@@ -56,7 +56,9 @@
         <!-- Step1 Create the stock from UI and then assign the sources -->
         <createData entity="BasicMsiStock1" stepKey="createStock"/>
 
-        <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
         <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
             <argument name="tags" value=""/>
         </actionGroup>

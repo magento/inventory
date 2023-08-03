@@ -53,7 +53,9 @@
             </createData>
             <!--Create source.-->
             <createData entity="FullSource1" stepKey="source"/>
-            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
                 <argument name="tags" value=""/>
             </actionGroup>
@@ -68,7 +70,9 @@
             </actionGroup>
 
             <!-- Reindex invalidated indices after product attribute has been created/deleted -->
-            <magentoCron groups="index" stepKey="reindexInvalidatedIndices"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexInvalidatedIndices">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!--Verify configurable product on storefront.-->

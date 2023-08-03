@@ -45,7 +45,9 @@
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
@@ -68,7 +70,9 @@
         </actionGroup>
         <click selector="{{AdminProductFormActionSection.saveButton}}"  stepKey="saveProduct"/>
 
-        <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
         <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
             <argument name="tags" value=""/>
         </actionGroup>

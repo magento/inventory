@@ -32,7 +32,9 @@
                 <requiredEntity createDataKey="customStock"/>
                 <requiredEntity createDataKey="customSource"/>
             </createData>
-            <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
                 <argument name="tags" value=""/>
             </actionGroup>
@@ -51,7 +53,9 @@
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="virtualProduct" stepKey="deleteProduct"/>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <actionGroup ref="AdminGoToProductGridFilterResultsByInputEditProduct" stepKey="goToProductGridFilterResultsByInputEditProduct1">

@@ -127,7 +127,9 @@
         <!-- Step8.3 Save the White Configurable Product -->
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveRedConfigProductPostOutOfStock"/>
 
-        <magentoCLI command="indexer:reindex" stepKey="performReindexPostOutOfStock"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexPostOutOfStock">
+            <argument name="indices" value=""/>
+        </actionGroup>
         <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCachePostOutOfStock">
             <argument name="tags" value=""/>
         </actionGroup>

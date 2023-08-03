@@ -26,7 +26,9 @@
             <magentoCLI command="config:set {{OnlineDistanceProviderForDistanceBasedSSA.path}} {{OnlineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOnline"/>
 
             <!--Clean cache and reindex-->
-            <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
                 <argument name="tags" value=""/>
             </actionGroup>
@@ -55,6 +57,8 @@
 
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="createSimpleProduct" stepKey="deleteProduct"/>
+            <!--Logout from customer account-->
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutStorefront"/>
             <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
@@ -65,7 +69,9 @@
         <fillField selector="{{InventoryConfigSection.GoogleDistanceProvided}}" userInput="AIzaSyD7QOaF7rcGVZQwrbG7AYNnFLwyuhGpQBU" stepKey="fillGoogleDistanceProvider"/>
         <click selector="{{ContentManagementSection.Save}}" stepKey="clickSaveConfig"/>
         <!--Clean cache and reindex-->
-        <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
         <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
             <argument name="tags" value=""/>
         </actionGroup>

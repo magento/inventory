@@ -72,7 +72,9 @@
             <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose"/>
 
             <!-- Perform reindex and flush cache -->
-            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
                 <argument name="tags" value=""/>
             </actionGroup>

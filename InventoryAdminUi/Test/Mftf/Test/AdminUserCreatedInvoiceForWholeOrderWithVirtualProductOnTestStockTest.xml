@@ -88,7 +88,9 @@
 
         <!-- Step5 Create New Customer -->
         <createData entity="Simple_US_Customer" stepKey="createCustomer1"/>
-        <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
         <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
             <argument name="tags" value=""/>
         </actionGroup>

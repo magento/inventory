@@ -36,7 +36,9 @@
                 <requiredEntity createDataKey="customStock"/>
                 <requiredEntity createDataKey="customSource1"/>
             </createData>
-            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
                 <argument name="tags" value=""/>
             </actionGroup>
@@ -98,7 +100,9 @@
         <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveVirtualProduct2"/>
 
         <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOffManageStockConfig.value}}" stepKey="magentoCLI1"/>
-        <magentoCLI command="indexer:reindex" stepKey="performReindexAfterDisableManageStock"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterDisableManageStock">
+            <argument name="indices" value=""/>
+        </actionGroup>
         <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterDisableManageStock">
             <argument name="tags" value=""/>
         </actionGroup>

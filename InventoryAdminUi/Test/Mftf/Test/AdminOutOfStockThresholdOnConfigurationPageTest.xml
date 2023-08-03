@@ -55,7 +55,9 @@
                 <argument name="sourceCode" value="$$customSource.source[source_code]$$"/>
             </actionGroup>
             <deleteData createDataKey="CustomStockMainWebsite" stepKey="deleteStock"/>
-            <magentoCLI command="indexer:reindex" stepKey="runIndexerReindex" />
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="runIndexerReindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
                 <argument name="tags" value=""/>
             </actionGroup>
@@ -70,7 +72,9 @@
 
         <!-- Set out of stock threshold in admin configuration. -->
         <magentoCLI command="config:set cataloginventory/item_options/min_qty 100" stepKey="setMinQtyInConfiguration"/>
-        <magentoCLI command="indexer:reindex" stepKey="runIndexerReindex" />
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="runIndexerReindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
         <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfter">
             <argument name="tags" value=""/>
         </actionGroup>

@@ -70,7 +70,9 @@
                 <argument name="sourceCode" value="$customSource.source[source_code]$"/>
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <actionGroup ref="AdminNavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer">

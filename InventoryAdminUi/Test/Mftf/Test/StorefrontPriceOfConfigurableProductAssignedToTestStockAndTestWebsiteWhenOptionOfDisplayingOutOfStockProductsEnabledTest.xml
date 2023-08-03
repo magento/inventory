@@ -77,7 +77,9 @@
                 <argument name="stockName" value="{{BasicMsiStock1.name}}"/>
                 <argument name="websiteName" value="{{NewWebSiteData.name}}"/>
             </actionGroup>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </before>
         <after>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
