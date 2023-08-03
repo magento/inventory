@@ -14,6 +14,7 @@ use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockStatus;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\CatalogInventory\Model\Stock;
+use Magento\InventoryConfigurableProduct\Model\Inventory\ChangeParentProductStockStatus;
 use Magento\InventoryConfigurableProduct\Model\IsProductSalableCondition\IsConfigurableProductChildrenSalable;
 use Magento\InventoryConfiguration\Model\GetLegacyStockItem;
 
@@ -49,19 +50,27 @@ class UpdateLegacyStockStatusForConfigurableProduct
     private $isConfigurableProductChildrenSalable;
 
     /**
+     * @var ChangeParentProductStockStatus
+     */
+    private $changeParentProductStockStatus;
+
+    /**
      * @param GetProductTypeById $getProductTypeById
      * @param SetDataToLegacyStockStatus $setDataToLegacyStockStatus
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param GetLegacyStockItem $getLegacyStockItem
      * @param IsConfigurableProductChildrenSalable $isConfigurableProductChildrenSalable
+     * @param ChangeParentProductStockStatus $changeParentProductStockStatus
      */
     public function __construct(
+        ChangeParentProductStockStatus $changeParentProductStockStatus,
         GetProductTypeById $getProductTypeById,
         SetDataToLegacyStockStatus $setDataToLegacyStockStatus,
         GetSkusByProductIdsInterface $getSkusByProductIds,
         GetLegacyStockItem $getLegacyStockItem,
         IsConfigurableProductChildrenSalable $isConfigurableProductChildrenSalable
     ) {
+        $this->changeParentProductStockStatus = $changeParentProductStockStatus;
         $this->getProductTypeById = $getProductTypeById;
         $this->setDataToLegacyStockStatus = $setDataToLegacyStockStatus;
         $this->getSkusByProductIds = $getSkusByProductIds;
@@ -82,11 +91,12 @@ class UpdateLegacyStockStatusForConfigurableProduct
      */
     public function afterSave(ItemResourceModel $subject, ItemResourceModel $result, StockItem $stockItem)
     {
+        $stockProductId = $stockItem->getProductId();
         if ($stockItem->getIsInStock() &&
-            $this->getProductTypeById->execute($stockItem->getProductId()) === Configurable::TYPE_CODE
+            $this->getProductTypeById->execute($stockProductId) === Configurable::TYPE_CODE
         ) {
             $productSku = $this->getSkusByProductIds
-                ->execute([$stockItem->getProductId()])[$stockItem->getProductId()];
+                ->execute([$stockProductId])[$stockItem->getProductId()];
 
             if ($stockItem->getStockStatusChangedAuto() ||
                 ($this->stockStatusChange($productSku)
@@ -100,6 +110,7 @@ class UpdateLegacyStockStatusForConfigurableProduct
                 );
             }
         }
+        $this->changeParentProductStockStatus->execute($stockItem->getProductId());
 
         return $result;
     }
