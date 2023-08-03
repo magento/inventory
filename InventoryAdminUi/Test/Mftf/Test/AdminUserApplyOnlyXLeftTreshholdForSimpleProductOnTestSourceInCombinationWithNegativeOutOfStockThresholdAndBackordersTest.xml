@@ -53,6 +53,7 @@
             <!--Clean up created data.-->
             <comment userInput="BIC workaround" stepKey="displayOutOfStockNo"/>
             <magentoCLI command="config:set {{SetOnlyXLeftThreshold.path}} {{SetOnlyXLeftThreshold.value}}" stepKey="setStockThresholdQty0"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>

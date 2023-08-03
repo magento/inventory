@@ -68,6 +68,7 @@
             <comment userInput="BIC workaround" stepKey="reindex"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="configurableAttribute1" stepKey="deleteConfigurableAttribute1"/>
             <deleteData createDataKey="configurableAttribute2" stepKey="deleteConfigurableAttribute2"/>

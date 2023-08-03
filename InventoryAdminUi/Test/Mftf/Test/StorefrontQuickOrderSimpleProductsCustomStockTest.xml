@@ -56,6 +56,7 @@
             <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseSimpleProduct2"/>
         </before>
         <after>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
             <!--Assign Default Stock to Default Website.-->

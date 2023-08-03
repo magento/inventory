@@ -35,6 +35,7 @@
             </actionGroup>
             <deleteData createDataKey="createVirtualProduct" stepKey="deleteVirtualProduct"/>
             <deleteData createDataKey="createSubCategory" stepKey="deleteSubCategory"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="createCustomer1" stepKey="deleteCustomer"/>
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <magentoCLI command="config:set {{DisableCashOnDeliveryPaymentMethod.path}} {{DisableCashOnDeliveryPaymentMethod.value}}" stepKey="disableCashOnDeliveryPaymentMethod"/>

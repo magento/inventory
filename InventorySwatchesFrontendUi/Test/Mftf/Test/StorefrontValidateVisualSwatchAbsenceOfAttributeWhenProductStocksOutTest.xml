@@ -51,6 +51,7 @@
                 <argument name="productAttributeLabel" value="{{visualSwatchAttribute.default_label}}"/>
             </actionGroup>
             <!-- Delete the created customer -->
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
             <actionGroup ref="AdminDeleteStockActionGroup" stepKey="deleteCreatedStock">
                 <argument name="stockName" value="{{BasicMsiStock1.name}}"/>
