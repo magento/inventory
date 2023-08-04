@@ -52,7 +52,9 @@
             <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexAfterManageStockRestored">
                 <argument name="indices" value=""/>
             </actionGroup>
-            <magentoCLI command="cache:flush" stepKey="flushCacheAfterManageStockRestored"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCacheAfterManageStockRestored">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </after>
 
         <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
@@ -78,7 +80,9 @@
         <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexAfterManageStockDisabled">
             <argument name="indices" value=""/>
         </actionGroup>
-        <magentoCLI command="cache:flush" stepKey="flushCacheAfterManageStockDisabled"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCacheAfterManageStockDisabled">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <!--Verify product is visible on storefront.-->
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="checkConfigurableIsPresentOnCategoryPage">
             <argument name="category" value="$$category$$"/>

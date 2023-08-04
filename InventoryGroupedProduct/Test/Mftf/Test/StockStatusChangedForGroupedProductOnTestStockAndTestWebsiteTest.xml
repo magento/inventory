@@ -118,7 +118,9 @@
             <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
                 <argument name="indices" value=""/>
             </actionGroup>
-            <magentoCLI stepKey="flushCache" command="cache:flush"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </before>
         <after>
             <!--Delete created data-->
@@ -167,7 +169,9 @@
         <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
             <argument name="indices" value=""/>
         </actionGroup>
-        <magentoCLI stepKey="flushCache" command="cache:flush"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <!-- Go to storefront and assert the grouped product-->
         <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="goToStoreFront2"/>
         <actionGroup ref="StorefrontGoToCategoryPageActionGroup" stepKey="openEnabledCategory2">

@@ -99,7 +99,9 @@
         <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
             <argument name="indices" value=""/>
         </actionGroup>
-        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <!-- Step7 Create Configurable Product -->
         <createData entity="ApiConfigurableProduct" stepKey="createConfigurableProduct">
@@ -150,7 +152,9 @@
         <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexPostOutOfStock">
             <argument name="indices" value=""/>
         </actionGroup>
-        <magentoCLI command="cache:flush" stepKey="cleanCachePostOutOfStock"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCachePostOutOfStock">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <!-- Step9.1 Verify the Configurable Product in Created Category in Storefront is not present -->
         <actionGroup ref="AssertProductNotPresentInStorefrontCategoryPage" stepKey="assertProductNotPresentInStorefrontPostMakingTheBundleProductOutOfStock">
@@ -171,7 +175,9 @@
         <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexPostInStock">
             <argument name="indices" value=""/>
         </actionGroup>
-        <magentoCLI command="cache:flush" stepKey="cleanCachePostInStock"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCachePostInStock">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <!-- Step11 Verify the Configurable Product name , SKU and status for product in Storefront is present -->
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="assertProductInStorefrontPostSwitchingBackToInStock">

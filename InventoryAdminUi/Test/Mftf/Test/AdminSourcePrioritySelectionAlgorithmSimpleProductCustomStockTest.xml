@@ -63,7 +63,9 @@
             <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterStockSave">
                 <argument name="indices" value=""/>
             </actionGroup>
-            <magentoCLI command="cache:flush" stepKey="cleanCacheAfterStockSave"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterStockSave">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </before>
         <after>
             <comment userInput="Disable sources, as they can brake single source mode tests." stepKey="disableSourcesComment"/>

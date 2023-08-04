@@ -130,7 +130,9 @@
         <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterConfigurationIsSaved">
             <argument name="indices" value=""/>
         </actionGroup>
-        <magentoCLI command="cache:flush" stepKey="cleanCacheAfterConfigurationIsSaved"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterConfigurationIsSaved">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <comment userInput="Check, product presents on category page after 'Manage Stock' has been disabled." stepKey="checkProductIsBackToCategoryPageComment"/>
         <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToProductCategoryPage"/>

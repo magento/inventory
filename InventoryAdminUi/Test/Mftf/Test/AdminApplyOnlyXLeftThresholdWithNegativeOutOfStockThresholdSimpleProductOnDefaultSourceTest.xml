@@ -25,7 +25,9 @@
             <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterFillThresholdConfig">
                 <argument name="indices" value=""/>
             </actionGroup>
-            <magentoCLI command="cache:flush" stepKey="cleanCacheAfterFillThresholdConfig"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterFillThresholdConfig">
+                <argument name="tags" value=""/>
+            </actionGroup>
             <!--Create customer.-->
             <createData entity="Msi_US_Customer" stepKey="customer"/>
             <!--Create additional source.-->
@@ -54,7 +56,9 @@
             <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterRevertThresholdConfig">
                 <argument name="indices" value=""/>
             </actionGroup>
-            <magentoCLI command="cache:flush" stepKey="cleanCacheAfterRevertThresholdConfig"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterRevertThresholdConfig">
+                <argument name="tags" value=""/>
+            </actionGroup>
             <!--Delete test data.-->
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
@@ -89,7 +93,9 @@
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="placeOrder"/>
         <comment userInput="BIC workaround" stepKey="waitForOrderPlacement"/>
         <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessage"/>
-        <magentoCLI command="cache:flush" stepKey="performCacheFlush"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="performCacheFlush">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <!--Verify 'Only 5 left' appears on PDP.-->
         <amOnPage url="{{StorefrontProductPage.url($$product.custom_attributes[url_key]$$)}}" stepKey="navigateToPDPToVerifyMessage"/>
         <see selector=".availability.only" userInput="Only 5 left" stepKey="checkMessage"/>

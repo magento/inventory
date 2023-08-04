@@ -67,7 +67,9 @@
         <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
             <argument name="indices" value=""/>
         </actionGroup>
-        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <!--Open category subcategory by direct URL. Verify simple product is visible on it. -->
         <actionGroup ref="OpenProductFromCategoryPageActionGroup" stepKey="openProductFromSubCategory2">

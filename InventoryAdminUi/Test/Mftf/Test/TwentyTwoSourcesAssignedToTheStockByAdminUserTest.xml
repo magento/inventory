@@ -59,7 +59,9 @@
         <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
             <argument name="indices" value=""/>
         </actionGroup>
-        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <!-- Step2 Create the 22 sources through API -->
         <createData entity="FullSource1" stepKey="createTestSource1"/>

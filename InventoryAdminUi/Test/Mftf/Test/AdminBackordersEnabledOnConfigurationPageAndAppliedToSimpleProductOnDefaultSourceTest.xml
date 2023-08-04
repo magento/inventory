@@ -27,7 +27,9 @@
             <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterFillBackordersConfig">
                 <argument name="indices" value=""/>
             </actionGroup>
-            <magentoCLI command="cache:flush" stepKey="cleanCacheAfterFillBackordersConfig"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterFillBackordersConfig">
+                <argument name="tags" value=""/>
+            </actionGroup>
 
             <createData entity="_minimalSource" stepKey="createSource"/>
             <createData entity="BasicMsiStock1" stepKey="createStock"/>
@@ -77,7 +79,9 @@
             <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterRevertBackordersConfig">
                 <argument name="indices" value=""/>
             </actionGroup>
-            <magentoCLI command="cache:flush" stepKey="cleanCacheAfterRevertBackordersConfig"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterRevertBackordersConfig">
+                <argument name="tags" value=""/>
+            </actionGroup>
 
             <comment userInput="Disable created source." stepKey="disableCreatedSourceComment"/>
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedSource">

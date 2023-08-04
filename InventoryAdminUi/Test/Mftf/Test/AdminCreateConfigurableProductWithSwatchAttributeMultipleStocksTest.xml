@@ -166,7 +166,9 @@
         <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
             <argument name="indices" value=""/>
         </actionGroup>
-        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <!--Verify configurable product with red variation on main website.-->
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="verifyConfigurableVisibleOnStoreFrontMainWebsite">
             <argument name="category" value="$$category$$"/>

@@ -121,7 +121,9 @@
         <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
             <argument name="indices" value=""/>
         </actionGroup>
-        <magentoCLI stepKey="flushCache" command="cache:flush"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <actionGroup ref="StorefrontGoToCategoryPageActionGroup" stepKey="openEnabledCategory">
             <argument name="categoryName" value="$$category.name$$"/>
         </actionGroup>
@@ -133,7 +135,9 @@
         <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexer">
             <argument name="indices" value=""/>
         </actionGroup>
-        <magentoCLI stepKey="cacheFlush" command="cache:flush"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cacheFlush">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <actionGroup ref="StorefrontGoToCategoryPageActionGroup" stepKey="againOpenEnabledCategory">
             <argument name="categoryName" value="$$category.name$$"/>
         </actionGroup>

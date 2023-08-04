@@ -38,7 +38,9 @@
             <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex1">
                 <argument name="indices" value=""/>
             </actionGroup>
-            <magentoCLI command="cache:flush" stepKey="flushCache1"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache1">
+                <argument name="tags" value=""/>
+            </actionGroup>
 
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin1"/>
 
@@ -57,7 +59,9 @@
             <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
                 <argument name="indices" value=""/>
             </actionGroup>
-            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </before>
         <after>
             <!--Assign Default Stock to Default Website.-->
@@ -87,7 +91,9 @@
         <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex1">
             <argument name="indices" value=""/>
         </actionGroup>
-        <magentoCLI command="cache:flush" stepKey="flushCache1"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache1">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
             <argument name="Customer" value="$$customer$$"/>
@@ -114,7 +120,9 @@
         <click selector="{{AdminOrderFormActionSection.SubmitOrder}}" stepKey="clickSubmitOrder"/>
         <seeInCurrentUrl url="{{AdminOrderDetailsPage.url}}" stepKey="seeViewOrderPage"/>
 
-        <magentoCLI command="cache:flush" stepKey="flushCache2"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache2">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <amOnPage url="/$$virtualProduct1.product[sku]$$.html" stepKey="amOnProductPage2"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad4"/>

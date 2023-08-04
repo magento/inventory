@@ -32,7 +32,9 @@
             <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
                 <argument name="indices" value=""/>
             </actionGroup>
-            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
             <!--Assign Default Stock to Default Website.-->
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
@@ -52,7 +54,9 @@
             <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterRevertThresholdConfig">
                 <argument name="indices" value=""/>
             </actionGroup>
-            <magentoCLI command="cache:flush" stepKey="cleanCacheAfterRevertThresholdConfig"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterRevertThresholdConfig">
+                <argument name="tags" value=""/>
+            </actionGroup>
             <!--Remove test data.-->
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
@@ -80,8 +84,10 @@
         <comment userInput="BIC workaround" stepKey="waitUntilOrderPlaced"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
         <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessage"/>
-        <!--flash cache-->
-        <magentoCLI command="cache:flush" stepKey="flushCache"/>
+        <!--flush cache-->
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <!--Verify 'Only X Left' message.-->
         <amOnPage url="{{StorefrontProductPage.url($$product.custom_attributes[url_key]$$)}}" stepKey="navigateToProductDetailsPage"/>
         <waitForPageLoad time="30" stepKey="waitForProductPageLoadToVerifyMessage"/>

@@ -130,7 +130,9 @@
         <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexPostOutOfStock">
             <argument name="indices" value=""/>
         </actionGroup>
-        <magentoCLI command="cache:flush" stepKey="cleanCachePostOutOfStock"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCachePostOutOfStock">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <!-- Step9 Verify the Configurable Product in Created Category in Storefront is no more present -->
         <actionGroup ref="AssertProductNotPresentInStorefrontCategoryPage" stepKey="assertProductNotPresentInStorefront">
