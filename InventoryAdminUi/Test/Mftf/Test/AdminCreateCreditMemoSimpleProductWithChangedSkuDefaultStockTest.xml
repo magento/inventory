@@ -53,7 +53,8 @@
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
-            <deleteData createDataKey="product" stepKey="deleteProduct" />
+            <!--      Deleting product with updated SKU      -->
+            <deleteData url="/V1/products/{{SimpleProduct.sku}}" stepKey="deleteProduct" />
             <!--Disable source.-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
@@ -84,7 +85,9 @@
             <argument name="productId" value="$product.id$"/>
         </actionGroup>
         <waitForPageLoad stepKey="waitForProductPage"/>
-        <actionGroup ref="AdminChangeProductSkuActionGroup" stepKey="changeProductSku"/>
+        <actionGroup ref="AdminChangeProductSkuActionGroup" stepKey="changeProductSku">
+            <argument name="productSku" value="{{SimpleProduct.sku}}"/>
+        </actionGroup>
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
         <actionGroup ref="CliConsumerStartActionGroup" stepKey="cleanUpSourceItems">
             <argument name="consumerName" value="inventory.source.items.cleanup"/>
