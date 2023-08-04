@@ -31,7 +31,7 @@ if (empty($sources)) {
             <select id="pickup_location_source" name="pickup_location_source"
                     class="select admin__control-select">
                 <?php foreach ($sources as $code => $name): ?>
-                    <option value="<?= $block->escapeHtml($code) ?>">
+                    <option value="<?= $block->escapeHtmlAttr($code) ?>">
                         <?= $block->escapeHtml($name) ?>
                     </option>
                 <?php endforeach; ?>
