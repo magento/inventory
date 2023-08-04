@@ -99,7 +99,9 @@
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
         <magentoCLI command="queue:consumers:start inventory.reservations.updateSalabilityStatus" stepKey="startSalabilityUpdate"/>
         <wait time="30" stepKey="waitForSalabilityUpdate"/>
-        <magentoCLI command="cache:flush" stepKey="flushCache"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <!--Verify, configurable product has 'out of stock' status.-->
         <amOnPage url="{{StorefrontProductPage.url($configurableProduct.custom_attributes[url_key]$)}}" stepKey="navigateToConfigurablePDP"/>
         <see selector="{{StorefrontProductInfoMainSection.productStockStatus}}" userInput="{{SourceStatusOutOfStock.value}}" stepKey="verifyProductStatus"/>

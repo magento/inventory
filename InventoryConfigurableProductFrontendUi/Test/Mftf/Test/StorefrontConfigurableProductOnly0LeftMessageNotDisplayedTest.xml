@@ -34,7 +34,9 @@
             </createData>
             <magentoCLI command="config:set {{StorefrontInventoryCatalogStockThresholdQtyDefaultConfigData.path}} {{StorefrontInventoryCatalogStockThresholdQtyDefaultConfigData.value}}" stepKey="setDefaultThresholdQty"/>
             <!-- Reindex invalidated indices after product attribute has been created -->
-            <magentoCron groups="index" stepKey="reindexInvalidatedIndicesAftercreateProductAttributes"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexInvalidatedIndicesAftercreateProductAttributes">
+                <argument name="indices" value=""/>
+            </actionGroup>
 
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
 
@@ -72,7 +74,9 @@
             </actionGroup>
             <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="resetProductGridFilters"/>
             <!-- Reindex invalidated indices after product attribute has been deleted -->
-            <magentoCron groups="index" stepKey="reindexInvalidatedIndicesAfterDeleteAttributes"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexInvalidatedIndicesAfterDeleteAttributes">
+                <argument name="indices" value=""/>
+            </actionGroup>
 
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdmin"/>
         </after>

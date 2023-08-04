@@ -93,7 +93,9 @@
         <!--Set configurable product stock status.-->
         <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="Out of Stock" stepKey="setProductStockStatus"/>
         <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveConfigurableProduct"/>
-        <magentoCron groups="index" stepKey="reindex"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
         <!-- Go to storefront category page PLP -->
         <actionGroup ref="StorefrontNavigateToCategoryUrlActionGroup" stepKey="navigateToCategoryPage">
             <argument name="categoryUrl" value="$$category.custom_attributes[url_key]$$"/>

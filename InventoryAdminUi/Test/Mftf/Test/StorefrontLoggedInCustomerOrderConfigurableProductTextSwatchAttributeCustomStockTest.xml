@@ -22,7 +22,9 @@
         <before>
             <!--Enable 'Mange Stock' in configuration.-->
             <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableManageStock"/>
-            <magentoCLI command="cache:clean config" stepKey="cleanCache"/>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value="config"/>
+            </actionGroup>
             <!--Create test data.-->
             <createData entity="Msi_US_Customer" stepKey="customer"/>
             <createData entity="SimpleSubCategory" stepKey="category"/>
@@ -84,7 +86,9 @@
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!--Add configurable product to cart.-->
