@@ -10,6 +10,7 @@
     <suite name="InventoryStorePickupSuite">
         <before>
             <actionGroup ref="AdminDisableWYSIWYGActionGroup" stepKey="disableWYSYWYG" />
+            <actionGroup ref="AdminEnableGuestCheckoutActionGroup" stepKey="enableGuestCheckout"/>
             <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableStockManagement"/>
         </before>
         <include>
@@ -21,6 +22,7 @@
         </exclude>
         <after>
             <actionGroup ref="AdminEnableWYSIWYGActionGroup" stepKey="enableWYSYWYG" />
+            <actionGroup ref="AdminDisableGuestCheckoutActionGroup" stepKey="disableGuestCheckout"/>
         </after>
     </suite>
 </suites>
