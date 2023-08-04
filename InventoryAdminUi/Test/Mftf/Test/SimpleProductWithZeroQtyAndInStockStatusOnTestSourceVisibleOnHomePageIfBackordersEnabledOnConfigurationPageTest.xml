@@ -46,6 +46,8 @@
         <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex" after="saveAndClose">
             <argument name="indices" value=""/>
         </actionGroup>
-        <magentoCLI command="cache:flush" stepKey="flushCache" after="reindex"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache" after="reindex">
+            <argument name="tags" value=""/>
+        </actionGroup>
     </test>
 </tests>

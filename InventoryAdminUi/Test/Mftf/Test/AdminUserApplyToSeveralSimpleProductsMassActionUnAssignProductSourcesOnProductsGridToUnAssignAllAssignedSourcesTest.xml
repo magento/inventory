@@ -48,7 +48,9 @@
         <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
             <argument name="indices" value=""/>
         </actionGroup>
-        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <actionGroup ref="AdminEditStockActionGroup" stepKey="adminEditCreatedStock">
             <argument name="stockName" value="$$createStock.stock[name]$$"/>
         </actionGroup>

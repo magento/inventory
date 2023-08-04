@@ -58,7 +58,9 @@
         <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterFillBackordersConfig">
             <argument name="indices" value=""/>
         </actionGroup>
-        <magentoCLI command="cache:flush" stepKey="cleanCacheAfterFillBackordersConfig"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterFillBackordersConfig">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
          <!--Assign source to product, and save the product-->
         <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPage"/>
@@ -192,7 +194,9 @@
             <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterFillBackordersConfig1">
                 <argument name="indices" value=""/>
             </actionGroup>
-            <magentoCLI command="cache:flush" stepKey="cleanCacheAfterFillBackordersConfig1"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterFillBackordersConfig1">
+                <argument name="tags" value=""/>
+            </actionGroup>
 
             <!--Delete the created products and catagory.-->
             <deleteData createDataKey="product" stepKey="deleteProduct"/>

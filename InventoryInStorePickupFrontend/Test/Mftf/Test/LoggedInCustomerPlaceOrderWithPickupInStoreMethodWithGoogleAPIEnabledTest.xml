@@ -29,7 +29,9 @@
             <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
                 <argument name="indices" value=""/>
             </actionGroup>
-            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
 
             <createData entity="CulverStorePickupEnabledSource2" stepKey="createSource1"/>
             <createData entity="AustinStorePickupEnabledSource" stepKey="createSource2"/>
@@ -70,7 +72,9 @@
         <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
             <argument name="indices" value=""/>
         </actionGroup>
-        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStock"
                      stepKey="goToStockGridFilterResultsByInputEditStock1">

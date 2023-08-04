@@ -146,7 +146,9 @@
         <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexForAssignedSources1">
             <argument name="indices" value=""/>
         </actionGroup>
-        <magentoCLI stepKey="flushCacheForAssignedSources1" command="cache:flush"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCacheForAssignedSources1">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <!--Do the validation in the front end-->
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginCustomer">
             <argument name="Customer" value="$$createCustomer$$" />
@@ -177,7 +179,9 @@
         <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexForAssignedSources">
             <argument name="indices" value=""/>
         </actionGroup>
-        <magentoCLI stepKey="flushCacheForAssignedSources" command="cache:flush"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCacheForAssignedSources">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <!-- Go to the product page and see text swatch options -->
         <amOnPage url="{{ApiConfigurableProduct.urlKey}}.html" stepKey="amOnProductPage2"/>
         <waitForPageLoad stepKey="waitForProductPage2"/>

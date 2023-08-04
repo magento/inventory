@@ -81,7 +81,9 @@
         <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
             <argument name="indices" value=""/>
         </actionGroup>
-        <magentoCLI command="cache:flush" stepKey="flushCache"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <!-- Step7 and 8 Create New Source -->
         <createData entity="FullSource1" stepKey="createTestSource1"/>
@@ -100,7 +102,9 @@
         <magentoCLI command="config:set cataloginventory/options/show_out_of_stock 1" stepKey="setDisplayOutOfStockProductOnConfigPage"/>
 
         <!-- Step13 perform cache flush -->
-        <magentoCLI command="cache:flush" stepKey="flushCachePostDeisplayOutOfStockProductAsYes"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCachePostDeisplayOutOfStockProductAsYes">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <!-- Step14 Create Simple Product and assign to subcategory-->
         <createData entity="SimpleProduct" stepKey="createSimpleProduct">
@@ -125,7 +129,9 @@
         <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexPostSwitchingToTestWebsite">
             <argument name="indices" value=""/>
         </actionGroup>
-        <magentoCLI command="cache:flush" stepKey="flushCachePostSwitchingToTestWebsite"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCachePostSwitchingToTestWebsite">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <!-- Step16.2 Navigate to Test website  -->
         <amOnPage url="{{StorefrontHomePage.url}}" stepKey="navigateToCategoryPage"/>

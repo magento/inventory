@@ -56,7 +56,9 @@
             <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterElasticSearchEnable">
                 <argument name="indices" value=""/>
             </actionGroup>
-            <magentoCLI command="cache:clean" arguments="full_page" stepKey="cleanCacheAfterElasticSearchEnable"/>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCacheAfterElasticSearchEnable">
+                <argument name="tags" value="full_page"/>
+            </actionGroup>
         </before>
         <after>
             <!-- Assign Main Website to Default Stock -->
@@ -84,7 +86,9 @@
             <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterElasticSearchDisable">
                 <argument name="indices" value=""/>
             </actionGroup>
-            <magentoCLI command="cache:flush" stepKey="cleanCacheAfterElasticSearchDisable"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterElasticSearchDisable">
+                <argument name="tags" value=""/>
+            </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
         </after>
         <!--Quick search created product.-->

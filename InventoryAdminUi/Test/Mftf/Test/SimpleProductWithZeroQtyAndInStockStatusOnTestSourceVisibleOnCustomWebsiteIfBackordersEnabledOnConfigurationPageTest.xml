@@ -50,7 +50,9 @@
             <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex" after="assignStockToAdditionalWebsite">
                 <argument name="indices" value=""/>
             </actionGroup>
-            <magentoCLI command="cache:flush" stepKey="flushCache" after="reindex"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache" after="reindex">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </before>
         <after>
             <!--Delete created website.-->

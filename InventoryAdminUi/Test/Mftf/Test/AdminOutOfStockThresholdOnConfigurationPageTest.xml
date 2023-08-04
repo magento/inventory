@@ -58,7 +58,9 @@
             <actionGroup ref="CliIndexerReindexActionGroup" stepKey="runIndexerReindex">
                 <argument name="indices" value=""/>
             </actionGroup>
-            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
@@ -73,7 +75,9 @@
         <actionGroup ref="CliIndexerReindexActionGroup" stepKey="runIndexerReindex">
             <argument name="indices" value=""/>
         </actionGroup>
-        <magentoCLI command="cache:flush" stepKey="cleanCacheAfter"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfter">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <waitForPageLoad time="30" stepKey="waitForIndexCache"/>
 
         <!-- Go to storefront category page, assert product isn't visible. -->

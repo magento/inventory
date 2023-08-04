@@ -55,7 +55,9 @@
       <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex1">
           <argument name="indices" value=""/>
       </actionGroup>
-    <magentoCLI command="cache:flush" stepKey="cleanCache1"/>
+      <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache1">
+          <argument name="tags" value=""/>
+      </actionGroup>
 
     <!-- Check the product is not displayed in the front end after the search -->
     <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="goToHomePage"/>
@@ -71,7 +73,9 @@
       <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex2">
           <argument name="indices" value=""/>
       </actionGroup>
-    <magentoCLI command="cache:flush" stepKey="cleanCache2"/>
+      <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache2">
+          <argument name="tags" value=""/>
+      </actionGroup>
 
     <!-- Check the product is displayed in the front end after the search without any errors -->
     <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="goToHomePage1"/>

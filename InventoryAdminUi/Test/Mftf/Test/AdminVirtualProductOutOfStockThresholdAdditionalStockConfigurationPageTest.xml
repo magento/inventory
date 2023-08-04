@@ -52,7 +52,9 @@
             <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexAfterOutOfStockThresholdReverted">
                 <argument name="indices" value=""/>
             </actionGroup>
-            <magentoCLI command="cache:flush" stepKey="flushCacheAfterOutOfStockThresholdReverted"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCacheAfterOutOfStockThresholdReverted">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </after>
 
         <!--Assign create product to additional stock and set qty.-->
@@ -75,7 +77,9 @@
         <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexAfterOutOfStockThresholdSet">
             <argument name="indices" value=""/>
         </actionGroup>
-        <magentoCLI command="cache:flush" stepKey="flushCacheAfterOutOfStockThresholdSet"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCacheAfterOutOfStockThresholdSet">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <!--Verify product is not visible on storefront.-->
         <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPage"/>
         <waitForPageLoad stepKey="waitForCategoryPageLoad"/>
@@ -85,7 +89,9 @@
         <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexAfterOutOfStockThresholdChanged">
             <argument name="indices" value=""/>
         </actionGroup>
-        <magentoCLI command="cache:flush" stepKey="flushCacheAfterOutOfStockThresholdChanged"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCacheAfterOutOfStockThresholdChanged">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <!--Verify product is visible on storefront.-->
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="checkConfigurableIsPresentOnCategoryPage">
             <argument name="category" value="$$category$$"/>

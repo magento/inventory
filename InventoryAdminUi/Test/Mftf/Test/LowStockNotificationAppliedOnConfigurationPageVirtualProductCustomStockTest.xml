@@ -29,7 +29,9 @@
             <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterRevertConfiguration">
                 <argument name="indices" value=""/>
             </actionGroup>
-            <magentoCLI command="cache:flush" stepKey="cleanCacheAfterRevertConfiguration"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterRevertConfiguration">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </after>
 
         <remove keyForRemoval="uncheckNotifyQtyUseDefault"/>
@@ -39,6 +41,8 @@
         <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterSetConfiguration">
             <argument name="indices" value=""/>
         </actionGroup>
-        <magentoCLI command="cache:flush" stepKey="cleanCacheAfterSetConfiguration"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterSetConfiguration">
+            <argument name="tags" value=""/>
+        </actionGroup>
     </test>
 </tests>
