@@ -49,9 +49,7 @@
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
-            <actionGroup ref="DeleteProductActionGroup" stepKey="deleteProduct">
-                <argument name="productName" value="$product.name$"/>
-            </actionGroup>
+            <deleteData createDataKey="product" stepKey="deleteProduct" />
             <!--Disable source.-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
