@@ -165,10 +165,21 @@ class IsFulfillableTest extends TestCase
     /**
      * Test the execute method of IsFulfillable model.
      *
+     * @dataProvider dataProvider
+     * @param  bool $manageStock
+     * @param bool $inStock
+     * @param float $qtyOrdered
+     * @param float $quantity
+     * @param bool $expectedResult
      * @return void
      */
-    public function testExecute(): void
-    {
+    public function testExecute(
+        bool $manageStock,
+        bool $inStock,
+        float $qtyOrdered,
+        float $quantity,
+        bool $expectedResult
+    ): void {
         $this->getPickupLocationCode->expects($this->once())
             ->method('execute')
             ->with($this->orderMock)
@@ -186,27 +197,27 @@ class IsFulfillableTest extends TestCase
             ->method('getExtensionAttributes')
             ->willReturn($this->extensionAttributesMock);
 
-        $this->sourceRepository->expects($this->once())
+        $this->sourceRepository->expects($this->any())
             ->method('get')
             ->willReturn($this->sourceMock);
 
         $this->stockItemMock->expects($this->once())
             ->method('getManageStock')
-            ->willReturn(false);
+            ->willReturn($manageStock);
 
         $this->stockItemMock->expects($this->any())
             ->method('getIsInStock')
-            ->willReturn(true);
+            ->willReturn($inStock);
 
         $this->extensionAttributesMock->expects($this->any())
             ->method('getStockItem')
             ->willReturn($this->stockItemMock);
 
-        $this->itemMock->expects($this->once())
+        $this->itemMock->expects($this->any())
             ->method('getHasChildren')
             ->willReturn(false);
 
-        $this->sourceMock->expects($this->once())
+        $this->sourceMock->expects($this->any())
             ->method('isEnabled')
             ->willReturn(true);
 
@@ -216,7 +227,7 @@ class IsFulfillableTest extends TestCase
 
         $this->itemMock->expects($this->any())
             ->method('getQtyOrdered')
-            ->willReturn(1);
+            ->willReturn($qtyOrdered);
 
         $searchCriteriaMock = $this
             ->getMockBuilder(SearchCriteria::class)
@@ -256,13 +267,24 @@ class IsFulfillableTest extends TestCase
 
         $this->abstractExtensibleObject->expects($this->any())
             ->method('getQuantity')
-            ->willReturn(0);
+            ->willReturn($quantity);
 
         $this->abstractExtensibleObject->expects($this->any())
             ->method('getStatus')
             ->willReturn(1);
 
         // Assertions to check the result.
-        $this->assertTrue($this->model->execute($this->orderMock));
+        $this->assertEquals($expectedResult, $this->model->execute($this->orderMock));
+    }
+
+    /**
+     * @return array
+     */
+    public function dataProvider(): array
+    {
+        return [
+            [false, true, 1, 0, true],
+            [false, false, 1, 0, false]
+        ];
     }
 }
