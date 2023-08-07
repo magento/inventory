@@ -154,6 +154,17 @@ class IsFulfillableTest extends TestCase
             ->setMethods(['getQuantity', 'getStatus'])
             ->getMock();
 
+        $this->searchCriteriaMock = $this
+            ->getMockBuilder(SearchCriteria::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->searchCriteriaBuilderMock = $this
+            ->getMockBuilder(SearchCriteriaBuilder::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['create', 'addFilter'])
+            ->getMock();
+
         $this->model = new IsFulfillable(
             $this->sourceItemRepository,
             $this->searchCriteriaBuilderFactory,
@@ -229,29 +240,18 @@ class IsFulfillableTest extends TestCase
             ->method('getQtyOrdered')
             ->willReturn($qtyOrdered);
 
-        $searchCriteriaMock = $this
-            ->getMockBuilder(SearchCriteria::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $searchCriteriaBuilderMock = $this
-            ->getMockBuilder(SearchCriteriaBuilder::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['create', 'addFilter'])
-            ->getMock();
-
         $this->searchCriteriaBuilderFactory
             ->expects($this->any())
             ->method('create')
-            ->willReturn($searchCriteriaBuilderMock);
+            ->willReturn($this->searchCriteriaBuilderMock);
 
-        $searchCriteriaBuilderMock->expects($this->any())
+        $this->searchCriteriaBuilderMock->expects($this->any())
             ->method('addFilter')
-            ->willReturn($searchCriteriaBuilderMock);
+            ->willReturn($this->searchCriteriaBuilderMock);
 
-        $searchCriteriaBuilderMock->expects($this->any())
+        $this->searchCriteriaBuilderMock->expects($this->any())
             ->method('create')
-            ->willReturn($searchCriteriaMock);
+            ->willReturn($this->searchCriteriaMock);
 
         $this->sourceItemRepository->expects($this->any())
             ->method('getList')
