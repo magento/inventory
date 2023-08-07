@@ -95,6 +95,16 @@ class IsFulfillableTest extends TestCase
      */
     private $abstractExtensibleObject;
 
+    /**
+     * @var SearchCriteria|MockObject
+     */
+    private $searchCriteriaMock;
+
+    /**
+     * @var SearchCriteriaBuilder|MockObject
+     */
+    private $searchCriteriaBuilderMock;
+
     protected function setUp(): void
     {
         $this->sourceItemRepository = $this->getMockBuilder(SourceItemRepositoryInterface::class)
