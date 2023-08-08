@@ -54,6 +54,7 @@
                 <argument name="indices" value=""/>
             </actionGroup>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <actionGroup ref="DeleteProductByNameActionGroup" stepKey="deleteProduct">
                 <argument name="name" value="$product.name$"/>

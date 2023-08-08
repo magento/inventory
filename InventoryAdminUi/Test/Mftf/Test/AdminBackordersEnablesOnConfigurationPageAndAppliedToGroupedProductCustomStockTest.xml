@@ -48,6 +48,7 @@
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
             <!--Delete test data.-->
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="groupedProduct" stepKey="deleteGroupedProduct"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>

@@ -82,6 +82,7 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableAdditionalWebsiteSource">
                 <argument name="sourceCode" value="$$source.source[source_code]$$"/>
             </actionGroup>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>

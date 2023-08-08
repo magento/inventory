@@ -58,6 +58,7 @@
 
         <after>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="virtualProduct" stepKey="deleteProduct"/>
             <actionGroup ref="ClearProductsFilterActionGroup" stepKey="clearProductsFilter"/>
