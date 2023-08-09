@@ -102,6 +102,7 @@
         </before>
         <after>
             <remove keyForRemoval="deleteProduct"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="configurableChildProduct1" stepKey="deleteConfigurableChildProduct1"/>
             <deleteData createDataKey="configurableProduct1" stepKey="deleteConfigurableProduct1"/>

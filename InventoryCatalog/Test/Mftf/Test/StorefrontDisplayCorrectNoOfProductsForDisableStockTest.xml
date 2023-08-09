@@ -115,6 +115,7 @@
                 <argument name="Color" value="{{color4.name}}"/>
             </actionGroup>
             <!-- Delete Created Customer -->
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
             <!-- Reindex invalidated indices after product attribute has been created/deleted -->
             <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexInvalidatedIndices">
