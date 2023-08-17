@@ -24,8 +24,12 @@
             <magentoCLI command="config:set {{EnableInStorePickup.path}} {{EnableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
             <!--Download tables for 'US'-->
             <magentoCLI command="{{ImportTables.path}} {{USTable.value}}" stepKey="downloadTables"/>
-            <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
             <!--Create test data.-->
             <createData entity="Msi_US_Customer" stepKey="customer"/>
             <createData entity="CulverStorePickupEnabledSource" stepKey="culverSource"/>
@@ -54,6 +58,7 @@
             <magentoCLI command="config:set {{OnlineDistanceProviderForDistanceBasedSSA.path}} {{OnlineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
             <!--Disable 'In Store Pickup' shipping method.-->
             <magentoCLI command="config:set {{DisableInStorePickup.path}} {{DisableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
@@ -65,7 +70,9 @@
             <deleteData createDataKey="stock" stepKey="deleteStock"/>
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
         <!--Add product to cart.-->
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">

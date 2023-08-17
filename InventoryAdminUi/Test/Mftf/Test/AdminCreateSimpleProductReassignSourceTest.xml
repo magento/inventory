@@ -35,7 +35,9 @@
                 <argument name="sourceCode" value="$$createSource.source[source_code]$$"/>
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!-- Assign created product to additional sources -->

@@ -57,8 +57,12 @@
                 <argument name="categoryName" value="$category.name$"/>
             </actionGroup>
             <magentoCLI command="indexer:set-mode" arguments="schedule" stepKey="setIndexerMode"/>
-            <magentoCLI command="cron:run" arguments="--group index" stepKey="cronRun"/>
-            <magentoCLI command="cron:run" arguments="--group index" stepKey="cronRunToStartReindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="cronRun">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="cronRunToStartReindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </before>
         <after>
             <!-- Change indexers to "Update on Save" mode -->
@@ -75,7 +79,9 @@
             <!--Disable created sources.-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
         <!--1. Assert simple and bundle products are visible on category page -->
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="assertSimpleProductPresentOnCategory">

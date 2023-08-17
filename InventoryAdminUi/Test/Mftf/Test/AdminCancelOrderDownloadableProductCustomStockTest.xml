@@ -23,6 +23,7 @@
             <createData entity="MsiCustomer1" stepKey="customer" after="linkSourceStock1"/>
         </before>
         <after>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer" after="deleteCustomStock"/>
         </after>
 
