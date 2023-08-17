@@ -35,6 +35,7 @@
             </actionGroup>
         </before>
         <after>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
             <!--Disable additional source.-->
@@ -42,7 +43,9 @@
                 <argument name="sourceCode" value="$$source.source[source_code]$$"/>
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!--Add custom option to product.-->

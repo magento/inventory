@@ -52,7 +52,9 @@
                 <argument name="stockName" value="$stock.stock[name]$"/>
                 <argument name="websiteName" value="{{customWebsite.name}}"/>
             </actionGroup>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <!--Assign product to custom website and source.-->
             <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="goToProductEditPage"/>
             <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="fillProductQtyPerSource1">
@@ -91,7 +93,9 @@
             <!--Disable additional source.-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!--Verify report for main website.-->

@@ -69,6 +69,7 @@
             <deleteData createDataKey="configurableProduct" stepKey="deleteConfigurableProduct"/>
             <deleteData createDataKey="product" stepKey="deleteConfigurableProductVariation"/>
             <deleteData createDataKey="configurableProductAttribute" stepKey="deleteConfigurableProductAttribute"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <!--Assign Default Stock to Default Website.-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">

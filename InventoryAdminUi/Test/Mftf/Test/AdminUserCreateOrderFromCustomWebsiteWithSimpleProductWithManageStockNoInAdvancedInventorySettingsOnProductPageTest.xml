@@ -54,7 +54,9 @@
                 <argument name="websiteName" value="{{NewWebSiteData.name}}"/>
             </actionGroup>
             <magentoCLI command="config:set {{StorefrontEnableAddStoreCodeToUrls.path}} {{StorefrontEnableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlEnable"/>
-            <magentoCLI command="indexer:reindex" stepKey="doReindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="doReindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </before>
         <after>
             <!--Assign Default Stock to Default Website.-->
@@ -71,8 +73,12 @@
             <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
             <deleteData createDataKey="createCategory1" stepKey="deleteCategory"/>
             <magentoCLI command="config:set {{StorefrontDisableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlDisable"/>
-            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </after>
 
         <!-- Assign product to custom website -->

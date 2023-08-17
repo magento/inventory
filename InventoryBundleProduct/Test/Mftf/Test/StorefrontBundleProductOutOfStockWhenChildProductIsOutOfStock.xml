@@ -192,7 +192,12 @@
             <actionGroup ref="AddWebsiteToProductActionGroup" stepKey="assignProductToAdditionalWebsiteForSimpleProduct3" >
                 <argument name="website" value="{{customWebsite.name}}"/>
             </actionGroup>
-            <actionGroup ref="AdminReindexAndFlushCache" stepKey="reindexAndFlushCache"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexAndFlushCache">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </before>
         <after>
             <!--Turn off 'Display Out Of Stock' settings for product from admin configuration-->
@@ -208,8 +213,13 @@
             <deleteData createDataKey="bundleProduct1" stepKey="deleteBundleProduct1"/>
             <deleteData createDataKey="bundleProduct2" stepKey="deleteBundleProduct2"/>
             <!-- Logout -->
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexAndFlushCache">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
-            <actionGroup ref="AdminReindexAndFlushCache" stepKey="reindexAndFlushCache"/>
         </after>
         <!--Verify simple product1, simple product 2 and simple product 3 is visible in category front page -->
         <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="goToHomepage"/>
@@ -245,7 +255,13 @@
             <argument name="sourceStatus" value="{{SourceStatusOutOfStock.value}}"/>
         </actionGroup>
         <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveSimpleProduct3OutOfStockStatus"/>
-        <actionGroup ref="AdminReindexAndFlushCache" stepKey="reindexAndFlushCacheAgain"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexAndFlushCacheAgain">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
+
         <!--Verify bundle product 2 not on storefront.-->
         <actionGroup ref="StorefrontGoToCategoryPageActionGroup" stepKey="openCategoryPageAgain">
             <argument name="categoryName" value="$$createCategory.name$$"/>
