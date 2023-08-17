@@ -78,8 +78,12 @@
         <see userInput="$$virtualProduct1.product[sku]$$" selector="{{StorefrontProductInfoMainSection.productSku}}" stepKey="assertProductSku1"/>
 
         <magentoCLI command="config:set cataloginventory/options/stock_threshold_qty 99" stepKey="setMinQtyToDefaultValue1"/>
-        <magentoCLI command="indexer:reindex" stepKey="reindex1"/>
-        <magentoCLI command="cache:flush" stepKey="flushCache1"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex1">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache1">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
             <argument name="Customer" value="$$customer$$"/>
