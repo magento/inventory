@@ -53,10 +53,13 @@
             <!--Clean up created data.-->
             <comment userInput="BIC workaround" stepKey="displayOutOfStockNo"/>
             <magentoCLI command="config:set {{SetOnlyXLeftThreshold.path}} {{SetOnlyXLeftThreshold.value}}" stepKey="setStockThresholdQty0"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
                 <argument name="tags" value="full_page"/>
             </actionGroup>
@@ -101,7 +104,9 @@
         <actionGroup ref="OrderSelectFlatRateShippingActionGroup" stepKey="selectFlatRate"/>
         <actionGroup ref="AdminSubmitOrderActionGroup" stepKey="submitOrder"/>
 
-        <magentoCLI command="cache:flush" stepKey="flushCache2"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache2">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <actionGroup ref="StorefrontOpenProductPageActionGroup" stepKey="openFirstProductPage">
             <argument name="productUrl" value="$$simpleProduct.custom_attributes[url_key]$$"/>

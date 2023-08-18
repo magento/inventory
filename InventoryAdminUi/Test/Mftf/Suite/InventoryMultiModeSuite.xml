@@ -9,11 +9,12 @@
 	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Suite/etc/suiteSchema.xsd">
     <suite name="InventoryMultiModeSuite">
         <before>
-	    <magentoCLI command="config:set {{EnableFlatRateConfigData.path}} {{EnableFlatRateConfigData.value}}" stepKey="enableFlatRate"/>
-
+            <comment userInput="BIC" stepKey="enableFlatRate" />
             <actionGroup ref="AdminDisableWYSIWYGActionGroup" stepKey="disableWYSYWYG"/>
             <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableStockManagement"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
                 <argument name="tags" value="config full_page"/>
             </actionGroup>
@@ -26,14 +27,17 @@
             <group name="single_mode"/>
         </exclude>
         <after>
-	    <magentoCLI command="config:set {{DisableFlatRateConfigData.path}} {{DisableFlatRateConfigData.value}}" stepKey="disableFlatRate"/>
-
+            <comment userInput="BIC" stepKey="disableFlatRate" />
             <actionGroup ref="AdminEnableWYSIWYGActionGroup" stepKey="enableWYSYWYG"/>
             <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOffManageStockConfig.value}}" stepKey="disableStockManagement"/>
-            <magentoCron groups="index" stepKey="reindex"/>
-            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
-                <argument name="tags" value="config full_page"/>
-            </actionGroup>
+            <comment userInput="BIC" stepKey="reindex" />
+            <comment userInput="BIC" stepKey="cleanCache" />
+<!--            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">-->
+<!--                <argument name="indices" value=""/>-->
+<!--            </actionGroup>-->
+<!--            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">-->
+<!--                <argument name="tags" value="config full_page"/>-->
+<!--            </actionGroup>-->
         </after>
     </suite>
 </suites>
