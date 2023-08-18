@@ -5,15 +5,15 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryConfigurableProduct\Test\Integration\CatalogInventory\Observer\ParentItemProcessor;
+namespace Magento\InventoryConfigurableProduct\Test\Integration\CatalogInventory;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\CatalogInventory\Api\StockItemRepositoryInterface;
-use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\Catalog\Test\Fixture\Product as ProductFixture;
+use Magento\CatalogInventory\Api\StockItemRepositoryInterface;
 use Magento\ConfigurableProduct\Test\Fixture\Attribute as AttributeFixture;
 use Magento\ConfigurableProduct\Test\Fixture\Product as ConfigurableProductFixture;
 use Magento\InventoryApi\Test\Fixture\SourceItem as SourceItemFixture;
+use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\TestFramework\Fixture\DataFixture;
 use Magento\TestFramework\Fixture\DataFixtureStorage;
 use Magento\TestFramework\Fixture\DataFixtureStorageManager;
@@ -21,7 +21,7 @@ use Magento\TestFramework\Fixture\DbIsolation;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
-class AdaptParentItemProcessorPluginTest extends TestCase
+class ConfigurableProductShouldBeInStockWhenChildProductInStockTest extends TestCase
 {
     /**
      * @var DataFixtureStorage
