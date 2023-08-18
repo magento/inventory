@@ -39,7 +39,9 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource">
                 <argument name="sourceCode" value="$createTestSource1.source[source_code]$"/>
             </actionGroup>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
@@ -101,8 +103,12 @@
 
         <!-- Step8.3 Save the Configurable Product -->
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProductPostOutOfStock"/>
-        <magentoCLI command="indexer:reindex" stepKey="performReindexPostOutOfStock"/>
-        <magentoCLI command="cache:flush" stepKey="cleanCachePostOutOfStock"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexPostOutOfStock">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCachePostOutOfStock">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <!-- Step9.1 Verify the Configurable Product in Created Category in Storefront is not present -->
         <actionGroup ref="AssertProductNotPresentInStorefrontCategoryPage" stepKey="assertProductNotPresentInStorefrontPostMakingTheBundleProductOutOfStock">
@@ -120,8 +126,12 @@
 
         <!-- Step10.3 Save the Configurable Product -->
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProductPostInStock"/>
-        <magentoCLI command="indexer:reindex" stepKey="performReindexPostInStock"/>
-        <magentoCLI command="cache:flush" stepKey="cleanCachePostInStock"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexPostInStock">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCachePostInStock">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <!-- Step11 Verify the Configurable Product name , SKU and status for product in Storefront is present -->
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="assertProductInStorefrontPostSwitchingBackToInStock">

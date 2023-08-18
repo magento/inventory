@@ -55,8 +55,12 @@
         <comment userInput="Fill config 'Backorders'." stepKey="fillConfigComment"/>
         <magentoCLI command="config:set cataloginventory/item_options/backorders 2" stepKey="fillBackordersConfigValue"/>
         <comment userInput="Perform reindex and cache flush after fill 'Backorders' configuration config." stepKey="reindexCacheFlushAfterFillBackordersConfigComment"/>
-        <magentoCLI command="indexer:reindex" stepKey="performReindexAfterFillBackordersConfig"/>
-        <magentoCLI command="cache:flush" stepKey="cleanCacheAfterFillBackordersConfig"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterFillBackordersConfig">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterFillBackordersConfig">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
          <!--Assign source to product, and save the product-->
         <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPage"/>
@@ -187,8 +191,12 @@
             <comment userInput="Fill config 'Backorders'." stepKey="fillConfigComment1"/>
             <magentoCLI command="config:set cataloginventory/item_options/backorders 0" stepKey="fillDefaultBackordersConfigValue1"/>
             <comment userInput="Perform reindex and cache flush after fill 'Backorders' configuration config." stepKey="reindexCacheFlushAfterFillBackordersConfigComment1"/>
-            <magentoCLI command="indexer:reindex" stepKey="performReindexAfterFillBackordersConfig1"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCacheAfterFillBackordersConfig1"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterFillBackordersConfig1">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterFillBackordersConfig1">
+                <argument name="tags" value=""/>
+            </actionGroup>
 
             <!--Delete the created products and catagory.-->
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
@@ -210,7 +218,9 @@
                 <argument name="sourceCode" value="$source.source[source_code]$"/>
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
     </test>
 </tests>

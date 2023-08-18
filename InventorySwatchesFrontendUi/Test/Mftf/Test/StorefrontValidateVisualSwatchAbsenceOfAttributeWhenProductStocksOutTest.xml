@@ -9,8 +9,8 @@
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="StorefrontValidateVisualSwatchAbsenceOfAttributeWhenProductStocksOutTest">
         <annotations>
-            <features value="Configurable Product With Swached attribute"/>
-            <stories value="Configurable Product With Swached attribute when the product option stocks out"/>
+            <features value="Configurable Product With Swatch attribute"/>
+            <stories value="Configurable Product With Swatch attribute when the product option stocks out"/>
             <title value="Visual swatch attribute option of Configurable product on Test stock not visible after order placement with all it's quantity"/>
             <description value="Visual swatch attribute option of Configurable product on Test stock not visible after order placement with all it's quantity"/>
             <testCaseId value="AC-6570"/>
@@ -51,6 +51,7 @@
                 <argument name="productAttributeLabel" value="{{visualSwatchAttribute.default_label}}"/>
             </actionGroup>
             <!-- Delete the created customer -->
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
             <actionGroup ref="AdminDeleteStockActionGroup" stepKey="deleteCreatedStock">
                 <argument name="stockName" value="{{BasicMsiStock1.name}}"/>
@@ -126,7 +127,8 @@
         <!--Fill the required attribute data associated with product-->
         <click selector="{{AdminCreateProductConfigurationsPanel.applySingleQuantityToEachSkus}}" stepKey="clickOnApplySingleQuantityToEachSku"/>
         <click selector="{{AdminConfigurableProductAssignSourcesSlideOut.assignSources}}" stepKey="openSelectSourcesModalWindow"/>
-        <click selector="{{AdminDataGridHeaderSection.clearFilters}}" stepKey="clearAttributeSearchFilter"/>
+        <waitForPageLoad stepKey="waitForAssignSources"/>
+        <conditionalClick selector="{{AdminConfigurableProductAssignSourcesSlideOut.clearFilters}}" dependentSelector="{{AdminConfigurableProductAssignSourcesSlideOut.clearFilters}}" visible="true" stepKey="clearAttributeSearchFilter"/>
         <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchAdditionalSourceByNameForAssignment">
             <argument name="keyword" value="$$createSource1.source[name]$$"/>
         </actionGroup>
@@ -142,8 +144,12 @@
         <click selector="{{AdminChooseAffectedAttributeSetPopup.confirm}}" stepKey="clickOnConfirmInPopup"/>
         <seeElement selector="{{AdminMessagesSection.success}}" stepKey="seeSaveProductMessage"/>
         <!--Do reindex and flush because of above created data to reflect in the frontend-->
-        <magentoCLI stepKey="reindexForAssignedSources1" command="indexer:reindex"/>
-        <magentoCLI stepKey="flushCacheForAssignedSources1" command="cache:flush"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexForAssignedSources1">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCacheForAssignedSources1">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <!--Do the validation in the front end-->
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginCustomer">
             <argument name="Customer" value="$$createCustomer$$" />
@@ -171,8 +177,12 @@
         <actionGroup ref="StorefrontClickProceedToCheckoutActionGroup" stepKey="clickProceedToCheckout"/>
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="placeOrder"/>
         <!--Do reindex and flush because of after the order placement, to reflect in the frontend with updated quantity-->
-        <magentoCLI stepKey="reindexForAssignedSources" command="indexer:reindex"/>
-        <magentoCLI stepKey="flushCacheForAssignedSources" command="cache:flush"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexForAssignedSources">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCacheForAssignedSources">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <!-- Go to the product page and see text swatch options -->
         <amOnPage url="{{ApiConfigurableProduct.urlKey}}.html" stepKey="amOnProductPage2"/>
         <waitForPageLoad stepKey="waitForProductPage2"/>

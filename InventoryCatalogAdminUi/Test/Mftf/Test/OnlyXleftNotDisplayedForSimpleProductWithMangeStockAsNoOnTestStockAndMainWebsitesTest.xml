@@ -27,8 +27,12 @@
         <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
       </actionGroup>
       <magentoCLI command="config:set cataloginventory/options/stock_threshold_qty 5" stepKey="setStockThresholdValueTo5"/>
-      <magentoCLI stepKey="reindexPostSettingTheMainWebsiteToDefaultStock" command="indexer:reindex"/>
-      <magentoCLI stepKey="flushCachePostSettingTheMainWebsiteToDefaultStock" command="cache:flush"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexPostSettingTheMainWebsiteToDefaultStock">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCachePostSettingTheMainWebsiteToDefaultStock">
+            <argument name="tags" value=""/>
+        </actionGroup>
     </before>
     <after>
       <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
@@ -42,8 +46,12 @@
       </actionGroup>
       <deleteData createDataKey="createStock" stepKey="deleteStock"/>
       <magentoCLI command="config:set {{CatalogInventoryOptionsOnlyXleftThreshold.path}} {{CatalogInventoryOptionsOnlyXleftThreshold.value}}" stepKey="removedStockThresholdQty"/>
-      <magentoCLI stepKey="reindexAfterDeletingTheStock" command="indexer:reindex"/>
-      <magentoCLI stepKey="flushCacheAfterDeletingTheStock" command="cache:flush"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexAfterDeletingTheStock">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCacheAfterDeletingTheStock">
+            <argument name="tags" value=""/>
+        </actionGroup>
     </after>
 
     <!-- Step2: Create the Subcategory -->
@@ -78,8 +86,12 @@
     <fillField  userInput="2" selector="{{AdminProductFormSection.assignedSourcesQty}}" stepKey="setQtyForAssignedSources"/>
     <click selector="{{AdminProductFormSection.save}}" stepKey="clickOnSaveButton"/>
     <see userInput="You saved the product." stepKey="saveSuccessfulForManageStockAsYes"/>
-    <magentoCLI stepKey="reindexPostAssigningTheSource" command="indexer:reindex"/>
-    <magentoCLI stepKey="flushCachePostAssigningTheSource" command="cache:flush"/>
+      <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexPostAssigningTheSource">
+          <argument name="indices" value=""/>
+      </actionGroup>
+      <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCachePostAssigningTheSource">
+          <argument name="tags" value=""/>
+      </actionGroup>
     <!-- Verify with Manage Stock set as Yes for the product -->
     <actionGroup ref="StorefrontOpenProductPageActionGroup" stepKey="openProductPage">
       <argument name="productUrl" value="$createProduct.custom_attributes[url_key]$"/>
@@ -100,8 +112,12 @@
     <click selector="{{AdminProductFormAdvancedInventorySection.doneButton}}" stepKey="clickOnAdvancedInventoryDoneButton"/>
     <click selector="{{AdminProductFormSection.save}}" stepKey="clickOnSaveButtonPostSettingManageStockAsNo"/>
     <see userInput="You saved the product." stepKey="saveSuccessfulForManageStockAsNo"/>
-    <magentoCLI stepKey="reindexForSettingManageStockAsNo" command="indexer:reindex"/>
-    <magentoCLI stepKey="flushCacheForSettingManageStockAsNo" command="cache:flush"/>
+      <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexForSettingManageStockAsNo">
+          <argument name="indices" value=""/>
+      </actionGroup>
+      <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCacheForSettingManageStockAsNo">
+          <argument name="tags" value=""/>
+      </actionGroup>
     <!-- Verify with Manage Stock set as No for the product -->
     <actionGroup ref="StorefrontOpenProductPageActionGroup" stepKey="openProductPageOnStorefrontForManageStockAsNo">
       <argument name="productUrl" value="$createProduct.custom_attributes[url_key]$"/>
