@@ -45,7 +45,7 @@ class UpdateLegacyStockStatus
     public function execute(array $dataForUpdate): void
     {
         $connection = $this->resource->getConnection();
-        $tableName = $connection->getTableName('cataloginventory_stock_status');
+        $tableName = $this->resource->getTableName('cataloginventory_stock_status');
         $productIds = $this->getProductIdsBySkus->execute(array_keys($dataForUpdate));
         foreach ($dataForUpdate as $sku => $isSalable) {
             $connection->update(
