@@ -56,8 +56,12 @@
         <!-- Step1 Create the stock from UI and then assign the sources -->
         <createData entity="BasicMsiStock1" stepKey="createStock"/>
 
-        <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
-        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <!-- Step2 Create the 22 sources through API -->
         <createData entity="FullSource1" stepKey="createTestSource1"/>

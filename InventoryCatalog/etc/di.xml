@@ -207,4 +207,7 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\CatalogInventory\Observer\ParentItemProcessorInterface">
+        <plugin name="skip_parent_stock_processors" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Observer\ParentItemProcessor\SkipParentItemProcessorOnMultipleSourceMode"/>
+    </type>
 </config>

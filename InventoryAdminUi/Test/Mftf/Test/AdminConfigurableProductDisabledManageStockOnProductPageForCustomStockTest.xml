@@ -73,6 +73,7 @@
         </actionGroup>
 
         <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$category.name$$]"  stepKey="searchAndSelectCategory"/>
+        <waitForElementClickable selector="{{AdminProductFormConfigurationsSection.createConfigurations}}" stepKey="waitForConfigurationsButton" />
         <click selector="{{AdminProductFormConfigurationsSection.createConfigurations}}" stepKey="clickOnTheCreateConfigurationsButton"/>
         <waitForElementVisible selector="{{AdminConfigurableProductSelectAttributesSlideOut.grid}}" time="30" stepKey="waitForGridPresents"/>
 
@@ -165,8 +166,12 @@
                stepKey="clickOnDoneToSetManageStockToNoForRed"/>
         <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseToSetManageStockToNoForRed"/>
 
-        <magentoCLI command="indexer:reindex" stepKey="performReindexAfterDisableManageStock1"/>
-        <magentoCLI command="cache:flush" stepKey="cleanCacheAfterDisableManageStock1"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterDisableManageStock1">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterDisableManageStock1">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <comment userInput="Check, configurable product back to category page and has 'In Stock' status on product view page." stepKey="checkConfigurableProductBackOnStorefront"/>
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="checkConfigurableIsBackToCategoryPage">
