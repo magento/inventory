@@ -146,7 +146,7 @@
         <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$orderNumber}"/>
         </actionGroup>
-        <!--Verify ship is not present and Notify Order Is Ready For Pickup -->
+        <!--Verify ship is not present and Notify Order Is Ready For Pickup is present-->
         <actionGroup ref="AdminAssertOrderWithStorePickupShippingMethodActionGroup" stepKey="verifyShippingInformation">
             <argument name="sourceName" value="$createSource1.source[name]$"/>
         </actionGroup>
