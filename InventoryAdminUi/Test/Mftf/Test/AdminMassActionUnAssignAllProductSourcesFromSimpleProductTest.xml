@@ -54,10 +54,10 @@
             <createData entity="SimpleProduct" stepKey="createFirstSimpleProduct">
                 <requiredEntity createDataKey="createCategory"/>
             </createData>
-            <createData entity="SimpleProduct" stepKey="createSecondSimpleProduct">
+            <createData entity="SimpleMsiProductWithSKU1234" stepKey="createSecondSimpleProduct">
                 <requiredEntity createDataKey="createCategory"/>
             </createData>
-            <createData entity="SimpleProduct" stepKey="createThirdSimpleProduct">
+            <createData entity="SimpleMsiProductWithSKU01234" stepKey="createThirdSimpleProduct">
                 <requiredEntity createDataKey="createCategory"/>
             </createData>
             <createData entity="SimpleProduct" stepKey="createFourthSimpleProduct">
