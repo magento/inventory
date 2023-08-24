@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
@@ -88,8 +89,12 @@ class ProductAlertTest extends TestCase
      */
     public function testAlertsBothSourceItemsOutOfStock()
     {
+        $maxId = $this->getMaxBulkOperationId();
         $this->observer->process();
-        $this->waitingForProcessAlertsByConsumer(2);
+        $bulkUUIDs = $this->getBulkOperationUUIDsAfterId($maxId);
+        $this->assertEquals(2, count($bulkUUIDs), 'There is more(less) than two bulk operation created!');
+
+        $this->waitingForProcessAlertsByConsumer(2, $bulkUUIDs);
 
         $stockCollection = $this->stockCollectionFactory->create();
         $count = 0;
@@ -122,6 +127,7 @@ class ProductAlertTest extends TestCase
      */
     public function testAlertsOneSourceItemInStock()
     {
+        $maxId = $this->getMaxBulkOperationId();
         $this->observer->process();
         $stockCollection = $this->stockCollectionFactory->create();
         $count = 0;
@@ -133,7 +139,10 @@ class ProductAlertTest extends TestCase
 
         $this->changeProductIsInStock('eu-2', 1);
         $this->observer->process();
-        $this->waitingForProcessAlertsByConsumer(4);
+
+        $bulkUUIDs = $this->getBulkOperationUUIDsAfterId($maxId);
+        $this->assertEquals(4, count($bulkUUIDs), 'There is more(less) than two bulk operation created!');
+        $this->waitingForProcessAlertsByConsumer(4, $bulkUUIDs);
 
         $stockCollection = $this->stockCollectionFactory->create();
         $count = 0;
@@ -168,8 +177,25 @@ class ProductAlertTest extends TestCase
     {
         $this->changeProductIsInStock('eu-2', 1);
         $this->changeProductIsInStock('default', 1);
+
+        $maxId = $this->getMaxBulkOperationId();
         $this->observer->process();
-        $this->waitingForProcessAlertsByConsumer(2);
+
+        $bulkUUIDs = $this->getBulkOperationUUIDsAfterId($maxId);
+        $this->assertEquals(2, count($bulkUUIDs), 'There is more(less) than two bulk operation created!');
+
+        $this->waitingForProcessAlertsByConsumer(2, $bulkUUIDs);
+
+        $magentoOperations = $this->getMagentoOperationsByBulkUUIDs($bulkUUIDs);
+        $this->assertEquals(2, count($magentoOperations), 'There is more(less) than two bulk operation processed!');
+
+        foreach ($magentoOperations as $row) {
+            $this->assertEquals(
+                'Product alerts are sent successfully.',
+                $row['result_message'],
+                'Product alert didnt sent, error: ' . $row['result_message']
+            );
+        }
 
         $stockCollection = $this->stockCollectionFactory->create();
         $count = 0;
@@ -234,47 +260,99 @@ class ProductAlertTest extends TestCase
      * Waiting for execute consumer
      *
      * @param int $maxMessageCount
+     * @param array $bulkUUIDs
      * @return void
      * @throws PreconditionFailedException
      */
-    private function waitingForProcessAlertsByConsumer(int $maxMessageCount): void
+    private function waitingForProcessAlertsByConsumer(int $maxMessageCount, array $bulkUUIDs): void
     {
         $this->startConsumer($maxMessageCount);
 
         sleep(30); // timeout to processing Magento queue
 
         $this->publisherConsumerController->waitForAsynchronousResult(
-            function () {
-                return $this->isProcessedStockAlerts();
+            function ($bulkUUIDs) {
+                return $this->isProcessedStockAlerts($bulkUUIDs);
             },
-            []
+            [$bulkUUIDs]
         );
     }
 
     /**
      * Is has been already processed stock alerts
      *
+     * @param array $bulkUUIDs
      * @return bool
      */
-    private function isProcessedStockAlerts(): bool
+    private function isProcessedStockAlerts(array $bulkUUIDs): bool
     {
         $collection = $this->stockCollectionFactory->create();
         $connection = $collection->getConnection();
         $select = $connection->select();
         $select->from(
-            ['status_table' => $connection->getTableName('queue_message_status')],
-            [new \Zend_Db_Expr('1')]
-        )->join(
-            ['queue_table' => $connection->getTableName('queue')],
-            'status_table.queue_id = queue_table.id',
-            []
+            ['t' => $connection->getTableName('magento_operation')],
+            [new \Zend_Db_Expr('COUNT(*)')]
         )->where(
-            "queue_table.name = 'product_alert.queue'"
-        )->where(
-            'status_table.status IN (?)',
-            [QueueManagement::MESSAGE_STATUS_NEW, QueueManagement::MESSAGE_STATUS_IN_PROGRESS]
-        )->limit(1);
+            't.bulk_uuid IN (?)',
+            $bulkUUIDs
+        );
 
-        return !(bool)$connection->fetchOne($select);
+        return (int)$connection->fetchOne($select) === count($bulkUUIDs);
+    }
+
+    /**
+     * Get current max ID of magento_bulk
+     * @return int
+     */
+    private function getMaxBulkOperationId(): int
+    {
+        $collection = $this->stockCollectionFactory->create();
+        $connection = $collection->getConnection();
+        $select = $connection->select();
+        $select->from(
+            ['t' => $connection->getTableName('magento_bulk')],
+            [new \Zend_Db_Expr('MAX(t.id)')]
+        );
+
+        return (int)$connection->fetchOne($select);
+    }
+
+    /**
+     * Get list of UUIDs from rows where id > maxId
+     *
+     * @param int $maxId
+     * @return array
+     */
+    private function getBulkOperationUUIDsAfterId(int $maxId): array
+    {
+        $collection = $this->stockCollectionFactory->create();
+        $connection = $collection->getConnection();
+        $select = $connection->select();
+        $select->from(
+            ['t' => $connection->getTableName('magento_bulk')],
+            ['uuid']
+        )->where('t.id > ?', $maxId);
+
+        return $connection->fetchCol($select);
+    }
+
+    /**
+     * Get list of Magento Operations by its UUIDs
+     *
+     * @param array $bulkUUIDs
+     * @return array
+     */
+    private function getMagentoOperationsByBulkUUIDs(array $bulkUUIDs): array
+    {
+        $collection = $this->stockCollectionFactory->create();
+        $connection = $collection->getConnection();
+        $select = $connection->select();
+        $select->from(
+            ['t' => $connection->getTableName('magento_operation')]
+        )->where(
+            't.bulk_uuid IN (?)',
+            $bulkUUIDs
+        );
+        return $connection->fetchAll($select);
     }
 }

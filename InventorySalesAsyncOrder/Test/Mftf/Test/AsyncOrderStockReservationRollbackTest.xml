@@ -34,6 +34,7 @@
             <createData entity="DisableFreeShippingConfig" stepKey="disableFreeShippingConfig"/>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
             <deleteData createDataKey="createProduct" stepKey="deleteProduct"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <actionGroup ref="DeleteCustomerByEmailActionGroup" stepKey="deleteCustomer">
                 <argument name="email" value="{{CustomerEntityOne.email}}"/>
             </actionGroup>
@@ -122,9 +123,7 @@
         <see selector="{{AdminProductGridSection.productSalableQty('1', 'Default Stock')}}" userInput="999" stepKey="verifyStockQuantity"/>
 
         <!-- Delete Cart Price Rule -->
-        <actionGroup ref="AdminDeleteCartPriceRuleActionGroup" stepKey="deleteCartPriceRule">
-            <argument name="ruleName" value="ApiSalesRule"/>
-        </actionGroup>
+        <actionGroup ref="AdminCartPriceRuleDeleteAllActionGroup" stepKey="deleteCartPriceRule"/>
 
         <!-- Trigger Async Place Order Consumer to Process the Order -->
         <actionGroup ref="CliConsumerStartActionGroup" stepKey="processFirstOrder">
