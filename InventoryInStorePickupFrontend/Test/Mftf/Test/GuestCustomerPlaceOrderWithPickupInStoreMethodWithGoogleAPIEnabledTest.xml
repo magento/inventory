@@ -134,10 +134,8 @@
         <actionGroup ref="StorefrontPickInStoreNavigateToPaymentActionGroup" stepKey="navigateToPaymentStep"/>
         <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="clickCheckMoneyOrderPayment"/>
         <!--Fill Shipping address -->
-        <actionGroup ref="StorefrontPickInStoreGuestCustomerFillBillingAddressActionGroup" stepKey="fillAddress">
-            <argument name="customerVar" value="Simple_US_Customer"/>
-            <argument name="customerAddressVar" value="US_Address_TX"/>
-        </actionGroup>
+        <click selector="{{StorefrontPickInStoreModalSection.shipBtn($$createSource1.source[name]$$)}}" stepKey="clickShipButton"/>
+        <waitForPageLoad stepKey="waitForSourceSelection"/>
         <!--Click on place order -->
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
         <waitForElement selector="{{CheckoutSuccessMainSection.orderNumber}}" stepKey="waitForOrderNumber"/>
