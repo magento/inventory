@@ -126,10 +126,8 @@
         <actionGroup ref="StorefrontPickInStoreFillCustomerEmail" stepKey="fillCustomerEmail"/>
         <!-- Click on select Store and select a store-->
         <actionGroup ref="StorefrontPickInStoreNavigateToSelectStoreActionGroup" stepKey="navigateToSelectStores"/>
-        <actionGroup ref="StorefrontPickInStoreSelectSourceActionGroup" stepKey="selectSource">
-            <argument name="searchString" value="{{CulverStorePickupEnabledSource2.city}}"/>
-            <argument name="sourceName" value="$createSource1.source[name]$"/>
-        </actionGroup>
+        <click selector="{{StorefrontPickInStoreModalSection.shipBtn($$createSource1.source[name]$$)}}" stepKey="clickShipButton"/>
+        <waitForPageLoad stepKey="waitForSourceSelection"/>
         <!--Navigate to Payment-->
         <actionGroup ref="StorefrontPickInStoreNavigateToPaymentActionGroup" stepKey="navigateToPaymentStep"/>
         <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="clickCheckMoneyOrderPayment"/>
