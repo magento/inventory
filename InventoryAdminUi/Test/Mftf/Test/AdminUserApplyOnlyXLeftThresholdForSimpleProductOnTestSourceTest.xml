@@ -25,8 +25,12 @@
             <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="magentoCLI1"/>
 
             <comment userInput="Perform reindex and cache flush after fill 'Only X left Threshold' configuration config." stepKey="reindexCacheFlushAfterFillThresholdConfigComment"/>
-            <magentoCLI command="indexer:reindex" stepKey="performReindexAfterFillThresholdConfig"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCacheAfterFillThresholdConfig"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterFillThresholdConfig">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterFillThresholdConfig">
+                <argument name="tags" value=""/>
+            </actionGroup>
 
             <createData entity="_minimalSource" stepKey="createSource"/>
             <createData entity="BasicMsiStock1" stepKey="createStock"/>
@@ -78,8 +82,12 @@
             <magentoCLI command="config:set cataloginventory/options/stock_threshold_qty 0" stepKey="revertConfigValue"/>
 
             <comment userInput="Perform reindex and cache flush after revert 'Only X left Threshold' configuration config." stepKey="reindexCacheFlushAfterFillThresholdConfigComment"/>
-            <magentoCLI command="indexer:reindex" stepKey="performReindexAfterRevertThresholdConfig"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCacheAfterRevertThresholdConfig"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterRevertThresholdConfig">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterRevertThresholdConfig">
+                <argument name="tags" value=""/>
+            </actionGroup>
 
             <comment userInput="Assign main website to default stock" stepKey="assignChannelToStockComment"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPageToAssignMainWebsiteToDefaultStock"/>
@@ -100,9 +108,12 @@
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
             <deleteData createDataKey="createSimpleProduct" stepKey="deleteProduct"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="createStock" stepKey="deleteStock"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <comment userInput="Customer login to storefront." stepKey="customerLoginToStorefrontComment"/>

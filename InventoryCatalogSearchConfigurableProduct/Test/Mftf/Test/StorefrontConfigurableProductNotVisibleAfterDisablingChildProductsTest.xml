@@ -95,7 +95,12 @@
                 <argument name="sourceCode" value="$createSource.source[source_code]$"/>
             </actionGroup>
             <actionGroup ref="SaveProductFormActionGroup" stepKey="saveSecondChildProduct"/>
-            <actionGroup ref="AdminReindexAndFlushCache" stepKey="reindexAndFlushCache"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexAndFlushCache">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </before>
         <after>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
@@ -113,7 +118,12 @@
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <!-- Reindex invalidated indices after product attribute has been created/deleted -->
-            <magentoCron groups="index" stepKey="reindexInvalidatedIndices"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexInvalidatedIndices">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </after>
         <!--Verify product is visible on storefront.-->
         <actionGroup ref="StorefrontNavigateCategoryPageActionGroup" stepKey="openCategoryPageOnFrontend">

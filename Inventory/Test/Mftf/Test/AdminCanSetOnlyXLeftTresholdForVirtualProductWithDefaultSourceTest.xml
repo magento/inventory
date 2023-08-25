@@ -35,8 +35,12 @@
             </createData>
 
             <magentoCLI command="config:set cataloginventory/options/stock_threshold_qty 0" stepKey="setMinQtyToDefaultValue1"/>
-            <magentoCLI command="indexer:reindex" stepKey="reindex1"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache1"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex1">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache1">
+                <argument name="tags" value=""/>
+            </actionGroup>
 
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin1"/>
 
@@ -52,8 +56,12 @@
             <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveDefaultStock"/>
 
             <comment userInput="Perform reindex and cache flush after assign default stock to main website." stepKey="reindexCacheFlushAfterAssignDefaultStockToMainWebsite"/>
-            <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </before>
         <after>
             <!--Assign Default Stock to Default Website.-->
@@ -80,8 +88,12 @@
         <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose1"/>
 
         <magentoCLI command="config:set cataloginventory/options/stock_threshold_qty 5" stepKey="setMinQtyToDefaultValue1"/>
-        <magentoCLI command="indexer:reindex" stepKey="reindex1"/>
-        <magentoCLI command="cache:flush" stepKey="flushCache1"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex1">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache1">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
             <argument name="Customer" value="$$customer$$"/>
@@ -108,7 +120,9 @@
         <click selector="{{AdminOrderFormActionSection.SubmitOrder}}" stepKey="clickSubmitOrder"/>
         <seeInCurrentUrl url="{{AdminOrderDetailsPage.url}}" stepKey="seeViewOrderPage"/>
 
-        <magentoCLI command="cache:flush" stepKey="flushCache2"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache2">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <amOnPage url="/$$virtualProduct1.product[sku]$$.html" stepKey="amOnProductPage2"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad4"/>

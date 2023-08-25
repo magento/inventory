@@ -102,6 +102,7 @@
         </before>
         <after>
             <remove keyForRemoval="deleteProduct"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="configurableChildProduct1" stepKey="deleteConfigurableChildProduct1"/>
             <deleteData createDataKey="configurableProduct1" stepKey="deleteConfigurableProduct1"/>
@@ -125,7 +126,9 @@
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
 
             <!-- Reindex invalidated indices after product attribute has been created/deleted -->
-            <magentoCron groups="index" stepKey="reindexInvalidatedIndices"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexInvalidatedIndices">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <remove keyForRemoval="quickOrderAddProductToCart"/>
@@ -135,6 +138,7 @@
         <waitForElementVisible selector="{{StorefrontQuickOrderSection.addToCart}}" stepKey="waitAddToCartProduct1BecomeEnabled"/>
         <click selector="{{StorefrontQuickOrderSection.addToCart}}" stepKey="clickAddToCartProduct1CorrectItem"/>
         <click selector="{{CheckoutCartProductSection.productOptionsLink}}" stepKey="configureConfigurableProduct1"/>
+        <waitForElement selector="{{StorefrontProductInfoMainSection.productOptionSelect($configurableProductAttribute.attribute[frontend_labels][0][label]$)}}" stepKey="waitForOption1" />
         <selectOption selector="{{StorefrontProductInfoMainSection.productOptionSelect($configurableProductAttribute.attribute[frontend_labels][0][label]$)}}" userInput="$getConfigAttributeOption.value$" stepKey="selectOption1"/>
         <fillField selector="{{StorefrontProductPageSection.qtyInput}}" userInput="{{tenPiecesAddToCart.value}}" stepKey="fillProduct1Quantity"/>
         <click selector="{{StorefrontCustomerOrderBySkuSection.updateCart}}" stepKey="clickOnAddProduct1ToCartButton"/>
@@ -145,6 +149,7 @@
         <waitForElementVisible selector="{{StorefrontQuickOrderSection.addToCart}}" stepKey="waitAddToCartProduct2BecomeEnabled"/>
         <click selector="{{StorefrontQuickOrderSection.addToCart}}" stepKey="clickAddToCartProduct2CorrectItem"/>
         <click selector="{{CheckoutCartProductSection.productOptionsLink}}" stepKey="configureConfigurableProduct2"/>
+        <waitForElement selector="{{StorefrontProductInfoMainSection.productOptionSelect($configurableProductAttribute.attribute[frontend_labels][0][label]$)}}" stepKey="waitForOption2" />
         <selectOption selector="{{StorefrontProductInfoMainSection.productOptionSelect($configurableProductAttribute.attribute[frontend_labels][0][label]$)}}" userInput="$getConfigAttributeOption.value$" stepKey="selectOption2"/>
         <fillField selector="{{StorefrontProductPageSection.qtyInput}}" userInput="{{tenPiecesAddToCart.value}}" stepKey="fillProduct2Quantity"/>
         <click selector="{{StorefrontCustomerOrderBySkuSection.updateCart}}" stepKey="clickOnAddProduct2ToCartButton"/>
