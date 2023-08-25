@@ -11,6 +11,7 @@
         <annotations>
             <description>Fill guest customer billing address for store pickup shipping method.</description>
         </annotations>
+        <remove keyForRemoval="waitForEmailField"/>
         <remove keyForRemoval="enterEmail"/>
         <click selector="{{CheckoutPaymentSection.update}}" stepKey="updateAddress"/>
         <waitForLoadingMaskToDisappear stepKey="waitForAddressUpdate"/>
