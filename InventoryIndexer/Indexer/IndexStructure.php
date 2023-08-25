@@ -23,9 +23,9 @@ class IndexStructure implements IndexStructureInterface
     /**
      * Constants for represent fields in index table
      */
-    const SKU = 'sku';
-    const QUANTITY = 'quantity';
-    const IS_SALABLE = 'is_salable';
+    public const SKU = 'sku';
+    public const QUANTITY = 'quantity';
+    public const IS_SALABLE = 'is_salable';
     /**#@-*/
 
     /**
@@ -105,7 +105,7 @@ class IndexStructure implements IndexStructureInterface
                 Table::OPTION_UNSIGNED => false,
                 Table::OPTION_NULLABLE => false,
                 Table::OPTION_DEFAULT => 0,
-                Table::OPTION_PRECISION => 10,
+                Table::OPTION_PRECISION => 12,
                 Table::OPTION_SCALE => 4,
             ],
             'Quantity'

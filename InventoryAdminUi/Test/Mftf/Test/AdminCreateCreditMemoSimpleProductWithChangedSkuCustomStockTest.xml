@@ -43,13 +43,18 @@
             </actionGroup>
             <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
             <magentoCLI command="config:set {{EnableInventorySynchronization.path}} {{EnableInventorySynchronization.value}}" stepKey="enableInventorySynchronization"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </before>
         <after>
             <!--Delete test data.-->
             <magentoCLI command="config:set {{DisableInventorySynchronization.path}} {{DisableInventorySynchronization.value}}" stepKey="disableInventorySynchronization"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <actionGroup ref="DeleteProductByNameActionGroup" stepKey="deleteProduct">
                 <argument name="name" value="$product.name$"/>
@@ -65,7 +70,9 @@
             <!--Disable source.-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
-            <magentoCron groups="index" stepKey="reindex1"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex1">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!--Add product to cart.-->

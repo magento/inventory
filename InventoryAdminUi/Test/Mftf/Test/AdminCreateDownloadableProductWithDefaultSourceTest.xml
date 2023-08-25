@@ -42,8 +42,12 @@
                           stepKey="selectWebsiteAsSalesChannel"/>
             <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveDefaultStock"/>
             <comment userInput="Perform reindex and cache flush after assign default stock to main website." stepKey="reindexCacheFlushAfterAssignDefaultStockToMainWebsite"/>
-            <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </before>
         <after>
             <magentoCLI stepKey="removeDownloadableDomain" command="downloadable:domains:remove static.magento.com"/>
@@ -53,7 +57,9 @@
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
             <deleteData createDataKey="downloadableProduct1" stepKey="deleteProduct"/>
             <deleteData createDataKey="simpleCategory1" stepKey="deleteCategory1"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="adminProductIndexPageAdd"/>

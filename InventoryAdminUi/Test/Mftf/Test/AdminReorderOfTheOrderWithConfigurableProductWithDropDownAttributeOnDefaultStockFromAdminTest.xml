@@ -57,7 +57,9 @@
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </before>
         <after>
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
@@ -79,6 +81,7 @@
             <deleteData createDataKey="createFirstConfigProductAttribute" stepKey="deleteFirstConfigProductAttribute"/>
             <deleteData createDataKey="createSecondConfigProductAttribute" stepKey="deleteSecondConfigProductAttribute"/>
             <deleteData createDataKey="simpleCategory" stepKey="deleteCategory"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
 
