@@ -97,8 +97,12 @@
             </actionGroup>
             <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseGroupedProduct"/>
             <!-- Reindex and Flush Magento as sources and stocks were updated for products-->
-            <magentoCLI stepKey="reindex" command="indexer:reindex"/>
-            <magentoCLI stepKey="flushCache" command="cache:flush"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </before>
         <after>
             <!--Delete created data-->
@@ -146,8 +150,12 @@
         <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="In Stock" stepKey="selectStockStatus1"/>
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveGroupedProduct2"/>
         <!-- Reindex and flush cache as updating status-->
-        <magentoCLI stepKey="reindex" command="indexer:reindex"/>
-        <magentoCLI stepKey="flushCache" command="cache:flush"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="goToStoreFront2"/>
         <actionGroup ref="StorefrontGoToCategoryPageActionGroup" stepKey="openEnabledCategory2">
             <argument name="categoryName" value="$$createCategory.name$$"/>

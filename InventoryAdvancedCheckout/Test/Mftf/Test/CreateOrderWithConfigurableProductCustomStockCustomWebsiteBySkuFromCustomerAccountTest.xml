@@ -51,7 +51,9 @@
                 <argument name="stockName" value="$$additionalStock.stock[name]$$"/>
                 <argument name="websiteName" value="{{customWebsite.name}}"/>
             </actionGroup>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <!--Assign configurable to additional website.-->
             <amOnPage url="{{AdminProductEditPage.url($$createConfigProduct.id$$)}}" stepKey="openConfigurableProductEditPage"/>
             <actionGroup ref="AddWebsiteToProductActionGroup" stepKey="assignConfigurableProductToAdditionalWebsite">
@@ -95,7 +97,9 @@
             <deleteData createDataKey="additionalStock" stepKey="deleteStock" before="deleteConfigChildProductOne"/>
             <!--Revert "Add Store Code To URL" configuration.-->
             <magentoCLI command="config:set {{StorefrontDisableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlDisable" after="deleteStock"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <remove keyForRemoval="loginAsCustomer"/>

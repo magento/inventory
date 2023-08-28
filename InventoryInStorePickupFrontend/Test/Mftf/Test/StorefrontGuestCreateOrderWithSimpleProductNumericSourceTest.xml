@@ -27,7 +27,12 @@
             <magentoCLI command="config:set {{EnableInStorePickup.path}} {{EnableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
             <!--Download tables for 'US'-->
             <magentoCLI command="{{ImportTables.path}} {{USTable.value}}" stepKey="downloadTables"/>
-            <actionGroup ref="AdminReindexAndFlushCache" stepKey="ReindexAndCache"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="ReindexAndCache">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
             <!--Create test data.-->
             <createData entity="PickupNumericSource" stepKey="numericSource"/>
             <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
@@ -65,7 +70,12 @@
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <deleteData createDataKey="stock" stepKey="deleteStock"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </after>
         <!--Add product to cart.-->
         <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addProductToCart">
