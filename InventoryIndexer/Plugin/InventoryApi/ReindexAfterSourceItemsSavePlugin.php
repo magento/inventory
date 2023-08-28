@@ -7,15 +7,13 @@ declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Plugin\InventoryApi;
 
+use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryIndexer\Indexer\SourceItem\GetSourceItemIds;
 use Magento\InventoryIndexer\Indexer\SourceItem\SourceItemIndexer;
 
-/**
- * Reindex after source items save plugin
- */
 class ReindexAfterSourceItemsSavePlugin
 {
     /**
@@ -49,10 +47,13 @@ class ReindexAfterSourceItemsSavePlugin
     }
 
     /**
+     * Run reindex process for saved source items
+     *
      * @param SourceItemsSaveInterface $subject
      * @param void $result
      * @param SourceItemInterface[] $sourceItems
      * @return void
+     * @throws LocalizedException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterExecute(
@@ -67,6 +68,12 @@ class ReindexAfterSourceItemsSavePlugin
         }
     }
 
+    /**
+     * Remove items with default source
+     *
+     * @param array $sourceItems
+     * @return array
+     */
     private function sanitizeSources(array $sourceItems) : array
     {
         $result = [];
