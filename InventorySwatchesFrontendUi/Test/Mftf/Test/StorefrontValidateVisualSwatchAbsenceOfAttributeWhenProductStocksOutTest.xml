@@ -78,7 +78,7 @@
         <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$createCategory.name$$]" stepKey="fillCategory"/>
         <conditionalClick selector="{{AdminProductFormConfigurationsSection.sectionHeader}}" dependentSelector="{{AdminProductFormConfigurationsSection.createConfigurations}}" visible="false" stepKey="openConfigurationSection"/>
         <click selector="{{AdminProductFormConfigurationsSection.createConfigurations}}" stepKey="openConfigurationPanel"/>
-        <waitForElementVisible selector="{{AdminCreateProductConfigurationsPanel.createNewAttribute}}" stepKey="waitForSlideOut"/>
+        <waitForElementClickable selector="{{AdminCreateProductConfigurationsPanel.createNewAttribute}}" stepKey="waitForSlideOut"/>
         <click selector="{{AdminCreateProductConfigurationsPanel.createNewAttribute}}" stepKey="clickCreateNewAttribute"/>
         <waitForPageLoad stepKey="waitForIFrame"/>
         <!--Create a new attribute with visual swatches options-->
