@@ -46,6 +46,7 @@
 
         <comment userInput="Add bundle item." stepKey="addBundleItemComment"/>
         <conditionalClick selector="{{AdminProductFormBundleSection.bundleItemsToggle}}" dependentSelector="{{AdminProductFormBundleSection.bundleItemsToggle}}" visible="false" stepKey="conditionallyOpenSectionBundleItems"/>
+        <waitForElementClickable selector="{{AdminProductFormBundleSection.addOption}}" stepKey="waitForAddOptionClickable" />
         <click selector="{{AdminProductFormBundleSection.addOption}}" stepKey="clickAddOption"/>
         <waitForPageLoad stepKey="waitForPageLoad2"/>
         <fillField selector="{{AdminProductFormBundleSection.bundleOptionXTitle('0')}}" userInput="{{BundleProduct.optionTitle1}}" stepKey="fillOptionTitle"/>
