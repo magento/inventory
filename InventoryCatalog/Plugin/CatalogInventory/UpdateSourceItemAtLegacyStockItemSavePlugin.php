@@ -186,6 +186,7 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
      */
     private function shouldAlignDefaultSourceWithLegacy(Item $legacyStockItem): bool
     {
+        return false;
         $productSku = $this->getSkusByProductIds
             ->execute([$legacyStockItem->getProductId()])[$legacyStockItem->getProductId()];
 
