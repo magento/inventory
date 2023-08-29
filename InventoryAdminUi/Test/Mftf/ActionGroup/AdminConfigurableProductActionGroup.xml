@@ -37,7 +37,7 @@
         <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clearSourcesFilter" after="openSelectSourcesModalWindow"/>
         <fillField selector="{{AdminDataGridHeaderSection.search}}" userInput="{{sourceName}}" stepKey="fillKeywordSearchField" after="clearSourcesFilter"/>
         <click selector="{{AdminDataGridHeaderSection.submitSearch}}" stepKey="clickKeywordSearch" after="fillKeywordSearchField"/>
-        <waitForElementClickable selector="{{AdminCreateProductConfigurationsPanel.selectAllByAttribute({$grabFirstAttributeDefaultLabel})}}" stepKey="waitForCustomSourceClickable" after="clickKeywordSearch"/>
+        <waitForElementClickable selector="{{AdminGridRow.checkboxByValue(sourceName)}}" stepKey="waitForCustomSourceClickable" after="clickKeywordSearch"/>
         <click selector="{{AdminGridRow.checkboxByValue(sourceName)}}" stepKey="selectCustomSource" after="waitForCustomSourceClickable"/>
         <click selector="{{AdminConfigurableProductAssignSourcesSlideOut.done}}" stepKey="doneAssignSources" after="selectCustomSource"/>
         <fillField selector="{{AdminConfigurableProductAssignSourcesSlideOut.quantityPerSourceForMultiMode}}" userInput="100" stepKey="fillQuantityForCustomSource" after="doneAssignSources"/>
