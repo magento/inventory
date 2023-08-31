@@ -95,6 +95,7 @@
             <argument name="customerAddress" value="US_Address_NY"/>
         </actionGroup>
         <!--Select flat rate shipping method-->
+        <waitForElementClickable selector="{{CheckoutShippingMethodsSection.shippingMethodFlatRate}}" stepKey="waitForShippingMethod"/>
         <actionGroup ref="CheckoutSelectFlatRateShippingMethodActionGroup" stepKey="selectFlatRate"/>
         <!--Switch to In Pick In Store-->
         <actionGroup ref="StorefrontPickInStoreActionGroup" stepKey="pickInStore"/>
