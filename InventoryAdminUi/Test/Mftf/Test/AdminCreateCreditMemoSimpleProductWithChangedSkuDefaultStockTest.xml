@@ -37,7 +37,9 @@
             <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="setProductQuantity"/>
             <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
             <magentoCLI command="config:set {{EnableInventorySynchronization.path}} {{EnableInventorySynchronization.value}}" stepKey="enableInventorySynchronization"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
                 <argument name="tags" value="config full_page"/>
             </actionGroup>
@@ -45,16 +47,20 @@
         <after>
             <!--Delete test data.-->
             <magentoCLI command="config:set {{DisableInventorySynchronization.path}} {{DisableInventorySynchronization.value}}" stepKey="disableInventorySynchronization"/>
-            <magentoCron groups="index" stepKey="reindex"/>
-            <deleteData createDataKey="category" stepKey="deleteCategory"/>
-            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
-            <actionGroup ref="DeleteProductActionGroup" stepKey="deleteProduct">
-                <argument name="productName" value="$product.name$"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
             </actionGroup>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <!--      Deleting product with updated SKU      -->
+            <deleteData url="/V1/products/{{SimpleProduct.sku}}" stepKey="deleteProduct" />
             <!--Disable source.-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
-            <magentoCron groups="index" stepKey="reindex1"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex1">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
                 <argument name="tags" value="config full_page"/>
             </actionGroup>
@@ -79,7 +85,9 @@
             <argument name="productId" value="$product.id$"/>
         </actionGroup>
         <waitForPageLoad stepKey="waitForProductPage"/>
-        <actionGroup ref="AdminChangeProductSkuActionGroup" stepKey="changeProductSku"/>
+        <actionGroup ref="AdminChangeProductSkuActionGroup" stepKey="changeProductSku">
+            <argument name="productSku" value="{{SimpleProduct.sku}}"/>
+        </actionGroup>
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
         <actionGroup ref="CliConsumerStartActionGroup" stepKey="cleanUpSourceItems">
             <argument name="consumerName" value="inventory.source.items.cleanup"/>

@@ -66,10 +66,10 @@ class AssignStatusToProductTest extends TestCase
      */
     public function testAssignStatusToProductIfStatusParameterIsNotPassed(string $storeCode, array $productsData)
     {
-        $this->storeManager->setCurrentStore($storeCode);
+        $storeId = $this->storeManager->getStore($storeCode)->getId();
 
         foreach ($productsData as $sku => $expectedStatus) {
-            $product = $this->productRepository->get($sku);
+            $product = $this->productRepository->get($sku, false, $storeId, forceReload: true);
             /** @var Product $product */
             $this->stockHelper->assignStatusToProduct($product);
 
@@ -95,10 +95,10 @@ class AssignStatusToProductTest extends TestCase
     public function testAssignStatusToProductIfStatusParameterIsPassed(string $storeCode, array $productsData)
     {
         $expectedStatus = 1;
-        $this->storeManager->setCurrentStore($storeCode);
+        $storeId = $this->storeManager->getStore($storeCode)->getId();
 
         foreach (array_keys($productsData) as $sku) {
-            $product = $this->productRepository->get($sku);
+            $product = $this->productRepository->get($sku, false, $storeId, forceReload: true);
             /** @var Product $product */
             $this->stockHelper->assignStatusToProduct($product, $expectedStatus);
 

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StockStatusChangedForGroupedProductOnTestStockAndTestWebsiteTest">
+        <annotations>
+            <stories value="Grouped Product"/>
+            <title value="Stock status changed for Grouped Product on Test stock and Test website."/>
+            <description value="Stock status changed for Grouped Product on Test stock and Test website."/>
+            <severity value="MAJOR"/>
+            <testCaseId value="AC-6564"/>
+        </annotations>
+        <before>
+            <!--Create simple and grouped product-->
+            <createData entity="SimpleSubCategory" stepKey="createCategory"/>
+            <createData entity="SimpleProduct2" stepKey="createFirstSimpleProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <createData entity="VirtualProduct" stepKey="createVirtualProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <createData entity="ApiGroupedProduct" stepKey="createGroupedProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <createData entity="OneSimpleProductLink" stepKey="addProductOne">
+                <requiredEntity createDataKey="createGroupedProduct"/>
+                <requiredEntity createDataKey="createFirstSimpleProduct"/>
+                <requiredEntity createDataKey="createVirtualProduct"/>
+            </createData>
+            <createData entity="FullSource1" stepKey="source"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="source"/>
+            </createData>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <!-- Create website, Store and Store View -->
+            <actionGroup ref="AdminCreateWebsiteActionGroup" stepKey="createWebsite">
+                <argument name="newWebsiteName" value="{{NewWebSiteData.name}}"/>
+                <argument name="websiteCode" value="{{NewWebSiteData.code}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateNewStoreGroupActionGroup" stepKey="createNewStore">
+                <argument name="website" value="{{NewWebSiteData.name}}"/>
+                <argument name="storeGroupName" value="{{NewStoreData.name}}"/>
+                <argument name="storeGroupCode" value="{{NewStoreData.code}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateStoreViewActionGroup" stepKey="createCustomStoreView">
+                <argument name="StoreGroup" value="NewStoreData"/>
+                <argument name="customStore" value="NewStoreViewData"/>
+            </actionGroup>
+            <actionGroup ref="EnableWebUrlOptionsActionGroup" stepKey="addStoreCodeToUrls"/>
+            <!--Assign source to product.-->
+            <amOnPage url="{{AdminProductEditPage.url($$createFirstSimpleProduct.id$$)}}" stepKey="openCreateFirstSimpleProductEditPage"/>
+            <actionGroup ref="SetCategoryByNameActionGroup" stepKey="addCategoryToSimpleProduct">
+                <argument name="categoryName" value="$$createCategory.name$$"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceAndSetQty">
+                <argument name="sourceCode" value="$$source.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="SelectProductInWebsitesActionGroup" stepKey="selectWebsiteForSimpleProduct2">
+                <argument name="website" value="{{NewWebSiteData.name}}"/>
+            </actionGroup>
+            <uncheckOption selector="{{ProductInWebsitesSection.website(_defaultWebsite.name)}}" stepKey="uncheckMainWebsiteForSimpleProduct"/>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveCreateFirstSimpleProduct"/>
+            <amOnPage url="{{AdminProductEditPage.url($$createVirtualProduct.id$$)}}" stepKey="openCreateVirtualProductEditPage"/>
+            <actionGroup ref="SetCategoryByNameActionGroup" stepKey="addCategoryToVirtualProduct">
+                <argument name="categoryName" value="$$createCategory.name$$"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceAndSetQty2">
+                <argument name="sourceCode" value="$$source.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="SelectProductInWebsitesActionGroup" stepKey="selectWebsiteForVirtualProduct">
+                <argument name="website" value="{{NewWebSiteData.name}}"/>
+            </actionGroup>
+            <uncheckOption selector="{{ProductInWebsitesSection.website(_defaultWebsite.name)}}" stepKey="uncheckMainWebsiteVirtualProduct"/>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveCreateVirtualProduct"/>
+            <!-- Add one more product, update status and  qty to Grouped Product-->
+            <amOnPage url="{{AdminProductEditPage.url($$createGroupedProduct.id$$)}}" stepKey="openCreateGroupedProductEditPage"/>
+            <click selector="{{AdminProductFormGroupedProductsSection.addProductsToGroup}}" stepKey="clickAddProductsToGroup"/>
+            <waitForElementVisible selector="{{AdminAddProductsToGroupPanel.filters}}" stepKey="waitForGroupedProductModal"/>
+            <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterGroupedProductOptionsBySimple">
+                <argument name="product" value="$$createVirtualProduct$$"/>
+            </actionGroup>
+            <checkOption selector="{{AdminAddProductsToGroupPanel.firstCheckbox}}" stepKey="checkProductFilterResult"/>
+            <click selector="{{AdminAddProductsToGroupPanel.addSelectedProducts}}" stepKey="clickAddSelectedGroupProducts"/>
+            <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="Out of Stock" stepKey="selectStockStatus1"/>
+            <waitForLoadingMaskToDisappear stepKey="waitForProductsAssignedToGroupedProduct" after="clickAddSelectedGroupProducts"/>
+            <actionGroup ref="SetCategoryByNameActionGroup" stepKey="addCategoryToGroupedProduct">
+                <argument name="categoryName" value="$$createCategory.name$$"/>
+            </actionGroup>
+            <actionGroup ref="FillDefaultQuantityForLinkedToGroupProductInGridActionGroup" stepKey="fillDefaultQtyForVirtualProduct">
+                <argument name="productName" value="$$createVirtualProduct.name$$"/>
+                <argument name="qty" value="{{twoPiecesAddToCart.value}}"/>
+            </actionGroup>
+            <actionGroup ref="FillDefaultQuantityForLinkedToGroupProductInGridActionGroup" stepKey="fillDefaultQtyForSimpleProduct">
+                <argument name="productName" value="$$createFirstSimpleProduct.name$$"/>
+                <argument name="qty" value="{{twoPiecesAddToCart.value}}"/>
+            </actionGroup>
+            <!-- Add Website-->
+            <actionGroup ref="SelectProductInWebsitesActionGroup" stepKey="selectWebsiteForGroupedProduct">
+                <argument name="website" value="{{NewWebSiteData.name}}"/>
+            </actionGroup>
+            <!-- Un check Main website and make new website as default-->
+            <uncheckOption selector="{{ProductInWebsitesSection.website(_defaultWebsite.name)}}" stepKey="uncheckMainWebsiteGroupedProduct"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseGroupedProduct"/>
+            <actionGroup ref="AdminGoCreatedWebsitePageActionGroup" stepKey="openWebsiteToGetId">
+                <argument name="websiteName" value="{{NewWebSiteData.name}}"/>
+            </actionGroup>
+            <click selector="{{AdminNewWebsiteActionsSection.setAsDefault}}" stepKey="setNewWebsiteAsDefault"/>
+            <click selector="{{AdminNewWebsiteActionsSection.saveWebsite}}" stepKey="clickSaveNewWebsite"/>
+            <!-- Flush and Reindex as making changes in website-->
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
+        </before>
+        <after>
+            <!--Delete created data-->
+            <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
+            <deleteData createDataKey="createFirstSimpleProduct" stepKey="deleteFirstSimpleProduct"/>
+            <deleteData createDataKey="createVirtualProduct" stepKey="deleteVirtualProduct"/>
+            <deleteData createDataKey="createGroupedProduct" stepKey="deleteGroupedProduct"/>
+            <!-- Change main website as default-->
+            <actionGroup ref="AdminGoCreatedWebsitePageActionGroup" stepKey="openOldWebsiteToGetId">
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <click selector="{{AdminNewWebsiteActionsSection.setAsDefault}}" stepKey="setOldWebsiteAsDefault"/>
+            <click selector="{{AdminNewWebsiteActionsSection.saveWebsite}}" stepKey="clickSaveOldWebsite"/>
+            <waitForPageLoad stepKey="waitForSuccess"/>
+            <!-- Delete new website-->
+            <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite">
+                <argument name="websiteName" value="{{NewWebSiteData.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <!-- Delete Stock-->
+            <deleteData createDataKey="stock" stepKey="deleteCustomStock"/>
+            <!--Disable all sources-->
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="deleteSource"/>
+            <actionGroup ref="ResetWebUrlOptionsActionGroup" stepKey="resetUrlOption"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <!--Admin logout-->
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="adminLogout"/>
+        </after>
+        <!-- Go to Storefront and open category and assert grouped product is not present-->
+        <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="goToStoreFront"/>
+        <actionGroup ref="StorefrontGoToCategoryPageActionGroup" stepKey="openEnabledCategory">
+            <argument name="categoryName" value="$$createCategory.name$$"/>
+        </actionGroup>
+        <dontSee userInput="$$createGroupedProduct.name$$" selector="{{StorefrontCategoryMainSection.productName}}" stepKey="dontSeeGroupedProduct"/>
+        <!-- Go to admin product edit page and update the stock status-->
+        <amOnPage url="{{AdminProductEditPage.url($$createGroupedProduct.id$$)}}" stepKey="goToProductEditPage"/>
+        <waitForPageLoad stepKey="waitForProductEditPageLoad"/>
+        <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="In Stock" stepKey="selectStockStatus1"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveGroupedProduct2"/>
+        <!-- Flush and Reindex as updating stock status of product-->
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
+        <!-- Go to storefront and assert the grouped product-->
+        <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="goToStoreFront2"/>
+        <actionGroup ref="StorefrontGoToCategoryPageActionGroup" stepKey="openEnabledCategory2">
+            <argument name="categoryName" value="$$createCategory.name$$"/>
+        </actionGroup>
+        <waitForPageLoad stepKey="waitingForPageLoad"/>
+        <actionGroup ref="StorefrontCheckProductStockStatus" stepKey="checkForInStock">
+            <argument name="productUrlKey" value="$createGroupedProduct.custom_attributes[url_key]$"/>
+            <argument name="productName" value="$createGroupedProduct.name$"/>
+            <argument name="stockStatus" value="IN STOCK"/>
+        </actionGroup>
+    </test>
+</tests>

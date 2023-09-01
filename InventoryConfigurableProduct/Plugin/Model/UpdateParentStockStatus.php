@@ -5,50 +5,53 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\Observer\ParentItemProcessor;
+namespace Magento\InventoryConfigurableProduct\Plugin\Model;
 
-use Closure;
-use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
-use Magento\CatalogInventory\Observer\ParentItemProcessorInterface;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Inventory\Model\SourceItem\Command\Handler\SourceItemsSaveHandler;
+use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 use Magento\InventoryIndexer\Model\ResourceModel\UpdateLegacyStockStatus;
 
-/**
- * Process configurable product stock status.
- */
-class AdaptParentItemProcessorPlugin
+class UpdateParentStockStatus
 {
     /**
      * @var IsSingleSourceModeInterface
      */
-    private $isSingleSourceMode;
+    private IsSingleSourceModeInterface $isSingleSourceMode;
 
     /**
      * @var GetSkusByProductIdsInterface
      */
-    private $getSkusByProductIds;
+    private GetSkusByProductIdsInterface $getSkusByProductIds;
+
+    /**
+     * @var GetProductIdsBySkusInterface
+     */
+    private GetProductIdsBySkusInterface $getProductIdsBySkus;
 
     /**
      * @var Configurable
      */
-    private $configurableType;
+    private Configurable $configurableType;
 
     /**
      * @var UpdateLegacyStockStatus
      */
-    private $updateLegacyStockStatus;
+    private UpdateLegacyStockStatus $updateLegacyStockStatus;
 
     /**
      * @var StockRegistryInterface
      */
-    private $stockRegistry;
+    private StockRegistryInterface $stockRegistry;
 
     /**
      * @param IsSingleSourceModeInterface $isSingleSourceMode
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
+     * @param GetProductIdsBySkusInterface $getProductIdsBySkus
      * @param Configurable $configurableType
      * @param UpdateLegacyStockStatus $updateLegacyStockStatus
      * @param StockRegistryInterface $stockRegistry
@@ -56,12 +59,14 @@ class AdaptParentItemProcessorPlugin
     public function __construct(
         IsSingleSourceModeInterface $isSingleSourceMode,
         GetSkusByProductIdsInterface $getSkusByProductIds,
+        GetProductIdsBySkusInterface $getProductIdsBySkus,
         Configurable $configurableType,
         UpdateLegacyStockStatus $updateLegacyStockStatus,
         StockRegistryInterface $stockRegistry
     ) {
         $this->isSingleSourceMode = $isSingleSourceMode;
         $this->getSkusByProductIds = $getSkusByProductIds;
+        $this->getProductIdsBySkus = $getProductIdsBySkus;
         $this->configurableType = $configurableType;
         $this->updateLegacyStockStatus = $updateLegacyStockStatus;
         $this->stockRegistry = $stockRegistry;
@@ -70,20 +75,21 @@ class AdaptParentItemProcessorPlugin
     /**
      * Process configurable product stock status considering source mode.
      *
-     * @param ParentItemProcessorInterface $subject
-     * @param Closure $proceed
-     * @param ProductInterface $product
+     * @param SourceItemsSaveHandler $subject
+     * @param void $result
+     * @param array $sourceItems
+     * @return void
+     * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function aroundProcess(
-        ParentItemProcessorInterface $subject,
-        Closure $proceed,
-        ProductInterface $product
+    public function afterExecute(
+        SourceItemsSaveHandler $subject,
+        $result,
+        array $sourceItems
     ): void {
-        if ($this->isSingleSourceMode->execute()) {
-            $proceed($product);
-        } else {
-            $parentIds = $this->configurableType->getParentIdsByChild($product->getId());
+        if (!$this->isSingleSourceMode->execute()) {
+            $productIds = $this->getProductIds($sourceItems);
+            $parentIds = $this->configurableType->getParentIdsByChild($productIds);
             $skus = $this->getSkusByProductIds->execute($parentIds);
 
             $dataForUpdate = [];
@@ -93,7 +99,31 @@ class AdaptParentItemProcessorPlugin
                     $dataForUpdate[$skus[$parentId]] = true;
                 }
             }
-            $this->updateLegacyStockStatus->execute($dataForUpdate);
+            if (count($dataForUpdate)) {
+                $this->updateLegacyStockStatus->execute($dataForUpdate);
+            }
         }
+    }
+
+    /**
+     * Get product ids
+     *
+     * @param array $sourceItems
+     * @return array
+     */
+    private function getProductIds(array $sourceItems): array
+    {
+        $productIds = [];
+        foreach ($sourceItems as $sourceItem) {
+            if ($sourceItem->getStatus()) {
+                try {
+                    $sku = $sourceItem->getSku();
+                    $productIds[$sku] ??= (int) $this->getProductIdsBySkus->execute([$sku])[$sku];
+                } catch (NoSuchEntityException $e) {
+                    continue;
+                }
+            }
+        }
+        return $productIds;
     }
 }

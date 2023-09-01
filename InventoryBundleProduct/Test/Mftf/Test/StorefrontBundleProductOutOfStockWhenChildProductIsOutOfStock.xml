@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<!-- Test XML Example -->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontBundleProductOutOfStockWhenChildProductIsOutOfStock">
+        <annotations>
+            <stories value="Bundle product is out of stock when child product is out of stock at storefront"/>
+            <title value="Bundle product is out of stock when child product is out of stock"/>
+            <description value="Bundle product should remain visible when one of the child
+            products becomes out of stock with display out of stock option set to yes."/>
+            <testCaseId value="ACP2E-1464"/>
+            <useCaseId value="AC-7852"/>
+            <severity value="BLOCKER"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+        <before>
+            <!-- Login to admin -->
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <!-- Create category, three simple products and two bundle product -->
+            <createData entity="SimpleSubCategory" stepKey="createCategory"/>
+            <createData entity="SimpleProduct" stepKey="product1">
+                <requiredEntity createDataKey="createCategory"/>
+                <field key="sku">sp1</field>
+            </createData>
+            <createData entity="SimpleProduct" stepKey="product2">
+                <requiredEntity createDataKey="createCategory"/>
+                <field key="sku">sp2</field>
+            </createData>
+            <createData entity="SimpleProduct" stepKey="product3">
+                <requiredEntity createDataKey="createCategory"/>
+                <field key="sku">sp3</field>
+            </createData>
+            <!-- Create bundle product 1 -->
+            <createData entity="ApiBundleProductShipmentTypeSeparately" stepKey="bundleProduct1">
+                <field key="sku">bp1</field>
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <createData entity="DropDownBundleOption" stepKey="bundleOption1">
+                <requiredEntity createDataKey="bundleProduct1"/>
+            </createData>
+            <createData entity="DropDownBundleOption" stepKey="bundleOption2">
+                <requiredEntity createDataKey="bundleProduct1"/>
+            </createData>
+            <!--Add simple products to bundle product 1.-->
+            <createData entity="ApiBundleLink" stepKey="bundleLink1">
+                <requiredEntity createDataKey="bundleProduct1"/>
+                <requiredEntity createDataKey="bundleOption1"/>
+                <requiredEntity createDataKey="product1"/>
+            </createData>
+            <createData entity="ApiBundleLink" stepKey="bundleLink2">
+                <requiredEntity createDataKey="bundleProduct1"/>
+                <requiredEntity createDataKey="bundleOption2"/>
+                <requiredEntity createDataKey="product2"/>
+            </createData>
+            <!-- Create bundle product 2 -->
+            <createData entity="ApiBundleProductShipmentTypeSeparately" stepKey="bundleProduct2">
+                <field key="sku">bp2</field>
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <createData entity="DropDownBundleOption" stepKey="bundleOption3">
+                <requiredEntity createDataKey="bundleProduct2"/>
+            </createData>
+            <createData entity="DropDownBundleOption" stepKey="bundleOption4">
+                <requiredEntity createDataKey="bundleProduct2"/>
+            </createData>
+            <!--Add simple products to bundle product.-->
+            <createData entity="ApiBundleLink" stepKey="bundleLink3">
+                <requiredEntity createDataKey="bundleProduct2"/>
+                <requiredEntity createDataKey="bundleOption3"/>
+                <requiredEntity createDataKey="product3"/>
+            </createData>
+            <createData entity="ApiBundleLink" stepKey="bundleLink4">
+                <requiredEntity createDataKey="bundleProduct2"/>
+                <requiredEntity createDataKey="bundleOption4"/>
+                <requiredEntity createDataKey="product2"/>
+            </createData>
+            <!--Add store code to url.-->
+            <magentoCLI command="config:set {{StorefrontEnableAddStoreCodeToUrls.path}} {{StorefrontEnableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlEnable"/>
+            <!--Set Display out of stock product-->
+            <magentoCLI stepKey="setDisplayOutOfStockProduct" command="config:set cataloginventory/options/show_out_of_stock 1" />
+            <!-- Create additional website with store and store view -->
+            <actionGroup ref="AdminCreateWebsiteActionGroup" stepKey="createWebsite">
+                <argument name="newWebsiteName" value="{{customWebsite.name}}"/>
+                <argument name="websiteCode" value="{{customWebsite.code}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateNewStoreGroupActionGroup" stepKey="createStore">
+                <argument name="website" value="{{customWebsite.name}}"/>
+                <argument name="storeGroupName" value="{{customStoreGroup.name}}"/>
+                <argument name="storeGroupCode" value="{{customStoreGroup.code}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateStoreViewActionGroup" stepKey="createStoreView">
+                <argument name="StoreGroup" value="customStoreGroup"/>
+                <argument name="customStore" value="customStore"/>
+            </actionGroup>
+            <!-- Create and link additional source and stock -->
+            <createData entity="FullSource1" stepKey="additionalSource"/>
+            <createData entity="BasicMsiStock1" stepKey="additionalStock"/>
+            <createData entity="SourceStockLinked1" stepKey="linkSourceStock">
+                <requiredEntity createDataKey="additionalStock"/>
+                <requiredEntity createDataKey="additionalSource"/>
+            </createData>
+            <!--Assign Default Stock to Default Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <!--Assign additional Stock to Additional Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignStockToAdditionalWebsite">
+                <argument name="stockName" value="{{BasicMsiStock1.name}}"/>
+                <argument name="websiteName" value="{{customWebsite.name}}"/>
+            </actionGroup>
+            <!-- Assign bundle product 1 to additional website -->
+            <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openGridForBundleProduct1"/>
+            <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterBundleProduct1">
+                <argument name="product" value="$$bundleProduct1$$"/>
+            </actionGroup>
+            <actionGroup ref="OpenProductForEditByClickingRowXColumnYInProductGridActionGroup"  stepKey="openFirstProductForEdit1"/>
+            <actionGroup ref="AddWebsiteToProductActionGroup" stepKey="assignProductToAdditionalWebsite1" >
+                <argument name="website" value="{{customWebsite.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignCategoryToProductAndSaveActionGroup" stepKey="assignCategoryToBundleProduct1">
+                <argument name="categoryName" value="$$createCategory.name$$"/>
+            </actionGroup>
+            <!-- Assign bundle product 2 to additional website -->
+            <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openGridForBundleProduct2"/>
+            <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterBundleProduct2">
+                <argument name="product" value="$$bundleProduct2$$"/>
+            </actionGroup>
+            <actionGroup ref="OpenProductForEditByClickingRowXColumnYInProductGridActionGroup"  stepKey="openForBundleProduct2"/>
+            <actionGroup ref="AddWebsiteToProductActionGroup" stepKey="assignBundleProduct2ToAdditionalWebsite2" >
+                <argument name="website" value="{{customWebsite.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignCategoryToProductAndSaveActionGroup" stepKey="assignCategoryToBundleProduct2">
+                <argument name="categoryName" value="$$createCategory.name$$"/>
+            </actionGroup>
+            <!-- Assign simple product 1 to additional source and additional website -->
+            <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openGridForSimpleProduct1"/>
+            <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterForProduct1">
+                <argument name="product" value="$$product1$$"/>
+            </actionGroup>
+            <actionGroup ref="OpenProductForEditByClickingRowXColumnYInProductGridActionGroup"  stepKey="openEditForSimpleProduct1"/>
+            <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTestSourceToCreatedProduct1" >
+                <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="fillProductQtyPerSourceForProduct1">
+                <argument name="qty" value="10" />
+            </actionGroup>
+            <actionGroup ref="AddWebsiteToProductActionGroup" stepKey="assignProductToAdditionalWebsiteForProduct1" >
+                <argument name="website" value="{{customWebsite.name}}"/>
+            </actionGroup>
+            <!-- Assign simple product 2 to additional source and additional website -->
+            <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openGridForSimpleProduct2"/>
+            <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterForProduct2">
+                <argument name="product" value="$$product2$$"/>
+            </actionGroup>
+            <actionGroup ref="OpenProductForEditByClickingRowXColumnYInProductGridActionGroup"  stepKey="openEditForSimpleProduct2"/>
+            <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTestSourceToCreatedForSimpleProduct2" >
+                <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="fillProductQtyPerSourceForSimpleProduct2">
+                <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
+                <argument name="qty" value="10" />
+            </actionGroup>
+            <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="fillProductQtyPerSourceForSimpleProduct2Again">
+                <argument name="qty" value="10" />
+            </actionGroup>
+            <actionGroup ref="AddWebsiteToProductActionGroup" stepKey="assignProductToAdditionalWebsiteForSimpleProduct2" >
+                <argument name="website" value="{{customWebsite.name}}"/>
+            </actionGroup>
+            <!-- Assign simple product 3 to additional source and additional website -->
+            <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openProductGridForSimpleProduct3"/>
+            <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterForSimpleProduct3">
+                <argument name="product" value="$$product3$$"/>
+            </actionGroup>
+            <actionGroup ref="OpenProductForEditByClickingRowXColumnYInProductGridActionGroup"  stepKey="openEditForSimpleProduct3"/>
+            <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTestSourceToCreatedForSimpleProduct3" >
+                <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="fillProductQtyPerSourceForSimpleProduct3">
+                <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
+                <argument name="qty" value="10" />
+            </actionGroup>
+            <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="fillProductQtyPerSourceForSimpleProduct3Again">
+                <argument name="qty" value="10" />
+            </actionGroup>
+            <actionGroup ref="AddWebsiteToProductActionGroup" stepKey="assignProductToAdditionalWebsiteForSimpleProduct3" >
+                <argument name="website" value="{{customWebsite.name}}"/>
+            </actionGroup>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexAndFlushCache">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
+        </before>
+        <after>
+            <!--Turn off 'Display Out Of Stock' settings for product from admin configuration-->
+            <magentoCLI stepKey="setDisplayOutOfStockProduct" command="config:set cataloginventory/options/show_out_of_stock 0" />
+            <!--Disable 'add store code to url'-->
+            <magentoCLI command="config:set {{StorefrontDisableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlDisable"/>
+            <!-- Delete category-->
+            <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
+            <!-- Delete created product1, product2 , product 3, bundle product 1, bundle product 2-->
+            <deleteData createDataKey="product1" stepKey="deleteProduct1"/>
+            <deleteData createDataKey="product2" stepKey="deleteProduct2"/>
+            <deleteData createDataKey="product3" stepKey="deleteProduct3"/>
+            <deleteData createDataKey="bundleProduct1" stepKey="deleteBundleProduct1"/>
+            <deleteData createDataKey="bundleProduct2" stepKey="deleteBundleProduct2"/>
+            <!-- Logout -->
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexAndFlushCache">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+        </after>
+        <!--Verify simple product1, simple product 2 and simple product 3 is visible in category front page -->
+        <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="goToHomepage"/>
+        <actionGroup ref="StorefrontAssertCategoryNameIsShownInMenuActionGroup" stepKey="seeCategoryNameInStoreFront">
+            <argument name="categoryName" value="$$createCategory.name$$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontGoToCategoryPageActionGroup" stepKey="selectCategory">
+            <argument name="categoryName" value="$$createCategory.name$$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontAssertProductNameOnProductMainPageActionGroup" stepKey="seeProduct1Name">
+            <argument name="productName" value="$$product1.name$$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontAssertProductNameOnProductMainPageActionGroup" stepKey="seeProduct2Name">
+            <argument name="productName" value="$$product2.name$$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontAssertProductNameOnProductMainPageActionGroup" stepKey="seeProduct3Name">
+            <argument name="productName" value="$$product3.name$$"/>
+        </actionGroup>
+        <!--Verify bundle product 1 not on storefront.-->
+        <actionGroup ref="StorefrontGoToCategoryPageActionGroup" stepKey="openCategoryPage">
+            <argument name="categoryName" value="$$createCategory.name$$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontAssertProductNameOnProductMainPageActionGroup" stepKey="assertBundleProduct1Present">
+            <argument name="productName" value="$$bundleProduct1.name$$"/>
+        </actionGroup>
+
+        <!--Set simple product 3 stock status to "Out Of Stock" -->
+        <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="editSimpleProduct">
+            <argument name="productId" value="$$product3.id$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminChangeSourceStockStatusActionGroup" stepKey="setSimpleProduct3StatusToOutOfStock">
+            <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
+            <argument name="sourceStatus" value="{{SourceStatusOutOfStock.value}}"/>
+        </actionGroup>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveSimpleProduct3OutOfStockStatus"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexAndFlushCacheAgain">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
+
+        <!--Verify bundle product 2 not on storefront.-->
+        <actionGroup ref="StorefrontGoToCategoryPageActionGroup" stepKey="openCategoryPageAgain">
+            <argument name="categoryName" value="$$createCategory.name$$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontAssertProductNameOnProductMainPageActionGroup" stepKey="assertBundleProduct2Present">
+            <argument name="productName" value="$$bundleProduct2.name$$"/>
+        </actionGroup>
+    </test>
+</tests>
