@@ -25,6 +25,7 @@
             <createData entity="MsiCustomer1" stepKey="customer"/>
         </before>
         <after>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
         </after>
         <!-- remove storefront steps -->

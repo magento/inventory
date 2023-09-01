@@ -49,7 +49,9 @@
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logout" before="deleteStock"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteStock" before="deleteSimpleProduct"/>
-            <magentoCron groups="index" stepKey="reindex" after="deleteSimpleProduct"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex" after="deleteSimpleProduct">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
     </test>
 </tests>

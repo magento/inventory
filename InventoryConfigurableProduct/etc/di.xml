@@ -24,9 +24,6 @@
             <argument name="baseSelectProcessor" xsi:type="object">Magento\InventoryConfigurableProduct\Pricing\Price\LowestPriceOptionsProvider\StockStatusBaseSelectProcessor</argument>
         </arguments>
     </type>
-    <type name="Magento\CatalogInventory\Observer\ParentItemProcessorInterface">
-        <plugin name="adapt_parent_stock_processor" type="Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\Observer\ParentItemProcessor\AdaptParentItemProcessorPlugin"/>
-    </type>
     <type name="Magento\ConfigurableProduct\Model\ResourceModel\Product\Indexer\Price\OptionsSelectBuilder">
         <arguments>
             <argument name="selectProcessor" xsi:type="object">Magento\InventoryConfigurableProduct\Pricing\Price\Indexer\BaseStockStatusSelectProcessor</argument>
@@ -55,5 +52,8 @@
                 <item name="configurable" xsi:type="object">Magento\InventoryConfigurableProduct\Model\StockStatusProcessor</item>
             </argument>
         </arguments>
+    </type>
+    <type name="Magento\Inventory\Model\SourceItem\Command\Handler\SourceItemsSaveHandler">
+        <plugin name="update_parent_stock_status" type="Magento\InventoryConfigurableProduct\Plugin\Model\UpdateParentStockStatus"/>
     </type>
 </config>
