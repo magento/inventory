@@ -78,6 +78,7 @@
         <waitForPageLoad time="30" stepKey="waitForPageLoad4"/>
         <click selector="{{StorefrontMinicartSection.goToCheckout}}" stepKey="goToCheckout"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad5"/>
+        <waitForElementClickable selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="waitForFirstShippingMethodClickable" />
         <click selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="selectShippingMethod"/>
         <comment userInput="BIC workaround" stepKey="waitForPageLoad6"/>
         <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="navigateToSecondCheckoutStep"/>
