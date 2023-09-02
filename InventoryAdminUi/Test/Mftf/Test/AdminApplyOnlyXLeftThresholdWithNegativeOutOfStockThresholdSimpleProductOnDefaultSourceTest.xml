@@ -87,6 +87,7 @@
         <comment userInput="BIC workaround" stepKey="openMiniCart"/>
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="goToCheckout"/>
         <comment userInput="BIC workaround" stepKey="waitForCheckoutPage"/>
+        <waitForElementClickable selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="waitForFirstShippingMethodClickable" />
         <click selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="selectShippingMethod"/>
         <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="navigateToSecondCheckoutStep"/>
         <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectCheckMoneyOrderPayment"/>
