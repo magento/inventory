@@ -42,6 +42,7 @@
         <actionGroup ref="CustomerCheckoutFillNewShippingAddressActionGroup" stepKey="fillShippingAddress">
             <argument name="address" value="US_Address_TX"/>
         </actionGroup>
+        <waitForElementClickable selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="waitForFirstShippingMethodClickable" />
         <click selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="selectFirstShippingMethod"/>
         <waitForPageLoad stepKey="waitForLoadingMask"/>
         <comment userInput="BIC workaround" stepKey="waitForNextButton"/>

@@ -92,6 +92,7 @@
 
         <comment userInput="Add bundle item." stepKey="addBundleItemComment"/>
         <conditionalClick selector="{{AdminProductFormBundleSection.bundleItemsToggle}}" dependentSelector="{{AdminProductFormBundleSection.bundleItemsToggle}}" visible="false" stepKey="conditionallyOpenSectionBundleItems"/>
+        <waitForElementClickable selector="{{AdminProductFormBundleSection.addOption}}" stepKey="waitForAddOptionClickable" />
         <click selector="{{AdminProductFormBundleSection.addOption}}" stepKey="clickAddOption"/>
         <waitForElementVisible selector="{{AdminProductFormBundleSection.bundleOptionXTitle('0')}}" stepKey="waitForBundleOptions"/>
         <fillField selector="{{AdminProductFormBundleSection.bundleOptionXTitle('0')}}" userInput="{{BundleProduct.optionTitle1}}" stepKey="fillOptionTitle"/>
@@ -119,7 +120,7 @@
         <conditionalClick selector="{{StorefrontMinicartSection.showCart}}" dependentSelector="{{StorefrontMinicartSection.miniCartOpened}}" visible="false" stepKey="openMiniCart"/>
         <waitForElementVisible selector="{{StorefrontMinicartSection.viewAndEditCart}}" stepKey="waitForViewAndEditCartVisible"/>
         <click selector="{{StorefrontMinicartSection.goToCheckout}}" stepKey="goToCheckout"/>
-        <waitForElementVisible selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="waitForShippingMethodsLoad"/>
+        <waitForElementClickable selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="waitForShippingMethodsLoad"/>
         <click selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="selectShippingMethod"/>
         <comment userInput="BIC workaround" stepKey="waitForNextButtonVisible"/>
         <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="navigateToSecondCheckoutStep"/>

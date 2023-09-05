@@ -73,6 +73,7 @@
 
         <comment userInput="Add bundle item." stepKey="addBundleItemComment"/>
         <conditionalClick selector="{{AdminProductFormBundleSection.bundleItemsToggle}}" dependentSelector="{{AdminProductFormBundleSection.bundleItemsToggle}}" visible="false" stepKey="conditionallyOpenSectionBundleItems"/>
+        <waitForElementClickable selector="{{AdminProductFormBundleSection.addOption}}" stepKey="waitForAddOptionClickable" />
         <click selector="{{AdminProductFormBundleSection.addOption}}" stepKey="clickAddOption"/>
         <waitForElementVisible selector="{{AdminProductFormBundleSection.bundleOptionXTitle('0')}}" stepKey="waitForBundleOptions"/>
         <fillField selector="{{AdminProductFormBundleSection.bundleOptionXTitle('0')}}" userInput="{{BundleProduct.optionTitle1}}" stepKey="fillOptionTitle"/>
@@ -98,6 +99,8 @@
         <waitForElementVisible selector="{{StorefrontMinicartSection.viewAndEditCart}}" stepKey="waitForViewAndEditCartVisible"/>
         <click selector="{{StorefrontMinicartSection.goToCheckout}}" stepKey="goToCheckout"/>
         <waitForPageLoad stepKey="waitForGuestCheckoutPageLoad"/>
+
+        <waitForElementVisible selector="{{CheckoutShippingGuestInfoSection.email}}" stepKey="waitForEmailFieldVisible" />
         <fillField selector="{{CheckoutShippingGuestInfoSection.email}}" userInput="{{CustomerEntityOne.email}}" stepKey="enterEmail"/>
         <fillField selector="{{CheckoutShippingGuestInfoSection.firstName}}" userInput="{{CustomerEntityOne.firstname}}" stepKey="enterFirstName"/>
         <fillField selector="{{CheckoutShippingGuestInfoSection.lastName}}" userInput="{{CustomerEntityOne.lastname}}" stepKey="enterLastName"/>
@@ -107,7 +110,7 @@
         <fillField selector="{{CheckoutShippingGuestInfoSection.postcode}}" userInput="{{CustomerAddressSimple.postcode}}" stepKey="enterPostcode"/>
         <fillField selector="{{CheckoutShippingGuestInfoSection.telephone}}" userInput="{{CustomerAddressSimple.telephone}}" stepKey="enterTelephone"/>
         <waitForLoadingMaskToDisappear stepKey="waitForLoadingMask"/>
-        <waitForElementVisible selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="waitForShippingMethodsLoad"/>
+        <waitForElementClickable selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="waitForShippingMethodsLoad"/>
         <click selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="selectShippingMethod"/>
         <comment userInput="BIC workaround" stepKey="waitForNextButtonVisible"/>
         <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="navigateToSecondCheckoutStep"/>
