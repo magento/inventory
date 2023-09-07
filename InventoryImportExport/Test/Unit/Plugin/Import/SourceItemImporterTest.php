@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryImportExport\Test\Unit\Plugin\Import;
 
 use Magento\CatalogImportExport\Model\Import\Product\SkuProcessor;
+use Magento\CatalogImportExport\Model\Import\Product\SkuStorage;
 use Magento\CatalogImportExport\Model\StockItemProcessorInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Adapter\AdapterInterface;
@@ -77,6 +78,11 @@ class SourceItemImporterTest extends TestCase
     private $skuProcessorMock;
 
     /**
+     * @var SkuStorage|MockObject
+     */
+    private SkuStorage $skuStorageMock;
+
+    /**
      * @inheritdoc
      */
     protected function setUp(): void
@@ -104,13 +110,16 @@ class SourceItemImporterTest extends TestCase
 
         $this->skuProcessorMock = $this->createMock(SkuProcessor::class);
 
+        $this->skuStorageMock = $this->createMock(SkuStorage::class);
+
         $this->plugin = new SourceItemImporter(
             $this->sourceItemsSaveMock,
             $this->sourceItemFactoryMock,
             $this->defaultSourceMock,
             $this->isSingleSourceModeMock,
             $this->resourceConnectionMock,
-            $this->skuProcessorMock
+            $this->skuProcessorMock,
+            $this->skuStorageMock
         );
     }
 
@@ -145,7 +154,20 @@ class SourceItemImporterTest extends TestCase
 
         $this->saveSkusHavingDefaultSourceMock($sku);
 
-        $this->skuProcessorMock->expects($this->once())->method('getOldSkus')->willReturn($existingSkus);
+        $this->skuProcessorMock->expects($this->never())->method('getOldSkus')->willReturn($existingSkus);
+
+        $this->skuStorageMock->method('get')->willReturnCallback(function ($sku) use ($existingSkus) {
+            $skuLowered = strtolower($sku);
+
+            return $existingSkus[$skuLowered] ?? null;
+        });
+
+        $this->skuStorageMock->method('has')->willReturnCallback(function ($sku) use ($existingSkus) {
+            $skuLowered = strtolower($sku);
+
+            return isset($existingSkus[$skuLowered]);
+        });
+
         $this->defaultSourceMock->expects($this->exactly(2))->method('getCode')->willReturn($sourceCode);
         $this->sourceItemMock->expects($this->once())->method('setSku')->with($sku)
             ->willReturnSelf();
