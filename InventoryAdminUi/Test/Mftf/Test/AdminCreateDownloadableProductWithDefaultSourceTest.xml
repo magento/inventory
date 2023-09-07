@@ -68,6 +68,7 @@
             <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
             <argument name="value" value="$$downloadableProduct1.product[sku]$$"/>
         </actionGroup>
+        <waitForElementVisible selector="{{AdminGridRow.editByValue($$downloadableProduct1.product[sku]$$)}}" stepKey="waitForClickOnEditDownloadableProductForCheckInStock"/>
         <click selector="{{AdminGridRow.editByValue($$downloadableProduct1.product[sku]$$)}}" stepKey="clickOnEditDownloadableProductForCheckInStock"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad2"/>
 
