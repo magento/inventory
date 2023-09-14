@@ -1,0 +1,16 @@
+
+File "/var/www/html/app/code/Magento/InventoryConfigurableProduct/Test/Mftf/Test/StorefrontConfigurableProductOutOfStockCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 BasicMsiStock1 from module(s): magento/module-inventory-admin-ui
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 ConfigurableMsiProduct from module(s): magento/module-inventory-admin-ui
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 DisableSourceActionGroup from module(s): magento/module-inventory-admin-ui
+	 createConfigurationsForTwoAttributeCustomSource from module(s): magento/module-inventory-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryConfigurableProduct/Test/Mftf/Test/StorefrontConfigurableProductOutOfStockDefaultStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 ConfigurableMsiProduct from module(s): magento/module-inventory-admin-ui
+	 DisableAllSourcesActionGroup from module(s): magento/module-inventory-admin-ui
