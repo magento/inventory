@@ -127,7 +127,7 @@ class BulkInventoryTransfer
 
         if ($orgSourceItem !== null) {
             $status = (int) $orgSourceItem[SourceItemInterface::STATUS];
-        } elseif ($dstSourceItemQty !== null) {
+        } elseif ($dstSourceItem !== null) {
             $status = (int) $dstSourceItem[SourceItemInterface::STATUS];
         } else {
             $status = (int) SourceItemInterface::STATUS_OUT_OF_STOCK;
