@@ -11,6 +11,7 @@ use ArrayIterator;
 use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Indexer\InventoryIndexer;
+use Magento\InventoryIndexer\Indexer\SourceItem\GetSalableStatuses;
 use Magento\InventoryIndexer\Indexer\SourceItem\GetSkuListInStock;
 use Magento\InventoryIndexer\Indexer\SourceItem\IndexDataBySkuListProvider;
 use Magento\InventoryIndexer\Indexer\Stock\PrepareReservationsIndexData;
@@ -73,6 +74,16 @@ class Sync
     private $prepareReservationsIndexData;
 
     /**
+     * @var GetSalableStatuses
+     */
+    private $getSalableStatuses;
+
+    /**
+     * @var array
+     */
+    private array $saleabilityChangesProcessorsPool;
+
+    /**
      * $indexStructure is reserved name for construct variable (in index internal mechanism)
      *
      * @param GetSkuListInStock $getSkuListInStockToUpdate
@@ -84,6 +95,9 @@ class Sync
      * @param DefaultStockProviderInterface $defaultStockProvider
      * @param ReservationsIndexTable $reservationsIndexTable
      * @param PrepareReservationsIndexData $prepareReservationsIndexData
+     * @param GetSalableStatuses $getSalableStatuses
+     * @param array $saleabilityChangesProcessorsPool
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         GetSkuListInStock $getSkuListInStockToUpdate,
@@ -94,7 +108,9 @@ class Sync
         StockIndexer $stockIndexer,
         DefaultStockProviderInterface $defaultStockProvider,
         ReservationsIndexTable $reservationsIndexTable,
-        PrepareReservationsIndexData $prepareReservationsIndexData
+        PrepareReservationsIndexData $prepareReservationsIndexData,
+        GetSalableStatuses $getSalableStatuses,
+        array $saleabilityChangesProcessorsPool = []
     ) {
         $this->getSkuListInStock = $getSkuListInStockToUpdate;
         $this->indexStructure = $indexStructureHandler;
@@ -105,6 +121,8 @@ class Sync
         $this->defaultStockProvider = $defaultStockProvider;
         $this->reservationsIndexTable = $reservationsIndexTable;
         $this->prepareReservationsIndexData = $prepareReservationsIndexData;
+        $this->getSalableStatuses = $getSalableStatuses;
+        $this->saleabilityChangesProcessorsPool = $saleabilityChangesProcessorsPool;
     }
 
     /**
@@ -114,6 +132,9 @@ class Sync
      */
     public function executeList(array $sourceItemIds) : void
     {
+        // Store products salable statuses before reindex
+        $salableStatusesBefore = $this->getSalableStatuses->execute($sourceItemIds);
+
         $skuListInStockList = $this->getSkuListInStock->execute($sourceItemIds);
 
         foreach ($skuListInStockList as $skuListInStock) {
@@ -151,6 +172,36 @@ class Sync
             );
 
             $this->reservationsIndexTable->dropTable($stockId);
+        }
+
+        // Store products salable statuses after reindex
+        $salableStatusesAfter = $this->getSalableStatuses->execute($sourceItemIds);
+        // Process products with changed salable statuses
+        $this->processProductsWithChangedSaleability($sourceItemIds, $salableStatusesBefore, $salableStatusesAfter);
+    }
+
+    /**
+     * Process products with changed salable statuses
+     *
+     * @param array $sourceItemIds
+     * @param array $saleableStatusesBefore
+     * @param array $saleableStatusesAfter
+     * @return void
+     */
+    private function processProductsWithChangedSaleability(
+        array $sourceItemIds,
+        array $saleableStatusesBefore,
+        array $saleableStatusesAfter
+    ): void {
+        $processors = $this->saleabilityChangesProcessorsPool;
+
+        // Sort processors by sort order
+        uasort($processors, function ($a, $b) {
+            return $a->getSortOrder() <=> $b->getSortOrder();
+        });
+
+        foreach ($processors as $processor) {
+            $processor->process($sourceItemIds, $saleableStatusesBefore, $saleableStatusesAfter);
         }
     }
 

@@ -5,16 +5,16 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryBundleProductIndexer\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
+namespace Magento\InventoryBundleProductIndexer\Indexer;
 
 use Magento\Framework\Exception\StateException;
 use Magento\InventoryBundleProductIndexer\Indexer\SourceItem\SourceItemIndexer as BundleProductsSourceItemIndexer;
-use Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
+use Magento\InventoryIndexer\Indexer\SourceItem\CompositeProductProcessorInterface;
 
 /**
  * Reindex bundle product source items.
  */
-class SourceItemIndexerPlugin
+class SourceItemIndexerProcessor implements CompositeProductProcessorInterface
 {
     /**
      * @var BundleProductsSourceItemIndexer
@@ -22,29 +22,49 @@ class SourceItemIndexerPlugin
     private $bundleProductsSourceItemIndexer;
 
     /**
+     * Processor sort order
+     *
+     * @var int
+     */
+    private $sortOrder;
+
+    /**
      * @param BundleProductsSourceItemIndexer $configurableProductsSourceItemIndexer
+     * @param array $sortOrder
      */
     public function __construct(
-        BundleProductsSourceItemIndexer $configurableProductsSourceItemIndexer
+        BundleProductsSourceItemIndexer $configurableProductsSourceItemIndexer,
+        int $sortOrder = 5
     ) {
         $this->bundleProductsSourceItemIndexer = $configurableProductsSourceItemIndexer;
+        $this->sortOrder = $sortOrder;
     }
 
     /**
      * Reindex source items list for bundle products.
      *
-     * @param Sync $subject
-     * @param callable $proceed
      * @param array $sourceItemIds
+     * @param array $saleableStatusesBeforeSync
+     * @param array $saleableStatusesAfterSync
+     * @return void
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @throws StateException
      */
-    public function aroundExecuteList(
-        Sync $subject,
-        callable $proceed,
-        array $sourceItemIds
-    ) {
-        $proceed($sourceItemIds);
+    public function process(
+        array $sourceItemIds,
+        array $saleableStatusesBeforeSync,
+        array $saleableStatusesAfterSync
+    ): void {
         $this->bundleProductsSourceItemIndexer->executeList($sourceItemIds);
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @return int
+     */
+    public function getSortOrder(): int
+    {
+        return $this->sortOrder;
     }
 }
