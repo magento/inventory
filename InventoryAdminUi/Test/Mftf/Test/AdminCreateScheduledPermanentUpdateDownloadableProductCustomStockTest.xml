@@ -20,7 +20,7 @@
         </annotations>
         <before>
             <magentoCLI stepKey="addDownloadableDomain" command="downloadable:domains:add static.magento.com example.com"/>
-            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexAfterCLICommand">
               <argument name="indices" value=""/>
             </actionGroup>
           <!--Create stock and source.-->
