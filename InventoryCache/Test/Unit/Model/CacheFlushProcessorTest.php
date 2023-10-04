@@ -5,26 +5,24 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCache\Test\Unit\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
+namespace Magento\InventoryCache\Test\Unit\Model;
 
-use Magento\Framework\Indexer\IndexerRegistry;
 use Magento\Framework\Indexer\IndexerInterface;
-use Magento\InventoryCache\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync\CacheFlush;
+use Magento\Framework\Indexer\IndexerRegistry;
+use Magento\InventoryCache\Model\CacheFlushProcessor;
 use Magento\InventoryCache\Model\FlushCacheByCategoryIds;
 use Magento\InventoryCache\Model\FlushCacheByProductIds;
-use Magento\InventoryIndexer\Model\ResourceModel\GetCategoryIdsByProductIds;
 use Magento\InventoryIndexer\Model\GetProductsIdsToProcess;
-use Magento\InventoryIndexer\Indexer\SourceItem\GetSalableStatuses;
-use Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
-use PHPUnit\Framework\TestCase;
+use Magento\InventoryIndexer\Model\ResourceModel\GetCategoryIdsByProductIds;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
-class CacheFlushTest extends TestCase
+class CacheFlushProcessorTest extends TestCase
 {
     /**
      * @var CacheFlush
      */
-    private $cacheFlush;
+    private $cacheFlushProcessor;
 
     /**
      * @var FlushCacheByProductIds|MockObject
@@ -42,24 +40,9 @@ class CacheFlushTest extends TestCase
     private $flushCategoryByCategoryIds;
 
     /**
-     * @var GetSalableStatuses|MockObject
-     */
-    private $getSalableStatuses;
-
-    /**
      * @var GetProductsIdsToProcess|MockObject
      */
     private $getProductsIdsToProcess;
-
-    /**
-     * @var Sync|MockObject
-     */
-    private $sync;
-
-    /**
-     * @var \Callable|MockObject
-     */
-    private $proceedMock;
 
     /**
      * @var IndexerRegistry|MockObject
@@ -71,16 +54,8 @@ class CacheFlushTest extends TestCase
      */
     private $indexer;
 
-    /**
-     * @var bool
-     */
-    private $isProceedMockCalled = false;
-
     protected function setUp(): void
     {
-        $this->proceedMock = function () {
-            $this->isProceedMockCalled = true;
-        };
         $this->flushCacheByIds = $this->getMockBuilder(FlushCacheByProductIds::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -90,13 +65,7 @@ class CacheFlushTest extends TestCase
         $this->flushCategoryByCategoryIds = $this->getMockBuilder(FlushCacheByCategoryIds::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->getSalableStatuses = $this->getMockBuilder(GetSalableStatuses::class)
-            ->disableOriginalConstructor()
-            ->getMock();
         $this->getProductsIdsToProcess = $this->getMockBuilder(GetProductsIdsToProcess::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->sync = $this->getMockBuilder(Sync::class)
             ->disableOriginalConstructor()
             ->getMock();
         $this->indexer = $this->getMockBuilder(IndexerInterface::class)
@@ -104,18 +73,17 @@ class CacheFlushTest extends TestCase
         $this->indexerRegistry = $this->getMockBuilder(IndexerRegistry::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->cacheFlush = new CacheFlush(
+        $this->cacheFlushProcessor = new CacheFlushProcessor(
             $this->flushCacheByIds,
             $this->getCategoryIdsByProductIds,
             $this->flushCategoryByCategoryIds,
-            $this->getSalableStatuses,
             $this->getProductsIdsToProcess,
             $this->indexerRegistry
         );
     }
 
     /**
-     * @dataProvider executeListDataProvider
+     * @dataProvider processDataProvider
      * @param array $sourceItemIds
      * @param array $beforeSalableList
      * @param array $afterSalableList
@@ -123,7 +91,7 @@ class CacheFlushTest extends TestCase
      * @param int $numberOfCacheCleans,
      * @return void
      */
-    public function testAroundExecuteList(
+    public function testProcess(
         array $sourceItemIds,
         array $beforeSalableList,
         array $afterSalableList,
@@ -133,16 +101,9 @@ class CacheFlushTest extends TestCase
         $this->indexerRegistry->expects($this->once())
             ->method('get')
             ->willReturn($this->indexer);
-        $this->indexer->expects($this->any())
+        $this->indexer->expects($this->once())
             ->method('isScheduled')
             ->willReturn(true);
-        $this->getSalableStatuses->expects($this->exactly(2))
-            ->method('execute')
-            ->with($sourceItemIds)
-            ->willReturnOnConsecutiveCalls(
-                $beforeSalableList,
-                $afterSalableList
-            );
         $this->getProductsIdsToProcess->expects($this->once())
             ->method('execute')
             ->with($beforeSalableList, $afterSalableList)
@@ -158,15 +119,13 @@ class CacheFlushTest extends TestCase
         $this->flushCategoryByCategoryIds->expects($this->exactly($numberOfCacheCleans))
             ->method('execute');
 
-        $this->cacheFlush->aroundExecuteList($this->sync, $this->proceedMock, $sourceItemIds);
-        $this->assertTrue($this->isProceedMockCalled);
+        $this->cacheFlushProcessor->process($sourceItemIds, $beforeSalableList, $afterSalableList);
     }
 
     /**
-     * Data provider for testAroundExecuteList
      * @return array
      */
-    public function executeListDataProvider(): array
+    public function processDataProvider(): array
     {
         return [
             [[1], ['sku1' => [1 => true]], ['sku1' => [1 => true]], [], 0],
