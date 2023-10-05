@@ -10,6 +10,7 @@ namespace Magento\InventoryCatalogAdminUi\Controller\Adminhtml\Source;
 use Magento\AsynchronousOperations\Model\MassSchedule;
 use Magento\Backend\App\Action;
 use Magento\Backend\Model\Auth;
+use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Exception\BulkException;
 use Magento\Framework\Exception\LocalizedException;
@@ -19,12 +20,15 @@ use Magento\InventoryCatalogAdminUi\Model\BulkSessionProductsStorage;
 use Magento\InventoryCatalogApi\Api\BulkSourceUnassignInterface;
 use Psr\Log\LoggerInterface;
 
-class BulkUnassignPost extends Action
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
+class BulkUnassignPost extends Action implements HttpPostActionInterface
 {
     /**
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Magento_Catalog::products';
+    public const ADMIN_RESOURCE = 'Magento_Catalog::products';
 
     /**
      * @var BulkSessionProductsStorage
@@ -84,6 +88,8 @@ class BulkUnassignPost extends Action
     }
 
     /**
+     * Synchronous operation for bulk un-assign
+     *
      * @param array $skus
      * @param array $sourceCodes
      * @return void
@@ -98,6 +104,8 @@ class BulkUnassignPost extends Action
     }
 
     /**
+     * Synchronous operation for bulk un-assign
+     *
      * @param array $skus
      * @param array $sourceCodes
      * @return void
@@ -129,6 +137,8 @@ class BulkUnassignPost extends Action
     }
 
     /**
+     * Bulk Inventory assignment
+     *
      * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
      */
     public function execute()
