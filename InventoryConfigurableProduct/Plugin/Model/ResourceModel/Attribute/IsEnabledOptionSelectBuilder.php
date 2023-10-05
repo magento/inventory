@@ -48,7 +48,7 @@ class IsEnabledOptionSelectBuilder
      */
     public function afterGetSelect(
         OptionSelectBuilderInterface $subject,
-        Select $select,
+        Select $select
     ) {
         $storeId = $this->storeManager->getStore()->getId();
         $status = $this->attributeRepository->get(ProductInterface::STATUS);
