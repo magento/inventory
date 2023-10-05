@@ -9,7 +9,7 @@
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="MinAndMaxQtyInShoppingCartAppliedOnConfigurationPageToSimpleProductAndCheckedOnFrontendTest"
-          extends="AdminUserApplyMinMaxQtyForSimpleProductOnTestSourceTest">
+          extends="AdminUserMinMaxQtyForSimpleProductOnTestSourceTest">
         <annotations>
             <stories value="Simple Product Custom Stock."/>
             <title value="Min and Max Qty in shopping cart applied on Configuration page to Simple product and checked on frontend."/>

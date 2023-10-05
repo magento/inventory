@@ -10,6 +10,7 @@
     <suite name="InventoryMultiModeSuite">
         <before>
             <actionGroup ref="AdminDisableWYSIWYGActionGroup" stepKey="disableWYSYWYG"/>
+            <actionGroup ref="AdminEnableGuestCheckoutActionGroup" stepKey="enableGuestCheckout"/>
             <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableStockManagement"/>
             <magentoCron groups="index" stepKey="reindex"/>
             <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
@@ -25,6 +26,7 @@
         </exclude>
         <after>
             <actionGroup ref="AdminEnableWYSIWYGActionGroup" stepKey="enableWYSYWYG"/>
+            <actionGroup ref="AdminDisableGuestCheckoutActionGroup" stepKey="disableGuestCheckout"/>
             <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOffManageStockConfig.value}}" stepKey="disableStockManagement"/>
             <magentoCron groups="index" stepKey="reindex"/>
             <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
