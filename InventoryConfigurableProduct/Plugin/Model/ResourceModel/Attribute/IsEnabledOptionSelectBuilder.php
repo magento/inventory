@@ -1,7 +1,18 @@
 <?php
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+/************************************************************************
+ *
+ * Copyright 2023 Adobe
+ * All Rights Reserved.
+ *
+ * NOTICE: All information contained herein is, and remains
+ * the property of Adobe and its suppliers, if any. The intellectual
+ * and technical concepts contained herein are proprietary to Adobe
+ * and its suppliers and are protected by all applicable intellectual
+ * property laws, including trade secret and copyright laws.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Adobe.
+ * ************************************************************************
  */
 declare(strict_types=1);
 
@@ -10,12 +21,13 @@ namespace Magento\InventoryConfigurableProduct\Plugin\Model\ResourceModel\Attrib
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Api\ProductAttributeRepositoryInterface;
 use Magento\ConfigurableProduct\Model\ResourceModel\Attribute\OptionSelectBuilderInterface;
+use Magento\Eav\Model\Entity\Attribute\AbstractAttribute;
+use Magento\Framework\App\ScopeInterface;
 use Magento\Framework\DB\Select;
 use Magento\Framework\EntityManager\MetadataPool;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\Store;
-use Magento\Store\Model\StoreManagerInterface;
 use Magento\Catalog\Model\Product\Attribute\Source\Status as ProductStatus;
 
 /**
@@ -24,12 +36,10 @@ use Magento\Catalog\Model\Product\Attribute\Source\Status as ProductStatus;
 class IsEnabledOptionSelectBuilder
 {
     /**
-     * @param StoreManagerInterface $storeManager
      * @param ProductAttributeRepositoryInterface $attributeRepository
      * @param MetadataPool $metadataPool
      */
     public function __construct(
-        private readonly StoreManagerInterface $storeManager,
         private readonly ProductAttributeRepositoryInterface $attributeRepository,
         private readonly MetadataPool $metadataPool
     ) {
@@ -48,9 +58,12 @@ class IsEnabledOptionSelectBuilder
      */
     public function afterGetSelect(
         OptionSelectBuilderInterface $subject,
-        Select $select
+        Select $select,
+        AbstractAttribute $superAttribute,
+        int $productId,
+        ScopeInterface $scope
     ) {
-        $storeId = $this->storeManager->getStore()->getId();
+        $storeId = $scope->getId();
         $status = $this->attributeRepository->get(ProductInterface::STATUS);
         $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
         $linkField = $metadata->getLinkField();
