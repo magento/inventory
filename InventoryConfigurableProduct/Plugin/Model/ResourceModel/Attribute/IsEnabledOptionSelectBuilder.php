@@ -50,9 +50,11 @@ class IsEnabledOptionSelectBuilder
      *
      * @param OptionSelectBuilderInterface $subject
      * @param Select $select
+     * @param AbstractAttribute $superAttribute
+     * @param int $productId
+     * @param ScopeInterface $scope
      * @return Select
      *
-     * @throws LocalizedException
      * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
