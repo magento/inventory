@@ -1,0 +1,9 @@
+twoPiecesAddToCart
+_defaultStock
+AdminAssignSourceToProductAndSetSourceQuantityActionGroup
+AssignWebsiteToStockActionGroup
+DisableAllSourcesActionGroup
+_defaultSource
+AdminProductSourcesGrid
+UnassignSourceFromProductActionGroup
+CliConsumerStartActionGroup
