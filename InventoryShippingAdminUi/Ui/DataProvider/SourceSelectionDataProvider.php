@@ -124,7 +124,8 @@ class SourceSelectionDataProvider extends AbstractDataProvider
         foreach ($order->getAllItems() as $orderItem) {
             if ($orderItem->getIsVirtual()
                 || $orderItem->getLockedDoShip()
-                || $orderItem->getHasChildren()) {
+                || $orderItem->getHasChildren()
+                || $orderItem->getQtyOrdered() === $orderItem->getQtyShipped()) {
                 continue;
             }
 
