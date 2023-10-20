@@ -1,0 +1,73 @@
+
+File "/var/www/html/app/code/Magento/InventoryCatalogAdminUi/Test/Mftf/Test/AdminChangeProductsListingColumnsOrderMultipleSourceTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 DisableSourceActionGroup from module(s): magento/module-inventory-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryCatalogAdminUi/Test/Mftf/Test/AdminCreateOrderWithSimpleProductFromDefaultSourceWithBackordersTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 AdminProductSourcesSection from module(s): magento/module-inventory-admin-ui
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 DisableSourceActionGroup from module(s): magento/module-inventory-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryCatalogAdminUi/Test/Mftf/Test/AdminCreateOrderWithSimpleProductFromTestSourceWithBackordersTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 negativeProductQuantity from module(s): magento/module-inventory-admin-ui
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 101ProductQty from module(s): magento/module-inventory-admin-ui
+	 defaultProductQty from module(s): magento/module-inventory-admin-ui
+	 defaultProductWithNegativeThresholdBoughtWith101Piece from module(s): magento/module-inventory-admin-ui
+	 AdminEnableBackordersOnProductEditPageActionGroup from module(s): magento/module-inventory-admin-ui
+	 AdminChangeOutOfStockThresholdOnProductEditPageActionGroup from module(s): magento/module-inventory-admin-ui
+	 AdminAssignSourceToProductAndSetSourceQuantityActionGroup from module(s): magento/module-inventory-admin-ui
+	 DisableAllSourcesActionGroup from module(s): magento/module-inventory-admin-ui
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 AssertAdminSalableProductQtyActionGroup from module(s): magento/module-inventory-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryCatalogAdminUi/Test/Mftf/Test/AdminCreateOrderWithSimpleProductInSingleStockModeWithBackordersTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminManageStockPage from module(s): magento/module-inventory-admin-ui
+	 AdminEditStockSalesChannelsSection from module(s): magento/module-inventory-admin-ui
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryCatalogAdminUi/Test/Mftf/Test/AdminCreateOrderWithVirtualProductFromDefaultSourceWithBackordersTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 AdminProductSourcesSection from module(s): magento/module-inventory-admin-ui
+	 MsiCustomer1 from module(s): magento/module-inventory-admin-ui
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 DisableSourceActionGroup from module(s): magento/module-inventory-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryCatalogAdminUi/Test/Mftf/Test/AdminCreateOrderWithVirtualProductFromTestSourceWithBackordersTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 VirtualMsiProduct from module(s): magento/module-inventory-admin-ui
+	 AdminProductSourcesGrid from module(s): magento/module-inventory-admin-ui
+	 AdminProductSourcesSection from module(s): magento/module-inventory-admin-ui
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 MsiCustomer1 from module(s): magento/module-inventory-admin-ui
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 AssignSourceToProductActionGroup from module(s): magento/module-inventory-admin-ui
+	 DisableSourceActionGroup from module(s): magento/module-inventory-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryCatalogAdminUi/Test/Mftf/Test/AdminCreateOrderWithVirtualProductInSingleStockModeWithBackordersTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminManageStockPage from module(s): magento/module-inventory-admin-ui
+	 AdminEditStockSalesChannelsSection from module(s): magento/module-inventory-admin-ui
+	 MsiCustomer1 from module(s): magento/module-inventory-admin-ui
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryCatalogAdminUi/Test/Mftf/Test/OnlyXleftNotDisplayedForSimpleProductWithMangeStockAsNoOnTestStockAndMainWebsitesTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 DisableAllSourcesActionGroup from module(s): magento/module-inventory-admin-ui
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 DisableSourceActionGroup from module(s): magento/module-inventory-admin-ui

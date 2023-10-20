@@ -1,0 +1,38 @@
+
+File "/var/www/html/app/code/Magento/InventoryCatalog/Test/Mftf/Test/AdminMassUpdateProductQtyIncrementsTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminInventoryMassUpdateConsumerData from module(s): magento/module-inventory-grouped-product
+	 CliConsumerStartActionGroup from module(s): magento/module-message-queue
+
+File "/var/www/html/app/code/Magento/InventoryCatalog/Test/Mftf/Test/StorefrontCustomWebsiteCustomStockDisplayOutOfStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 DisableAllSourcesActionGroup from module(s): magento/module-inventory-admin-ui
+	 StorefrontAssertProductOnCategoryPageAdditionalWebsiteActionGroup from module(s): magento/module-inventory-admin-ui
+	 StorefrontAssertProductAbsentOnCategoryPageAdditionalWebsiteActionGroup from module(s): magento/module-inventory-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryCatalog/Test/Mftf/Test/StorefrontDisplayCorrectNoOfProductsForDisableStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminDeleteCreatedColorAttributeActionGroup from module(s): magento/module-inventory-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryCatalog/Test/Mftf/Test/StorefrontValidateNoExceptionOnProductSearchTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontCheckQuickSearchStringActionGroup from module(s): magento/module-catalog-search
+
+File "/var/www/html/app/code/Magento/InventoryCatalog/Test/Mftf/Test/StorefrontValidateProductSearchWhenDisplayOutStockEnabledTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontQuickSearchResultsSection from module(s): magento/module-search
+
+File "/var/www/html/app/code/Magento/InventoryCatalog/Test/Mftf/ActionGroup/ConfigurableProductWithColorAttributeActionGroup.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminConfigurableProductSelectAttributesSlideOut from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminChooseAffectedAttributeSetPopup from module(s): magento/module-configurable-product
