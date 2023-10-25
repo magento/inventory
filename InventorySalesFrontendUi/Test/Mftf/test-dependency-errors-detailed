@@ -1,0 +1,5 @@
+
+File "/var/www/html/app/code/Magento/InventorySalesFrontendUi/Test/Mftf/Test/UserApplyOnlyXLeftThresholdDisabledManageStockForSimpleProductTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 TurnOnManageStockConfig from module(s): magento/module-inventory-admin-ui
