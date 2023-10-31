@@ -12,9 +12,9 @@ use Magento\InventorySalesApi\Model\GetStockItemsDataInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * Define if products are salable for a given stock.
+ * Define if multiple products are salable for a given stock.
  */
-class AreProductsSalable
+class AreMultipleProductsSalable
 {
     /**
      * @var GetStockItemsDataInterface

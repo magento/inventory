@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Plugin\InventorySales;
 
+use Magento\InventoryIndexer\Model\AreMultipleProductsSalable;
 use Magento\InventorySales\Model\AreProductsSalable as AreProductsSalableInventorySales;
 use Magento\InventorySalesApi\Api\Data\IsProductSalableResultInterfaceFactory;
 
@@ -21,17 +22,17 @@ class AreProductsSalable
     private IsProductSalableResultInterfaceFactory $isProductSalableResultFactory;
 
     /**
-     * @var \Magento\InventoryIndexer\Model\AreProductsSalable
+     * @var AreMultipleProductsSalable
      */
-    private \Magento\InventoryIndexer\Model\AreProductsSalable $areProductsSalable;
+    private AreMultipleProductsSalable $areProductsSalable;
 
     /**
      * @param IsProductSalableResultInterfaceFactory $isProductSalableResultFactory
-     * @param \Magento\InventoryIndexer\Model\AreProductsSalable $areProductSalable
+     * @param AreMultipleProductsSalable $areProductSalable
      */
     public function __construct(
         IsProductSalableResultInterfaceFactory $isProductSalableResultFactory,
-        \Magento\InventoryIndexer\Model\AreProductsSalable $areProductSalable
+        AreMultipleProductsSalable $areProductSalable
     ) {
         $this->isProductSalableResultFactory = $isProductSalableResultFactory;
         $this->areProductsSalable = $areProductSalable;
