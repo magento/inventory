@@ -81,6 +81,7 @@
     </type>
     <!-- Stock Item -->
     <preference for="Magento\InventorySalesApi\Model\GetStockItemDataInterface" type="Magento\InventoryIndexer\Model\ResourceModel\GetStockItemData"/>
+    <preference for="Magento\InventorySalesApi\Model\GetStockItemsDataInterface" type="Magento\InventoryIndexer\Model\ResourceModel\GetStockItemsData"/>
     <preference for="Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface" type="Magento\InventoryIndexer\Model\StockIndexTableNameResolver"/>
     <type name="Magento\InventoryIndexer\Model\StockIndexTableNameResolver">
         <arguments>
@@ -95,14 +96,14 @@
             <argument name="productTableName" xsi:type="string">catalog_product_entity</argument>
         </arguments>
     </type>
-    <virtualType name="Magento\InventoryIndexer\Model\AreProductsSalable" type="Magento\InventorySales\Model\AreProductsSalable">
+    <virtualType name="Magento\InventoryIndexer\Model\ProductsSalabilityStatus" type="Magento\InventorySales\Model\AreProductsSalable">
         <arguments>
             <argument name="isProductSalable" xsi:type="object">Magento\InventoryIndexer\Model\IsProductSalable</argument>
         </arguments>
     </virtualType>
     <type name="Magento\InventoryIndexer\Indexer\SourceItem\GetSalableStatuses">
         <arguments>
-            <argument name="areProductsSalable" xsi:type="object">Magento\InventoryIndexer\Model\AreProductsSalable</argument>
+            <argument name="areProductsSalable" xsi:type="object">Magento\InventoryIndexer\Model\ProductsSalabilityStatus</argument>
         </arguments>
     </type>
 </config>
