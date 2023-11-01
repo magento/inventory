@@ -116,9 +116,7 @@ class GetStockItemsData implements GetStockItemsDataInterface
                 foreach ($skus as $sku) {
                     if (!isset($results[$sku])) {
                         $fallbackRow = $this->stockItemDataHandler->getStockItemDataFromStockItemTable($sku, $stockId);
-                        if ($fallbackRow) {
-                            $results[$sku] = $fallbackRow;
-                        }
+                        $results[$sku] = $fallbackRow ?: null;
                     }
                 }
             }

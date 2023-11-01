@@ -61,7 +61,10 @@ class GetStockItemsDataCache implements GetStockItemsDataInterface
 
             foreach ($fetchedItemsData as $sku => $stockItemData) {
                 $stockItemsData[$sku] = $stockItemData;
-                $this->cacheStorage->set($stockId, $sku, $stockItemData);
+
+                if ($stockItemData !== null) {
+                    $this->cacheStorage->set($stockId, $sku, $stockItemData);
+                }
             }
         }
 
