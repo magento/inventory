@@ -47,7 +47,7 @@ class GetStockItemsDataCache implements GetStockItemsDataInterface
         // Get data from the cache and identify which SKUs need to be fetched
         $skusToFetch = [];
         foreach ($skus as $sku) {
-            $cachedData = $this->cacheStorage->get($stockId, $sku);
+            $cachedData = $this->cacheStorage->get($stockId, (string)$sku);
             if ($cachedData !== null) {
                 $stockItemsData[$sku] = $cachedData;
             } else {
@@ -63,7 +63,7 @@ class GetStockItemsDataCache implements GetStockItemsDataInterface
                 $stockItemsData[$sku] = $stockItemData;
 
                 if ($stockItemData !== null) {
-                    $this->cacheStorage->set($stockId, $sku, $stockItemData);
+                    $this->cacheStorage->set($stockId, (string)$sku, $stockItemData);
                 }
             }
         }
