@@ -12,7 +12,7 @@ use Magento\InventorySalesApi\Model\GetStockItemsDataInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * Define if multiple products are salable for a given stock.
+ * Determine the salability of multiple products in a specified stock.
  */
 class AreMultipleProductsSalable
 {
@@ -39,6 +39,8 @@ class AreMultipleProductsSalable
     }
 
     /**
+     * Define if multiple products are salable for a specified stock.
+     *
      * @param array $skus
      * @param int $stockId
      * @return array
