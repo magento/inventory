@@ -43,10 +43,10 @@
         <see userInput="$$createSource3.source[source_code]$$" selector="{{AdminGridRow.rowOne}}" stepKey="seeCodeInRow1"/>
         <see userInput="$$createSource3.source[name]$$" selector="{{AdminGridRow.rowOne}}" stepKey="seeNameInRow1"/>
         <see userInput="Enabled" selector="{{AdminGridRow.rowOne}}" stepKey="seeIsEnabledInRow1"/>
-        <grabTextFrom selector="{{AdminGridHeaders.totalRecords}}" stepKey="grabTotalRecords"/>
-        <assertEquals stepKey="assertTotalRecords">
+        <grabTextFrom selector="{{AdminGridHeaders.totalRecords}}" stepKey="grabTotalRecords1"/>
+        <assertEquals stepKey="assertTotalRecords1">
             <expectedResult type="string">1 records found</expectedResult>
-            <actualResult type="string">$grabTotalRecords</actualResult>
+            <actualResult type="string">$grabTotalRecords1</actualResult>
         </assertEquals>
 
         <click selector="{{AdminGridColumnsControls.columns}}" stepKey="clickOnColumns1"/>
