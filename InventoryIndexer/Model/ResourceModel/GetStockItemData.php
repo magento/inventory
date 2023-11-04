@@ -56,6 +56,7 @@ class GetStockItemData implements GetStockItemDataInterface
      * @param IsSingleSourceModeInterface|null $isSingleSourceMode
      * @param IsSourceItemManagementAllowedForSkuInterface|null $isSourceItemManagementAllowedForSku
      * @param StockItemDataHandler|null $stockItemDataHandler
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __construct(
         ResourceConnection $resource,
