@@ -15,8 +15,19 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 class GetStockItemsDataCacheTest extends TestCase
 {
-    private MockObject $getStockItemsDataMock;
-    private MockObject $cacheStorageMock;
+    /**
+     * @var GetStockItemsData|MockObject
+     */
+    private $getStockItemsDataMock;
+
+    /**
+     * @var CacheStorage|MockObject
+     */
+    private $cacheStorageMock;
+
+    /**
+     * @var GetStockItemsDataCache
+     */
     private GetStockItemsDataCache $getStockItemsDataCache;
 
     protected function setUp(): void
@@ -40,7 +51,7 @@ class GetStockItemsDataCacheTest extends TestCase
         // Setup cache storage to return cached data for sku1
         $this->cacheStorageMock
             ->method('get')
-            ->willReturnCallback(function($requestedStockId, $requestedSku) use ($stockId, $cachedData) {
+            ->willReturnCallback(function ($requestedStockId, $requestedSku) use ($stockId, $cachedData) {
                 if ($requestedSku == 'sku1' && $requestedStockId == $stockId) {
                     return $cachedData;
                 }

@@ -13,16 +13,39 @@ use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForSkuInterface;
 use Magento\InventoryIndexer\Model\ResourceModel\StockItemDataHandler;
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
 class StockItemDataHandlerTest extends TestCase
 {
-    private MockObject $resourceMock;
-    private MockObject $defaultStockProviderMock;
-    private MockObject $getProductIdsBySkusMock;
-    private MockObject $isSingleSourceModeMock;
-    private MockObject $isSourceItemManagementAllowedForSkuMock;
+    /**
+     * @var ResourceConnection|MockObject
+     */
+    private $resourceMock;
+
+    /**
+     * @var DefaultStockProviderInterface|MockObject
+     */
+    private $defaultStockProviderMock;
+
+    /**
+     * @var GetProductIdsBySkusInterface|MockObject
+     */
+    private $getProductIdsBySkusMock;
+
+    /**
+     * @var IsSingleSourceModeInterface|MockObject
+     */
+    private $isSingleSourceModeMock;
+
+    /**
+     * @var IsSourceItemManagementAllowedForSkuInterface|MockObject
+     */
+    private $isSourceItemManagementAllowedForSkuMock;
+
+    /**
+     * @var StockItemDataHandler
+     */
     private StockItemDataHandler $stockItemDataHandler;
 
     protected function setUp(): void

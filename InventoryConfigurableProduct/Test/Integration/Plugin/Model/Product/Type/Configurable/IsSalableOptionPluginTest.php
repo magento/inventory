@@ -11,6 +11,7 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\ConfigurableProduct\Block\Product\View\Type\Configurable as ConfigurableView;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Framework\View\LayoutInterface;
 use Magento\Inventory\Model\SourceItem\Command\SourceItemsSave;
@@ -21,9 +22,15 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @magentoAppArea frontend
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class IsSalableOptionPluginTest extends TestCase
 {
+    /**
+     * @var ObjectManagerInterface
+     */
+    private $objectManager;
+
     /**
      * @var ProductRepositoryInterface
      */

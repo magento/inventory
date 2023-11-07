@@ -16,8 +16,19 @@ use Psr\Log\LoggerInterface;
 
 class AreMultipleProductsSalableTest extends TestCase
 {
-    private MockObject $getStockItemsDataMock;
-    private MockObject $loggerMock;
+    /**
+     * @var GetStockItemsDataInterface|MockObject
+     */
+    private $getStockItemsDataMock;
+
+    /**
+     * @var LoggerInterface|MockObject
+     */
+    private $loggerMock;
+
+    /**
+     * @var AreMultipleProductsSalable
+     */
     private AreMultipleProductsSalable $areMultipleProductsSalable;
 
     protected function setUp(): void
