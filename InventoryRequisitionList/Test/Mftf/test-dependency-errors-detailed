@@ -1,0 +1,47 @@
+
+File "/var/www/html/app/code/Magento/InventoryRequisitionList/Test/Mftf/Test/OrderWithMultipleConfigurableProductsAdditionalStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductSourcesGrid from module(s): magento/module-inventory-admin-ui
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 StorefrontRequisitionListGridSection from module(s): magento/module-requisition-list
+	 StorefrontRequisitionListViewSection from module(s): magento/module-requisition-list
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 AssignSourceToProductActionGroup from module(s): magento/module-inventory-admin-ui
+	 DisableSourceActionGroup from module(s): magento/module-inventory-admin-ui
+	 RegisterCustomOnStorefrontActionGroup from module(s): magento/module-inventory-admin-ui
+	 StorefrontAddProductWithFileToTheCartFromRequisitionListTest from module(s): magento/module-requisition-list
+
+File "/var/www/html/app/code/Magento/InventoryRequisitionList/Test/Mftf/Test/OrderWithMultipleProductsAdditionalStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 _defaultSource from module(s): magento/module-inventory-admin-ui
+	 AdminProductSourcesGrid from module(s): magento/module-inventory-admin-ui
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 StorefrontRequisitionListIndexPage from module(s): magento/module-requisition-list
+	 StorefrontRequisitionListGridSection from module(s): magento/module-requisition-list
+	 StorefrontRequisitionListViewSection from module(s): magento/module-requisition-list
+	 UnassignSourceFromProductActionGroup from module(s): magento/module-inventory-admin-ui
+	 AssignSourceToProductActionGroup from module(s): magento/module-inventory-admin-ui
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 DisableSourceActionGroup from module(s): magento/module-inventory-admin-ui
+	 StorefrontAddProductWithFileToTheCartFromRequisitionListTest from module(s): magento/module-requisition-list
+
+File "/var/www/html/app/code/Magento/InventoryRequisitionList/Test/Mftf/Test/StoreFrontQTYChangeCustomStockProductVariationOfConfigurableProductTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 DisableSourceActionGroup from module(s): magento/module-inventory-admin-ui
+	 createConfigurationsForTwoAttributeCustomSource from module(s): magento/module-inventory-admin-ui
+	 StoreFrontQTYChangeProductVariationOfConfigurableProductTest from module(s): magento/module-requisition-list
+
+File "/var/www/html/app/code/Magento/InventoryRequisitionList/Test/Mftf/Test/StorefrontAddCustomStockProductWithFileToTheCartFromRequisitionListTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductSourcesGrid from module(s): magento/module-inventory-admin-ui
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 AssignSourceToProductActionGroup from module(s): magento/module-inventory-admin-ui
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 DisableSourceActionGroup from module(s): magento/module-inventory-admin-ui
+	 StorefrontAddProductWithFileToTheCartFromRequisitionListTest from module(s): magento/module-requisition-list

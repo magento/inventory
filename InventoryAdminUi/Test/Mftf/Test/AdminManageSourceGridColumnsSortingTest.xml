@@ -103,7 +103,7 @@
 
         <comment userInput="Ascend sorting for Name" stepKey="ascendSortingForNameComment"/>
         <click selector="{{AdminGridHeaders.headerByName('Name')}}" stepKey="clickOnNameHeaderToSetAscendSorting"/>
-        <waitForPageLoad time="10" stepKey="waitForSourceGridPageLoadAfterSettingAscendSortingForName"/>
+        <waitForPageLoad time="30" stepKey="waitForSourceGridPageLoadAfterSettingAscendSortingForName"/>
         <see userInput="$$createCustomSource1.source[name]$$" selector="{{AdminGridRow.rowByIndex('0')}}" stepKey="seeCustomSource1NameInRow1WhenAscendSorting"/>
         <see userInput="$$createCustomSource2.source[name]$$" selector="{{AdminGridRow.rowByIndex('1')}}" stepKey="seeCustomSource2NameInRow2WhenAscendSorting"/>
         <see userInput="$$createCustomSource3.source[name]$$" selector="{{AdminGridRow.rowByIndex('2')}}" stepKey="seeCustomSource3NameInRow3WhenAscendSorting"/>
@@ -111,7 +111,7 @@
 
         <comment userInput="Descend sorting for Name" stepKey="descendSortingForNameComment"/>
         <click selector="{{AdminGridHeaders.headerByName('Name')}}" stepKey="clickOnNameHeaderToSetDescendSorting"/>
-        <waitForPageLoad time="10" stepKey="waitForSourceGridPageLoadAfterSettingDescendSortingForName"/>
+        <waitForPageLoad time="30" stepKey="waitForSourceGridPageLoadAfterSettingDescendSortingForName"/>
         <see userInput="$$createCustomSource4.source[name]$$" selector="{{AdminGridRow.rowByIndex('0')}}" stepKey="seeCustomSource4NameInRow1WhenDescendSorting"/>
         <see userInput="$$createCustomSource3.source[name]$$" selector="{{AdminGridRow.rowByIndex('1')}}" stepKey="seeCustomSource3NameInRow2WhenDescendSorting"/>
         <see userInput="$$createCustomSource2.source[name]$$" selector="{{AdminGridRow.rowByIndex('2')}}" stepKey="seeCustomSource2NameInRow3WhenDescendSorting"/>

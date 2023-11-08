@@ -1,0 +1,26 @@
+
+File "/var/www/html/app/code/Magento/InventoryGroupedProduct/Test/Mftf/Test/StockStatusChangedForGroupedProductOnTestStockAndTestWebsiteTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 twoPiecesAddToCart from module(s): magento/module-inventory-admin-ui
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 AdminAssignSourceToProductAndSetSourceQuantityActionGroup from module(s): magento/module-inventory-admin-ui
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 DisableAllSourcesActionGroup from module(s): magento/module-inventory-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryGroupedProduct/Test/Mftf/Test/StockStatusChangedForGroupedProductOnTestStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 _defaultSource from module(s): magento/module-inventory-admin-ui
+	 AdminProductSourcesGrid from module(s): magento/module-inventory-admin-ui
+	 twoPiecesAddToCart from module(s): magento/module-inventory-admin-ui
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 DisableAllSourcesActionGroup from module(s): magento/module-inventory-admin-ui
+	 UnassignSourceFromProductActionGroup from module(s): magento/module-inventory-admin-ui
+	 AdminAssignSourceToProductAndSetSourceQuantityActionGroup from module(s): magento/module-inventory-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryGroupedProduct/Test/Mftf/Test/UpdateStockStatusInventoryGroupedProductTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 CliConsumerStartActionGroup from module(s): magento/module-message-queue
