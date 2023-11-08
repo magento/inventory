@@ -56,17 +56,21 @@
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
-            <magentoCron groups="index" stepKey="reindexInvalidatedIndices"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexInvalidatedIndices">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </before>
         <after>
             <deleteData createDataKey="configurableProduct" stepKey="deleteConfigurableProduct"/>
             <deleteData createDataKey="product" stepKey="deleteConfigurableProductVariation"/>
             <deleteData createDataKey="configurableProductAttribute" stepKey="deleteConfigurableProductAttribute"/>
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
-            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
-            <magentoCron groups="index" stepKey="reindexInvalidatedIndices"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexInvalidatedIndices">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginAsCustomer">

@@ -35,6 +35,7 @@
             </actionGroup>
             <deleteData createDataKey="createVirtualProduct" stepKey="deleteVirtualProduct"/>
             <deleteData createDataKey="createSubCategory" stepKey="deleteSubCategory"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="createCustomer1" stepKey="deleteCustomer"/>
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <magentoCLI command="config:set {{DisableCashOnDeliveryPaymentMethod.path}} {{DisableCashOnDeliveryPaymentMethod.value}}" stepKey="disableCashOnDeliveryPaymentMethod"/>
@@ -88,8 +89,12 @@
 
         <!-- Step5 Create New Customer -->
         <createData entity="Simple_US_Customer" stepKey="createCustomer1"/>
-        <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
-        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <!-- Step6 Create Order for Virtual Product -->
         <actionGroup ref="AdminCreateNewOrderForVirtualProductActionGroup" stepKey="createOrderForVirtualProduct">

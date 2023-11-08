@@ -46,10 +46,13 @@
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="customStock" stepKey="deleteCustomStock"/>
             <deleteData createDataKey="simpleProduct" stepKey="deleteSimpleProduct"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <comment userInput="Create bundle product." stepKey="createBundleProductComment"/>
@@ -64,6 +67,7 @@
 
         <comment userInput="Add bundle item." stepKey="addBundleItemComment"/>
         <conditionalClick selector="{{AdminProductFormBundleSection.bundleItemsToggle}}" dependentSelector="{{AdminProductFormBundleSection.bundleItemsToggle}}" visible="false" stepKey="conditionallyOpenSectionBundleItems"/>
+        <waitForElementClickable selector="{{AdminProductFormBundleSection.addOption}}" stepKey="waitForAddOptionClickable" />
         <click selector="{{AdminProductFormBundleSection.addOption}}" stepKey="clickAddOption"/>
         <waitForElementVisible selector="{{AdminProductFormBundleSection.bundleOptionXTitle('0')}}" stepKey="waitForBundleOptions"/>
         <fillField selector="{{AdminProductFormBundleSection.bundleOptionXTitle('0')}}" userInput="{{BundleProduct.optionTitle1}}" stepKey="fillOptionTitle"/>

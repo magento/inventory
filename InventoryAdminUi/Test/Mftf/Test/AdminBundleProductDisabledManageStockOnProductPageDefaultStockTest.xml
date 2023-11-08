@@ -45,7 +45,9 @@
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="simpleProduct" stepKey="deleteSimpleProduct"/>
             <deleteData createDataKey="bundleProduct" stepKey="deleteBundleProduct"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!--Add simple product to bundle.-->

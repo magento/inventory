@@ -56,8 +56,12 @@
             <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
             <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="In Stock" stepKey="setProductStockStatus"/>
             <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveProduct"/>
-            <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </before>
         <after>
             <!-- Delete configurable product -->
@@ -76,7 +80,9 @@
                 <argument name="sourceCode" value="$$source.source[source_code]$$"/>
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!--Advanced search product by name.-->

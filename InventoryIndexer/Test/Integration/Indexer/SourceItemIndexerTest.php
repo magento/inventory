@@ -64,7 +64,6 @@ class SourceItemIndexerTest extends TestCase
         $this->sourceItemRepository = Bootstrap::getObjectManager()->get(SourceItemRepositoryInterface::class);
         $this->searchCriteriaBuilder = Bootstrap::getObjectManager()->get(SearchCriteriaBuilder::class);
         $this->removeIndexData = Bootstrap::getObjectManager()->get(RemoveIndexData::class);
-        $this->removeIndexData->execute([10, 20, 30]);
     }
 
     /**
@@ -95,6 +94,7 @@ class SourceItemIndexerTest extends TestCase
      */
     public function testReindexRow(string $sku, int $stockId, $expectedData)
     {
+        $this->removeIndexData->execute([10, 20, 30]);
         $sourceItem = $this->getSourceItem('SKU-1', 'eu-1');
         $sourceItemIds = $this->getSourceItemIds->execute([$sourceItem]);
         foreach ($sourceItemIds as $sourceItemId) {
@@ -140,6 +140,7 @@ class SourceItemIndexerTest extends TestCase
      */
     public function testReindexList(string $sku, int $stockId, $expectedData)
     {
+        $this->removeIndexData->execute([10, 20, 30]);
         $sourceItemIds = $this->getSourceItemIds->execute(
             [
                 $this->getSourceItem('SKU-1', 'eu-1'),
@@ -189,6 +190,7 @@ class SourceItemIndexerTest extends TestCase
      */
     public function testReindexAll(string $sku, int $stockId, $expectedData)
     {
+        $this->removeIndexData->execute([10, 20, 30]);
         $this->sourceItemIndexer->executeFull();
 
         $stockItemData = $this->getStockItemData->execute($sku, $stockId);
