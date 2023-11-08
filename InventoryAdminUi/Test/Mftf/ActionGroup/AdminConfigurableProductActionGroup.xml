@@ -19,7 +19,7 @@
         <remove keyForRemoval="clickApplyFiltersButton"/>
         <remove keyForRemoval="clickOnFirstCheckbox"/>
         <remove keyForRemoval="enterAttributeQuantity"/>
-
+        <waitForLoadingMaskToDisappear stepKey="waitForLoadingMaskToDisappear"/>
         <waitForElementClickable selector="{{AdminCreateProductConfigurationsPanel.attributeCheckbox(attributeCode)}}" stepKey="waitForCreateConfigurationsClickable" after="clickCreateConfigurations"/>
         <click selector="{{AdminCreateProductConfigurationsPanel.attributeCheckbox(attributeCode)}}" stepKey="clickOnFirstAttributeCheckbox" after="waitForCreateConfigurationsClickable"/>
         <waitForElementClickable selector="{{AdminCreateProductConfigurationsPanel.attributeCheckbox(secondAttributeCode)}}" stepKey="waitForFirstAttributeCheckboxClickable" after="clickOnFirstAttributeCheckbox"/>
