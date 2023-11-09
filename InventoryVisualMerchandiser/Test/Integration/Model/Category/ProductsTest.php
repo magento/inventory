@@ -114,7 +114,7 @@ class ProductsTest extends TestCase
             $productsStockData[$item->getSku()] = $item->getData('stock');
         }
 
-        self::assertEquals($product->getQty(), (int)$productsStockData['simple_10']);
+        self::assertEquals(100, (int)$productsStockData['simple_10']);
     }
 
     /**
