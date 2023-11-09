@@ -12,6 +12,9 @@
     <type name="Magento\InventoryIndexer\Model\ResourceModel\GetStockItemData">
         <plugin name="inventory_catalog_get_legacy_stock_item_data_from_stock_registry" disabled="true"/>
     </type>
+    <type name="Magento\InventoryIndexer\Model\ResourceModel\GetStockItemsData">
+        <plugin name="inventory_catalog_get_bulk_legacy_stock_item_data_from_stock_registry" disabled="true"/>
+    </type>
     <type name="Magento\Inventory\Model\ResourceModel\IsProductAssignedToStock">
         <plugin name="cache_product_stock_assignment_check" disabled="true"/>
     </type>
@@ -20,6 +23,7 @@
     <preference for="Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface" type="Magento\InventoryCatalog\Model\GetSkusByProductIds" />
     <preference for="Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface" type="Magento\InventoryCatalog\Model\ResourceModel\GetProductTypesBySkus" />
     <preference for="Magento\InventorySalesApi\Model\GetStockItemDataInterface" type="Magento\InventoryIndexer\Model\ResourceModel\GetStockItemData"/>
+    <preference for="Magento\InventorySalesApi\Model\GetStockItemsDataInterface" type="Magento\InventoryIndexer\Model\ResourceModel\GetStockItemsData"/>
     <preference for="Magento\InventoryReservationsApi\Model\GetReservationsQuantityInterface" type="Magento\InventoryReservations\Model\ResourceModel\GetReservationsQuantity"/>
     <preference for="Magento\InventorySalesApi\Model\GetAssignedSalesChannelsForStockInterface" type="Magento\InventorySales\Model\GetAssignedSalesChannelsForStock"/>
     <preference for="Magento\InventorySalesApi\Api\GetStockBySalesChannelInterface" type="Magento\InventorySales\Model\GetStockBySalesChannel"/>
