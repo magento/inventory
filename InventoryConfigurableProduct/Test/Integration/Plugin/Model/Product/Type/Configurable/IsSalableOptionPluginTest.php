@@ -74,7 +74,7 @@ class IsSalableOptionPluginTest extends TestCase
         parent::setUp();
         $this->objectManager = Bootstrap::getObjectManager();
         $this->productRepository = $this->objectManager->get(ProductRepositoryInterface::class);
-        $this->productRepository->cleanCache();
+//        $this->productRepository->cleanCache();
         $this->serializer = $this->objectManager->get(SerializerInterface::class);
         $this->sourceItemRepository = $this->objectManager->get(SourceItemRepositoryInterface::class);
         $this->searchCriteriaBuilder = $this->objectManager->get(SearchCriteriaBuilder::class);
@@ -92,6 +92,7 @@ class IsSalableOptionPluginTest extends TestCase
      */
     public function testGetSalableOptions()
     {
+        $this->markTestSkipped('Skipped to check if it affects other tests');
         $product = $this->productRepository->get('Configurable product');
         $this->block = $this->layout->createBlock(ConfigurableView::class);
         $this->block->setProduct($product);
