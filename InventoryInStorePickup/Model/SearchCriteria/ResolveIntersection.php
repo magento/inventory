@@ -59,7 +59,9 @@ class ResolveIntersection implements ResolverInterface
         }
 
         $codes = $this->getPickupLocationIntersectionForSkus->execute($skus);
-        $codes = implode(',', $codes);
-        $searchCriteriaBuilder->addFilter(SourceInterface::SOURCE_CODE, $codes, 'in');
+        if (!empty($codes)) {
+            $codes = implode(',', $codes);
+            $searchCriteriaBuilder->addFilter(SourceInterface::SOURCE_CODE, $codes, 'in');
+        }
     }
 }
