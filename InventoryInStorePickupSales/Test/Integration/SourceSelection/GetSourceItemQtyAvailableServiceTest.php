@@ -10,6 +10,7 @@ namespace Magento\InventoryInStorePickupSales\Test\Integration\SourceSelection;
 
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Indexer\Model\Indexer\CollectionFactory;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryInStorePickupSales\Model\SourceSelection\GetSourceItemQtyAvailableService;
@@ -69,78 +70,78 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
         }
     }
 
-//    /**
-//     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
-//     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
-//     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
-//     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
-//     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
-//     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
-//     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_items.php
-//     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
-//     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_addresses.php
-//     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_pickup_location_attributes.php
-//     * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/create_in_store_pickup_quote_on_eu_website_guest.php
-//     * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/place_order.php
-//     * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/set_order_pickup_location.php
-//     * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/create_multiple_quotes_on_eu_website.php
-//     * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/place_multiple_orders_on_eu_website.php
-//     *
-//     * @magentoConfigFixture store_for_eu_website_store carriers/instore/active 1
-//     * @magentoConfigFixture store_for_eu_website_store carriers/flatrate/active 1
-//     *
-//     * @magentoDbIsolation disabled
-//     *
-//     * @dataProvider singleStorePickupOrderProvider
-//     *
-//     * @param string $sourceCode
-//     * @param string $sku
-//     * @param float $qtyExpected
-//     *
-//     * @throws NoSuchEntityException
-//     */
-//    public function testSingleStorePickupOrder(string $sourceCode, string $sku, float $qtyExpected)
-//    {
-//        $sourceItem = $this->getSourceItem($sourceCode, $sku);
-//        $this->assertEquals($qtyExpected, $this->getSourceItemQtyAvailableService->execute($sourceItem));
-//    }
-//
-//    /**
-//     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
-//     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
-//     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
-//     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
-//     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
-//     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
-//     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_items.php
-//     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
-//     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_addresses.php
-//     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_pickup_location_attributes.php
-//     * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/create_in_store_pickup_quote_on_eu_website_guest.php
-//     * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/place_order.php
-//     * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/set_order_pickup_location.php
-//     * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/create_multiple_quotes_on_eu_website.php
-//     * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/place_multiple_orders_on_eu_website.php
-//     * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/set_orders_pickup_location.php
-//     *
-//     * @magentoConfigFixture store_for_eu_website_store carriers/instore/active 1
-//     * @magentoConfigFixture store_for_eu_website_store carriers/flatrate/active 1
-//     *
-//     * @magentoDbIsolation disabled
-//     *
-//     * @dataProvider multipleStorePickupOrdersProvider
-//     *
-//     * @param string $sourceCode
-//     * @param string $sku
-//     * @param float $qtyExpected
-//     *
-//     * @throws
-//     */
-//    public function testMultipleStorePickupOrders(string $sourceCode, string $sku, float $qtyExpected)
-//    {
-//        $sourceItem = $this->getSourceItem($sourceCode, $sku);
-//        $this->assertEquals($qtyExpected, $this->getSourceItemQtyAvailableService->execute($sourceItem));
-//    }
+    /**
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_items.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_addresses.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_pickup_location_attributes.php
+     * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/create_in_store_pickup_quote_on_eu_website_guest.php
+     * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/place_order.php
+     * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/set_order_pickup_location.php
+     * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/create_multiple_quotes_on_eu_website.php
+     * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/place_multiple_orders_on_eu_website.php
+     *
+     * @magentoConfigFixture store_for_eu_website_store carriers/instore/active 1
+     * @magentoConfigFixture store_for_eu_website_store carriers/flatrate/active 1
+     *
+     * @magentoDbIsolation disabled
+     *
+     * @dataProvider singleStorePickupOrderProvider
+     *
+     * @param string $sourceCode
+     * @param string $sku
+     * @param float $qtyExpected
+     *
+     * @throws NoSuchEntityException
+     */
+    public function testSingleStorePickupOrder(string $sourceCode, string $sku, float $qtyExpected)
+    {
+        $sourceItem = $this->getSourceItem($sourceCode, $sku);
+        $this->assertEquals($qtyExpected, $this->getSourceItemQtyAvailableService->execute($sourceItem));
+    }
+
+    /**
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_items.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_addresses.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_pickup_location_attributes.php
+     * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/create_in_store_pickup_quote_on_eu_website_guest.php
+     * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/place_order.php
+     * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/set_order_pickup_location.php
+     * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/create_multiple_quotes_on_eu_website.php
+     * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/place_multiple_orders_on_eu_website.php
+     * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/set_orders_pickup_location.php
+     *
+     * @magentoConfigFixture store_for_eu_website_store carriers/instore/active 1
+     * @magentoConfigFixture store_for_eu_website_store carriers/flatrate/active 1
+     *
+     * @magentoDbIsolation disabled
+     *
+     * @dataProvider multipleStorePickupOrdersProvider
+     *
+     * @param string $sourceCode
+     * @param string $sku
+     * @param float $qtyExpected
+     *
+     * @throws
+     */
+    public function testMultipleStorePickupOrders(string $sourceCode, string $sku, float $qtyExpected)
+    {
+        $sourceItem = $this->getSourceItem($sourceCode, $sku);
+        $this->assertEquals($qtyExpected, $this->getSourceItemQtyAvailableService->execute($sourceItem));
+    }
 
     /**
      * @param string $sourceCodes
@@ -216,5 +217,18 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
                     )->create()
             )->getItems()
         );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function tearDownAfterClass(): void
+    {
+        $indexerCollectionFactory = Bootstrap::getObjectManager()->create(CollectionFactory::class);
+        $indexerCollection = $indexerCollectionFactory->create();
+
+        foreach ($indexerCollection as $indexer) {
+            $indexer->reindexAll();
+        }
     }
 }
