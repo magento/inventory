@@ -10,7 +10,6 @@ namespace Magento\InventoryInStorePickupSales\Test\Integration\SourceSelection;
 
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Indexer\Model\Indexer\CollectionFactory;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryInStorePickupSales\Model\SourceSelection\GetSourceItemQtyAvailableService;
@@ -217,18 +216,5 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
                     )->create()
             )->getItems()
         );
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function tearDownAfterClass(): void
-    {
-        $indexerCollectionFactory = Bootstrap::getObjectManager()->create(CollectionFactory::class);
-        $indexerCollection = $indexerCollectionFactory->create();
-
-        foreach ($indexerCollection as $indexer) {
-            $indexer->reindexAll();
-        }
     }
 }
