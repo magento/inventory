@@ -65,7 +65,7 @@ class UpdateIndexSalabilityStatusTest extends TestCase
     }
 
     #[
-        DbIsolation(true),
+        DbIsolation(false),
         AppIsolation(true),
         DataFixture(SourceFixture::class, as: 'source2'),
         DataFixture(StockFixture::class, as: 'stock2'),
@@ -109,7 +109,7 @@ class UpdateIndexSalabilityStatusTest extends TestCase
     }
 
     #[
-        DbIsolation(true),
+        DbIsolation(false),
         AppIsolation(true),
         DataFixture(SourceFixture::class, as: 'source2'),
         DataFixture(StockFixture::class, as: 'stock2'),
