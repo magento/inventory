@@ -20,7 +20,6 @@ use Magento\Checkout\Test\Fixture\SetPaymentMethod as SetPaymentMethodFixture;
 use Magento\Checkout\Test\Fixture\SetShippingAddress as SetShippingAddressFixture;
 use Magento\Framework\MessageQueue\ConsumerFactory;
 use Magento\Framework\MessageQueue\ConsumerInterface;
-use Magento\Indexer\Test\Fixture\Indexer;
 use Magento\InventoryApi\Api\Data\StockInterface;
 use Magento\InventoryApi\Test\Fixture\DeleteSourceItems as DeleteSourceItemsFixture;
 use Magento\InventoryApi\Test\Fixture\Source as SourceFixture;
@@ -87,7 +86,6 @@ class UpdateIndexSalabilityStatusTest extends TestCase
         DataFixture(BundleSelectionFixture::class, ['sku' => '$s1.sku$'], 'link1'),
         DataFixture(BundleOptionFixture::class, ['product_links' => ['$link1$']], 'opt1'),
         DataFixture(BundleProductFixture::class, ['sku' => 'bundle1', '_options' => ['$opt1$']], 'b1'),
-        DataFixture(Indexer::class, as: 'indexer'),
         DataFixture(GuestCartFixture::class, as: 'cart'),
         DataFixture(AddProductToCartFixture::class, ['cart_id' => '$cart.id$', 'product_id' => '$s1.id$']),
         DataFixture(SetBillingAddressFixture::class, ['cart_id' => '$cart.id$']),
@@ -132,7 +130,6 @@ class UpdateIndexSalabilityStatusTest extends TestCase
         DataFixture(BundleSelectionFixture::class, ['sku' => '$s1.sku$'], 'link1'),
         DataFixture(BundleOptionFixture::class, ['product_links' => ['$link1$']], 'opt1'),
         DataFixture(BundleProductFixture::class, ['sku' => 'bundle1', '_options' => ['$opt1$']], 'b1'),
-        DataFixture(Indexer::class, as: 'indexer'),
         DataFixture(GuestCartFixture::class, as: 'cart'),
         DataFixture(
             AddBundleProductToCartFixture::class,
