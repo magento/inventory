@@ -129,7 +129,6 @@ class IsSalableOptionPluginTest extends TestCase
         ];
     }
 
-
     public function testNoProductsAreSalable()
     {
         $products = $this->createProducts(['sku1' => false, 'sku2' => false]);
@@ -153,7 +152,6 @@ class IsSalableOptionPluginTest extends TestCase
         $this->assertIsArray($result);
         $this->assertEmpty($result);
     }
-
 
     private function createProducts(array $productData): array
     {
