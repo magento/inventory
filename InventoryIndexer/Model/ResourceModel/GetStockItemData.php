@@ -18,7 +18,6 @@ use Magento\InventoryIndexer\Indexer\IndexStructure;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
 use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 
-
 /**
  * @inheritdoc
  */
@@ -45,14 +44,9 @@ class GetStockItemData implements GetStockItemDataInterface
     private $getProductIdsBySkus;
 
     /**
-     * @var IsSingleSourceModeInterface
+     * @var StockItemDataHandler
      */
-    private $isSingleSourceMode;
-
-    /**
-     * @var IsSourceItemManagementAllowedForSkuInterface
-     */
-    private $isSourceItemManagementAllowedForSku;
+    private $stockItemDataHandler;
 
     /**
      * @param ResourceConnection $resource
@@ -61,6 +55,8 @@ class GetStockItemData implements GetStockItemDataInterface
      * @param GetProductIdsBySkusInterface $getProductIdsBySkus
      * @param IsSingleSourceModeInterface|null $isSingleSourceMode
      * @param IsSourceItemManagementAllowedForSkuInterface|null $isSourceItemManagementAllowedForSku
+     * @param StockItemDataHandler|null $stockItemDataHandler
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __construct(
         ResourceConnection $resource,
@@ -68,17 +64,15 @@ class GetStockItemData implements GetStockItemDataInterface
         DefaultStockProviderInterface $defaultStockProvider,
         GetProductIdsBySkusInterface $getProductIdsBySkus,
         ?IsSingleSourceModeInterface $isSingleSourceMode = null,
-        ?IsSourceItemManagementAllowedForSkuInterface $isSourceItemManagementAllowedForSku = null
+        ?IsSourceItemManagementAllowedForSkuInterface $isSourceItemManagementAllowedForSku = null,
+        ?StockItemDataHandler $stockItemDataHandler = null
     ) {
         $this->resource = $resource;
         $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
         $this->defaultStockProvider = $defaultStockProvider;
         $this->getProductIdsBySkus = $getProductIdsBySkus;
-        $this->isSingleSourceMode = $isSingleSourceMode
-            ?: ObjectManager::getInstance()->get(IsSingleSourceModeInterface::class);
-        $this->isSourceItemManagementAllowedForSku = $isSourceItemManagementAllowedForSku
-            ?: ObjectManager::getInstance()->get(IsSourceItemManagementAllowedForSkuInterface::class);
-
+        $this->stockItemDataHandler = $stockItemDataHandler
+            ?: ObjectManager::getInstance()->get(StockItemDataHandler::class);
     }
 
     /**
@@ -122,46 +116,12 @@ class GetStockItemData implements GetStockItemDataInterface
              * for disabled products assigned to the default stock.
              */
             if ($stockItemRow === null) {
-                $stockItemRow = $this->getStockItemDataFromStockItemTable($sku, $stockId);
+                $stockItemRow = $this->stockItemDataHandler->getStockItemDataFromStockItemTable($sku, $stockId);
             }
         } catch (\Exception $e) {
             throw new LocalizedException(__('Could not receive Stock Item data'), $e);
         }
 
         return $stockItemRow;
-    }
-
-    /**
-     * Retrieve stock item data for product assigned to the default stock.
-     *
-     * @param string $sku
-     * @param int $stockId
-     * @return array|null
-     */
-    private function getStockItemDataFromStockItemTable(string $sku, int $stockId): ?array
-    {
-        if ($this->defaultStockProvider->getId() !== $stockId
-            || $this->isSingleSourceMode->execute()
-            || !$this->isSourceItemManagementAllowedForSku->execute($sku)
-        ) {
-            return null;
-        }
-
-        $productId = current($this->getProductIdsBySkus->execute([$sku]));
-        $connection = $this->resource->getConnection();
-        $select = $connection->select();
-
-        $select->from(
-            $this->resource->getTableName('cataloginventory_stock_item'),
-            [
-                GetStockItemDataInterface::QUANTITY => 'qty',
-                GetStockItemDataInterface::IS_SALABLE => 'is_in_stock',
-            ]
-        )->where(
-            'product_id = ?',
-            $productId
-        );
-
-        return $connection->fetchRow($select) ?: null;
     }
 }
