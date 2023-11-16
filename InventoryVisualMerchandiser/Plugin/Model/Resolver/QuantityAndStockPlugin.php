@@ -94,7 +94,11 @@ class QuantityAndStockPlugin
      */
     public function aroundJoinStock(QuantityAndStock $subject, callable $proceed, Collection $collection): Collection
     {
-        $websiteCode = $this->storeManager->getWebsite()->getCode();
+        if ($collection->getStoreId() !== null) {
+            $websiteCode = $this->storeManager->getWebsite($collection->getStoreId())->getCode();
+        } else {
+            $websiteCode = $this->storeManager->getWebsite()->getCode();
+        }
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
         $stockId = (int)$stock->getStockId();
         if ($stockId === $this->defaultStockProvider->getId()) {
@@ -152,7 +156,7 @@ class QuantityAndStockPlugin
             $collection->getSelect()->joinLeft(
                 ['inventory_stock' => $this->stockIndexTableNameResolver->execute($stockId)],
                 'inventory_stock.sku = e.sku',
-                ['stock' => 'quantity']
+                ['stock' => 'IFNULL(quantity, 0)']
             );
         }
 
