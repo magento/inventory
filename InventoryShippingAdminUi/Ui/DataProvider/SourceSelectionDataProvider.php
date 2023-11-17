@@ -173,8 +173,10 @@ class SourceSelectionDataProvider extends AbstractDataProvider
     }
 
     /**
-     * @param $itemSku
-     * @param $stockId
+     * Manage Stock
+     *
+     * @param string $itemSku
+     * @param int $stockId
      * @return bool
      * @throws LocalizedException
      */
@@ -187,6 +189,7 @@ class SourceSelectionDataProvider extends AbstractDataProvider
 
     /**
      * Generate display product name
+     *
      * @param Item $item
      * @return null|string
      */
@@ -221,6 +224,8 @@ class SourceSelectionDataProvider extends AbstractDataProvider
     }
 
     /**
+     * Cast Qty
+     *
      * @param Item $item
      * @param string|int|float $qty
      * @return float|int
