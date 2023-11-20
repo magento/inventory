@@ -95,7 +95,8 @@ class QuantityAndStockPlugin
     public function aroundJoinStock(QuantityAndStock $subject, callable $proceed, Collection $collection): Collection
     {
         if ($collection->getStoreId() !== null) {
-            $websiteCode = $this->storeManager->getWebsite($collection->getStoreId())->getCode();
+            $websiteId = $this->storeManager->getStore($collection->getStoreId())->getWebsiteId();
+            $websiteCode = $this->storeManager->getWebsite($websiteId)->getCode();
         } else {
             $websiteCode = $this->storeManager->getWebsite()->getCode();
         }
