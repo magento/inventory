@@ -163,5 +163,6 @@
             <actualResult type="string">$getProductSku</actualResult>
             <expectedResult type="string">$$simpleProduct.sku$$</expectedResult>
         </assertNotEquals>
+        <actionGroup ref="AdminOrdersGridClearFiltersActionGroup" stepKey="clearOrderFilter"/>
     </test>
 </tests>
