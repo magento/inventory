@@ -100,9 +100,8 @@ class QuantityAndStockPlugin
         } else {
             $websiteCode = $this->storeManager->getWebsite()->getCode();
         }
-        $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
-        $stockId = (int)$stock->getStockId();
-        if ($stockId === $this->defaultStockProvider->getId()) {
+
+        if ($websiteCode === 'admin') {
             $productLinkField = $this->metadataPool->getMetadata(ProductInterface::class)
                 ->getLinkField();
             $collection->joinField(
@@ -154,6 +153,8 @@ class QuantityAndStockPlugin
                 )
             );
         } else {
+            $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
+            $stockId = (int)$stock->getStockId();
             $collection->getSelect()->joinLeft(
                 ['inventory_stock' => $this->stockIndexTableNameResolver->execute($stockId)],
                 'inventory_stock.sku = e.sku',
