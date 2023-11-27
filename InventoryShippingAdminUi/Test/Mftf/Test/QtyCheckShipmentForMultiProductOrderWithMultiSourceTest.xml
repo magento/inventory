@@ -16,7 +16,6 @@
             <testCaseId value="GIT-38063"/>
             <useCaseId value="GIT-38063"/>
             <severity value="AVERAGE"/>
-            <group value="msi"/>
         </annotations>
         <before>
             <!--Create Category and Simple Product.-->
