@@ -9,6 +9,7 @@ namespace Magento\Inventory\Model\SourceItem\Validator;
 
 use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
+use Magento\Inventory\Model\Validators\NoSpaceBeforeAndAfterString;
 use Magento\Inventory\Model\Validators\NotAnEmptyString;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Model\SourceItemValidatorInterface;
@@ -29,15 +30,23 @@ class SkuValidator implements SourceItemValidatorInterface
     private $notAnEmptyString;
 
     /**
+     * @var NoSpaceBeforeAndAfterString
+     */
+    private $noSpaceBeforeAndAfterString;
+
+    /**
      * @param ValidationResultFactory $validationResultFactory
      * @param NotAnEmptyString $notAnEmptyString
+     * @param NoSpaceBeforeAndAfterString $noSpaceBeforeAndAfterString
      */
     public function __construct(
         ValidationResultFactory $validationResultFactory,
-        NotAnEmptyString $notAnEmptyString
+        NotAnEmptyString $notAnEmptyString,
+        NoSpaceBeforeAndAfterString $noSpaceBeforeAndAfterString
     ) {
         $this->validationResultFactory = $validationResultFactory;
         $this->notAnEmptyString = $notAnEmptyString;
+        $this->noSpaceBeforeAndAfterString = $noSpaceBeforeAndAfterString;
     }
 
     /**
@@ -47,10 +56,10 @@ class SkuValidator implements SourceItemValidatorInterface
     {
         $value = $source->getSku();
         $errors = [
-            $this->notAnEmptyString->execute(SourceItemInterface::SKU, (string)$value)
+            $this->notAnEmptyString->execute(SourceItemInterface::SKU, (string)$value),
+            $this->noSpaceBeforeAndAfterString->execute(SourceItemInterface::SKU, (string)$value)
         ];
-        $errors = !empty($errors) ? array_merge(...$errors) : $errors;
-
+        $errors = array_merge(...$errors);
         return $this->validationResultFactory->create(['errors' => $errors]);
     }
 }

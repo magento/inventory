@@ -13,7 +13,8 @@
         "magento/module-store": "*",
         "magento/module-catalog-inventory": "*",
         "magento/module-sales": "*",
-        "magento/module-configurable-product": "*"
+        "magento/module-configurable-product": "*",
+        "magento/module-eav": "*"
     },
     "suggest": {
         "magento/module-inventory": "*",

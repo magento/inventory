@@ -33,7 +33,9 @@
             <actionGroup ref="AdminSetWebsiteAsDefaultActionGroup" stepKey="SetTheMainWebsiteAsDefault">
                 <argument name="WebsiteName" value="Main Website"/>
             </actionGroup>
-            <magentoCron groups="index" stepKey="reindexForResettingTheMainWebsite"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexForResettingTheMainWebsite">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <actionGroup ref="AdminDeleteStockActionGroup" stepKey="deleteCreatedStock">
                 <argument name="stockName" value="Test Stock 1"/>
                 <argument name="websiteName" value="{{customWebsite.name}}"/>
@@ -47,7 +49,9 @@
             <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite">
                 <argument name="websiteName" value="{{customWebsite.name}}"/>
             </actionGroup>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
@@ -78,7 +82,9 @@
         <actionGroup ref="AdminSetWebsiteAsDefaultActionGroup" stepKey="SetTheWebsiteAsDefault">
             <argument name="WebsiteName" value="{{customWebsite.name}}"/>
         </actionGroup>
-        <magentoCron groups="index" stepKey="reindex"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
 
         <!-- Step3 Create New Source -->
         <createData entity="FullSource1" stepKey="createTestSource1"/>
@@ -92,8 +98,12 @@
 
         <!-- Step5 Set your Test Website accessible on frontend via Add Store Code to Urls-->
         <magentoCLI command="config:set {{StorefrontEnableAddStoreCodeToUrls.path}} {{StorefrontEnableAddStoreCodeToUrls.value}}" stepKey="setAddStoreCodeToUrlsToYes"/>
-        <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
-        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <!-- Step6.1 Create Simple Product -->
         <createData entity="SimpleProduct" stepKey="createMSISimpleProduct">
@@ -153,8 +163,12 @@
 
         <!-- Step8.3 Save the Bundle Product -->
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProductPostOutOfStock"/>
-        <magentoCLI command="indexer:reindex" stepKey="performReindexPostOutOfStock"/>
-        <magentoCLI command="cache:flush" stepKey="cleanCachePostOutOfStock"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexPostOutOfStock">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCachePostOutOfStock">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <!-- Step9.1 Verify the Bundle Product in Created Category in Storefront is not present -->
         <actionGroup ref="AssertProductNotPresentInStorefrontCategoryPage" stepKey="assertProductNotPresentInStorefrontPostMakingTheBundleProductOutOfStock">
@@ -172,8 +186,12 @@
 
         <!-- Step10.3 Save the Bundle Product -->
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProductPostInStock"/>
-        <magentoCLI command="indexer:reindex" stepKey="performReindexPostInStock"/>
-        <magentoCLI command="cache:flush" stepKey="cleanCachePostInStock"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexPostInStock">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCachePostInStock">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <!-- Step11 Verify the Bundle Product name , SKU and status for product in Storefront is present -->
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="assertProductInStorefrontPostSwitchingBackToInStock">

@@ -1,0 +1,227 @@
+
+File "/var/www/html/app/code/Magento/Inventory/Test/Mftf/Test/AdminAddConfigurableProductWithTextSwatchAttributeAndDefaultSourceTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 _defaultWebsite from module(s): magento/module-store
+	 AdminProductIndexPage from module(s): magento/module-catalog
+	 AdminProductGridActionSection from module(s): magento/module-catalog, magento/module-configurable-product
+	 ConfigurableMsiProduct from module(s): magento/module-inventory-admin-ui
+	 AdminProductFormSection from module(s): magento/module-catalog, magento/module-catalog-inventory, magento/module-catalog-staging, magento/module-gift-card
+	 AdminConfigurableProductFormSection from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminNewAttributePanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui, magento/module-swatches
+	 textSwatchProductAttribute from module(s): magento/module-catalog, magento/module-inventory-configurable-product, magento/module-swatches
+	 textSwatchProductAttribute1 from module(s): magento/module-inventory-configurable-product
+	 textSwatchProductAttribute2 from module(s): magento/module-inventory-configurable-product
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 AdminGridFilterControls from module(s): magento/module-ui
+	 AdminManageSourcesGridFilterControls from module(s): magento/module-inventory-admin-ui
+	 AdminGridRow from module(s): magento/module-ui
+	 AdminProductFormActionSection from module(s): magento/module-catalog
+	 AdminChooseAffectedAttributeSetPopup from module(s): magento/module-configurable-product
+	 AdminProductMessagesSection from module(s): magento/module-catalog
+	 StorefrontProductInfoMainSection from module(s): magento/module-bundle, magento/module-catalog, magento/module-checkout, magento/module-configurable-product, magento/module-gift-card, magento/module-grouped-product, magento/module-inventory-bundle-product, magento/module-inventory-configurable-product-frontend-ui, magento/module-product-video, magento/module-swatches, magento/module-wishlist
+	 CliIndexerReindexActionGroup from module(s): magento/module-indexer
+	 AdminLoginActionGroup from module(s): magento/module-admin-analytics, magento/module-backend, magento/module-two-factor-auth
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 AdminLogoutActionGroup from module(s): magento/module-backend
+	 AssertProductInStorefrontCategoryPage from module(s): magento/module-catalog
+	 AssertProductNameAndSkuInStorefrontProductPageActionGroup from module(s): magento/module-catalog
+	 DeleteProductUsingProductGridActionGroup from module(s): magento/module-catalog
+	 ResetAdminDataGridToDefaultViewActionGroup from module(s): magento/module-ui
+
+File "/var/www/html/app/code/Magento/Inventory/Test/Mftf/Test/AdminCanSetOnlyXLeftThresholdForVirtualProductWithTestSourceTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 _defaultWebsite from module(s): magento/module-store
+	 AdminProductFormSection from module(s): magento/module-catalog, magento/module-catalog-inventory, magento/module-catalog-staging, magento/module-gift-card
+	 AdminProductSourcesGrid from module(s): magento/module-inventory-admin-ui
+	 StorefrontProductInfoMainSection from module(s): magento/module-bundle, magento/module-catalog, magento/module-checkout, magento/module-configurable-product, magento/module-gift-card, magento/module-grouped-product, magento/module-inventory-bundle-product, magento/module-inventory-configurable-product-frontend-ui, magento/module-product-video, magento/module-swatches, magento/module-wishlist
+	 AdminOrderFormActionSection from module(s): magento/module-sales
+	 AdminOrderDetailsPage from module(s): magento/module-gift-wrapping, magento/module-reward, magento/module-rma, magento/module-sales
+	 AdminLoginActionGroup from module(s): magento/module-admin-analytics, magento/module-backend, magento/module-two-factor-auth
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 AdminLogoutActionGroup from module(s): magento/module-backend
+	 AdminGoToProductGridFilterResultsByInputEditProduct from module(s): magento/module-inventory-admin-ui
+	 AdminOnProductEditPageAssignSourceToProduct from module(s): magento/module-inventory-admin-ui
+	 AdminFormSaveAndCloseActionGroup from module(s): magento/module-ui
+	 AssertProductInStorefrontCategoryPage from module(s): magento/module-catalog
+	 CliIndexerReindexActionGroup from module(s): magento/module-indexer
+	 CliCacheFlushActionGroup from module(s): magento/module-backend
+	 LoginToStorefrontActionGroup from module(s): magento/module-customer
+	 AdminNavigateToNewOrderPageExistingCustomerActionGroup from module(s): magento/module-negotiable-quote, magento/module-sales
+	 AddSimpleProductToOrderActionGroup from module(s): magento/module-sales
+
+File "/var/www/html/app/code/Magento/Inventory/Test/Mftf/Test/AdminCanSetOnlyXLeftTresholdForVirtualProductWithDefaultSourceTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminManageStockPage from module(s): magento/module-inventory-admin-ui
+	 AdminGridRow from module(s): magento/module-ui
+	 AdminEditStockSalesChannelsSection from module(s): magento/module-inventory-admin-ui
+	 AdminGridMainControls from module(s): magento/module-ui
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 _defaultWebsite from module(s): magento/module-store
+	 AdminProductSourcesGrid from module(s): magento/module-inventory-admin-ui
+	 AdminProductFormSection from module(s): magento/module-catalog, magento/module-catalog-inventory, magento/module-catalog-staging, magento/module-gift-card
+	 AdminOrderFormActionSection from module(s): magento/module-sales
+	 AdminOrderDetailsPage from module(s): magento/module-gift-wrapping, magento/module-reward, magento/module-rma, magento/module-sales
+	 CliIndexerReindexActionGroup from module(s): magento/module-indexer
+	 CliCacheFlushActionGroup from module(s): magento/module-backend
+	 AdminLoginActionGroup from module(s): magento/module-admin-analytics, magento/module-backend, magento/module-two-factor-auth
+	 SearchAdminDataGridByKeywordActionGroup from module(s): magento/module-ui
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 AdminLogoutActionGroup from module(s): magento/module-backend
+	 AdminGoToProductGridFilterResultsByInputEditProduct from module(s): magento/module-inventory-admin-ui
+	 AdminFormSaveAndCloseActionGroup from module(s): magento/module-ui
+	 LoginToStorefrontActionGroup from module(s): magento/module-customer
+	 AdminNavigateToNewOrderPageExistingCustomerActionGroup from module(s): magento/module-negotiable-quote, magento/module-sales
+	 AddSimpleProductToOrderActionGroup from module(s): magento/module-sales
+
+File "/var/www/html/app/code/Magento/Inventory/Test/Mftf/Test/AdminCreateVirtualProductOnSingleStockModeTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 TurnOnManageStockConfig from module(s): magento/module-inventory-admin-ui
+	 AdminProductIndexPage from module(s): magento/module-catalog
+	 AdminProductGridSection from module(s): magento/module-catalog, magento/module-inventory-admin-ui, magento/module-inventory-catalog-admin-ui
+	 AdminProductFormSection from module(s): magento/module-catalog, magento/module-catalog-inventory, magento/module-catalog-staging, magento/module-gift-card
+	 VirtualMsiProduct from module(s): magento/module-inventory-admin-ui
+	 StorefrontProductInfoMainSection from module(s): magento/module-bundle, magento/module-catalog, magento/module-checkout, magento/module-configurable-product, magento/module-gift-card, magento/module-grouped-product, magento/module-inventory-bundle-product, magento/module-inventory-configurable-product-frontend-ui, magento/module-product-video, magento/module-swatches, magento/module-wishlist
+	 AdminLoginActionGroup from module(s): magento/module-admin-analytics, magento/module-backend, magento/module-two-factor-auth
+	 AdminLogoutActionGroup from module(s): magento/module-backend
+	 AdminGridFilterSearchResultsByInput from module(s): magento/module-ui
+	 AdminFormSaveAndCloseActionGroup from module(s): magento/module-ui
+	 AssertProductInStorefrontCategoryPage from module(s): magento/module-catalog
+
+File "/var/www/html/app/code/Magento/Inventory/Test/Mftf/Test/AdminCreateVirtualProductWithDefaultSourceTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductEditPage from module(s): magento/module-catalog, magento/module-catalog-staging, magento/module-staging, magento/module-weee
+	 StorefrontProductPage from module(s): magento/module-banner, magento/module-catalog, magento/module-downloadable, magento/module-requisition-list
+	 AdminLoginActionGroup from module(s): magento/module-admin-analytics, magento/module-backend, magento/module-two-factor-auth
+	 AdminAssignCategoryToProductAndSaveActionGroup from module(s): magento/module-catalog
+	 CliIndexerReindexActionGroup from module(s): magento/module-indexer
+	 CliCacheFlushActionGroup from module(s): magento/module-backend
+	 DisableAllSourcesActionGroup from module(s): magento/module-inventory-admin-ui
+	 AdminLogoutActionGroup from module(s): magento/module-backend
+	 AssertProductInStorefrontCategoryPage from module(s): magento/module-catalog
+	 StorefrontAssertProductNameOnProductPageActionGroup from module(s): magento/module-catalog
+	 StorefrontAssertProductPriceOnProductPageActionGroup from module(s): magento/module-catalog
+
+File "/var/www/html/app/code/Magento/Inventory/Test/Mftf/Test/AdminManageStockForVirtualProductIsDisabledTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 TurnOnManageStockConfig from module(s): magento/module-inventory-admin-ui
+	 AdminProductSEOSection from module(s): magento/module-catalog
+	 VirtualMsiProduct from module(s): magento/module-inventory-admin-ui
+	 AdminProductFormSection from module(s): magento/module-catalog, magento/module-catalog-inventory, magento/module-catalog-staging, magento/module-gift-card
+	 AdminProductSourcesGrid from module(s): magento/module-inventory-admin-ui
+	 AdminProductFormActionSection from module(s): magento/module-catalog
+	 AdminProductMessagesSection from module(s): magento/module-catalog
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 _defaultWebsite from module(s): magento/module-store
+	 StorefrontCategoryPage from module(s): magento/module-catalog, magento/module-catalog-event, magento/module-msrp
+	 SimpleMsiProduct from module(s): magento/module-inventory-admin-ui
+	 AdminLoginActionGroup from module(s): magento/module-admin-analytics, magento/module-backend, magento/module-two-factor-auth
+	 AdminGoToProductGridFilterResultsByInputEditProduct from module(s): magento/module-inventory-admin-ui
+	 AdminOnProductEditPageAssignSourceToProduct from module(s): magento/module-inventory-admin-ui
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 AdminLogoutActionGroup from module(s): magento/module-backend
+	 AssertProductInStorefrontCategoryPage from module(s): magento/module-catalog
+	 AssertProductInStorefrontProductPageActionGroup from module(s): magento/module-catalog
+
+File "/var/www/html/app/code/Magento/Inventory/Test/Mftf/Test/AdminOutOfStockThresholdOnVirtualProductPageTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 TurnOnManageStockConfig from module(s): magento/module-inventory-admin-ui
+	 AdminProductIndexPage from module(s): magento/module-catalog
+	 AdminGridRow from module(s): magento/module-ui
+	 AdminProductFormSection from module(s): magento/module-catalog, magento/module-catalog-inventory, magento/module-catalog-staging, magento/module-gift-card
+	 AdminProductFormActionSection from module(s): magento/module-catalog
+	 AdminOrderFormItemsSection from module(s): magento/module-inventory-admin-ui, magento/module-sales
+	 AdminOrderFormActionSection from module(s): magento/module-sales
+	 AdminOrderDetailsPage from module(s): magento/module-gift-wrapping, magento/module-reward, magento/module-rma, magento/module-sales
+	 AdminOrderDetailsMessagesSection from module(s): magento/module-sales
+	 AdminLoginActionGroup from module(s): magento/module-admin-analytics, magento/module-backend, magento/module-two-factor-auth
+	 AdminLogoutActionGroup from module(s): magento/module-backend
+	 AdminGridFilterSearchResultsByInput from module(s): magento/module-ui
+	 AdminNavigateToNewOrderPageExistingCustomerActionGroup from module(s): magento/module-negotiable-quote, magento/module-sales
+	 CliIndexerReindexActionGroup from module(s): magento/module-indexer
+	 CliCacheFlushActionGroup from module(s): magento/module-backend
+
+File "/var/www/html/app/code/Magento/Inventory/Test/Mftf/Test/AdminUseDecimalQuantityOnSimpleProductTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 TurnOnManageStockConfig from module(s): magento/module-inventory-admin-ui
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 _defaultWebsite from module(s): magento/module-store
+	 AdminProductFormSection from module(s): magento/module-catalog, magento/module-catalog-inventory, magento/module-catalog-staging, magento/module-gift-card
+	 AdminProductSourcesGrid from module(s): magento/module-inventory-admin-ui
+	 AdminProductSEOSection from module(s): magento/module-catalog
+	 SimpleMsiProduct from module(s): magento/module-inventory-admin-ui
+	 AdminProductFormActionSection from module(s): magento/module-catalog
+	 AdminProductMessagesSection from module(s): magento/module-catalog
+	 StorefrontProductActionSection from module(s): magento/module-catalog
+	 StorefrontMessagesSection from module(s): magento/module-checkout, magento/module-theme, magento/module-ui
+	 StorefrontMinicartSection from module(s): magento/module-checkout, magento/module-inventory-admin-ui
+	 CheckoutShippingGuestInfoSection from module(s): magento/module-checkout
+	 CustomerEntityOne from module(s): magento/module-customer
+	 CustomerAddressSimple from module(s): magento/module-customer
+	 CheckoutSuccessMainSection from module(s): magento/module-b2b, magento/module-checkout
+	 AdminLoginActionGroup from module(s): magento/module-admin-analytics, magento/module-backend, magento/module-two-factor-auth
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 AdminLogoutActionGroup from module(s): magento/module-backend
+	 AdminGoToProductGridFilterResultsByInputEditProduct from module(s): magento/module-inventory-admin-ui
+	 AdminOnProductEditPageAssignSourceToProduct from module(s): magento/module-inventory-admin-ui
+	 ClickPlaceOrderActionGroup from module(s): magento/module-checkout
+
+File "/var/www/html/app/code/Magento/Inventory/Test/Mftf/Test/AdminUseDecimalQuantityOnVirtualProductTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 TurnOnManageStockConfig from module(s): magento/module-inventory-admin-ui
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 _defaultWebsite from module(s): magento/module-store
+	 AdminProductFormSection from module(s): magento/module-catalog, magento/module-catalog-inventory, magento/module-catalog-staging, magento/module-gift-card
+	 AdminProductSourcesGrid from module(s): magento/module-inventory-admin-ui
+	 AdminProductSEOSection from module(s): magento/module-catalog
+	 SimpleMsiProduct from module(s): magento/module-inventory-admin-ui
+	 AdminProductFormActionSection from module(s): magento/module-catalog
+	 AdminProductMessagesSection from module(s): magento/module-catalog
+	 StorefrontProductActionSection from module(s): magento/module-catalog
+	 StorefrontMessagesSection from module(s): magento/module-checkout, magento/module-theme, magento/module-ui
+	 StorefrontMinicartSection from module(s): magento/module-checkout, magento/module-inventory-admin-ui
+	 CheckoutShippingGuestInfoSection from module(s): magento/module-checkout
+	 CustomerEntityOne from module(s): magento/module-customer
+	 CustomerAddressSimple from module(s): magento/module-customer
+	 CheckoutPaymentSection from module(s): magento/module-checkout, magento/module-customer-balance, magento/module-gift-card-account, magento/module-paypal, magento/module-quick-checkout
+	 CheckoutSuccessMainSection from module(s): magento/module-b2b, magento/module-checkout
+	 AdminLoginActionGroup from module(s): magento/module-admin-analytics, magento/module-backend, magento/module-two-factor-auth
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 AdminLogoutActionGroup from module(s): magento/module-backend
+	 AdminGoToProductGridFilterResultsByInputEditProduct from module(s): magento/module-inventory-admin-ui
+	 AdminOnProductEditPageAssignSourceToProduct from module(s): magento/module-inventory-admin-ui
+	 ClickPlaceOrderActionGroup from module(s): magento/module-checkout
+
+File "/var/www/html/app/code/Magento/Inventory/Test/Mftf/Test/AdminVirtualProductDisabledManageStockOnCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 TurnOnManageStockConfig from module(s): magento/module-inventory-admin-ui
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 _defaultWebsite from module(s): magento/module-store
+	 AdminProductIndexPage from module(s): magento/module-catalog
+	 AdminGridRow from module(s): magento/module-ui
+	 AdminProductFormSection from module(s): magento/module-catalog, magento/module-catalog-inventory, magento/module-catalog-staging, magento/module-gift-card
+	 AdminProductSourcesGrid from module(s): magento/module-inventory-admin-ui
+	 AdminProductFormActionSection from module(s): magento/module-catalog
+	 StorefrontProductInfoMainSection from module(s): magento/module-bundle, magento/module-catalog, magento/module-checkout, magento/module-configurable-product, magento/module-gift-card, magento/module-grouped-product, magento/module-inventory-bundle-product, magento/module-inventory-configurable-product-frontend-ui, magento/module-product-video, magento/module-swatches, magento/module-wishlist
+	 TurnOffManageStockConfig from module(s): magento/module-inventory-admin-ui
+	 CliIndexerReindexActionGroup from module(s): magento/module-indexer
+	 CliCacheFlushActionGroup from module(s): magento/module-backend
+	 AdminLoginActionGroup from module(s): magento/module-admin-analytics, magento/module-backend, magento/module-two-factor-auth
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 AdminLogoutActionGroup from module(s): magento/module-backend
+	 AdminGridFilterSearchResultsByInput from module(s): magento/module-ui
+	 AdminOnProductEditPageAssignSourceToProduct from module(s): magento/module-inventory-admin-ui
+	 AssertProductInStorefrontCategoryPage from module(s): magento/module-catalog
