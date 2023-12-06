@@ -33,12 +33,11 @@ class IsProductAssignedToStockCacheStorage
      * @param string $sku
      * @return bool
      */
-    public function isProductAssigned(int $stockId, string $sku): ?bool
+    public function isProductAssigned(int $stockId, string $sku): bool
     {
-        return $this->cachedItemData[$stockId][$sku] ?? null;
+        return $this->cachedItemData[$stockId][$sku] ?? false;
     }
 
-    
     /**
      * Delete item from cache
      *

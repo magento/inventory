@@ -16,7 +16,7 @@ use Magento\Inventory\Model\ResourceModel\IsProductAssignedToStock;
 class IsProductAssignedToStockCache
 {
     /**
-     * @var IsProductAssignedToStockCacheStorage
+     * @var $cacheStorage
      */
     private IsProductAssignedToStockCacheStorage $cacheStorage;
 
@@ -42,16 +42,16 @@ class IsProductAssignedToStockCache
     public function aroundExecute(IsProductAssignedToStock $subject, callable $proceed, string $sku, int $stockId): bool
     {
         if ($this->cacheStorage->isProductAssigned($stockId, $sku)) {
-            return $this->cacheStorage->isProductAssigned($stockId, $sku);
+            return true;
         }
 
-        $stockItemData = $proceed($sku, $stockId);
+        $isProductAssignableToStockCache = $proceed($sku, $stockId);
 
         /* Add to cache a new item */
-        if (!empty($stockItemData)) {
-            $this->cacheStorage->set($stockId, $sku, $stockItemData);
+        if ($isProductAssignableToStockCache) {
+            $this->cacheStorage->set($stockId, $sku, $isProductAssignableToStockCache);
         }
 
-        return $stockItemData;
+        return $isProductAssignableToStockCache;
     }
 }
