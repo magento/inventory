@@ -10,6 +10,10 @@
         <plugin name="inventory_catalog_get_legacy_stock_item_data_from_stock_registry"
                 type="Magento\InventoryCatalog\Plugin\InventoryIndexer\Model\ResourceModel\GetLegacyStockStatusDataFromStockRegistry"/>
     </type>
+    <type name="Magento\InventoryIndexer\Model\ResourceModel\GetStockItemsData">
+        <plugin name="inventory_catalog_get_bulk_legacy_stock_item_data_from_stock_registry"
+                type="Magento\InventoryCatalog\Plugin\InventoryIndexer\Model\ResourceModel\GetBulkLegacyStockStatusDataFromStockRegistry"/>
+    </type>
     <type name="Magento\InventoryConfiguration\Model\GetLegacyStockItem">
         <plugin name="inventory_catalog_get_legacy_stock_item_from_stock_registry"
                 type="\Magento\InventoryCatalog\Plugin\InventoryConfiguration\Model\GetLegacyStockItemFromStockRegistry"/>

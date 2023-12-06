@@ -9,6 +9,8 @@ namespace Magento\InventoryConfigurableProduct\Plugin\Model\Product\Type\Configu
 
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\InventorySalesApi\Api\Data\IsProductSalableResultInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
@@ -69,33 +71,42 @@ class IsSalableOptionPlugin
      * @param Configurable $subject
      * @param array $products
      * @return array
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterGetUsedProducts(Configurable $subject, array $products): array
     {
-        $skus = [];
-        foreach ($products as $product) {
-            foreach ($this->productsSalableStatuses as $isProductSalableResult) {
-                if ($isProductSalableResult->getSku() === $product->getSku()) {
-                    continue 2;
-                }
-            }
-            $skus[] = $product->getSku();
-        }
+        // Use associative array for fast SKU lookup
+        $salableSkus = array_flip(array_map(function ($status) {
+            return $status->getSku();
+        }, $this->productsSalableStatuses));
 
+        // Collect SKUs not already in $this->productsSalableStatuses
+        $skus = array_filter(array_map(function ($product) use ($salableSkus) {
+            $sku = $product->getSku();
+            return isset($salableSkus[$sku]) ? null : $sku; // Return null if SKU exists, SKU otherwise
+        }, $products));
+
+        // If there are no new SKUs to process, filter products and return
         if (empty($skus)) {
             $this->filterProducts($products, $this->productsSalableStatuses);
             return $products;
         }
 
+        // Only now do we need the website and stock information
         $website = $this->storeManager->getWebsite();
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $website->getCode());
 
+        // Update products salable statuses with new salable information
         $this->productsSalableStatuses = array_merge(
             $this->productsSalableStatuses,
             $this->areProductsSalable->execute($skus, $stock->getStockId())
         );
+
+        // Filter products once all updates are made
         $this->filterProducts($products, $this->productsSalableStatuses);
+
         return $products;
     }
 
@@ -106,15 +117,22 @@ class IsSalableOptionPlugin
      * @param array $isSalableResults
      * @return void
      */
-    private function filterProducts(array $products, array $isSalableResults) : void
+    private function filterProducts(array &$products, array $isSalableResults) : void
     {
+        // Transform $isSalableResults into an associative array with SKU as the key
+        $salabilityBySku = [];
+        foreach ($isSalableResults as $result) {
+            $salabilityBySku[$result->getSku()] = $result->isSalable();
+        }
+
         foreach ($products as $key => $product) {
-            foreach ($isSalableResults as $result) {
-                if ($result->getSku() === $product->getSku() && !$result->isSalable()) {
-                    $product->setIsSalable(0);
-                    if (!$this->stockConfiguration->isShowOutOfStock()) {
-                        unset($products[$key]);
-                    }
+            $sku = $product->getSku();
+
+            // Check if the SKU exists in the salability results and if it's not salable
+            if (isset($salabilityBySku[$sku]) && !$salabilityBySku[$sku]) {
+                $product->setIsSalable(0);
+                if (!$this->stockConfiguration->isShowOutOfStock()) {
+                    unset($products[$key]);
                 }
             }
         }
