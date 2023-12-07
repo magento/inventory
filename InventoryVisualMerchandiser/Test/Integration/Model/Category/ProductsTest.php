@@ -105,6 +105,7 @@ class ProductsTest extends TestCase
         $product = $this->objectManager->create(Product::class);
         $product->setStoreId($this->storeManager->getStore('store_for_us_website')->getId());
         $product->load(10);
+        $this->storeManager->setCurrentStore('store_for_us_website');
 
         /** @var Products $productsModel */
         $productsModel = $this->objectManager->get(Products::class);
@@ -114,7 +115,7 @@ class ProductsTest extends TestCase
             $productsStockData[$item->getSku()] = $item->getData('stock');
         }
 
-        self::assertEquals(0, (int)$productsStockData['simple_10']);
+        self::assertEquals($product->getQty(), (int)$productsStockData['simple_10']);
     }
 
     /**
