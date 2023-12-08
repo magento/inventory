@@ -109,7 +109,10 @@ class ProductsTest extends TestCase
 
         /** @var Products $productsModel */
         $productsModel = $this->objectManager->get(Products::class);
-        $collection = $productsModel->getCollectionForGrid($categoryId, 'store_for_us_website');
+        $collection = $productsModel->getCollectionForGrid(
+            $categoryId,
+            $this->storeManager->getStore('store_for_us_website')->getId()
+        );
         $productsStockData = [];
         foreach ($collection as $item) {
             $productsStockData[$item->getSku()] = $item->getData('stock');
