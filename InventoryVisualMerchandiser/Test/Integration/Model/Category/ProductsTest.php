@@ -100,25 +100,26 @@ class ProductsTest extends TestCase
             $this->markTestSkipped('VisualMerchandiser module is absent');
         }
 
+        $storeManager = $this->objectManager->get(StoreManagerInterface::class);
+        $storeManager->setCurrentStore('store_for_us_website');
+
         $categoryId = 1234;
         /** @var $product Product */
         $product = $this->objectManager->create(Product::class);
-        $product->setStoreId($this->storeManager->getStore('store_for_us_website')->getId());
         $product->load(10);
-        $this->storeManager->setCurrentStore('store_for_us_website');
 
         /** @var Products $productsModel */
         $productsModel = $this->objectManager->get(Products::class);
         $collection = $productsModel->getCollectionForGrid(
             $categoryId,
-            $this->storeManager->getStore('store_for_us_website')->getId()
+            $storeManager->getStore('store_for_us_website')->getId()
         );
         $productsStockData = [];
         foreach ($collection as $item) {
             $productsStockData[$item->getSku()] = $item->getData('stock');
         }
 
-        self::assertEquals($product->getQty(), (int)$productsStockData['simple_10']);
+        self::assertEquals($product->getQuantityAndStockStatus()['qty'], (int)$productsStockData['simple_10']);
     }
 
     /**
