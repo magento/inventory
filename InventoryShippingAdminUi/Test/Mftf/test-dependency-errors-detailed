@@ -1,0 +1,12 @@
+
+File "/var/www/html/app/code/Magento/InventoryShippingAdminUi/Test/Mftf/Test/SourcesPagerForOrderShipmentTest.xml"
+contains entity references that violate dependency constraints:
+
+	 AdminProductSourcesGrid from module(s): magento/module-inventory-admin-ui
+	 AdminSourceSelectionOrderedItemsGrid from module(s): magento/module-inventory-admin-ui
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 AdminSourceSelectionFormSection from module(s): magento/module-inventory-admin-ui
+	 AdminShipmentInventorySection from module(s): magento/module-inventory-admin-ui, magento/module-inventory-catalog-admin-ui
+	 AssignSourceToProductActionGroup from module(s): magento/module-inventory-admin-ui
+	 DisableAllSourcesActionGroup from module(s): magento/module-inventory-admin-ui
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui

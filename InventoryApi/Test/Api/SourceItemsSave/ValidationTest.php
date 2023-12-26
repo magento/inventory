@@ -17,8 +17,8 @@ class ValidationTest extends WebapiAbstract
     /**#@+
      * Service constants
      */
-    const RESOURCE_PATH = '/V1/inventory/source-items';
-    const SERVICE_NAME = 'inventoryApiSourceItemsSaveV1';
+    public const RESOURCE_PATH = '/V1/inventory/source-items';
+    public const SERVICE_NAME = 'inventoryApiSourceItemsSaveV1';
     /**#@-*/
 
     /**
@@ -202,6 +202,12 @@ class ValidationTest extends WebapiAbstract
                     'errors' => [
                         [
                             'message' => '"%field" can not be empty.',
+                            'parameters' => [
+                                'field' => SourceItemInterface::SKU,
+                            ],
+                        ],
+                        [
+                            'message' => '"%field" can not contain leading or trailing spaces.',
                             'parameters' => [
                                 'field' => SourceItemInterface::SKU,
                             ],

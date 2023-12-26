@@ -35,6 +35,7 @@
             </actionGroup>
             <deleteData createDataKey="createConfigurableProduct" stepKey="deleteConfigurableProduct"/>
             <deleteData createDataKey="createSubCategory" stepKey="deleteSubCategory"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="createCustomer1" stepKey="deleteCustomer"/>
 
             <!-- Delete the Created Color attribute-->
@@ -62,8 +63,12 @@
             <argument name="assignSource" value="$$createTestSource1.source[name]$$"/>
             <argument name="stockName" value="Test Stock 1"/>
         </actionGroup>
-        <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
-        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <!-- Step5 Create Configurable Product -->
         <createData entity="ApiConfigurableProduct" stepKey="createConfigurableProduct">

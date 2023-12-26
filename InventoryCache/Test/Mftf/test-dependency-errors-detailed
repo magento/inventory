@@ -1,0 +1,12 @@
+
+File "/var/www/html/app/code/Magento/InventoryCache/Test/Mftf/Test/StorefrontClearProductCacheAfterChangeProductStockStatusTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 minimalProductQty from module(s): magento/module-inventory-admin-ui
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 SourceStatusOutOfStock from module(s): magento/module-inventory-admin-ui
+	 SourceStatusInStock from module(s): magento/module-inventory-admin-ui
+	 AdminAssignSourceToProductAndSetSourceQuantityActionGroup from module(s): magento/module-inventory-admin-ui
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 DisableAllSourcesActionGroup from module(s): magento/module-inventory-admin-ui
+	 AdminChangeSourceStockStatusActionGroup from module(s): magento/module-inventory-admin-ui

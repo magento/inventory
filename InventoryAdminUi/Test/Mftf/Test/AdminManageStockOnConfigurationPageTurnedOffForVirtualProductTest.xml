@@ -49,8 +49,12 @@
             <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
             <!--Revert manage stock configuration.-->
             <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableManageStock"/>
-            <magentoCLI command="indexer:reindex" stepKey="reindexAfterManageStockRestored"/>
-            <magentoCLI command="cache:flush" stepKey="flushCacheAfterManageStockRestored"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexAfterManageStockRestored">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCacheAfterManageStockRestored">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </after>
 
         <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
@@ -73,8 +77,12 @@
         <dontSee userInput="$$product.name$$" stepKey="verifyProductIsNotPresentOnStorefront"/>
         <!--Disable manage stock on configuration page.-->
         <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOffManageStockConfig.value}}" stepKey="disableManageStock"/>
-        <magentoCLI command="indexer:reindex" stepKey="reindexAfterManageStockDisabled"/>
-        <magentoCLI command="cache:flush" stepKey="flushCacheAfterManageStockDisabled"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexAfterManageStockDisabled">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCacheAfterManageStockDisabled">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <!--Verify product is visible on storefront.-->
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="checkConfigurableIsPresentOnCategoryPage">
             <argument name="category" value="$$category$$"/>

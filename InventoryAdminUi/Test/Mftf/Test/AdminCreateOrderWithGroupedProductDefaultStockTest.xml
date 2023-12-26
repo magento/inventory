@@ -55,6 +55,7 @@
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
 
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="customStock" stepKey="deleteCustomStock"/>
             <deleteData createDataKey="simpleProduct" stepKey="deleteSimpleProduct"/>

@@ -39,11 +39,16 @@
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
             </actionGroup>
             <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProductForm"/>
-            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </before>
         <after>
             <!--Delete test data.-->
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
             <!--Disable source.-->
@@ -55,7 +60,9 @@
             </actionGroup>
             <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!-- Login as customer -->

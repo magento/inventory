@@ -45,36 +45,58 @@ class GetProductsIdsToProcess
      * @param array $after
      * @param bool $forceDefaultStockProcessing
      * @return array
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     public function execute(array $before, array $after, bool $forceDefaultStockProcessing = false) : array
     {
-        $productIds = [];
         $productSkus = array_merge(
             array_diff(array_keys($before), array_keys($after)),
             array_diff(array_keys($after), array_keys($before))
         );
         foreach ($before as $sku => $salableData) {
-            if (!in_array($sku, $productSkus)) {
-                foreach ($salableData as $stockId => $isSalable) {
-                    if (empty($after[$sku][$stockId])
-                        || $before[$sku][$stockId] !== $after[$sku][$stockId]
-                        || ($stockId === $this->defaultStockProvider->getId() && $forceDefaultStockProcessing)) {
-                        $productSkus[] = $sku;
-                    }
+            if (in_array($sku, $productSkus)) {
+                continue;
+            }
+            $afterSalableData = $after[$sku] ?? [];
+            // get stock IDs from "after" that doesn't exist in "before"
+            $diff = array_diff(array_keys($afterSalableData), array_keys($salableData));
+            if ($diff) {
+                $productSkus[] = $sku;
+                continue;
+            }
+            foreach ($salableData as $stockId => $isSalable) {
+                if (!isset($after[$sku][$stockId])
+                    || $before[$sku][$stockId] !== $after[$sku][$stockId]
+                    || ($stockId === $this->defaultStockProvider->getId() && $forceDefaultStockProcessing)) {
+                    $productSkus[] = $sku;
                 }
             }
         }
-        if (!empty($productSkus)) {
-            $productSkus = array_unique($productSkus);
-            foreach ($productSkus as $sku) {
-                try {
-                    $productId = $this->getProductIdsBySkus->execute([$sku]);
-                    $productIds = array_merge($productIds, $productId);
-                } catch (NoSuchEntityException $e) {
-                    continue;
-                }
+
+        return $this->getProductIdsBySkus($productSkus);
+    }
+
+    /**
+     * Retrieve product ids by skus
+     *
+     * @param array $productSkus
+     * @return array
+     */
+    private function getProductIdsBySkus(array $productSkus): array
+    {
+        if (empty($productSkus)) {
+            return [];
+        }
+
+        $productSkus = array_unique($productSkus);
+        $ids = [];
+        foreach ($productSkus as $sku) {
+            try {
+                $ids[] = $this->getProductIdsBySkus->execute([$sku]);
+            } catch (NoSuchEntityException $e) {
+                continue;
             }
         }
-        return $productIds;
+        return array_merge(...$ids);
     }
 }
