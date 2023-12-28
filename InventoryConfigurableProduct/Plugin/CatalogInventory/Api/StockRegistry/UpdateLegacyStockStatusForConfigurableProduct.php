@@ -10,9 +10,11 @@ namespace Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\Api\Stock
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\Catalog\Model\ProductFactory;
-use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\ConfigurableProduct\Model\Inventory\ChangeParentStockStatus;
 
+/***
+ * Update stock status of configurable products when update children products stock status
+ */
 class UpdateLegacyStockStatusForConfigurableProduct
 {
     /**
@@ -21,31 +23,25 @@ class UpdateLegacyStockStatusForConfigurableProduct
     private $changeParentStockStatus;
 
     /**
-     * @var GetProductIdsBySkusInterface
-     */
-    private $getProductIdsBySkus;
-
-    /**
      * @var ProductFactory
      */
     protected $productFactory;
 
     /**
-     * @param GetProductIdsBySkusInterface $getProductIdsBySkus
      * @param ChangeParentStockStatus $changeParentStockStatus
      * @param ProductFactory $productFactory
      */
     public function __construct(
-        GetProductIdsBySkusInterface $getProductIdsBySkus,
         ChangeParentStockStatus $changeParentStockStatus,
         ProductFactory $productFactory
     ) {
-        $this->getProductIdsBySkus = $getProductIdsBySkus;
         $this->changeParentStockStatus = $changeParentStockStatus;
         $this->productFactory = $productFactory;
     }
 
     /**
+     * Update product stock item by product SKU
+     *
      * @param StockRegistryInterface $subject
      * @param int $result
      * @param string $productSku
@@ -59,19 +55,21 @@ class UpdateLegacyStockStatusForConfigurableProduct
         string $productSku,
         StockItemInterface $stockItem
     ) {
-        $productIds[] = $this->resolveProductId($productSku);
-        if (!empty($productIds)) {
-            $this->changeParentStockStatus->execute($productIds);
+        $productIds = $this->resolveProductId($productSku);
+        if ($productIds) {
+            $this->changeParentStockStatus->execute([$productIds]);
         }
         return $result;
     }
 
     /**
+     * Resolve and retrieve the product ID based on the SKU
+     *
      * @param string $productSku
      * @return int
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    protected function resolveProductId($productSku)
+    private function resolveProductId($productSku)
     {
         $product = $this->productFactory->create();
         $productId = $product->getIdBySku($productSku);
