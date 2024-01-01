@@ -25,7 +25,7 @@ class UpdateLegacyStockStatusForConfigurableProduct
     /**
      * @var ProductFactory
      */
-    protected $productFactory;
+    private $productFactory;
 
     /**
      * @param ChangeParentStockStatus $changeParentStockStatus
