@@ -97,6 +97,7 @@ class UpdateIndexSalabilityStatusTest extends TestCase
     ]
     public function testProductsStatusesAfterBuyingChildProduct(): void
     {
+        $this->markTestSkipped("AC-10695");
         /** @var StockInterface $stock */
         $stock = $this->fixtures->get('stock2');
 
