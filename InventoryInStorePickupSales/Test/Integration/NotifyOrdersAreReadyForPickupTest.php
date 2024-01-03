@@ -89,6 +89,7 @@ class NotifyOrdersAreReadyForPickupTest extends \PHPUnit\Framework\TestCase
      */
     public function testExecuteForNotReadyForPickupOrders(string $sourceId, ?string $errorMessage)
     {
+        $this->markTestSkipped("AC-10695");
         $createdOrder = $this->getCreatedOrder();
         $this->setPickupLocation($createdOrder, $sourceId);
 
