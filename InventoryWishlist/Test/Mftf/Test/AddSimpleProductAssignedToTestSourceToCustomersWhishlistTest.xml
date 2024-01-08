@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AddSimpleProductAssignedToTestSourceToCustomersWhishlistTest">
+        <annotations>
+            <stories value="Add Product with Stock to wishlist"/>
+            <title value="Add Simple Product assigned to Test Source to customer's whishlist"/>
+            <description value="Add Simple Product assigned to Test Source to customer's whishlist"/>
+            <severity value="MAJOR"/>
+            <testCaseId value="AC-6511"/>
+            <group value="cloud"/>
+        </annotations>
+        <before>
+            <createData entity="SimpleMsiProduct" stepKey="product"/>
+            <createData entity="FullSource1" stepKey="source"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="source"/>
+            </createData>
+            <createData entity="MsiCustomer1" stepKey="customer"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <!--Assign source to product.-->
+            <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPage"/>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceAndSetQty">
+                <argument name="sourceCode" value="$$source.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
+        </before>
+        <after>
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <!--Assign Default Stock to Default Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <deleteData createDataKey="stock" stepKey="deleteCustomStock"/>
+            <!--Disable all sources.-->
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="deleteSource"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+        </after>
+
+        <!-- Login as customer -->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
+            <argument name="Customer" value="$$customer$$"/>
+        </actionGroup>
+        <!-- Navigate to product page -->
+        <actionGroup ref="OpenStoreFrontProductPageActionGroup" stepKey="openProductPage">
+            <argument name="productUrlKey" value="$$product.custom_attributes[url_key]$$"/>
+        </actionGroup>
+        <!-- Add product to the Wishlist and assert that product is successfully added to the Wishlist-->
+        <actionGroup ref="StorefrontCustomerAddProductToWishlistActionGroup" stepKey="addProductToWishlist">
+            <argument name="productVar" value="$$product$$"/>
+        </actionGroup>
+        <!-- Open Customer Wishlist and verify that product is present there -->
+        <actionGroup ref="AssertProductIsPresentInWishListActionGroup" stepKey="assertProductInWishlist">
+            <argument name="productName" value="$$product.name$$"/>
+            <argument name="productPrice" value="$$product.price$$"/>
+        </actionGroup>
+    </test>
+</tests>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+  <test name="StorefrontValidateProductSearchWhenDisplayOutStockEnabledTest">
+    <annotations>
+      <stories value="Product Search"/>
+      <title value="Product Search Result when set Display Out Of Stock"/>
+      <description value="Validate no exception error when trying to search product if display out of stock product = yes"/>
+      <testCaseId value="AC-5960"/>
+      <useCaseId value="AC-5960"/>
+      <severity value="CRITICAL"/>
+      <group value="msi"/>
+    </annotations>
+
+    <before>
+      <!-- Login to admin -->
+      <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminPanel"/>
+      <!-- Set Display Out of Stock to NO -->
+      <actionGroup ref="NoDisplayOutOfStockProductActionGroup" stepKey="displayOutOfStockProductToNO"/>
+      <!-- Create a category -->
+      <createData entity="SimpleSubCategory" stepKey="createCategory"/>
+      <!-- Create a product -->
+      <createData entity="ABC_dfj_SimpleProduct" stepKey="createProduct"/>
+    </before>
+
+    <after>
+      <!-- Set Display Out of Stock to NO -->
+      <actionGroup ref="NoDisplayOutOfStockProductActionGroup" stepKey="revertBackdisplayOutOfStockProductToNO"/>
+      <!-- Delete the product -->
+      <deleteData createDataKey="createProduct" stepKey="deleteProduct"/>
+      <!-- Delete the category -->
+      <actionGroup ref="DeleteCategoryActionGroup" stepKey="deleteCategory">
+        <argument name="categoryEntity" value="SimpleSubCategory"/>
+      </actionGroup>
+      <!-- Logout from admin -->
+      <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
+    </after>
+
+    <!-- Set the created product to out of stock -->
+    <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="goToEditPage">
+      <argument name="productId" value="$$createProduct.id$$"/>
+    </actionGroup>
+    <selectOption selector="{{AdminProductFormSection.stockStatus}}" userInput="{{virtualProductOutOfStock.status}}" stepKey="selectStockStatusOutOfStock"/>
+    <actionGroup ref="AdminProductFormSaveButtonClickActionGroup" stepKey="clickSaveButton"/>
+    <see selector="{{AdminProductFormSection.successMessage}}" userInput="You saved the product." stepKey="seeAssertVirtualProductSuccessMessage"/>
+
+    <!-- Do reindex because product has been edited, and configurations changed -->
+      <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex1">
+          <argument name="indices" value=""/>
+      </actionGroup>
+      <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache1">
+          <argument name="tags" value=""/>
+      </actionGroup>
+
+    <!-- Check the product is not displayed in the front end after the search -->
+    <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="goToHomePage"/>
+    <fillField selector="{{StorefrontQuickSearchResultsSection.searchTextBox}}" userInput="$$createProduct.sku$$" stepKey="searchProduct1"/>
+    <waitForPageLoad stepKey="waitForSearchTextBox"/>
+    <click selector="{{StorefrontQuickSearchResultsSection.searchTextBoxButton}}" stepKey="clickSearchTextBoxButton"/>
+    <waitForPageLoad stepKey="waitForSearchResultToLoad"/>
+    <dontSee selector="{{StorefrontCategoryMainSection.productName}}" userInput="$$createProduct.name$$" stepKey="seeProductNameInCategoryPage1"/>
+
+    <!-- Set Display Out of Stock to YES -->
+    <actionGroup ref="DisplayOutOfStockProductActionGroup" stepKey="displayOutOfStockProduct"/>
+    <!-- Do reindex because again the configuration changed -->
+      <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex2">
+          <argument name="indices" value=""/>
+      </actionGroup>
+      <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache2">
+          <argument name="tags" value=""/>
+      </actionGroup>
+
+    <!-- Check the product is displayed in the front end after the search without any errors -->
+    <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="goToHomePage1"/>
+    <fillField selector="{{StorefrontQuickSearchResultsSection.searchTextBox}}" userInput="$$createProduct.sku$$" stepKey="searchProduct2"/>
+    <waitForPageLoad stepKey="waitForSearchTextBox1"/>
+    <click selector="{{StorefrontQuickSearchResultsSection.searchTextBoxButton}}" stepKey="clickSearchTextBoxButton1"/>
+    <waitForPageLoad stepKey="waitForSearchResultToLoad1"/>
+    <see selector="{{StorefrontCategoryMainSection.productName}}" userInput="$$createProduct.name$$" stepKey="seeProductNameInCategoryPage2"/>
+  </test>
+</tests>

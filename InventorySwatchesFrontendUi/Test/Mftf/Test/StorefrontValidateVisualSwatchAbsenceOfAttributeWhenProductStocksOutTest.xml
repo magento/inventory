@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontValidateVisualSwatchAbsenceOfAttributeWhenProductStocksOutTest">
+        <annotations>
+            <features value="Configurable Product With Swatch attribute"/>
+            <stories value="Configurable Product With Swatch attribute when the product option stocks out"/>
+            <title value="Visual swatch attribute option of Configurable product on Test stock not visible after order placement with all it's quantity"/>
+            <description value="Visual swatch attribute option of Configurable product on Test stock not visible after order placement with all it's quantity"/>
+            <testCaseId value="AC-6570"/>
+            <useCaseId value="AC-6570"/>
+            <severity value="CRITICAL"/>
+            <group value="catalog"/>
+            <group value="swatches"/>
+            <group value="msi"/>
+            <group value="single_mode"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminPanel"/>
+            <createData entity="SimpleSubCategory" stepKey="createCategory"/>
+            <!-- Create a new source and assign a new stock to it -->
+            <createData entity="FullSource1" stepKey="createSource1"/>
+            <actionGroup ref="AdminCreateNewStockActionGroup" stepKey="adminCreateNewStock">
+                <argument name="stockName" value="{{BasicMsiStock1.name}}"/>
+                <argument name="assignSource" value="$$createSource1.source[name]$$"/>
+            </actionGroup>
+            <!-- Create a new customer -->
+            <createData entity="CustomerEntityOne" stepKey="createCustomer"/>
+        </before>
+
+        <after>
+            <!-- Delete the configurable product with all child products of it -->
+            <actionGroup ref="AdminDeleteConfigProductActionGroup" stepKey="deleteConfigurableProductOption1">
+                <argument name="productName" value="{{ApiConfigurableProduct.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminDeleteConfigProductActionGroup" stepKey="deleteConfigurableProductOption2">
+                <argument name="productName" value="{{ApiConfigurableProduct.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminDeleteConfigProductActionGroup" stepKey="deleteConfigurableProductMain">
+                <argument name="productName" value="{{ApiConfigurableProduct.name}}"/>
+            </actionGroup>
+            <!-- Delete the product attribute -->
+            <actionGroup ref="AdminDeleteProductAttributeByLabelActionGroup" stepKey="deleteProductAttribute">
+                <argument name="productAttributeLabel" value="{{visualSwatchAttribute.default_label}}"/>
+            </actionGroup>
+            <!-- Delete the created customer -->
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
+            <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
+            <actionGroup ref="AdminDeleteStockActionGroup" stepKey="deleteCreatedStock">
+                <argument name="stockName" value="{{BasicMsiStock1.name}}"/>
+            </actionGroup>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource">
+                <argument name="sourceCode" value="$$createSource1.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="DeleteCategoryActionGroup" stepKey="deleteCategory">
+                <argument name="categoryEntity" value="SimpleSubCategory"/>
+            </actionGroup>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
+        </after>
+
+        <!-- Create configurable product -->
+        <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="amOnProductGridPage"/>
+        <actionGroup ref="GoToCreateProductPageActionGroup" stepKey="createConfigurableProduct">
+            <argument name="product" value="ApiConfigurableProduct"/>
+        </actionGroup>
+        <!-- Fill configurable product required fields only-->
+        <fillField selector="{{AdminProductFormSection.productName}}" userInput="{{ApiConfigurableProduct.name}}" stepKey="fillProductName"/>
+        <fillField selector="{{AdminProductFormSection.productSku}}" userInput="{{ApiConfigurableProduct.sku}}" stepKey="fillProductSku"/>
+        <fillField selector="{{AdminProductFormSection.productPrice}}" userInput="{{ApiConfigurableProduct.price}}" stepKey="fillProductPrice"/>
+        <!-- Add configurable product in category -->
+        <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$createCategory.name$$]" stepKey="fillCategory"/>
+        <conditionalClick selector="{{AdminProductFormConfigurationsSection.sectionHeader}}" dependentSelector="{{AdminProductFormConfigurationsSection.createConfigurations}}" visible="false" stepKey="openConfigurationSection"/>
+        <click selector="{{AdminProductFormConfigurationsSection.createConfigurations}}" stepKey="openConfigurationPanel"/>
+        <waitForElementClickable selector="{{AdminCreateProductConfigurationsPanel.createNewAttribute}}" stepKey="waitForSlideOut"/>
+        <click selector="{{AdminCreateProductConfigurationsPanel.createNewAttribute}}" stepKey="clickCreateNewAttribute"/>
+        <waitForPageLoad stepKey="waitForIFrame"/>
+        <!--Create a new attribute with visual swatches options-->
+        <switchToIFrame selector="{{AdminNewAttributePanel.newAttributeIFrame}}" stepKey="switchToNewAttributeIFrame"/>
+        <fillField selector="{{AdminNewAttributePanel.defaultLabel}}" userInput="{{visualSwatchAttribute.default_label}}" stepKey="fillDefaultLabel"/>
+        <selectOption selector="{{AdminNewAttributePanel.inputType}}" userInput="{{visualSwatchProductAttribute.frontend_input}}" stepKey="selectInputType"/>
+        <!--Add swatch options-->
+        <click selector="{{AdminNewAttributePanel.addVisualSwatchOption}}" stepKey="clickAddSwatch1"/>
+        <waitForElementVisible selector="{{AdminNewAttributePanel.visualSwatchOptionAdminValue('0')}}" stepKey="waitForOption1Row"/>
+        <fillField selector="{{AdminNewAttributePanel.visualSwatchOptionAdminValue('0')}}" userInput="{{multiselectProductAttribute.option1_admin}}" stepKey="fillAdminLabel1"/>
+        <fillField selector="{{AdminNewAttributePanel.visualSwatchOptionDefaultStoreValue('0')}}" userInput="{{multiselectProductAttribute.option1_frontend}}" stepKey="fillDefaultStoreLabel1"/>
+        <click selector="{{AdminNewAttributePanel.addVisualSwatchOption}}" stepKey="clickAddSwatch2"/>
+        <waitForElementVisible selector="{{AdminNewAttributePanel.visualSwatchOptionAdminValue('1')}}" stepKey="waitForOption2Row"/>
+        <fillField selector="{{AdminNewAttributePanel.visualSwatchOptionAdminValue('1')}}" userInput="{{multiselectProductAttribute.option2_admin}}" stepKey="fillAdminLabel2"/>
+        <fillField selector="{{AdminNewAttributePanel.visualSwatchOptionDefaultStoreValue('1')}}" userInput="{{multiselectProductAttribute.option2_frontend}}" stepKey="fillDefaultStoreLabel2"/>
+        <!--Select swatch options colors-->
+        <actionGroup ref="OpenSwatchMenuByIndexActionGroup" stepKey="clickSwatch1">
+            <argument name="index" value="0"/>
+        </actionGroup>
+        <click selector="{{AdminManageSwatchSection.nthChooseColor('1')}}" stepKey="clickChooseColor1"/>
+        <actionGroup ref="SetColorPickerByHexActionGroup" stepKey="fillHex1">
+            <argument name="nthColorPicker" value="1"/>
+            <argument name="hexColor" value="e74c3c"/>
+        </actionGroup>
+        <actionGroup ref="OpenSwatchMenuByIndexActionGroup" stepKey="clickSwatch2">
+            <argument name="index" value="1"/>
+        </actionGroup>
+        <click selector="{{AdminManageSwatchSection.nthChooseColor('2')}}" stepKey="clickChooseColor2"/>
+        <actionGroup ref="SetColorPickerByHexActionGroup" stepKey="fillHex2">
+            <argument name="nthColorPicker" value="2"/>
+            <argument name="hexColor" value="1f3594"/>
+        </actionGroup>
+        <!--Save attribute-->
+        <click selector="{{AdminNewAttributePanel.saveAttribute}}" stepKey="clickOnSaveAttributeButton"/>
+        <waitForPageLoad stepKey="waitForSaveAttribute"/>
+        <switchToIFrame stepKey="switchOutOfIFrame"/>
+        <!--Find attribute in grid and select-->
+        <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clearExistingFilters"/>
+        <click selector="{{AdminDataGridHeaderSection.filters}}" stepKey="clickOnFilters"/>
+        <fillField selector="{{AdminDataGridHeaderSection.attributeCodeFilterInput}}" userInput="{{visualSwatchAttribute.default_label}}" stepKey="fillFilterAttributeCodeField"/>
+        <click selector="{{AdminDataGridHeaderSection.applyFilters}}" stepKey="clickApplyFiltersButton"/>
+        <click selector="{{AdminDataGridTableSection.rowCheckbox('1')}}" stepKey="clickOnFirstCheckbox"/>
+        <click selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="clickNextStep1"/>
+        <click selector="{{AdminCreateProductConfigurationsPanel.selectAllByAttribute(visualSwatchAttribute.default_label)}}" stepKey="clickSelectAll"/>
+        <click selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="clickNextStep2"/>
+        <!--Fill the required attribute data associated with product-->
+        <click selector="{{AdminCreateProductConfigurationsPanel.applySingleQuantityToEachSkus}}" stepKey="clickOnApplySingleQuantityToEachSku"/>
+        <click selector="{{AdminConfigurableProductAssignSourcesSlideOut.assignSources}}" stepKey="openSelectSourcesModalWindow"/>
+        <waitForPageLoad stepKey="waitForAssignSources"/>
+        <conditionalClick selector="{{AdminConfigurableProductAssignSourcesSlideOut.clearFilters}}" dependentSelector="{{AdminConfigurableProductAssignSourcesSlideOut.clearFilters}}" visible="true" stepKey="clearAttributeSearchFilter"/>
+        <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchAdditionalSourceByNameForAssignment">
+            <argument name="keyword" value="$$createSource1.source[name]$$"/>
+        </actionGroup>
+        <click selector="{{AdminGridRow.checkboxByValue($$createSource1.source[name]$$)}}" stepKey="selectAdditionalSource"/>
+        <click selector="{{AdminConfigurableProductAssignSourcesSlideOut.done}}" stepKey="doneAssignSources"/>
+        <fillField selector="{{AdminConfigurableProductAssignSourcesSlideOut.quantityPerSourceForMultiMode}}" userInput="2" stepKey="fillQuantityForCustomSource"/>
+        <!--Generate and save the product-->
+        <click selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="generateProducts"/>
+        <waitForPageLoad stepKey="waitForGenerateProducts"/>
+        <click selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="doneGeneratingConfigurableVariations"/>
+        <waitForPageLoad stepKey="waitForGenerateProducts1"/>
+        <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveProduct"/>
+        <click selector="{{AdminChooseAffectedAttributeSetPopup.confirm}}" stepKey="clickOnConfirmInPopup"/>
+        <seeElement selector="{{AdminMessagesSection.success}}" stepKey="seeSaveProductMessage"/>
+        <!--Do reindex and flush because of above created data to reflect in the frontend-->
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexForAssignedSources1">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCacheForAssignedSources1">
+            <argument name="tags" value=""/>
+        </actionGroup>
+        <!--Do the validation in the front end-->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginCustomer">
+            <argument name="Customer" value="$$createCustomer$$" />
+        </actionGroup>
+        <!-- Go to the product page and see text swatch options -->
+        <amOnPage url="{{ApiConfigurableProduct.urlKey}}.html" stepKey="amOnProductPage"/>
+        <waitForPageLoad stepKey="waitForProductPage"/>
+        <!-- Verify that the storefront shows the swatches too -->
+        <actionGroup ref="AssertStorefrontSwatchColorActionGroup" stepKey="assertSwatch1">
+            <argument name="nthSwatch" value="1"/>
+            <argument name="expectedRgb" value="rgb(231, 77, 60)"/>
+        </actionGroup>
+        <actionGroup ref="AssertStorefrontSwatchColorActionGroup" stepKey="assertSwatch2">
+            <argument name="nthSwatch" value="2"/>
+            <argument name="expectedRgb" value="rgb(31, 52, 148)"/>
+        </actionGroup>
+        <!-- Add configurable product with swatch attribute to the cart -->
+        <actionGroup ref="StorefrontSelectSwatchOptionOnProductPageActionGroup" stepKey="selectVisualSwatchFromProductPage">
+            <argument name="optionName" value="{{multiselectProductAttribute.option2_frontend}}"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontAddProductToCartWithQtyActionGroup" stepKey="addProductToTheCart">
+            <argument name="productQty" value="2"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontOpenCartFromMinicartActionGroup" stepKey="openCartPage"/>
+        <actionGroup ref="StorefrontClickProceedToCheckoutActionGroup" stepKey="clickProceedToCheckout"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="placeOrder"/>
+        <!--Do reindex and flush because of after the order placement, to reflect in the frontend with updated quantity-->
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexForAssignedSources">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCacheForAssignedSources">
+            <argument name="tags" value=""/>
+        </actionGroup>
+        <!-- Go to the product page and see text swatch options -->
+        <amOnPage url="{{ApiConfigurableProduct.urlKey}}.html" stepKey="amOnProductPage2"/>
+        <waitForPageLoad stepKey="waitForProductPage2"/>
+        <seeElement selector="{{StorefrontProductInfoMainSection.swatchOptionByLabel(multiselectProductAttribute.option1_frontend)}}" stepKey="multiselectProductAttributeoption1_frontend"/>
+        <dontSeeElement selector="{{StorefrontProductInfoMainSection.swatchOptionByLabel(multiselectProductAttribute.option2_frontend)}}" stepKey="multiselectProductAttributeoption2_frontend"/>
+    </test>
+</tests>

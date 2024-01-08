@@ -69,7 +69,9 @@
                 <argument name="stockName" value="$stock.stock[name]$"/>
                 <argument name="websiteName" value="{{customWebsite.name}}"/>
             </actionGroup>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <!--Assign source, website and set simple product1 quantity-->
             <amOnPage url="{{AdminProductEditPage.url($product1.id$)}}" stepKey="openSimple1ProductEditPage"/>
             <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct1">
@@ -111,7 +113,9 @@
             </actionGroup>
             <deleteData createDataKey="stock" stepKey="deleteStock"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!--Get bundle product option.-->
@@ -121,8 +125,9 @@
             <argument name="website" value="{{customWebsite.name}}"/>
         </actionGroup>
         <!--Create new customer order.-->
-        <actionGroup ref="NavigateToNewOrderPageNewCustomerActionGroup" stepKey="navigateToNewOrderWithExistingCustomer">
-            <argument name="storeView" value="customStore"/>
+        <actionGroup ref="AdminNavigateToNewOrderPageNewCustomerActionGroup" stepKey="navigateToNewOrderWithExistingCustomer"/>
+        <actionGroup ref="AdminSelectStoreDuringOrderCreationActionGroup" stepKey="selectCustomStore">
+            <argument name="storeView" value="customStore" />
         </actionGroup>
         <!--Add bundle product to order.-->
         <actionGroup ref="AdminFilterProductInCreateOrderActionGroup" stepKey="filterBundleProduct">

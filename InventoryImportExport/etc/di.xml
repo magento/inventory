@@ -27,11 +27,14 @@
         </arguments>
     </type>
     <type name="Magento\CatalogImportExport\Model\StockItemImporterInterface">
-        <plugin name="updateConfigurableProductsStockItemStatusInventory" type="Magento\InventoryImportExport\Plugin\Import\UpdateConfigurableProductsPlugin" sortOrder="100" />
         <plugin name="update_configurable_products_stock_item_status" disabled="true"/>
+        <plugin name="update_grouped_product_stock_status_plugin" disabled="true"/>
     </type>
     <type name="Magento\CatalogImportExport\Model\StockItemProcessorInterface">
         <plugin name="importStockItemDataForSourceItem" type="Magento\InventoryImportExport\Plugin\Import\SourceItemImporter"/>
+    </type>
+    <type name="Magento\ImportExport\Model\Import\EntityInterface">
+        <plugin name="SourceNeedToLogin" type="Magento\InventoryImportExport\Plugin\Import\EntityHistoryLoginFlag"/>
     </type>
     <!-- Prevent stock indexer to execute twice as it is run by default -->
     <type name="Magento\CatalogImportExport\Model\Import\Product\StockProcessor">

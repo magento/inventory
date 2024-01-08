@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorePickupButtonHiddenOnCheckoutWhenNotAllProductsInTheCartAvailableForPickupTest">
+        <annotations>
+            <stories value="Simple Product Custom Stock."/>
+            <title value="Store Pickup button hidden on checkout when not all products in the cart available for pickup"/>
+            <description value="Store Pickup button hidden on checkout when not all products in the cart available for pickup"/>
+            <testCaseId value="ACQE-6624"/>
+            <severity value="CRITICAL"/>
+        </annotations>
+
+        <before>
+
+            <!--Enable Store pickup-->
+            <magentoCLI command="config:set {{EnableInStorePickup.path}} {{EnableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
+
+            <!--Set Distance Provider for Distance Based SSA to offline-->
+            <magentoCLI command="config:set {{OfflineDistanceProviderForDistanceBasedSSA.path}} {{OfflineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
+
+            <!--Clean cache and reindex-->
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
+
+            <createData entity="CulverStorePickupEnabledSource2" stepKey="createSource1"/>
+            <createData entity="FullSource1" stepKey="testSource"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="createStock"/>
+            <createData entity="SimpleProduct" stepKey="createSimpleProduct"/>
+            <createData entity="SimpleProduct" stepKey="createSimpleProduct2"/>
+            <createData entity="Simple_US_Customer" stepKey="createCustomer"/>
+            <createData entity="_defaultCategory" stepKey="category"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+        </before>
+        <after>
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <actionGroup ref="ClearFiltersAdminDataGridActionGroup" stepKey="clearGridFilters"/>
+            <!--Disable 'In Store Pickup' shipping method.-->
+            <magentoCLI command="config:set {{DisableInStorePickup.path}} {{DisableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
+
+            <deleteData createDataKey="createStock" stepKey="deleteStock"/>
+
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <actionGroup ref="ClearFiltersAdminDataGridActionGroup" stepKey="clearGridFilters2"/>
+
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <deleteData createDataKey="createSimpleProduct" stepKey="deleteProduct"/>
+            <deleteData createDataKey="createSimpleProduct2" stepKey="deleteProduct2"/>
+            <!--Logout from customer account-->
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutStorefront"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
+            <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+        </after>
+        <magentoCLI command="inventory-geonames:import us" stepKey="downloadOfflineTables"/>
+
+        <!--Clean cache and reindex-->
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
+
+        <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStock"
+                     stepKey="goToStockGridFilterResultsByInputEditStock1">
+            <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
+            <argument name="filter_value" value="$$createStock.stock[name]$$"/>
+        </actionGroup>
+
+      <!--  Assign Sources to stock-->
+        <actionGroup ref="AdminOnStockEditPageAssignSourceToStock" stepKey="onStockEditPageAssignSourceToStock1">
+            <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
+            <argument name="filter_value" value="$$createSource1.source[name]$$"/>
+        </actionGroup>
+
+        <actionGroup ref="AdminOnStockEditPageAssignSourceToStock" stepKey="onStockEditPageAssignSourceToStock2">
+            <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
+            <argument name="filter_value" value="$$testSource.source[name]$$"/>
+        </actionGroup>
+
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose1"/>
+
+        <!--Go to product and open product to edit-->
+        <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openProductEditPage">
+            <argument name="productId" value="$createSimpleProduct.id$"/>
+        </actionGroup>
+
+        <!--Add category to product-->
+        <actionGroup ref="AdminAssignCategoryToProductAndSaveActionGroup" stepKey="assignProduct">
+            <argument name="categoryName" value="$$category.name$$"/>
+        </actionGroup>
+
+        <!--Assign Source to product and update quantity-->
+        <actionGroup ref="AdminOnProductEditPageAssignSourceToProduct" stepKey="AdminOnProductEditPageAssignSourceToProduct1">
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="filter_value" value="$$createSource1.source[source_code]$$"/>
+        </actionGroup>
+
+        <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="fillDefaultQuantityField1"/>
+
+        <!--Save the product-->
+        <actionGroup ref="AdminProductFormSaveActionGroup" stepKey="saveProduct"/>
+
+        <!--Go to product and open product to edit-->
+        <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openProductEditPage2">
+            <argument name="productId" value="$createSimpleProduct2.id$"/>
+        </actionGroup>
+
+        <!--Add category to product-->
+        <actionGroup ref="AdminAssignCategoryToProductAndSaveActionGroup" stepKey="assignProduct2">
+            <argument name="categoryName" value="$$category.name$$"/>
+        </actionGroup>
+
+        <!--Assign Source to product and update quantity-->
+        <actionGroup ref="AdminOnProductEditPageAssignSourceToProduct" stepKey="AdminOnProductEditPageAssignSourceToProduct2">
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="filter_value" value="$$testSource.source[source_code]$$"/>
+        </actionGroup>
+
+        <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="fillDefaultQuantityField2"/>
+
+        <!--Save the product-->
+        <actionGroup ref="AdminProductFormSaveActionGroup" stepKey="saveProduct2"/>
+
+       <!--  Login as customer -->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="storefrontCustomerLogin">
+            <argument name="Customer" value="$$createCustomer$$"/>
+        </actionGroup>
+
+        <!--Open product in storefront-->
+        <amOnPage url="{{StorefrontProductPage.url($$createSimpleProduct.custom_attributes[url_key]$$)}}" stepKey="goToProductPageOnStorefront"/>
+        <waitForPageLoad stepKey="waitForStoreFrontProductPageLoad"/>
+
+        <!--Add product to cart-->
+        <actionGroup ref="StorefrontAddSimpleProductWithQtyActionGroup" stepKey="addSimpleProductToCart">
+            <argument name="product" value="$$createSimpleProduct$$"/>
+            <argument name="quantity" value="1"/>
+        </actionGroup>
+
+        <!--Open product in storefront-->
+        <amOnPage url="{{StorefrontProductPage.url($$createSimpleProduct.custom_attributes[url_key]$$)}}" stepKey="goToProductPageOnStorefront2"/>
+        <waitForPageLoad stepKey="waitForStoreFrontProductPageLoad2"/>
+
+        <!--Add product to cart-->
+        <actionGroup ref="StorefrontAddSimpleProductWithQtyActionGroup" stepKey="addSimpleProductToCart2">
+            <argument name="product" value="$$createSimpleProduct2$$"/>
+            <argument name="quantity" value="1"/>
+        </actionGroup>
+
+        <!--Click on Proceed to checkout-->
+        <actionGroup ref="StorefrontCartPageOpenActionGroup" stepKey="goToCart"/>
+        <actionGroup ref="StorefrontClickProceedToCheckoutActionGroup" stepKey="goToCheckout"/>
+
+        <dontSeeElement selector="{{StorefrontSelectStoreSection.pickInStoreBtn}}" stepKey="dontSeePickupStore"/>
+        <dontSeeElement selector="{{StorefrontSelectStoreSection.instorepickupdelivery}}" stepKey="dontSeeInStorePickupDelivery"/>
+    </test>
+</tests>
+

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="SourcesColumnTnTheSalesOrderGridInMagentoAdminPanelTest">
+        <annotations>
+            <stories value="Source Priority"/>
+            <title value="Sources column in the Sales Order Grid in Magento Admin panel"/>
+            <description value="Sources column in the Sales Order Grid in Magento Admin panel"/>
+            <severity value="MAJOR"/>
+            <testCaseId value="AC-6609"/>
+        </annotations>
+
+        <before>
+            <!--Set default flat rate shipping method settings-->
+            <magentoCLI command="config:set {{EnableFlatRateConfigData.path}} {{EnableFlatRateConfigData.value}}" stepKey="enableFlatRate"/>
+            <!--Create Source-->
+            <createData entity="FullSource1" stepKey="testSource1"/>
+            <createData entity="FullSource1" stepKey="testSource2"/>
+            <createData entity="FullSource1" stepKey="testSource3"/>
+            <createData entity="FullSource1" stepKey="testSource4"/>
+            <!--Create Stock-->
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="createStock"/>
+            <!--create Stock-->
+            <createData entity="_defaultCategory" stepKey="category"/>
+            <createData entity="SimpleProduct" stepKey="createSimpleProduct"/>
+            <createData entity="Simple_US_Customer" stepKey="createCustomer"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminPanel"/>
+     </before>
+     <after>
+         <!--Remove default flat rate shipping method settings-->
+         <comment userInput="Preserve BIC. config:set DisableFlatRateConfigData.path DisableFlatRateConfigData.value" stepKey="disableFlatRate"/>
+         <!--Assign Main Website to Default Stock-->
+         <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+             <argument name="stockName" value="{{_defaultStock.name}}"/>
+             <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+         </actionGroup>
+         <!--Clear Filter-->
+         <actionGroup ref="ClearFiltersAdminDataGridActionGroup" stepKey="clearGridFilters"/>
+         <!--Delete Stock-->
+         <deleteData createDataKey="createStock" stepKey="deleteStock"/>
+         <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+         <actionGroup ref="ClearFiltersAdminDataGridActionGroup" stepKey="clearGridFilters2"/>
+         <deleteData createDataKey="createSimpleProduct" stepKey="deleteProduct"/>
+         <deleteData createDataKey="category" stepKey="deleteCategory"/>
+         <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
+            <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
+
+         <!--Clean cache and reindex-->
+         <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+             <argument name="indices" value=""/>
+         </actionGroup>
+         <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+             <argument name="tags" value=""/>
+         </actionGroup>
+
+         <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
+     </after>
+
+        <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStock"
+                     stepKey="goToStockGridFilterResultsByInputEditStock1">
+            <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
+            <argument name="filter_value" value="$$createStock.stock[name]$$"/>
+        </actionGroup>
+
+        <!--  Assign Sources to stock-->
+        <actionGroup ref="AdminOnStockEditPageAssignSourceToStock" stepKey="onStockEditPageAssignSourceToStock1">
+            <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
+            <argument name="filter_value" value="$$testSource1.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminOnStockEditPageAssignSourceToStock" stepKey="onStockEditPageAssignSourceToStock2">
+            <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
+            <argument name="filter_value" value="$$testSource2.source[name]$$"/>
+        </actionGroup>
+
+        <actionGroup ref="AdminOnStockEditPageAssignSourceToStock" stepKey="onStockEditPageAssignSourceToStock3">
+            <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
+            <argument name="filter_value" value="$$testSource3.source[name]$$"/>
+        </actionGroup>
+
+        <actionGroup ref="AdminOnStockEditPageAssignSourceToStock" stepKey="onStockEditPageAssignSourceToStock4">
+            <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
+            <argument name="filter_value" value="$$testSource4.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose1"/>
+
+        <!--Go to product and open product to edit-->
+        <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openProductEditPage">
+            <argument name="productId" value="$createSimpleProduct.id$"/>
+        </actionGroup>
+
+        <!--Add category to product-->
+        <actionGroup ref="AdminAssignCategoryToProductAndSaveActionGroup" stepKey="assignProduct">
+            <argument name="categoryName" value="$$category.name$$"/>
+        </actionGroup>
+
+        <!--Assign Source to product and update quantity-->
+        <actionGroup ref="AdminOnProductEditPageAssignSourceToProduct" stepKey="AdminOnProductEditPageAssignSourceToProduct1">
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="filter_value" value="$$testSource1.source[source_code]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminOnProductEditPageAssignSourceToProduct" stepKey="AdminOnProductEditPageAssignSourceToProduct2">
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="filter_value" value="$$testSource2.source[source_code]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminOnProductEditPageAssignSourceToProduct" stepKey="AdminOnProductEditPageAssignSourceToProduct3">
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="filter_value" value="$$testSource3.source[source_code]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminOnProductEditPageAssignSourceToProduct" stepKey="AdminOnProductEditPageAssignSourceToProduct4">
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="filter_value" value="$$testSource4.source[source_code]$$"/>
+        </actionGroup>
+
+        <!--Update Qty-->
+        <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="10" stepKey="fillSourceQuantityField1"/>
+        <fillField selector="{{AdminProductSourcesGrid.rowQty('2')}}" userInput="10" stepKey="fillSourceQuantityField2"/>
+        <fillField selector="{{AdminProductSourcesGrid.rowQty('3')}}" userInput="10" stepKey="fillSourceQuantityField3"/>
+        <fillField selector="{{AdminProductSourcesGrid.rowQty('4')}}" userInput="10" stepKey="fillSourceQuantityField4"/>
+        <actionGroup ref="AdminProductFormSaveActionGroup" stepKey="saveProduct"/>
+
+        <!--  Login as customer -->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="storefrontCustomerLogin">
+            <argument name="Customer" value="$$createCustomer$$"/>
+        </actionGroup>
+
+        <actionGroup ref="StorefrontOpenProductPageActionGroup" stepKey="openProductPage">
+            <argument name="productUrl" value="$createSimpleProduct.custom_attributes[url_key]$"/>
+        </actionGroup>
+
+        <!--Add product to cart-->
+        <actionGroup ref="StorefrontAddSimpleProductWithQtyActionGroup" stepKey="addSimpleProductToCart2">
+            <argument name="product" value="$$createSimpleProduct$$"/>
+            <argument name="quantity" value="20"/>
+        </actionGroup>
+
+        <actionGroup ref="StorefrontClickOnMiniCartActionGroup" stepKey="clickMiniCart"/>
+        <click selector="{{StorefrontMinicartSection.goToCheckout}}" stepKey="goToCheckout"/>
+
+        <actionGroup ref="CheckoutSelectFlatRateShippingMethodActionGroup" stepKey="selectFlatRate"/>
+        <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="clickNext"/>
+
+        <!-- Checkout select Check/Money Order payment -->
+        <comment userInput="Select Check/Money payment" stepKey="checkoutSelectCheckMoneyPayment"/>
+        <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectCheckMoneyPayment"/>
+
+        <!-- Place Order -->
+        <comment userInput="Place order" stepKey="placeOrder"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickPlaceOrder"/>
+
+        <see selector="{{CheckoutSuccessMainSection.orderNumberText}}" userInput="Your order number is: " stepKey="seeOrderNumber"/>
+        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="grabOrderNumber"/>
+
+        <actionGroup ref="FilterOrderGridByIdActionGroup" stepKey="filterOrderGridById">
+            <argument name="orderId" value="$grabOrderNumber"/>
+        </actionGroup>
+        <waitForLoadingMaskToDisappear stepKey="waitForSearchingOrder"/>
+
+        <click selector="{{AdminOrdersGridSection.firstRow}}" stepKey="navigateToOrderViewPage"/>
+
+        <click selector="{{AdminOrderDetailsMainActionsSection.ship}}" stepKey="clickShipAction"/>
+
+        <actionGroup ref="AdminSelectSourceAlgorithmByPriorityActionGroup" stepKey="selectSourceByPriority1">
+            <argument name="Source" value="$$testSource1.source[name]$$"/>
+        </actionGroup>
+
+        <see selector="{{AdminSourceSelectionOrderedItemsGrid.rowAvailableSourcesName('0','0')}}" userInput="$$testSource1.source[name]$$" stepKey="CheckHighPrioritySourceName"/>
+        <seeInField selector="{{AdminSourceSelectionOrderedItemsGrid.rowAvailableSourcesQtyToDeduct('0','0')}}" userInput="10" stepKey="CheckHighPrioritySourceQty"/>
+
+        <click selector="{{AdminSourceSelectionFormSection.proceedToShipment}}" stepKey="createShipment"/>
+        <waitForPageLoad time="45" stepKey="waitForPageLoad2"/>
+
+
+        <click selector="{{AdminShipmentMainActionsSection.submitShipment}}" stepKey="clickSubmitShipment"/>
+
+        <click selector="{{AdminOrderDetailsMainActionsSection.ship}}" stepKey="clickShipAction2"/>
+
+        <waitForPageLoad time="45" stepKey="waitForPageLoad3"/>
+        <actionGroup ref="AdminSelectSourceAlgorithmByPriorityActionGroup" stepKey="selectSourcebyPriority2">
+            <argument name="Source" value="$$testSource2.source[name]$$"/>
+        </actionGroup>
+
+        <see selector="{{AdminSourceSelectionOrderedItemsGrid.rowAvailableSourcesName('0','1')}}" userInput="$$testSource2.source[name]$$" stepKey="CheckHighPrioritySourceName2"/>
+        <seeInField selector="{{AdminSourceSelectionOrderedItemsGrid.rowAvailableSourcesQtyToDeduct('0','1')}}" userInput="10" stepKey="CheckHighPrioritySourceQty2"/>
+
+        <click selector="{{AdminSourceSelectionFormSection.proceedToShipment}}" stepKey="createShipment2"/>
+        <waitForPageLoad time="45" stepKey="waitForPageLoad5"/>
+
+        <click selector="{{AdminShipmentMainActionsSection.submitShipment}}" stepKey="clickSubmitShipment2"/>
+        <waitForPageLoad time="45" stepKey="waitForPageLoad6"/>
+    </test>
+</tests>

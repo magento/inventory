@@ -71,7 +71,9 @@
             <deleteData createDataKey="createStock" stepKey="deleteStock"/>
             <deleteData createDataKey="downloadableProduct" stepKey="deleteProduct"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <amOnPage url="{{StorefrontProductPage.url($$downloadableProduct.custom_attributes[url_key]$$)}}" stepKey="openProductPage"/>
@@ -82,7 +84,7 @@
         <!-- Place Order -->
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="goToCheckoutFromMinicart"/>
 
-        <fillField selector="{{CheckoutShippingSection.email}}" userInput="{{MsiCustomer1.email}}" stepKey="enterEmail"/>
+        <fillField selector="{{CheckoutShippingSection.emailAddress}}" userInput="{{MsiCustomer1.email}}" stepKey="enterEmail"/>
         <fillField selector="{{CheckoutPaymentSection.guestFirstName}}" userInput="{{MsiCustomer1.firstname}}" stepKey="enterFirstName"/>
         <fillField selector="{{CheckoutPaymentSection.guestLastName}}" userInput="{{MsiCustomer1.lastname}}" stepKey="enterLastName"/>
         <fillField selector="{{CheckoutPaymentSection.guestStreet}}" userInput="{{CustomerAddressSimple.street[0]}}" stepKey="enterStreet"/>

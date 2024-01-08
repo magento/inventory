@@ -1,0 +1,82 @@
+
+File "/var/www/html/app/code/Magento/InventoryInStorePickupAdminUi/Test/Mftf/Test/AdminCreateCreditMemoWithSimpleProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontPickInStoreActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreNavigateToSelectStoreActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreSelectSourceActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreNavigateToPaymentActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+
+File "/var/www/html/app/code/Magento/InventoryInStorePickupAdminUi/Test/Mftf/Test/AdminCreateInvoiceAndShipmentWithSimpleProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontPickInStoreActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreNavigateToSelectStoreActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreSelectSourceActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreNavigateToPaymentActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+
+File "/var/www/html/app/code/Magento/InventoryInStorePickupAdminUi/Test/Mftf/Test/AdminCreateInvoiceWithSimpleProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontPickInStoreActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreNavigateToSelectStoreActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreSelectSourceActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreNavigateToPaymentActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+
+File "/var/www/html/app/code/Magento/InventoryInStorePickupAdminUi/Test/Mftf/Test/AdminCreateShipmentWithSimpleProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontPickInStoreActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreNavigateToSelectStoreActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreSelectSourceActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreNavigateToPaymentActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+
+File "/var/www/html/app/code/Magento/InventoryInStorePickupAdminUi/Test/Mftf/Test/AdminNotifyCustomerForPickupOrderBundleProductTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontPickInStoreActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreFillCustomerEmail from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreNavigateToSelectStoreActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreSelectSourceActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreNavigateToPaymentActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreGuestCustomerFillBillingAddressActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+
+File "/var/www/html/app/code/Magento/InventoryInStorePickupAdminUi/Test/Mftf/Test/AdminNotifyCustomerForPickupOrderConfigurableProductTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontAddConfigurableProductToTheCartActionGroup from module(s): magento/module-configurable-product
+	 StorefrontPickInStoreActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreFillCustomerEmail from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreNavigateToSelectStoreActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreSelectSourceActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreNavigateToPaymentActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreGuestCustomerFillBillingAddressActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+
+File "/var/www/html/app/code/Magento/InventoryInStorePickupAdminUi/Test/Mftf/Test/AdminNotifyCustomerForPickupOrderGroupedProductTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+	 StorefrontPickInStoreActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreFillCustomerEmail from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreNavigateToSelectStoreActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreSelectSourceActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreNavigateToPaymentActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreGuestCustomerFillBillingAddressActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+
+File "/var/www/html/app/code/Magento/InventoryInStorePickupAdminUi/Test/Mftf/Test/AdminNotifyOrderIsReadyForPickupTwiceWithSimpleProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontPickInStoreActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreNavigateToSelectStoreActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreSelectSourceActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreNavigateToPaymentActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+
+File "/var/www/html/app/code/Magento/InventoryInStorePickupAdminUi/Test/Mftf/Test/AdminVerifyNotifyOrderIsReadyForPickupWithSimpleProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontPickInStoreActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreNavigateToSelectStoreActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreSelectSourceActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend
+	 StorefrontPickInStoreNavigateToPaymentActionGroup from module(s): magento/module-inventory-in-store-pickup-frontend

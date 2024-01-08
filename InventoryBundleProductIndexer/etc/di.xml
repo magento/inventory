@@ -10,9 +10,6 @@
         <plugin name="bundle_product_index_full" type="Magento\InventoryBundleProductIndexer\Plugin\InventoryIndexer\Indexer\Stock\Strategy\Sync\ReindexFullPlugin"/>
         <plugin name="bundle_product_index_list" type="Magento\InventoryBundleProductIndexer\Plugin\InventoryIndexer\Indexer\Stock\Strategy\Sync\ReindexListPlugin"/>
     </type>
-    <type name="Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync">
-        <plugin name="bundle_product_index" type="Magento\InventoryBundleProductIndexer\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync\SourceItemIndexerPlugin" sortOrder="20"/>
-    </type>
     <type name="Magento\InventoryBundleProductIndexer\Indexer\Stock\StockIndexer">
         <arguments>
             <argument name="indexHandler" xsi:type="object">Magento\InventoryIndexer\Indexer\IndexHandler</argument>
@@ -29,5 +26,20 @@
         <plugin name="reindex_source_items_after_add_bundle_selection" type="Magento\InventoryBundleProductIndexer\Plugin\Bundle\Model\LinkManagement\ReindexSourceItemsAfterAddBundleSelectionPlugin"/>
         <plugin name="reindex_source_items_after_save_bundle_selection" type="Magento\InventoryBundleProductIndexer\Plugin\Bundle\Model\LinkManagement\ReindexSourceItemsAfterSaveBundleSelectionPlugin"/>
         <plugin name="reindex_source_items_after_remove_bundle_selection" type="Magento\InventoryBundleProductIndexer\Plugin\Bundle\Model\LinkManagement\ReindexSourceItemsAfterRemoveBundleSelectionPlugin"/>
+    </type>
+    <type name="Magento\Bundle\Api\ProductLinkManagementAddChildrenInterface">
+        <plugin name="reindex_source_items_after_bulk_add_bundle_selection" type="Magento\InventoryBundleProductIndexer\Plugin\Bundle\Model\LinkManagement\ReindexSourceItemsAfterBulkAddBundleSelectionPlugin"/>
+    </type>
+    <type name="Magento\InventoryBundleProductIndexer\Indexer\SourceItemIndexerProcessor">
+        <arguments>
+            <argument name="sortOrder" xsi:type="number">5</argument>
+        </arguments>
+    </type>
+    <type name="Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync">
+        <arguments>
+            <argument name="saleabilityChangesProcessorsPool" xsi:type="array">
+                <item name="sourceItemIndexerProcessor" xsi:type="object">Magento\InventoryBundleProductIndexer\Indexer\SourceItemIndexerProcessor</item>
+            </argument>
+        </arguments>
     </type>
 </config>

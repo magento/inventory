@@ -2,15 +2,14 @@
     "name": "magento/module-inventory-import-export",
     "description": "N/A",
     "require": {
-        "php": "~7.4.0||~8.1.0",
+        "php": "~8.1.0||~8.2.0",
         "magento/framework": "*",
         "magento/module-eav": "*",
         "magento/module-import-export": "*",
         "magento/module-inventory-api": "*",
         "magento/module-inventory": "*",
         "magento/module-inventory-catalog-api": "*",
-        "magento/module-store": "*",
-        "magento/module-configurable-product": "*"
+        "magento/module-store": "*"
     },
     "suggest": {
         "magento/module-catalog-import-export": "*"

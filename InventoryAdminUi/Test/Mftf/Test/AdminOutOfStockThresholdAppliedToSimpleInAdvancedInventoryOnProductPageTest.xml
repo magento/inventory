@@ -90,7 +90,7 @@
             <argument name="categoryUrl" value="$$category.custom_attributes[url_key]$$"/>
         </actionGroup>
         <comment userInput="BIC workaround" stepKey="waitForCategoryPageLoadOnStorefront"/>
-        <see userInput="$$simpleProduct.product[name]$$" stepKey="assertProductPresentOnCategoryPageOnStorefront"/>
-        <see userInput="$$simpleProduct.product[price]$$" stepKey="assertProductPricePresentOnCategoryPageOnStorefront"/>
+        <see userInput="$$simpleProduct.product[name]$$" selector="{{StorefrontCatalogSearchMainSection.searchResults}}" stepKey="assertProductPresentOnCategoryPageOnStorefront"/>
+        <see userInput="$$simpleProduct.product[price]$$" selector="{{StorefrontCatalogSearchMainSection.searchResults}}" stepKey="assertProductPricePresentOnCategoryPageOnStorefront"/>
     </test>
 </tests>

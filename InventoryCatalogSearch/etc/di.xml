@@ -9,7 +9,16 @@
     <type name="Magento\CatalogSearch\Model\Indexer\Fulltext\Action\GetSearchableProductsSelect">
         <plugin name="stock_filters_by_child_products" type="Magento\InventoryCatalogSearch\Plugin\CatalogSearch\Model\Indexer\ChildProductFilterByInventoryStockPlugin"/>
     </type>
+    <type name="Magento\InventoryCatalogSearch\Model\FullTextIndexUpdateProcessor">
+        <arguments>
+            <argument name="sortOrder" xsi:type="number">20</argument>
+        </arguments>
+    </type>
     <type name="Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync">
-        <plugin name="fulltextIndexUpdater" type="Magento\InventoryCatalogSearch\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync\FulltextIndexUpdater" sortOrder="10" />
+        <arguments>
+            <argument name="saleabilityChangesProcessorsPool" xsi:type="array">
+                <item name="fullTextIndexUpdateProcessor" xsi:type="object">Magento\InventoryCatalogSearch\Model\FullTextIndexUpdateProcessor</item>
+            </argument>
+        </arguments>
     </type>
 </config>

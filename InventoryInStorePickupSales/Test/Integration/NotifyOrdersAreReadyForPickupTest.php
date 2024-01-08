@@ -19,6 +19,7 @@ use Magento\Sales\Api\Data\ShipmentItemInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Api\ShipmentRepositoryInterface;
 use Magento\TestFramework\Helper\Bootstrap;
+use Magento\TestFramework\Mail\Template\TransportBuilderMock;
 
 /**
  * @inheritdoc
@@ -46,6 +47,9 @@ class NotifyOrdersAreReadyForPickupTest extends \PHPUnit\Framework\TestCase
     /** @var RequestInterface */
     private $request;
 
+    /** @var TransportBuilderMock */
+    private $transportBuilder;
+
     protected function setUp(): void
     {
         $this->objectManager = Bootstrap::getObjectManager();
@@ -56,6 +60,7 @@ class NotifyOrdersAreReadyForPickupTest extends \PHPUnit\Framework\TestCase
         $this->notifyOrderIsReadyForPickup = $this->objectManager->get(NotifyOrdersAreReadyForPickupInterface::class);
         $this->orderExtensionFactory = $this->objectManager->get(OrderExtensionFactory::class);
         $this->request = $this->objectManager->get(RequestInterface::class);
+        $this->transportBuilder = $this->objectManager->get(TransportBuilderMock::class);
     }
 
     /**
@@ -95,6 +100,12 @@ class NotifyOrdersAreReadyForPickupTest extends \PHPUnit\Framework\TestCase
 
         $this->assertFalse($result->isSuccessful());
         $this->assertEquals(current($result->getErrors())['message'], $errorMessage);
+        if ($message = $this->transportBuilder->getSentMessage()) {
+            $this->assertNotEquals(
+                "Your store_view_eu_website order is ready for pickup",
+                $message->getSubject()
+            );
+        }
     }
 
     /**
@@ -137,6 +148,8 @@ class NotifyOrdersAreReadyForPickupTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('SKU-1', $shipmentItem->getSku());
         $this->assertEquals((float)'3.5', $shipmentItem->getQty());
         $this->assertEquals($sourceId, $createdShipment->getExtensionAttributes()->getSourceCode());
+        $message = $this->transportBuilder->getSentMessage();
+        $this->assertEquals("Your store_view_eu_website order is ready for pickup", $message->getSubject());
     }
 
     /**

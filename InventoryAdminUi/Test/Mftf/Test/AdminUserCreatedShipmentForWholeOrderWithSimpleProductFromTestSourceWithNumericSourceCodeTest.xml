@@ -46,7 +46,9 @@
             </actionGroup>
             <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="clickOnSaveAndContinue"/>
             <seeElement selector=".success" stepKey="seeSuccessMessage"/>
-            <magentoCLI command="indexer:reindex" stepKey="doReindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="doReindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </before>
         <after>
             <!--Assign Default Stock to Default Website.-->
@@ -56,6 +58,7 @@
             </actionGroup>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="createSimpleProduct" stepKey="deleteProduct"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
         </after>
         <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="goToProduct1">

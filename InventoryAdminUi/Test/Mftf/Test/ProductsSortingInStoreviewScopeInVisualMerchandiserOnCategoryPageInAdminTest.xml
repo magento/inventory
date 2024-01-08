@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="ProductsSortingInStoreviewScopeInVisualMerchandiserOnCategoryPageInAdminTest">
+        <annotations>
+            <stories value="Product Sorting"/>
+            <title value="Products Sorting in Storeview scope in Visual Merchandiser on Category page in Admin (EE)"/>
+            <description value="Products Sorting in Storeview scope in Visual Merchandiser on Category page in Admin (EE)"/>
+            <testCaseId value="ACQE-6610"/>
+            <severity value="CRITICAL"/>
+            <group value="cloud"/>
+        </annotations>
+
+        <before>
+            <!--Create Source-->
+            <createData entity="FullSource1" stepKey="testSource"/>
+            <!--Create Stock-->
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="createStock"/>
+            <!--Create Simple Product-->
+            <createData entity="SimpleProduct" stepKey="createSimpleProduct"/>
+            <createData entity="SimpleProduct" stepKey="createSimpleProduct2"/>
+            <!--Create Category-->
+            <createData entity="_defaultCategory" stepKey="category"/>
+            <!--Admin login-->
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
+            <waitForPageLoad stepKey="waitForDashboardLoad"/>
+            <!--Create website-->
+            <actionGroup ref="AdminCreateWebsiteActionGroup" stepKey="createWebsite">
+                <argument name="newWebsiteName" value="{{customWebsite.name}}"/>
+                <argument name="websiteCode" value="{{customWebsite.code}}"/>
+            </actionGroup>
+            <!-- Create second store -->
+            <actionGroup ref="CreateCustomStoreActionGroup" stepKey="createCustomStore">
+                <argument name="website" value="{{customWebsite.name}}"/>
+                <argument name="store" value="{{customStoreGroup.name}}"/>
+                <argument name="rootCategory" value="Default Category"/>
+            </actionGroup>
+            <!-- Create second store view -->
+            <actionGroup ref="AdminCreateStoreViewActionGroup" stepKey="createCustomStoreView">
+                <argument name="StoreGroup" value="customStoreGroup"/>
+                <argument name="customStore" value="customStoreEN"/>
+            </actionGroup>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="AdminOpenConfigurationStoresPageActionGroup" stepKey="navigatetoStoresConfiguration"/>
+            <!--<amOnPage url="{{CatalogConfigPage.url}}" stepKey="goToCatalogConfigurationPageAfter"/>-->
+
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{BasicMsiStockWithMainWebsite1.name}}"/>
+                <argument name="websiteName" value="{{customWebsite.name}}"/>
+            </actionGroup>
+        </before>
+        <after>
+
+            <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite">
+                <argument name="websiteName" value="{{customWebsite.name}}"/>
+            </actionGroup>
+            <!--Clear Filter-->
+            <actionGroup ref="ClearFiltersAdminDataGridActionGroup" stepKey="clearGridFilters"/>
+            <!--Delete Stock-->
+            <deleteData createDataKey="createStock" stepKey="deleteStock"/>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <actionGroup ref="ClearFiltersAdminDataGridActionGroup" stepKey="clearGridFilters2"/>
+            <deleteData createDataKey="createSimpleProduct" stepKey="deleteProduct"/>
+            <deleteData createDataKey="createSimpleProduct2" stepKey="deleteProduct1"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
+        </after>
+
+        <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStock"
+                     stepKey="goToStockGridFilterResultsByInputEditStock1">
+            <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
+            <argument name="filter_value" value="$$createStock.stock[name]$$"/>
+        </actionGroup>
+
+        <!--  Assign Sources to stock-->
+        <actionGroup ref="AdminOnStockEditPageAssignSourceToStock" stepKey="onStockEditPageAssignSourceToStock1">
+            <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
+            <argument name="filter_value" value="$$testSource.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose1"/>
+
+        <!--Go to product and open product to edit-->
+        <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openProductEditPage">
+            <argument name="productId" value="$createSimpleProduct.id$"/>
+        </actionGroup>
+
+        <!--Add category to product-->
+        <actionGroup ref="AdminAssignCategoryToProductAndSaveActionGroup" stepKey="assignProduct">
+            <argument name="categoryName" value="$$category.name$$"/>
+        </actionGroup>
+
+        <!--Assign Source to product and update quantity-->
+        <actionGroup ref="AdminOnProductEditPageAssignSourceToProduct" stepKey="AdminOnProductEditPageAssignSourceToProduct1">
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="filter_value" value="$$testSource.source[source_code]$$"/>
+        </actionGroup>
+
+        <!--Update Qty-->
+        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="10" stepKey="fillDefaultQuantityField1"/>
+        <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="fillSourceQuantityField1"/>
+
+        <actionGroup ref="SelectProductInWebsitesActionGroup" stepKey="selectWebsiteForProduct1">
+            <argument name="website" value="{{customWebsite.name}}"/>
+        </actionGroup>
+
+        <actionGroup ref="AdminProductFormSaveActionGroup" stepKey="saveProduct"/>
+
+        <!--Go to product and open product to edit-->
+        <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openProductEditPage2">
+            <argument name="productId" value="$createSimpleProduct2.id$"/>
+        </actionGroup>
+
+        <!--Add category to product-->
+        <actionGroup ref="AdminAssignCategoryToProductAndSaveActionGroup" stepKey="assignProduct2">
+            <argument name="categoryName" value="$$category.name$$"/>
+        </actionGroup>
+
+        <!--Assign Source to product and update quantity-->
+        <actionGroup ref="AdminOnProductEditPageAssignSourceToProduct" stepKey="AdminOnProductEditPageAssignSourceToProduct2">
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="filter_value" value="$$testSource.source[source_code]$$"/>
+        </actionGroup>
+
+        <!--Update Qty-->
+        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="60" stepKey="fillDefaultQuantityField2"/>
+        <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="40" stepKey="fillSourceQuantityField2"/>
+
+        <actionGroup ref="SelectProductInWebsitesActionGroup" stepKey="selectWebsiteForProduct2">
+            <argument name="website" value="{{customWebsite.name}}"/>
+        </actionGroup>
+
+        <actionGroup ref="AdminProductFormSaveActionGroup" stepKey="saveProduct2"/>
+
+        <actionGroup ref="AdminOpenCategoryPageActionGroup" stepKey="goToCategoryPage"/>
+
+        <actionGroup ref="SwitchCategoryStoreViewActionGroup" stepKey="goToCategory1PageOnEnStoreView">
+          <argument name="Store" value="customStoreEN.name"/>
+          <argument name="CatName" value="$category.name$"/>
+        </actionGroup>
+
+        <actionGroup ref="AdminCategoriesOpenCategoryActionGroup" stepKey="openCategory">
+            <argument name="category" value="$$category$$"/>
+        </actionGroup>
+
+        <actionGroup ref="AdminCategoryPageOpenProductsInCategorySectionActionGroup" stepKey="openProductsInCategoryInitial"/>
+        <actionGroup ref="AdminCheckProductPositionInCategoryProductsGridActionGroup" stepKey="seeProduct2FirstInitial">
+            <argument name="position" value="1"/>
+            <argument name="productName" value="$createSimpleProduct2.name$"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckProductPositionInCategoryProductsGridActionGroup" stepKey="seeProduct2FirstInitial2">
+            <argument name="position" value="2"/>
+            <argument name="productName" value="$createSimpleProduct.name$"/>
+        </actionGroup>
+    </test>
+</tests>
