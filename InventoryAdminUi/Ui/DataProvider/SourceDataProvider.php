@@ -27,7 +27,12 @@ use Magento\Ui\DataProvider\Modifier\PoolInterface;
  */
 class SourceDataProvider extends DataProvider
 {
-    const SOURCE_FORM_NAME = 'inventory_source_form_data_source';
+    /**
+     * constant for Source Form Name
+     *
+     * @const SOURCE_FORM_NAME
+     */
+    public const SOURCE_FORM_NAME = 'inventory_source_form_data_source';
 
     /**
      * @var SourceRepositoryInterface
@@ -157,9 +162,9 @@ class SourceDataProvider extends DataProvider
     }
 
     /**
-     * Get total sources count, without filter be source name.
+     * Get total sources count, with or without filter be source name.
      *
-     * Get total sources count, without filter in order to ui/grid/columns/multiselect::updateState()
+     * Get total sources count, with or without filter in order to ui/grid/columns/multiselect::updateState()
      * works correctly with sources selection.
      *
      * @return int
@@ -167,7 +172,7 @@ class SourceDataProvider extends DataProvider
     private function getSourcesCount(): int
     {
         if (!$this->sourceCount) {
-            $this->sourceCount = $this->sourceRepository->getList()->getTotalCount();
+            $this->sourceCount = $this->getSearchResult()->getTotalCount();
         }
 
         return $this->sourceCount;

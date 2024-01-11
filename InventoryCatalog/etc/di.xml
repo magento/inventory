@@ -31,9 +31,6 @@
         <plugin name="inventory_catalog_update_parent_stock_status_on_decrement_source_item_qty"
                 type="Magento\InventoryCatalog\Plugin\Inventory\UpdateCompositeProductStockStatusOnDecrementSourceItemQty" sortOrder="100"/>
     </type>
-    <type name="Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync">
-        <plugin name="priceIndexUpdater" type="Magento\InventoryCatalog\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync\PriceIndexUpdater"/>
-    </type>
     <type name="Magento\InventoryIndexer\Indexer\Stock\Strategy\Sync">
         <plugin name="update_product_prices_plugin" type="Magento\InventoryCatalog\Plugin\InventoryIndexer\Indexer\Stock\Strategy\Sync\PriceIndexUpdatePlugin"/>
     </type>
@@ -197,6 +194,18 @@
     </type>
     <type name="Magento\Catalog\Model\ResourceModel\Product\Collection">
         <plugin name="outOfStockSorting" type="Magento\InventoryCatalog\Plugin\Catalog\Model\ResourceModel\Product\CollectionPlugin"/>
+    </type>
+    <type name="Magento\InventoryCatalog\Model\PriceIndexUpdateProcessor">
+        <arguments>
+            <argument name="sortOrder" xsi:type="number">10</argument>
+        </arguments>
+    </type>
+    <type name="Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync">
+        <arguments>
+            <argument name="saleabilityChangesProcessorsPool" xsi:type="array">
+                <item name="priceIndexUpdateProcessor" xsi:type="object">Magento\InventoryCatalog\Model\PriceIndexUpdateProcessor</item>
+            </argument>
+        </arguments>
     </type>
     <type name="Magento\CatalogInventory\Observer\ParentItemProcessorInterface">
         <plugin name="skip_parent_stock_processors" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Observer\ParentItemProcessor\SkipParentItemProcessorOnMultipleSourceMode"/>
