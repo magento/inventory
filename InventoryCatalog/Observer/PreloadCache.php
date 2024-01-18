@@ -18,6 +18,7 @@ use Magento\InventoryCatalog\Model\Cache\ProductSkusByIdsStorage;
 use Magento\InventoryCatalog\Model\Cache\ProductTypesBySkusStorage;
 use Magento\InventoryCatalog\Model\LegacyStockStatusCache;
 use Magento\InventoryIndexer\Model\GetStockItemData\CacheStorage as StockItemDataCacheStorage;
+use Magento\Inventory\Model\GetStockItemData\IsProductAssignedToStockCacheStorage;
 
 /**
  * Preload id/sku, sku/id and sku/type pairs into cache
@@ -55,12 +56,18 @@ class PreloadCache implements ObserverInterface
     private $stockRegistry;
 
     /**
+     * @var IsProductAssignedToStockCacheStorage
+     */
+    private IsProductAssignedToStockCacheStorage $cacheStorage;
+
+    /**
      * @param ProductTypesBySkusStorage $productTypesBySkusStorage
      * @param ProductIdsBySkusStorage $productIdsBySkusStorage
      * @param ProductSkusByIdsStorage $productSkusByIdsStorage
      * @param LegacyStockStatusCache $legacyStockStatusCache
      * @param StockItemDataCacheStorage $stockItemDataCacheStorage
      * @param StockRegistryInterface $stockRegistry
+     * @param IsProductAssignedToStockCacheStorage $cacheStorage
      */
     public function __construct(
         ProductTypesBySkusStorage $productTypesBySkusStorage,
@@ -68,7 +75,8 @@ class PreloadCache implements ObserverInterface
         ProductSkusByIdsStorage $productSkusByIdsStorage,
         LegacyStockStatusCache $legacyStockStatusCache,
         StockItemDataCacheStorage $stockItemDataCacheStorage,
-        StockRegistryInterface $stockRegistry
+        StockRegistryInterface $stockRegistry,
+        IsProductAssignedToStockCacheStorage $cacheStorage
     ) {
         $this->productTypesBySkusStorage = $productTypesBySkusStorage;
         $this->productIdsBySkusStorage = $productIdsBySkusStorage;
@@ -76,6 +84,7 @@ class PreloadCache implements ObserverInterface
         $this->legacyStockStatusCache = $legacyStockStatusCache;
         $this->stockItemDataCacheStorage = $stockItemDataCacheStorage;
         $this->stockRegistry = $stockRegistry;
+        $this->cacheStorage = $cacheStorage;
     }
 
     /**
@@ -95,6 +104,7 @@ class PreloadCache implements ObserverInterface
             $stockCache = ['quantity' => $stockData->getQty(), 'is_salable' => $stockData->getIsInStock()];
             $this->stockItemDataCacheStorage->set(Stock::DEFAULT_STOCK_ID, $product->getSku(), $stockCache);
             $this->stockItemDataCacheStorage->delete(Stock::DEFAULT_STOCK_ID, $product->getSku());
+            $this->cacheStorage->delete(Stock::DEFAULT_STOCK_ID, $product->getSku());
         }
         $productIds = array_keys($productCollection->getItems());
         if ($productIds) {
