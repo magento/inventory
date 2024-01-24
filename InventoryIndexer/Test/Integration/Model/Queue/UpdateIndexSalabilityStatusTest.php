@@ -62,7 +62,6 @@ class UpdateIndexSalabilityStatusTest extends TestCase
      */
     private static $clearQueueProcessor;
 
-
     public static function setUpBeforeClass(): void
     {
         $objectManager = Bootstrap::getObjectManager();
