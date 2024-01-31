@@ -101,7 +101,7 @@ class UpdateLegacyStockStatusForConfigurableProductTest extends TestCase
             ->getMock();
         $stockItemMock = $this->getMockBuilder(StockItem::class)
             ->disableOriginalConstructor()
-            ->setMethods([
+            ->addMethods([
                 'getQty',
                 'getIsInStock',
                 'getProductId',
@@ -153,7 +153,7 @@ class UpdateLegacyStockStatusForConfigurableProductTest extends TestCase
             ->getMock();
         $stockItemMock = $this->getMockBuilder(StockItem::class)
             ->disableOriginalConstructor()
-            ->setMethods([
+            ->addMethods([
                 'getQty',
                 'getIsInStock',
                 'getProductId',

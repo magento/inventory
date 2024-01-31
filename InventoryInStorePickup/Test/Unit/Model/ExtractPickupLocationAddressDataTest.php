@@ -52,12 +52,12 @@ class ExtractPickupLocationAddressDataTest extends TestCase
 
         $this->objectCopyServiceMock = $this->getMockBuilder(Copy::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getDataFromFieldset'])
+            ->onlyMethods(['getDataFromFieldset'])
             ->getMockForAbstractClass();
 
         $regionFactoryMock = $this->getMockBuilder(RegionFactory::class)
             ->disableOriginalConstructor()
-            ->setMethods(['create'])
+            ->onlyMethods(['create'])
             ->getMockForAbstractClass();
 
         $regionFactoryMock->expects($this->any())

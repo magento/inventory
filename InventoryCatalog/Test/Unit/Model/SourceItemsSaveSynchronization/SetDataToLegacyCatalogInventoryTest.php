@@ -95,7 +95,7 @@ class SetDataToLegacyCatalogInventoryTest extends TestCase
         $this->areProductsSalable = $this->getMockBuilder(AreProductsSalableInterface::class)
             ->onlyMethods(['execute'])->disableOriginalConstructor()->getMockForAbstractClass();
         $this->cacheCleaner = $this->getMockBuilder(CacheCleaner::class)
-            ->disableOriginalConstructor()->setMethods(['clean'])->getMock();
+            ->disableOriginalConstructor()->onlyMethods(['clean'])->getMock();
         $this->model = (new ObjectManager($this))->getObject(
             SetDataToLegacyCatalogInventory::class,
             [
