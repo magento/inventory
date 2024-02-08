@@ -79,6 +79,7 @@
         <click selector="{{AdminGridRow.checkboxByValue('color')}}" stepKey="selectColorAttribute"/>
         <click selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="navigateToSecondStep"/>
 
+        <scrollTo selector="{{AdminCreateProductConfigurationsPanel.createNewValue}}" stepKey="scrollToAddNewColorBlue"/>
         <click selector="{{AdminCreateProductConfigurationsPanel.createNewValue}}" stepKey="addNewColorBlue"/>
         <fillField userInput="{{colorProductAttribute3.name}}" selector="{{AdminCreateProductConfigurationsPanel.attributeName}}" stepKey="setNameBlue"/>
         <click selector="{{AdminCreateProductConfigurationsPanel.saveAttribute}}" stepKey="saveBlueColor"/>

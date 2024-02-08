@@ -14,6 +14,8 @@ use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
+use Magento\InventoryIndexer\Model\GetStockItemData\CacheStorage as StockItemDataCacheStorage;
+use Magento\CatalogInventory\Model\Stock as StockModel;
 
 /**
  * Adapt assignStatusToProduct for multi stocks.
@@ -41,21 +43,29 @@ class AdaptAssignStatusToProductPlugin
     private $getProductIdsBySkus;
 
     /**
+     * @var StockItemDataCacheStorage
+     */
+    private $stockItemDataCacheStorage;
+
+    /**
      * @param GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite
      * @param AreProductsSalableInterface $areProductsSalable
      * @param DefaultStockProviderInterface $defaultStockProvider
      * @param GetProductIdsBySkusInterface $getProductIdsBySkus
+     * @param StockItemDataCacheStorage $stockItemDataCacheStorage
      */
     public function __construct(
         GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite,
         AreProductsSalableInterface $areProductsSalable,
         DefaultStockProviderInterface $defaultStockProvider,
-        GetProductIdsBySkusInterface $getProductIdsBySkus
+        GetProductIdsBySkusInterface $getProductIdsBySkus,
+        StockItemDataCacheStorage $stockItemDataCacheStorage
     ) {
         $this->getStockIdForCurrentWebsite = $getStockIdForCurrentWebsite;
         $this->areProductsSalable = $areProductsSalable;
         $this->defaultStockProvider = $defaultStockProvider;
         $this->getProductIdsBySkus = $getProductIdsBySkus;
+        $this->stockItemDataCacheStorage = $stockItemDataCacheStorage;
     }
 
     /**
@@ -78,6 +88,7 @@ class AdaptAssignStatusToProductPlugin
         }
 
         try {
+            $this->stockItemDataCacheStorage->delete(StockModel::DEFAULT_STOCK_ID, $product->getSku());
             $this->getProductIdsBySkus->execute([$product->getSku()]);
             if (null === $status) {
                 $stockId = $this->getStockIdForCurrentWebsite->execute();
