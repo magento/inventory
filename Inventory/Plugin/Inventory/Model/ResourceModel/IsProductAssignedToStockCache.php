@@ -7,25 +7,26 @@ declare(strict_types=1);
 
 namespace Magento\Inventory\Plugin\Inventory\Model\ResourceModel;
 
-use Magento\Framework\ObjectManager\ResetAfterRequestInterface;
+use Magento\Inventory\Model\GetStockItemData\IsProductAssignedToStockCacheStorage;
 use Magento\Inventory\Model\ResourceModel\IsProductAssignedToStock;
 
 /**
  * Caching plugin for IsProductAssignedToStock service.
  */
-class IsProductAssignedToStockCache implements ResetAfterRequestInterface
+class IsProductAssignedToStockCache
 {
     /**
-     * @var array
+     * @var $cacheStorage
      */
-    private $skuToStockIdAssignment = [];
+    private IsProductAssignedToStockCacheStorage $cacheStorage;
 
     /**
-     * @inheritDoc
+     * @param IsProductAssignedToStockCacheStorage $cacheStorage
      */
-    public function _resetState(): void
-    {
-        $this->skuToStockIdAssignment = [];
+    public function __construct(
+        IsProductAssignedToStockCacheStorage $cacheStorage
+    ) {
+        $this->cacheStorage = $cacheStorage;
     }
 
     /**
@@ -40,9 +41,17 @@ class IsProductAssignedToStockCache implements ResetAfterRequestInterface
      */
     public function aroundExecute(IsProductAssignedToStock $subject, callable $proceed, string $sku, int $stockId): bool
     {
-        if (!isset($this->skuToStockIdAssignment[$sku][$stockId])) {
-            $this->skuToStockIdAssignment[$sku][$stockId] = $proceed($sku, $stockId);
+        if ($this->cacheStorage->isProductAssigned($stockId, $sku)) {
+            return true;
         }
-        return $this->skuToStockIdAssignment[$sku][$stockId];
+
+        $isProductAssignableToStockCache = $proceed($sku, $stockId);
+
+        /* Add to cache a new item */
+        if ($isProductAssignableToStockCache) {
+            $this->cacheStorage->set($stockId, $sku, $isProductAssignableToStockCache);
+        }
+
+        return $isProductAssignableToStockCache;
     }
 }
