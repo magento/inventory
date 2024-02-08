@@ -51,7 +51,9 @@
             <argument name="assignSource" value="$$createTestSource1.source[name]$$"/>
             <argument name="stockName" value="Test Stock 1"/>
         </actionGroup>
-        <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
         <magentoCLI command="cache:flush" stepKey="cleanCache"/>
 
         <!-- Step4.1 Create Simple Product -->
@@ -107,7 +109,9 @@
 
         <!-- Step6.3 Save the Bundle Product -->
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProductPostOutOfStock"/>
-        <magentoCLI command="indexer:reindex" stepKey="performReindexPostOutOfStock"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexPostOutOfStock">
+            <argument name="indices" value=""/>
+        </actionGroup>
         <magentoCLI command="cache:flush" stepKey="cleanCachePostOutOfStock"/>
 
         <!-- Step7.1 Verify the Bundle Product in Created Category in Storefront is not present -->
@@ -126,7 +130,9 @@
 
         <!-- Step8.3 Save the Bundle Product -->
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProductPostInStock"/>
-        <magentoCLI command="indexer:reindex" stepKey="performReindexPostInStock"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexPostInStock">
+            <argument name="indices" value=""/>
+        </actionGroup>
         <magentoCLI command="cache:flush" stepKey="cleanCachePostInStock"/>
 
         <!-- Step9 Verify the Bundle Product name , SKU and status for product in Storefront is present -->
