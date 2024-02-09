@@ -75,15 +75,19 @@ class UpdateInventoryTest extends TestCase
             'cp2'
         )
     ]
-    public function testMassUpdateConfigurableProductsStockStatus(): void
+    /**
+     * @dataProvider massUpdateConfigurableProductsStockStatusDataProvider
+     */
+    public function testMassUpdateConfigurableProductsStockStatus(array $products): void
     {
-        $products = ['sp1', 'sp2', 'sp3', 'sp4', 'cp1', 'cp2'];
         $skus = array_map(
             fn (string $fixture) => $this->fixtures->get($fixture)->getSku(),
             array_combine($products, $products)
         );
-        $this->assertTrue($this->isProductSalable->execute($skus['cp1'], Stock::DEFAULT_STOCK_ID));
-        $this->assertTrue($this->isProductSalable->execute($skus['cp2'], Stock::DEFAULT_STOCK_ID));
+        $cp1Sku = $this->fixtures->get('cp1')->getSku();
+        $cp2Sku = $this->fixtures->get('cp2')->getSku();
+        $this->assertTrue($this->isProductSalable->execute($cp1Sku, Stock::DEFAULT_STOCK_ID));
+        $this->assertTrue($this->isProductSalable->execute($cp2Sku, Stock::DEFAULT_STOCK_ID));
 
         $inventory = [
             'is_in_stock' => 0
@@ -95,8 +99,8 @@ class UpdateInventoryTest extends TestCase
             ]
         );
         $this->updateInventory->execute($data);
-        $this->assertFalse($this->isProductSalable->execute($skus['cp1'], Stock::DEFAULT_STOCK_ID));
-        $this->assertFalse($this->isProductSalable->execute($skus['cp2'], Stock::DEFAULT_STOCK_ID));
+        $this->assertFalse($this->isProductSalable->execute($cp1Sku, Stock::DEFAULT_STOCK_ID));
+        $this->assertFalse($this->isProductSalable->execute($cp2Sku, Stock::DEFAULT_STOCK_ID));
 
         $inventory = [
             'is_in_stock' => 1
@@ -108,7 +112,18 @@ class UpdateInventoryTest extends TestCase
             ]
         );
         $this->updateInventory->execute($data);
-        $this->assertTrue($this->isProductSalable->execute($skus['cp1'], Stock::DEFAULT_STOCK_ID));
-        $this->assertTrue($this->isProductSalable->execute($skus['cp2'], Stock::DEFAULT_STOCK_ID));
+        $this->assertTrue($this->isProductSalable->execute($cp1Sku, Stock::DEFAULT_STOCK_ID));
+        $this->assertTrue($this->isProductSalable->execute($cp2Sku, Stock::DEFAULT_STOCK_ID));
+    }
+
+    /**
+     * @return array[]
+     */
+    public function massUpdateConfigurableProductsStockStatusDataProvider(): array
+    {
+        return [
+            [['sp1', 'sp2', 'sp3', 'sp4', 'cp1', 'cp2']],
+            [['sp1', 'sp2', 'sp3', 'sp4']],
+        ];
     }
 }
