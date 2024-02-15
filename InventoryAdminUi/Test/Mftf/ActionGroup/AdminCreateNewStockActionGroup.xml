@@ -17,6 +17,7 @@
             <argument name="assignSource" type="string"/>
         </arguments>
         <amOnPage url="{{AdminCreateStockPage.url}}" stepKey="navigateToNewStockPage"/>
+        <waitForPageLoad stepKey="waitForPageLoad" />
         <fillField selector="{{AdminEditStockGeneralSection.name}}" userInput="{{stockName}}" stepKey="enterNameForNewStock"/>
         <selectOption selector="{{AdminEditStockGeneralSection.websites}}" userInput="{{websiteName}}" stepKey="selectWebsite" />
         <click selector="{{AdminEditStockGeneralSection.assignSources}}" stepKey="clickAssignSourceButton" />
