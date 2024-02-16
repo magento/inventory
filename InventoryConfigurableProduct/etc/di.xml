@@ -29,22 +29,15 @@
             <argument name="selectProcessor" xsi:type="object">Magento\InventoryConfigurableProduct\Pricing\Price\Indexer\BaseStockStatusSelectProcessor</argument>
         </arguments>
     </type>
-    <type name="Magento\InventoryCatalog\Model\UpdateInventory">
-        <plugin name="inventory_configurable_product_update_legacy_stock_status_on_mass_update"
-                type="Magento\InventoryConfigurableProduct\Plugin\InventoryCatalog\UpdateLegacyStockStatusForConfigurableProductOnMassUpdate"/>
-    </type>
     <type name="Magento\CatalogInventory\Api\StockRegistryInterface">
         <plugin name="inventory_catalog_add_qty_to_legacy_stock_configurable"
                 type="Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\Api\StockRegistry\SetQtyToLegacyStock" sortOrder="100"/>
     </type>
     <type name="Magento\CatalogInventory\Model\ResourceModel\Stock\Item">
-        <plugin name="after_update_stock_item_for_new_configurable_product"
-                type="Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\UpdateLegacyStockItemForNewConfigurableProduct"
-                sortOrder="100"/>
-        <plugin name="update_source_stock_for_configurable_product"
+        <plugin name="after_update_stock_item_for_configurable_product"
                 type="Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\UpdateLegacyStockStatusForConfigurableProduct"
-                sortOrder="200"/>
-
+                sortOrder="100"/>
+        <plugin name="updateStockChangedAuto" disabled="true"/>
     </type>
     <type name="Magento\InventoryCatalogApi\Model\CompositeProductStockStatusProcessorPool">
         <arguments>
@@ -53,7 +46,15 @@
             </argument>
         </arguments>
     </type>
-    <type name="Magento\Inventory\Model\SourceItem\Command\Handler\SourceItemsSaveHandler">
-        <plugin name="update_parent_stock_status" type="Magento\InventoryConfigurableProduct\Plugin\Model\UpdateParentStockStatus"/>
+    <type name="Magento\InventorySalesApi\Model\GetIsQtySalableInterface">
+        <plugin name="inventory_configurable_product_is_any_child_salable"
+                type="Magento\InventoryConfigurableProduct\Plugin\InventorySales\Model\IsProductSalableCondition\GetIsQtySalableForConfigurableProduct"/>
+    </type>
+    <type name="Magento\CatalogInventory\Model\ResourceModel\Indexer\Stock\GetStatusExpression">
+        <arguments>
+            <argument name="statusExpressions" xsi:type="array">
+                <item name="configurable" xsi:type="object">Magento\CatalogInventory\Model\ResourceModel\Indexer\Stock\StatusExpression\DefaultExpression</item>
+            </argument>
+        </arguments>
     </type>
 </config>
