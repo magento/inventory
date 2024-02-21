@@ -210,4 +210,5 @@
     <type name="Magento\CatalogInventory\Observer\ParentItemProcessorInterface">
         <plugin name="skip_parent_stock_processors" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Observer\ParentItemProcessor\SkipParentItemProcessorOnMultipleSourceMode"/>
     </type>
+    <preference for="Magento\Framework\Indexer\Config\Converter\SortingAdjustmentInterface" type="Magento\InventoryCatalog\Model\SortingAdjustment" />
 </config>
