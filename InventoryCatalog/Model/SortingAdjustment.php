@@ -25,7 +25,7 @@ use Magento\InventoryIndexer\Indexer\InventoryIndexer;
 class SortingAdjustment implements SortingAdjustmentInterface
 {
     /**
-     * @inheridoc
+     * @inheritDoc
      */
     public function adjust(array $indexersList): array
     {
@@ -40,19 +40,43 @@ class SortingAdjustment implements SortingAdjustmentInterface
 
         $newOrder = [];
         foreach ($order as $pos => $indexerId) {
-            if ($pos < $pricePos || $pos > $inventoryPos) {
-                $newOrder[$pos] = $indexerId;
-            } elseif ($pos === $pricePos) {
-                $newOrder[$pos] = $order[$inventoryPos];
-                $newOrder[$pos+1] = $indexerId;
-            } elseif ($pos > $pricePos && $pos < $inventoryPos) {
-                $newOrder[$pos+1] = $indexerId;
-            }
+            $newOrder = $this->fillNewOrder($newOrder, $order, $pos, $indexerId, $pricePos, $inventoryPos);
         }
-        for ($i = 0; $i < count($newOrder); $i++) {
+        $c = count($newOrder);
+        for ($i = 0; $i < $c; $i++) {
             $indexersListAdjusted[$newOrder[$i]] = $indexersList[$newOrder[$i]];
         }
 
         return $indexersListAdjusted;
+    }
+
+    /**
+     * Fill array with new sorting order
+     *
+     * @param array $newOrder
+     * @param array $order
+     * @param int $pos
+     * @param string $indexerId
+     * @param int $pricePos
+     * @param int $inventoryPos
+     * @return array
+     */
+    private function fillNewOrder(
+        array $newOrder,
+        array $order,
+        int $pos,
+        string $indexerId,
+        int $pricePos,
+        int $inventoryPos
+    ) : array {
+        if ($pos < $pricePos || $pos > $inventoryPos) {
+            $newOrder[$pos] = $indexerId;
+        } elseif ($pos === $pricePos) {
+            $newOrder[$pos] = $order[$inventoryPos];
+            $newOrder[$pos+1] = $indexerId;
+        } elseif ($pos > $pricePos && $pos < $inventoryPos) {
+            $newOrder[$pos+1] = $indexerId;
+        }
+        return $newOrder;
     }
 }
