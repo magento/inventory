@@ -25,7 +25,7 @@ use Magento\InventoryIndexer\Indexer\InventoryIndexer;
 class SortingAdjustment implements SortingAdjustmentInterface
 {
     /**
-     * @inheirtdoc
+     * @inheridoc
      */
     public function adjust(array $indexersList): array
     {
@@ -34,23 +34,23 @@ class SortingAdjustment implements SortingAdjustmentInterface
 
         $pricePos = array_search(PriceIndexer::INDEXER_ID, $order);
         $inventoryPos = array_search(InventoryIndexer::INDEXER_ID, $order);
-        if ($pricePos !== false && $inventoryPos !== false && $inventoryPos > $pricePos) {
-            $newOrder = [];
-            foreach ($order as $pos => $indexerId) {
-                if ($pos < $pricePos || $pos > $inventoryPos) {
-                    $newOrder[$pos] = $indexerId;
-                } elseif ($pos === $pricePos) {
-                    $newOrder[$pos] = $order[$inventoryPos];
-                    $newOrder[$pos+1] = $indexerId;
-                } elseif ($pos > $pricePos && $pos < $inventoryPos) {
-                    $newOrder[$pos+1] = $indexerId;
-                }
+        if ($pricePos === false || $inventoryPos === false || $inventoryPos < $pricePos) {
+            return $indexersList;
+        }
+
+        $newOrder = [];
+        foreach ($order as $pos => $indexerId) {
+            if ($pos < $pricePos || $pos > $inventoryPos) {
+                $newOrder[$pos] = $indexerId;
+            } elseif ($pos === $pricePos) {
+                $newOrder[$pos] = $order[$inventoryPos];
+                $newOrder[$pos+1] = $indexerId;
+            } elseif ($pos > $pricePos && $pos < $inventoryPos) {
+                $newOrder[$pos+1] = $indexerId;
             }
-            for ($i = 0; $i < count($newOrder); $i++) {
-                $indexersListAdjusted[$newOrder[$i]] = $indexersList[$newOrder[$i]];
-            }
-        } else {
-            $indexersListAdjusted = $indexersList;
+        }
+        for ($i = 0; $i < count($newOrder); $i++) {
+            $indexersListAdjusted[$newOrder[$i]] = $indexersList[$newOrder[$i]];
         }
 
         return $indexersListAdjusted;
