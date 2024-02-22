@@ -87,10 +87,12 @@ class GetOrderDataForOrderInFinalStateTest extends TestCase
             ->willReturnArgument(0);
         $this->resourceConnection->expects($this->exactly(2))
             ->method('getConnection')
-            ->willReturnCallback(function($arg) use ($salesConnectionName,
+            ->willReturnCallback(function ($arg) use (
+                $salesConnectionName,
                 $defaultConnectionName,
                 $salesConnection,
-                $defaultConnection) {
+                $defaultConnection
+            ) {
                 if ($arg == $salesConnectionName) {
                     return $salesConnection;
                 } elseif ($arg == $defaultConnectionName) {
