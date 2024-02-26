@@ -37,7 +37,7 @@ class CartQuantityValidator implements CartQuantityValidatorInterface
     /**
      * @var array
      */
-    private $cumulativeQty;
+    private $cumulativeQty = [];
 
     /**
      * @param CartItemRepositoryInterface $cartItemRepository
@@ -93,6 +93,8 @@ class CartQuantityValidator implements CartQuantityValidatorInterface
                 }
             }
         }
+        $this->cumulativeQty = [];
+
         return $modified;
     }
 
