@@ -42,7 +42,7 @@ class SortingAdjustment implements SortingAdjustmentInterface
         $order = array_keys($indexersListAdjusted);
         $pricePos = array_search(PriceIndexer::INDEXER_ID, $order);
         $inventoryPos = array_search(InventoryIndexer::INDEXER_ID, $order);
-        if ($pricePos !== false && $inventoryPos !== false && $inventoryPos > $pricePos) {
+        if ($pricePos !== false && $inventoryPos !== false) {
             $indexersListAdjusted = $this->switchPositions($indexersListAdjusted, $inventoryPos, $pricePos);
         }
 
@@ -86,10 +86,10 @@ class SortingAdjustment implements SortingAdjustmentInterface
         foreach ($order as $pos => $indexerId) {
             if ($pos < $posShouldBeLower || $pos > $posShouldBeUpper) {
                 $newOrder[$pos] = $indexerId;
-            } elseif ($pos === $posShouldBeUpper) {
-                $newOrder[$pos] = $order[$posShouldBeLower];
+            } elseif ($pos === $posShouldBeLower) {
+                $newOrder[$pos] = $order[$posShouldBeUpper];
                 $newOrder[$pos+1] = $indexerId;
-            } elseif ($pos < $posShouldBeUpper && $pos > $posShouldBeLower) {
+            } elseif ($pos > $posShouldBeLower && $pos < $posShouldBeUpper) {
                 $newOrder[$pos+1] = $indexerId;
             }
         }
