@@ -20,6 +20,7 @@ namespace Magento\InventoryCatalog\Model;
 
 use Magento\Framework\Indexer\Config\Converter\SortingAdjustmentInterface;
 use Magento\Catalog\Model\Indexer\Product\Price\Processor as PriceIndexer;
+use Magento\CatalogInventory\Model\Indexer\Stock\Processor as StockIndexer;
 use Magento\InventoryIndexer\Indexer\InventoryIndexer;
 
 class SortingAdjustment implements SortingAdjustmentInterface
@@ -27,55 +28,70 @@ class SortingAdjustment implements SortingAdjustmentInterface
     /**
      * @inheritDoc
      */
-    public function adjust(array $indexersList): array
+    public function adjust(array $indexersList) : array
     {
-        $indexersListAdjusted = [];
-        $order = array_keys($indexersList);
+        $indexersListAdjusted = $indexersList;
 
+        $order = array_keys($indexersListAdjusted);
+        $inventoryPos = array_search(InventoryIndexer::INDEXER_ID, $order);
+        $stockPos = array_search(StockIndexer::INDEXER_ID, $order);
+        if ($stockPos !== false && $inventoryPos !== false) {
+            $indexersListAdjusted = $this->switchPositions($indexersListAdjusted, $stockPos, $inventoryPos);
+        }
+
+        $order = array_keys($indexersListAdjusted);
         $pricePos = array_search(PriceIndexer::INDEXER_ID, $order);
         $inventoryPos = array_search(InventoryIndexer::INDEXER_ID, $order);
-        if ($pricePos === false || $inventoryPos === false || $inventoryPos < $pricePos) {
-            return $indexersList;
-        }
-
-        $newOrder = [];
-        foreach ($order as $pos => $indexerId) {
-            $newOrder = $this->fillNewOrder($newOrder, $order, $pos, $indexerId, $pricePos, $inventoryPos);
-        }
-        $c = count($newOrder);
-        for ($i = 0; $i < $c; $i++) {
-            $indexersListAdjusted[$newOrder[$i]] = $indexersList[$newOrder[$i]];
+        if ($pricePos !== false && $inventoryPos !== false && $inventoryPos > $pricePos) {
+            $indexersListAdjusted = $this->switchPositions($indexersListAdjusted, $inventoryPos, $pricePos);
         }
 
         return $indexersListAdjusted;
     }
 
     /**
-     * Fill array with new sorting order
+     * Switch position for two indexers if necessary
      *
-     * @param array $newOrder
-     * @param array $order
-     * @param int $pos
-     * @param string $indexerId
-     * @param int $pricePos
-     * @param int $inventoryPos
+     * @param array $list
+     * @param int $posShouldBeUpper
+     * @param int $posShouldBeLower
      * @return array
      */
-    private function fillNewOrder(
-        array $newOrder,
-        array $order,
-        int $pos,
-        string $indexerId,
-        int $pricePos,
-        int $inventoryPos
-    ) : array {
-        if ($pos < $pricePos || $pos > $inventoryPos) {
-            $newOrder[$pos] = $indexerId;
-        } elseif ($pos === $pricePos) {
-            $newOrder[$pos] = $order[$inventoryPos];
-            $newOrder[$pos+1] = $indexerId;
-        } elseif ($pos > $pricePos && $pos < $inventoryPos) {
-            $newOrder[$pos+1] = $indexerId;
+    private function switchPositions(array $list, int $posShouldBeUpper, int $posShouldBeLower) : array
+    {
+        if ($posShouldBeUpper > $posShouldBeLower) {
+            $newOrder = $this->reArrange($list, $posShouldBeUpper, $posShouldBeLower);
+            $tmpList = [];
+            $c = count($newOrder);
+            for ($i = 0; $i < $c; $i++) {
+                $tmpList[$newOrder[$i]] = $list[$newOrder[$i]];
+            }
+            $list = $tmpList;
+        }
+        return $list;
+    }
+
+    /**
+     * Perform adjustments in the sorting order
+     *
+     * @param array $list
+     * @param int $posShouldBeUpper
+     * @param int $posShouldBeLower
+     * @return array
+     */
+    private function reArrange(array $list, int $posShouldBeUpper, int $posShouldBeLower) : array
+    {
+        $newOrder = [];
+        $order = array_keys($list);
+        foreach ($order as $pos => $indexerId) {
+            if ($pos < $posShouldBeLower || $pos > $posShouldBeUpper) {
+                $newOrder[$pos] = $indexerId;
+            } elseif ($pos === $posShouldBeUpper) {
+                $newOrder[$pos] = $order[$posShouldBeLower];
+                $newOrder[$pos+1] = $indexerId;
+            } elseif ($pos < $posShouldBeUpper && $pos > $posShouldBeLower) {
+                $newOrder[$pos+1] = $indexerId;
+            }
         }
         return $newOrder;
     }
