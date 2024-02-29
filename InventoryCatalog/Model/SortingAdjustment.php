@@ -46,6 +46,14 @@ class SortingAdjustment implements SortingAdjustmentInterface
             $indexersListAdjusted = $this->switchPositions($indexersListAdjusted, $inventoryPos, $pricePos);
         }
 
+        //put stock first
+        foreach ($indexersListAdjusted as $id => $data) {
+            if ($id === StockIndexer::INDEXER_ID) {
+                $indexersListAdjusted = [$id => $data] + $indexersListAdjusted;
+                break;
+            }
+        }
+
         return $indexersListAdjusted;
     }
 
