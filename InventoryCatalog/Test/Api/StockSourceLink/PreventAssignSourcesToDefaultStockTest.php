@@ -87,7 +87,7 @@ class PreventAssignSourcesToDefaultStockTest extends WebapiAbstract
     /**
      * @return array
      */
-    public function dataProviderWrongParameters(): array
+    public static function dataProviderWrongParameters(): array
     {
         $defaultSourceProvider = Bootstrap::getObjectManager()->get(DefaultSourceProviderInterface::class);
         $defaultStockProvider = Bootstrap::getObjectManager()->get(DefaultStockProviderInterface::class);

@@ -76,7 +76,7 @@ class GetProductStockStatusBuSkuOnDefaultStockTest extends TestCase
     /**
      * @return array
      */
-    public function getStockDataProvider(): array
+    public static function getStockDataProvider(): array
     {
         return [
             ['configurable_in_stock', 1],

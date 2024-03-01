@@ -127,7 +127,7 @@ class GetStockStatusAsyncReindexTest extends TestCase
     /**
      * @return array
      */
-    public function getStatusDataProvider(): array
+    public static function getStatusDataProvider(): array
     {
         return [
             ['store_for_eu_website', 'SKU-1', 1, 8.5],
