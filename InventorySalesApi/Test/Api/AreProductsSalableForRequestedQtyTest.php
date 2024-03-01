@@ -77,7 +77,7 @@ class AreProductsSalableForRequestedQtyTest extends WebapiAbstract
      *
      * @return array
      */
-    public function executeDataProvider(): array
+    public static function executeDataProvider(): array
     {
         return [
             ['SKU-1', 10, 1, true, []],

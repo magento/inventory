@@ -54,7 +54,7 @@ class CarrierLinkManagementTest extends WebapiAbstract
     /**
      * @return array
      */
-    public function dataProviderCarrierLinks(): array
+    public static function dataProviderCarrierLinks(): array
     {
         return [
             'add_carrier_new_links' => [

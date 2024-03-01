@@ -101,7 +101,7 @@ class SalesChannelManagementTest extends WebapiAbstract
     /**
      * @return array
      */
-    public function deleteSalesChannelDataProvider(): array
+    public static function deleteSalesChannelDataProvider(): array
     {
         return [
             'one_channel_delete' . SalesChannelInterface::TYPE => [
@@ -176,7 +176,7 @@ class SalesChannelManagementTest extends WebapiAbstract
     /**
      * @return array
      */
-    public function dataProviderSalesChannelsAssignment(): array
+    public static function dataProviderSalesChannelsAssignment(): array
     {
         return [
             'not_given_' . SalesChannelInterface::TYPE => [

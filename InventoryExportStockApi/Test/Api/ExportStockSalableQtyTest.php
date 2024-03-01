@@ -217,7 +217,7 @@ class ExportStockSalableQtyTest extends OrderPlacementBase
      *
      * @return array
      */
-    public function simpleProductTypesDataProvider()
+    public static function simpleProductTypesDataProvider()
     {
         return [
             [
