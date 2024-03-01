@@ -51,7 +51,6 @@ class SortingAdjustment implements SortingAdjustmentInterface
             $indexersListAdjusted = $this->switchPositions($indexersListAdjusted, $inventoryPos, $pricePos);
         }
 
-
         return $indexersListAdjusted;
     }
 
