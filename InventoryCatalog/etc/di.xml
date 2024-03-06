@@ -210,4 +210,11 @@
     <type name="Magento\CatalogInventory\Observer\ParentItemProcessorInterface">
         <plugin name="skip_parent_stock_processors" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Observer\ParentItemProcessor\SkipParentItemProcessorOnMultipleSourceMode"/>
     </type>
+    <virtualType name="CatalogRuleCustomConditionProvider" type="Magento\Framework\Api\SearchCriteria\CollectionProcessor\ConditionProcessor\CustomConditionProvider">
+        <arguments>
+            <argument name="customConditionProcessors" xsi:type="array">
+                <item name="quantity_and_stock_status" xsi:type="object">Magento\InventoryCatalog\Model\AttributeQuantityAndStock</item>
+            </argument>
+        </arguments>
+    </virtualType>
 </config>
