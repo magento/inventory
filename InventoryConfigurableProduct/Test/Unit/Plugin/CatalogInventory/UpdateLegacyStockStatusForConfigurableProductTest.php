@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryConfigurableProduct\Test\Unit\Plugin\CatalogInventory;
 
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
+use Magento\InventoryConfigurableProduct\Model\Inventory\ChangeParentProductStockStatus;
 use Magento\InventoryConfigurableProduct\Model\IsProductSalableCondition\IsConfigurableProductChildrenSalable;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -61,10 +62,18 @@ class UpdateLegacyStockStatusForConfigurableProductTest extends TestCase
     private $plugin;
 
     /**
+     * @var ChangeParentProductStockStatus
+     */
+    private $changeParentProductStockStatus;
+
+    /**
      * @inheritdoc
      */
     protected function setUp(): void
     {
+        $this->changeParentProductStockStatus = $this->getMockBuilder(ChangeParentProductStockStatus::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $this->getProductTypeByIdMock = $this->getMockBuilder(GetProductTypeById::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -77,6 +86,7 @@ class UpdateLegacyStockStatusForConfigurableProductTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
         $this->plugin = new UpdateLegacyStockStatusForConfigurableProduct(
+            $this->changeParentProductStockStatus,
             $this->getProductTypeByIdMock,
             $this->setDataToLegacyStockStatusMock,
             $this->getSkusByProductIdsMock,
@@ -137,6 +147,9 @@ class UpdateLegacyStockStatusForConfigurableProductTest extends TestCase
         $this->setDataToLegacyStockStatusMock->expects($this->once())
             ->method('execute')
             ->with($product['sku'], (float) $product['qty'], Stock::STOCK_IN_STOCK);
+        $this->changeParentProductStockStatus->expects($this->atLeastOnce())
+            ->method('execute')
+            ->with($product['id']);
         $this->plugin->afterSave($itemResourceModelMock, $itemResourceModelMock, $stockItemMock);
     }
 
@@ -179,6 +192,9 @@ class UpdateLegacyStockStatusForConfigurableProductTest extends TestCase
             ->method('execute')
             ->willReturn([$product['id'] => $product['sku']]);
         $stockItemMock->expects($this->never())->method('getQty');
+        $this->changeParentProductStockStatus->expects($this->atLeastOnce())
+            ->method('execute')
+            ->with($product['id']);
         $this->plugin->afterSave($itemResourceModelMock, $itemResourceModelMock, $stockItemMock);
     }
 }
