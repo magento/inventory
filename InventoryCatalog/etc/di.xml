@@ -217,4 +217,7 @@
             </argument>
         </arguments>
     </virtualType>
+    <type name="Magento\Rule\Model\Condition\Product\AbstractProduct">
+        <plugin name="update_special_attribute" type="Magento\InventoryCatalog\Plugin\UpdateSpecialAttributePlugin"/>
+    </type>
 </config>
