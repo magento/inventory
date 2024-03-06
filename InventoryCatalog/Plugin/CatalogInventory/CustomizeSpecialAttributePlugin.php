@@ -19,7 +19,6 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalog\Plugin\CatalogInventory;
 
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
-use Magento\CatalogRule\Model\Rule\Condition\Product;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Model\AbstractModel;
 use Magento\InventoryCatalog\Model\ProductStockStatus;
@@ -46,17 +45,18 @@ class CustomizeSpecialAttributePlugin
     /**
      * Will filter product special attribute
      *
-     * @param Product $subject
+     * @param mixed $subject
      * @param callable $proceed
      * @param AbstractModel $model
      * @return mixed
      */
     public function aroundValidate(
-        Product $subject,
+        mixed $subject,
         callable $proceed,
         AbstractModel $model
     ) {
-        if ('quantity_and_stock_status' == $subject->getAttribute()) {
+        if ($subject instanceof \Magento\CatalogRule\Model\Rule\Condition\Product
+            && 'quantity_and_stock_status' == $subject->getAttribute()) {
             return $subject->validateAttribute($this->productStockStatus->isProductInStock(
                 $model->getSku(),
                 (int)$model->getStore()->getWebsiteId()
@@ -68,17 +68,18 @@ class CustomizeSpecialAttributePlugin
     /**
      * Will filter product special attribute
      *
-     * @param Product $subject
+     * @param mixed $subject
      * @param callable $proceed
      * @param Collection $model
      * @return mixed
      */
     public function aroundCollectValidatedAttributes(
-        Product $subject,
+        mixed $subject,
         callable $proceed,
         Collection $model
-    ) {
-        if ('quantity_and_stock_status' == $subject->getAttribute()) {
+    ): mixed {
+        if ($subject instanceof \Magento\CatalogRule\Model\Rule\Condition\Product
+            && 'quantity_and_stock_status' == $subject->getAttribute()) {
             return $this;
         } else {
             return $proceed($model);
