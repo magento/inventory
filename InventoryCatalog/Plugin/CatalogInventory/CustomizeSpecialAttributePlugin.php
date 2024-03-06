@@ -16,7 +16,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Plugin;
+namespace Magento\InventoryCatalog\Plugin\CatalogInventory;
 
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\CatalogRule\Model\Rule\Condition\Product;
@@ -24,7 +24,10 @@ use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Model\AbstractModel;
 use Magento\InventoryCatalog\Model\ProductStockStatus;
 
-class UpdateSpecialAttributePlugin
+/**
+ * Plugin to customize specific condition for product attributes
+ */
+class CustomizeSpecialAttributePlugin
 {
     /**
      * @var ProductStockStatus
@@ -73,7 +76,7 @@ class UpdateSpecialAttributePlugin
     public function aroundCollectValidatedAttributes(
         Product $subject,
         callable $proceed,
-        \Magento\Catalog\Model\ResourceModel\Product\Collection $model
+        Collection $model
     ) {
         if ('quantity_and_stock_status' == $subject->getAttribute()) {
             return $this;

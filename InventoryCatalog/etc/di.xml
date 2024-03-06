@@ -218,6 +218,6 @@
         </arguments>
     </virtualType>
     <type name="Magento\Rule\Model\Condition\Product\AbstractProduct">
-        <plugin name="update_special_attribute" type="Magento\InventoryCatalog\Plugin\UpdateSpecialAttributePlugin"/>
+        <plugin name="customize_special_attribute" type="Magento\InventoryCatalog\Plugin\CatalogInventory\CustomizeSpecialAttributePlugin"/>
     </type>
 </config>
