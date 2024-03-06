@@ -8,9 +8,7 @@
 
 <pages xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/PageObject.xsd">
-  <page name="AdminStockPage" url="/inventory/stock/" area="admin" module="Magento_Inventory">
-    <section name="AdminManageStockGridBody"/>
-    <section name="AdminEditStockSourcesSection"/>
-    <section name="AdminManageStockGridControls"/>
-  </page>
+    <page name="AdminStockPage" url="/catalog/product_attribute/edit" area="admin" module="Magento_Inventory">
+        <section name="AdminColorGridBodySection"/>
+    </page>
 </pages>
