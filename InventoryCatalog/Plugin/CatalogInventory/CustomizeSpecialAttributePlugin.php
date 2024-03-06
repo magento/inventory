@@ -55,8 +55,7 @@ class CustomizeSpecialAttributePlugin
         callable $proceed,
         AbstractModel $model
     ) {
-        if ($subject instanceof \Magento\CatalogRule\Model\Rule\Condition\Product
-            && 'quantity_and_stock_status' == $subject->getAttribute()) {
+        if ('quantity_and_stock_status' == $subject->getAttribute()) {
             return $subject->validateAttribute($this->productStockStatus->isProductInStock(
                 $model->getSku(),
                 (int)$model->getStore()->getWebsiteId()
@@ -78,8 +77,7 @@ class CustomizeSpecialAttributePlugin
         callable $proceed,
         Collection $model
     ): mixed {
-        if ($subject instanceof \Magento\CatalogRule\Model\Rule\Condition\Product
-            && 'quantity_and_stock_status' == $subject->getAttribute()) {
+        if ('quantity_and_stock_status' == $subject->getAttribute()) {
             return $this;
         } else {
             return $proceed($model);
