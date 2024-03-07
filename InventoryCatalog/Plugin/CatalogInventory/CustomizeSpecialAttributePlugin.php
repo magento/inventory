@@ -18,8 +18,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Plugin\CatalogInventory;
 
-use Magento\Catalog\Model\ResourceModel\Product\Collection;
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Model\AbstractModel;
 use Magento\InventoryCatalog\Model\ProductStockStatus;
 
@@ -34,12 +32,12 @@ class CustomizeSpecialAttributePlugin
     private $productStockStatus;
 
     /**
-     * @param ProductStockStatus|null $productStock
+     * @param ProductStockStatus $productStock
      */
     public function __construct(
-        ProductStockStatus $productStock = null
+        ProductStockStatus $productStock
     ) {
-        $this->productStockStatus = $productStock ?: ObjectManager::getInstance()->get(ProductStockStatus::class);
+        $this->productStockStatus = $productStock;
     }
 
     /**
@@ -62,25 +60,5 @@ class CustomizeSpecialAttributePlugin
             ));
         }
         return $proceed($model);
-    }
-
-    /**
-     * Will filter product special attribute
-     *
-     * @param mixed $subject
-     * @param callable $proceed
-     * @param Collection $model
-     * @return mixed
-     */
-    public function aroundCollectValidatedAttributes(
-        mixed $subject,
-        callable $proceed,
-        Collection $model
-    ): mixed {
-        if ('quantity_and_stock_status' == $subject->getAttribute()) {
-            return $this;
-        } else {
-            return $proceed($model);
-        }
     }
 }
