@@ -20,6 +20,7 @@ namespace Magento\InventoryCatalog\Plugin\CatalogInventory;
 
 use Magento\Framework\Model\AbstractModel;
 use Magento\InventoryCatalog\Model\ProductStockStatus;
+use Magento\Rule\Model\Condition\Product\AbstractProduct;
 
 /**
  * Plugin to customize specific condition for product attributes
@@ -43,13 +44,13 @@ class CustomizeSpecialAttributePlugin
     /**
      * Will filter product special attribute
      *
-     * @param mixed $subject
+     * @param AbstractProduct $subject
      * @param callable $proceed
      * @param AbstractModel $model
      * @return mixed
      */
     public function aroundValidate(
-        mixed $subject,
+        AbstractProduct $subject,
         callable $proceed,
         AbstractModel $model
     ) {
