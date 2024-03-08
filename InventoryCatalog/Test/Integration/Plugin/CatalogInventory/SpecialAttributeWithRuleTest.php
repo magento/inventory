@@ -18,7 +18,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Test\Integration\Plugin\CatalogInventory;
 
-use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 use Magento\Catalog\Test\Fixture\Product as ProductFixture;
 use Magento\CatalogRule\Model\ResourceModel\Product\ConditionsToCollectionApplier;
@@ -85,17 +84,11 @@ class SpecialAttributeWithRuleTest extends TestCase
         $productCollection = $this->productCollectionFactory->create();
         $product = $this->fixture->get('p1');
         $productCollection->addWebsiteFilter($product->getWebsiteIds());
-        $resultCollection = $this->conditionsToCollectionApplier->applyConditionsToCollection(
+        $result = $this->conditionsToCollectionApplier->applyConditionsToCollection(
             $this->getCombineCondition(),
             $productCollection
         );
-        $resultSkuList = array_map(
-            function (Product $product) {
-                return $product->getSku();
-            },
-            array_values($resultCollection->getItems())
-        );
-        $this->assertNotEmpty($resultSkuList);
+        $this->assertStringNotContainsString('catalog_product_entity_int', $result->getSelectSql(true)) ;
     }
 
     /**
