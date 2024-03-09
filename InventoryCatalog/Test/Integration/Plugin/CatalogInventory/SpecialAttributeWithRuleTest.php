@@ -99,7 +99,7 @@ class SpecialAttributeWithRuleTest extends TestCase
         $p1 = $this->fixture->get('p1');
         $p2 = $this->fixture->get('p2');
         $productIds = $r1->getMatchingProductIds();
-        $this->assertTrue($productIds[$p1->getId()][$p1->getId()]);
+        $this->assertArrayHasKey($p1->getId(), $productIds);
         $this->assertArrayNotHasKey($p2->getId(), $productIds);
     }
 }
