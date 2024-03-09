@@ -24,4 +24,5 @@
     <preference for="Magento\InventorySalesApi\Model\GetAssignedSalesChannelsForStockInterface" type="Magento\InventorySales\Model\GetAssignedSalesChannelsForStock"/>
     <preference for="Magento\InventorySalesApi\Api\GetStockBySalesChannelInterface" type="Magento\InventorySales\Model\GetStockBySalesChannel"/>
     <preference for="Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface" type="Magento\InventoryCatalog\Model\IsSingleSourceMode"/>
+    <preference for="Magento\InventoryConfiguration\Model\GetLegacyStockItemsInterface" type="Magento\InventoryConfiguration\Model\GetLegacyStockItems"/>
 </config>
