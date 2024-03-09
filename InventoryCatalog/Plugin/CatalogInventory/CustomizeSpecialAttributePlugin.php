@@ -19,26 +19,32 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalog\Plugin\CatalogInventory;
 
 use Magento\Framework\Model\AbstractModel;
-use Magento\InventoryCatalog\Model\ProductStockStatus;
+use Magento\Framework\ObjectManager\ResetAfterRequestInterface;
+use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\Rule\Model\Condition\Product\AbstractProduct;
 
 /**
  * Plugin to customize specific condition for product attributes
  */
-class CustomizeSpecialAttributePlugin
+class CustomizeSpecialAttributePlugin implements ResetAfterRequestInterface
 {
     /**
-     * @var ProductStockStatus
+     * @var array
      */
-    private $productStockStatus;
+    private $stockStatus = [];
 
     /**
-     * @param ProductStockStatus $productStock
+     * @var AreProductsSalableInterface
+     */
+    private $areProductsSalable;
+
+    /**
+     * @param AreProductsSalableInterface $areProductsSalable
      */
     public function __construct(
-        ProductStockStatus $productStock
+        AreProductsSalableInterface $areProductsSalable
     ) {
-        $this->productStockStatus = $productStock;
+        $this->areProductsSalable = $areProductsSalable;
     }
 
     /**
@@ -55,11 +61,25 @@ class CustomizeSpecialAttributePlugin
         AbstractModel $model
     ) {
         if ('quantity_and_stock_status' == $subject->getAttribute()) {
-            return $subject->validateAttribute($this->productStockStatus->isProductInStock(
-                $model->getSku(),
-                (int)$model->getStore()->getWebsiteId()
-            ));
+
+            $websiteId = (int)$model->getStore()->getWebsiteId();
+            $sku = $model->getSku();
+
+            if (!isset($this->stockStatus[$websiteId][$sku])) {
+                $result = $this->areProductsSalable->execute([$sku], $websiteId);
+                $result = current($result);
+                $this->stockStatus[$websiteId][$sku] = (int)$result->isSalable();
+            }
+            return $subject->validateAttribute($this->stockStatus[$websiteId][$sku]);
         }
         return $proceed($model);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function _resetState(): void
+    {
+        $this->stockStatus = [];
     }
 }
