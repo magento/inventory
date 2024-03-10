@@ -9,8 +9,13 @@ namespace Magento\InventoryCatalogSearch\Test\Integration\Model\Indexer;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Catalog\Model\Indexer\Product\Price\Processor as ProductPriceIndexerProcessor;
 use Magento\Catalog\Model\Layer\Search as SearchLayer;
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
+use Magento\Catalog\Test\Fixture\Category as CategoryFixture;
+use Magento\Catalog\Test\Fixture\Product as ProductFixture;
+use Magento\CatalogInventory\Model\Indexer\Stock\Processor as StockIndexerProcessor;
+use Magento\CatalogSearch\Model\Indexer\Fulltext\Processor as FulltextIndexerProcessor;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\DeploymentConfig\FileReader;
 use Magento\Framework\App\DeploymentConfig\Writer;
@@ -24,22 +29,28 @@ use Magento\Framework\Indexer\IndexerInterface;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\Validation\ValidationException;
 use Magento\Indexer\Model\Indexer;
+use Magento\Indexer\Test\Fixture\ScheduleMode;
+use Magento\Indexer\Test\Fixture\UpdateMview;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryApi\Api\SourceItemsDeleteInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 use Magento\Search\Model\QueryFactory;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\TestFramework\Fixture\DataFixture;
+use Magento\TestFramework\Fixture\DataFixtureStorageManager;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\CatalogSearch\Model\Indexer\Fulltext as CatalogSearchIndexer;
 use PHPUnit\Framework\TestCase;
 use Magento\Framework\Exception\FileSystemException;
 use Magento\InventoryApi\Api\Data\SourceItemInterfaceFactory;
+use Magento\InventoryApi\Test\Fixture\SourceItems as SourceItemsFixture;
 
 /**
  * @magentoDbIsolation disabled
  * @magentoAppArea frontend
  * @magentoAppIsolation enabled
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class FulltextTest extends TestCase
 {
@@ -112,7 +123,6 @@ class FulltextTest extends TestCase
      * @var array
      */
     private $envConfig;
-
 
     /**
      * @inheritdoc
@@ -233,6 +243,84 @@ class FulltextTest extends TestCase
             ['White', 'store_for_us_website', 0],
             ['White', 'store_for_global_website', 0],
         ];
+    }
+
+    #[
+        DataFixture(CategoryFixture::class, as: 'c'),
+        DataFixture(ProductFixture::class, ['category_ids' => ['$c.id$'], 'price' => 10], 'p1'),
+        DataFixture(ProductFixture::class, ['category_ids' => ['$c.id$'], 'price' => 20], 'p2'),
+        DataFixture(ProductFixture::class, ['category_ids' => ['$c.id$'], 'price' => 30], 'p3'),
+        DataFixture(ProductFixture::class, ['category_ids' => ['$c.id$'], 'price' => 40], 'p4'),
+        DataFixture(ProductFixture::class, ['category_ids' => ['$c.id$'], 'price' => 50], 'p5'),
+        DataFixture(ProductFixture::class, ['category_ids' => ['$c.id$'], 'price' => 60], 'p6'),
+        DataFixture(ScheduleMode::class, ['indexer' => StockIndexerProcessor::INDEXER_ID]),
+        DataFixture(ScheduleMode::class, ['indexer' => ProductPriceIndexerProcessor::INDEXER_ID]),
+        DataFixture(ScheduleMode::class, ['indexer' => FulltextIndexerProcessor::INDEXER_ID]),
+        DataFixture(
+            SourceItemsFixture::class,
+            [['sku' => '$p2.sku$', 'source_code' => 'default', 'quantity' => 1, 'status' => 0]]
+        ),
+        DataFixture(UpdateMview::class),
+    ]
+    public function testSearchIndexShouldBeUpdatedWhenProductBecomeOutOfStock(): void
+    {
+        $pageSize = 4;
+        $expectedTotal = 5;
+        $expectedSkus = [
+            DataFixtureStorageManager::getStorage()->get('p1')->getSku(),
+            DataFixtureStorageManager::getStorage()->get('p3')->getSku(),
+            DataFixtureStorageManager::getStorage()->get('p4')->getSku(),
+            DataFixtureStorageManager::getStorage()->get('p5')->getSku(),
+        ];
+        $layer = $this->objectManager->create(\Magento\Catalog\Model\Layer\Category::class);
+        $layer->setData('current_category', DataFixtureStorageManager::getStorage()->get('c'));
+        $this->fulltextCollection = $layer->getProductCollection();
+        $this->fulltextCollection->setPageSize($pageSize);
+        $this->fulltextCollection->setOrder('price', Collection::SORT_ORDER_ASC);
+        $items = $this->fulltextCollection->getItems();
+        $this->assertEquals($expectedSkus, array_values(array_map(fn ($product) => $product->getSku(), $items)));
+        $this->assertEquals($expectedTotal, $this->fulltextCollection->getSize());
+    }
+
+    #[
+        DataFixture(CategoryFixture::class, as: 'c'),
+        DataFixture(ProductFixture::class, ['category_ids' => ['$c.id$'], 'price' => 10], 'p1'),
+        DataFixture(
+            ProductFixture::class,
+            ['category_ids' => ['$c.id$'], 'price' => 20, 'stock_item' => ['is_in_stock' => false]],
+            'p2'
+        ),
+        DataFixture(ProductFixture::class, ['category_ids' => ['$c.id$'], 'price' => 30], 'p3'),
+        DataFixture(ProductFixture::class, ['category_ids' => ['$c.id$'], 'price' => 40], 'p4'),
+        DataFixture(ProductFixture::class, ['category_ids' => ['$c.id$'], 'price' => 50], 'p5'),
+        DataFixture(ProductFixture::class, ['category_ids' => ['$c.id$'], 'price' => 60], 'p6'),
+        DataFixture(ScheduleMode::class, ['indexer' => StockIndexerProcessor::INDEXER_ID]),
+        DataFixture(ScheduleMode::class, ['indexer' => ProductPriceIndexerProcessor::INDEXER_ID]),
+        DataFixture(ScheduleMode::class, ['indexer' => FulltextIndexerProcessor::INDEXER_ID]),
+        DataFixture(
+            SourceItemsFixture::class,
+            [['sku' => '$p2.sku$', 'source_code' => 'default', 'quantity' => 1, 'status' => 1]]
+        ),
+        DataFixture(UpdateMview::class),
+    ]
+    public function testSearchIndexShouldBeUpdatedWhenProductBecomeInStock(): void
+    {
+        $pageSize = 4;
+        $expectedTotal = 6;
+        $expectedSkus = [
+            DataFixtureStorageManager::getStorage()->get('p1')->getSku(),
+            DataFixtureStorageManager::getStorage()->get('p2')->getSku(),
+            DataFixtureStorageManager::getStorage()->get('p3')->getSku(),
+            DataFixtureStorageManager::getStorage()->get('p4')->getSku(),
+        ];
+        $layer = $this->objectManager->create(\Magento\Catalog\Model\Layer\Category::class);
+        $layer->setData('current_category', DataFixtureStorageManager::getStorage()->get('c'));
+        $this->fulltextCollection = $layer->getProductCollection();
+        $this->fulltextCollection->setPageSize($pageSize);
+        $this->fulltextCollection->setOrder('price', Collection::SORT_ORDER_ASC);
+        $items = $this->fulltextCollection->getItems();
+        $this->assertEquals($expectedSkus, array_values(array_map(fn ($product) => $product->getSku(), $items)));
+        $this->assertEquals($expectedTotal, $this->fulltextCollection->getSize());
     }
 
     /**
