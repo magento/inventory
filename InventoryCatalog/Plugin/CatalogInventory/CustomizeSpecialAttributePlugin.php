@@ -19,32 +19,45 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalog\Plugin\CatalogInventory;
 
 use Magento\Framework\Model\AbstractModel;
-use Magento\Framework\ObjectManager\ResetAfterRequestInterface;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
+use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
+use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Rule\Model\Condition\Product\AbstractProduct;
+use Magento\Store\Api\WebsiteRepositoryInterface;
 
 /**
  * Plugin to customize specific condition for product attributes
  */
-class CustomizeSpecialAttributePlugin implements ResetAfterRequestInterface
+class CustomizeSpecialAttributePlugin
 {
-    /**
-     * @var array
-     */
-    private $stockStatus = [];
-
     /**
      * @var AreProductsSalableInterface
      */
     private $areProductsSalable;
 
     /**
+     * @var WebsiteRepositoryInterface
+     */
+    private $websiteRepository;
+
+    /**
+     * @var StockResolverInterface
+     */
+    private $stockResolver;
+
+    /**
      * @param AreProductsSalableInterface $areProductsSalable
+     * @param WebsiteRepositoryInterface $websiteRepository
+     * @param StockResolverInterface $stockResolver
      */
     public function __construct(
-        AreProductsSalableInterface $areProductsSalable
+        AreProductsSalableInterface $areProductsSalable,
+        WebsiteRepositoryInterface $websiteRepository,
+        StockResolverInterface $stockResolver,
     ) {
         $this->areProductsSalable = $areProductsSalable;
+        $this->websiteRepository = $websiteRepository;
+        $this->stockResolver = $stockResolver;
     }
 
     /**
@@ -61,25 +74,12 @@ class CustomizeSpecialAttributePlugin implements ResetAfterRequestInterface
         AbstractModel $model
     ) {
         if ('quantity_and_stock_status' == $subject->getAttribute()) {
-
-            $websiteId = (int)$model->getStore()->getWebsiteId();
-            $sku = $model->getSku();
-
-            if (!isset($this->stockStatus[$websiteId][$sku])) {
-                $result = $this->areProductsSalable->execute([$sku], $websiteId);
-                $result = current($result);
-                $this->stockStatus[$websiteId][$sku] = (int)$result->isSalable();
-            }
-            return $subject->validateAttribute($this->stockStatus[$websiteId][$sku]);
+            $website = $this->websiteRepository->getById((int)$model->getStore()->getWebsiteId());
+            $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $website->getCode());
+            $result = $this->areProductsSalable->execute([$model->getSku()], $stock->getStockId());
+            $result = current($result);
+            return $subject->validateAttribute((int)$result->isSalable());
         }
         return $proceed($model);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function _resetState(): void
-    {
-        $this->stockStatus = [];
     }
 }
