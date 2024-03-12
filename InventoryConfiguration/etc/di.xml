@@ -15,6 +15,7 @@
     <preference for="Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForSkuInterface" type="Magento\InventoryConfiguration\Model\IsSourceItemManagementAllowedForSku"/>
     <preference for="Magento\InventoryConfigurationApi\Model\GetAllowedProductTypesForSourceItemManagementInterface" type="Magento\InventoryConfiguration\Model\GetAllowedProductTypesForSourceItemManagement"/>
     <preference for="Magento\InventoryConfigurationApi\Model\InventoryConfigurationInterface" type="Magento\InventoryConfiguration\Model\InventoryConfiguration"/>
+    <preference for="Magento\InventoryConfiguration\Model\GetLegacyStockItemsInterface" type="Magento\InventoryConfiguration\Model\GetLegacyStockItemsCache"/>
     <type name="Magento\CatalogInventory\Model\System\Config\Backend\Minqty">
         <plugin name="allow_negative_min_qty_in_config"
                 type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Model\System\Config\Backend\Minqty\AllowNegativeMinQtyInConfigPlugin"/>
