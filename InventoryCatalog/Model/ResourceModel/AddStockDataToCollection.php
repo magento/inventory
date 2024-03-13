@@ -55,7 +55,7 @@ class AddStockDataToCollection
             $isSalableColumnName = 'stock_status';
             $resource = $collection->getResource();
             $collection->getSelect()
-                ->{$isFilterInStock ? 'join' : 'joinLeft'}(
+            ->join(
                     ['stock_status_index' => $resource->getTable('cataloginventory_stock_status')],
                     sprintf('%s.entity_id = stock_status_index.product_id', Collection::MAIN_TABLE_ALIAS),
                     [IndexStructure::IS_SALABLE => $isSalableColumnName]
