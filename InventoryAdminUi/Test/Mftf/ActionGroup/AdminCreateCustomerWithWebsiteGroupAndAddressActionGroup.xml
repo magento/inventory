@@ -22,6 +22,7 @@
         <waitForPageLoad stepKey="waitForAddressFields"/>
         <click selector="{{AdminCustomerAddressesSection.defaultBillingAddress}}" stepKey="checkDefaulBillingAddress"/>
         <click selector="{{AdminCustomerAddressesSection.defaultShippingAddress}}" stepKey="checkDefaultShippingAddress"/>
+        <waitForElementVisible selector="{{AdminCustomerAddressesSection.firstNameForAddress}}" stepKey="waitForTheAddressEditModalFields"/>
         <fillField selector="{{AdminCustomerAddressesSection.firstNameForAddress}}" userInput="{{address.firstname}}" stepKey="fillFirstNameForAddress"/>
         <fillField selector="{{AdminCustomerAddressesSection.lastNameForAddress}}" userInput="{{address.lastname}}" stepKey="fillLastNameForAddress"/>
         <fillField selector="{{AdminCustomerAddressesSection.streetAddress}}" userInput="{{address.street[0]}}" stepKey="fillStreetAddress"/>
