@@ -86,7 +86,7 @@ class IsSalableWithReservationsCondition implements IsProductSalableForRequested
             $errors = [
                 $this->productSalabilityErrorFactory->create([
                     'code' => 'is_salable_with_reservations-no_data',
-                    'message' => __('The requested sku is not assigned to given stock')
+                    'message' => __('The requested sku %1 is not assigned to given stock.', $sku)
                 ])
             ];
             return $this->productSalableResultFactory->create(['errors' => $errors]);

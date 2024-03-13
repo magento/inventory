@@ -11,6 +11,7 @@
 "You cannot use decimal quantity for this product.","You cannot use decimal quantity for this product."
 "Parameter ""sort_order"" must be present for urequired conditions.","Parameter ""sort_order"" must be present for urequired conditions."
 "Condition have to implement IsProductSalableForRequestedQtyInterface.","Condition have to implement IsProductSalableForRequestedQtyInterface."
+"The requested sku %1 is not assigned to given stock.","The requested sku %1 is not assigned to given stock."
 "The requested sku is not assigned to given stock.","The requested sku is not assigned to given stock."
 "The requested sku is not assigned to given stock","The requested sku is not assigned to given stock"
 "The requested qty is not available","The requested qty is not available"

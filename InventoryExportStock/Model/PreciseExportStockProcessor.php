@@ -143,7 +143,7 @@ class PreciseExportStockProcessor
             ];
         }
         if (!$this->isProductAssignedToStock->execute($sku, $stockId)) {
-            throw new SkuIsNotAssignedToStockException(__('The requested sku is not assigned to given stock.'));
+            throw new SkuIsNotAssignedToStockException(__('The requested sku %1 is not assigned to given stock.', $sku));
         }
 
         $result = $this->areProductsSalable->execute([$sku], $stockId);
