@@ -110,6 +110,11 @@ class BundleChildStockStatusModifier implements SelectModifierInterface
 
         $store = $this->storeRepository->getById($storeId);
         $this->stockStatusResource->addStockStatusToSelect($optionsAvailabilitySelect, $store->getWebsite());
+        $optionsAvailabilitySelect->joinLeft(
+            ['children_website' => $this->resourceConnection->getTableName('catalog_product_website')],
+            "e.entity_id = children_website.product_id AND children_website.website_id = " . $store->getWebsiteId(),
+            []
+        );
         $columns = array_column($optionsAvailabilitySelect->getPart(Select::COLUMNS), 1, 2);
         $isSalableColumn = $columns['is_salable'];
 
@@ -129,14 +134,19 @@ class BundleChildStockStatusModifier implements SelectModifierInterface
             'required' => 'bundle_options.required',
             'is_available' => $isOptionSalableExpr,
             'is_required_and_unavailable' => $isRequiredOptionUnsalable,
+            'child_website_id' => new \Zend_Db_Expr('MIN(IFNULL(children_website.website_id, -1))')
         ]);
-        $isBundleAvailableExpr = new \Zend_Db_Expr('(MAX(is_available) = 1 AND MAX(is_required_and_unavailable) = 0)');
+        $isBundleAvailableExpr = new \Zend_Db_Expr(
+            '(MAX(is_available) = 1
+            AND MAX(is_required_and_unavailable) = 0
+            AND MIN(child_website_id) = ' . $store->getWebsiteId() . ')'
+        );
         $bundleAvailabilitySelect = $connection->select()
             ->from($optionsAvailabilitySelect, ['parent_id' => 'parent_id', 'is_available' => $isBundleAvailableExpr])
             ->group('parent_id');
 
         $existsSelect = $connection->select()
-            ->from($bundleAvailabilitySelect)
+            ->from($bundleAvailabilitySelect, [new \Zend_Db_Expr('1')])
             ->where('is_available = 1')
             ->where("parent_id = e.{$linkField}");
         $typeBundle = Type::TYPE_CODE;
