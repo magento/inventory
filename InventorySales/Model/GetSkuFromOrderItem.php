@@ -55,7 +55,7 @@ class GetSkuFromOrderItem implements GetSkuFromOrderItemInterface
             $itemSku = $value['title'];
         }
         try {
-            if ($this->isSourceItemManagementAllowedForProductType->execute($orderItem->getProductType())) {
+            if ($this->isSourceItemManagementAllowedForProductType->execute((string)$orderItem->getProductType())) {
                 $itemSku = $this->getSkusByProductIds->execute(
                     [$orderItem->getProductId()]
                 )[$orderItem->getProductId()];
