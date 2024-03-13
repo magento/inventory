@@ -115,7 +115,7 @@ class GetDistanceToSources
     }
 
     /**
-     * Create Source Selection Address based on Distance Fitler from Search Request.
+     * Create Source Selection Address based on Distance Filter from Search Request.
      *
      * @param AreaInterface $area
      *
