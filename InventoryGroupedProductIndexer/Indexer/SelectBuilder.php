@@ -20,13 +20,14 @@ use Magento\InventoryIndexer\Indexer\InventoryIndexer;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameResolverInterface;
+use Magento\InventoryIndexer\Indexer\SelectBuilderInterface;
 
 /**
  * Class to prepare select for partial reindex
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class SelectBuilder
+class SelectBuilder implements SelectBuilderInterface
 {
     /**
      * @var ResourceConnection
