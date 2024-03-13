@@ -111,6 +111,9 @@ class ReadyForPickupSender extends Sender
             'order' => $order,
             'store' => $order->getStore(),
             'formattedShippingAddress' => $this->getFormattedShippingAddress($order),
+            'order_data' => [
+                'customer_name' => $order->getCustomerName()
+            ]
         ];
         $transportObject = new DataObject($transport);
 
