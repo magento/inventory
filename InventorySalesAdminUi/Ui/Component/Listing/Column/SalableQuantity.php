@@ -10,7 +10,6 @@ namespace Magento\InventorySalesAdminUi\Ui\Component\Listing\Column;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\InventorySalesAdminUi\Model\GetSalableQuantityDataBySku;
-use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
 use Magento\InventorySalesAdminUi\Model\ResourceModel\GetAssignedStockIdsBySku;
 use Magento\Ui\Component\Listing\Columns\Column;
@@ -24,11 +23,6 @@ class SalableQuantity extends Column
      * @var IsSourceItemManagementAllowedForProductTypeInterface
      */
     private $isSourceItemManagementAllowedForProductType;
-
-    /**
-     * @var IsSingleSourceModeInterface
-     */
-    private $isSingleSourceMode;
 
     /**
      * @var GetSalableQuantityDataBySku
@@ -49,7 +43,6 @@ class SalableQuantity extends Column
      * @param ContextInterface $context
      * @param UiComponentFactory $uiComponentFactory
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
-     * @param IsSingleSourceModeInterface $isSingleSourceMode
      * @param GetSalableQuantityDataBySku $getSalableQuantityDataBySku
      * @param GetAssignedStockIdsBySku $getAssignedStockIdsBySku
      * @param int $maximumStocksToShow
@@ -60,7 +53,6 @@ class SalableQuantity extends Column
         ContextInterface $context,
         UiComponentFactory $uiComponentFactory,
         IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType,
-        IsSingleSourceModeInterface $isSingleSourceMode,
         GetSalableQuantityDataBySku $getSalableQuantityDataBySku,
         GetAssignedStockIdsBySku $getAssignedStockIdsBySku,
         int $maximumStocksToShow,
@@ -69,7 +61,6 @@ class SalableQuantity extends Column
     ) {
         parent::__construct($context, $uiComponentFactory, $components, $data);
         $this->isSourceItemManagementAllowedForProductType = $isSourceItemManagementAllowedForProductType;
-        $this->isSingleSourceMode = $isSingleSourceMode;
         $this->getSalableQuantityDataBySku = $getSalableQuantityDataBySku;
         $this->getAssignedStockIdsBySku = $getAssignedStockIdsBySku;
         $this->maximumStocksToShow = $maximumStocksToShow;
