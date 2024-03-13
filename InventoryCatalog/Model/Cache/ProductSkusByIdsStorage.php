@@ -50,6 +50,16 @@ class ProductSkusByIdsStorage implements ResetAfterRequestInterface
     }
 
     /**
+     * Invalidate cache for provided id
+     *
+     * @param int $id
+     */
+    public function delete(int $id): void
+    {
+        unset($this->storage[$id]);
+    }
+
+    /**
      * Clean storage
      *
      * @return void
