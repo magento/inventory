@@ -72,6 +72,7 @@ class BundleChildStockStatusModifier implements SelectModifierInterface
 
     /**
      * @inheritdoc
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function modify(Select $select, int $storeId): void
     {
@@ -158,8 +159,6 @@ class BundleChildStockStatusModifier implements SelectModifierInterface
             "e.type_id != '{$typeBundle}' OR EXISTS ({$existsSelect->assemble()})"
         );
 
-
-
         $optionsSaleabilitySelect = $connection->select()
             ->from(
                 ['parent_products' => $this->resourceConnection->getTableName('catalog_product_entity')],
@@ -176,12 +175,8 @@ class BundleChildStockStatusModifier implements SelectModifierInterface
                 ['child_products' => $this->resourceConnection->getTableName('catalog_product_entity')],
                 'child_products.entity_id = bundle_selections.product_id',
                 []
-            )->group(
-                ['bundle_options.parent_id', 'bundle_options.option_id']
-            )->where(
-                'parent_products.entity_id = ?',
-                4
-            );
+            )->group(['bundle_options.parent_id', 'bundle_options.option_id']);
+
         $statusAttr = $this->productAttributeRepository->get(ProductInterface::STATUS);
         $optionsSaleabilitySelect->joinInner(
             ['child_status_global' => $statusAttr->getBackendTable()],
@@ -212,10 +207,5 @@ class BundleChildStockStatusModifier implements SelectModifierInterface
             'is_salable' => $isOptionSalableExpr,
             'is_required_and_unsalable' => $isRequiredOptionUnsalable,
         ]);
-
-        $test = $connection->select()->from(
-            $optionsSaleabilitySelect,
-            [new \Zend_Db_Expr('(MAX(is_salable) = 1 AND MAX(is_required_and_unsalable) = 0)')]
-        );
     }
 }
