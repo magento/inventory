@@ -11,6 +11,7 @@ use Magento\Bundle\Model\Product\Type;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Api\ProductAttributeRepositoryInterface;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
+use Magento\Catalog\Model\Product\Attribute\Source\Status as ProductStatus;
 use Magento\CatalogInventory\Model\ResourceModel\Stock\Status as StockStatusResource;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
@@ -134,12 +135,15 @@ class BundleChildStockStatusModifier implements SelectModifierInterface
             'required' => 'bundle_options.required',
             'is_available' => $isOptionSalableExpr,
             'is_required_and_unavailable' => $isRequiredOptionUnsalable,
-            'child_website_id' => new \Zend_Db_Expr('MIN(IFNULL(children_website.website_id, -1))')
+            'child_website_id' => new \Zend_Db_Expr('IFNULL(children_website.website_id, -1)')
         ]);
         $isBundleAvailableExpr = new \Zend_Db_Expr(
-            '(MAX(is_available) = 1
+            '(
+            MAX(is_available) = 1
             AND MAX(is_required_and_unavailable) = 0
-            AND MIN(child_website_id) = ' . $store->getWebsiteId() . ')'
+            AND MIN((child_website_id = ' . $store->getWebsiteId() . ' AND required = 1)
+                    OR (child_website_id = -1 AND required = 0)) = 1
+            )'
         );
         $bundleAvailabilitySelect = $connection->select()
             ->from($optionsAvailabilitySelect, ['parent_id' => 'parent_id', 'is_available' => $isBundleAvailableExpr])
@@ -152,6 +156,66 @@ class BundleChildStockStatusModifier implements SelectModifierInterface
         $typeBundle = Type::TYPE_CODE;
         $select->where(
             "e.type_id != '{$typeBundle}' OR EXISTS ({$existsSelect->assemble()})"
+        );
+
+
+
+        $optionsSaleabilitySelect = $connection->select()
+            ->from(
+                ['parent_products' => $this->resourceConnection->getTableName('catalog_product_entity')],
+                []
+            )->joinInner(
+                ['bundle_options' => $this->resourceConnection->getTableName('catalog_product_bundle_option')],
+                "bundle_options.parent_id = parent_products.{$linkField}",
+                []
+            )->joinInner(
+                ['bundle_selections' => $this->resourceConnection->getTableName('catalog_product_bundle_selection')],
+                'bundle_selections.option_id = bundle_options.option_id',
+                []
+            )->joinInner(
+                ['child_products' => $this->resourceConnection->getTableName('catalog_product_entity')],
+                'child_products.entity_id = bundle_selections.product_id',
+                []
+            )->group(
+                ['bundle_options.parent_id', 'bundle_options.option_id']
+            )->where(
+                'parent_products.entity_id = ?',
+                4
+            );
+        $statusAttr = $this->productAttributeRepository->get(ProductInterface::STATUS);
+        $optionsSaleabilitySelect->joinInner(
+            ['child_status_global' => $statusAttr->getBackendTable()],
+            "child_status_global.{$linkField} = child_products.{$linkField}"
+            . " AND child_status_global.attribute_id = {$statusAttr->getAttributeId()}"
+            . " AND child_status_global.store_id = 0",
+            []
+        )->joinLeft(
+            ['child_status_store' => $statusAttr->getBackendTable()],
+            "child_status_store.{$linkField} = child_products.{$linkField}"
+            . " AND child_status_store.attribute_id = {$statusAttr->getAttributeId()}"
+            . " AND child_status_store.store_id = {$storeId}",
+            []
+        );
+        $isOptionSalableExpr = new \Zend_Db_Expr(
+            sprintf(
+                'MAX(IFNULL(child_status_store.value, child_status_global.value) != %s)',
+                ProductStatus::STATUS_DISABLED
+            )
+        );
+        $isRequiredOptionUnsalable = $connection->getCheckSql(
+            'required = 1 AND ' . $isOptionSalableExpr . ' = 0',
+            '1',
+            '0'
+        );
+        $optionsSaleabilitySelect->columns([
+            'required' => 'bundle_options.required',
+            'is_salable' => $isOptionSalableExpr,
+            'is_required_and_unsalable' => $isRequiredOptionUnsalable,
+        ]);
+
+        $test = $connection->select()->from(
+            $optionsSaleabilitySelect,
+            [new \Zend_Db_Expr('(MAX(is_salable) = 1 AND MAX(is_required_and_unsalable) = 0)')]
         );
     }
 }
