@@ -72,7 +72,6 @@ class BundleChildStockStatusModifier implements SelectModifierInterface
 
     /**
      * @inheritdoc
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function modify(Select $select, int $storeId): void
     {
@@ -158,54 +157,5 @@ class BundleChildStockStatusModifier implements SelectModifierInterface
         $select->where(
             "e.type_id != '{$typeBundle}' OR EXISTS ({$existsSelect->assemble()})"
         );
-
-        $optionsSaleabilitySelect = $connection->select()
-            ->from(
-                ['parent_products' => $this->resourceConnection->getTableName('catalog_product_entity')],
-                []
-            )->joinInner(
-                ['bundle_options' => $this->resourceConnection->getTableName('catalog_product_bundle_option')],
-                "bundle_options.parent_id = parent_products.{$linkField}",
-                []
-            )->joinInner(
-                ['bundle_selections' => $this->resourceConnection->getTableName('catalog_product_bundle_selection')],
-                'bundle_selections.option_id = bundle_options.option_id',
-                []
-            )->joinInner(
-                ['child_products' => $this->resourceConnection->getTableName('catalog_product_entity')],
-                'child_products.entity_id = bundle_selections.product_id',
-                []
-            )->group(['bundle_options.parent_id', 'bundle_options.option_id']);
-
-        $statusAttr = $this->productAttributeRepository->get(ProductInterface::STATUS);
-        $optionsSaleabilitySelect->joinInner(
-            ['child_status_global' => $statusAttr->getBackendTable()],
-            "child_status_global.{$linkField} = child_products.{$linkField}"
-            . " AND child_status_global.attribute_id = {$statusAttr->getAttributeId()}"
-            . " AND child_status_global.store_id = 0",
-            []
-        )->joinLeft(
-            ['child_status_store' => $statusAttr->getBackendTable()],
-            "child_status_store.{$linkField} = child_products.{$linkField}"
-            . " AND child_status_store.attribute_id = {$statusAttr->getAttributeId()}"
-            . " AND child_status_store.store_id = {$storeId}",
-            []
-        );
-        $isOptionSalableExpr = new \Zend_Db_Expr(
-            sprintf(
-                'MAX(IFNULL(child_status_store.value, child_status_global.value) != %s)',
-                ProductStatus::STATUS_DISABLED
-            )
-        );
-        $isRequiredOptionUnsalable = $connection->getCheckSql(
-            'required = 1 AND ' . $isOptionSalableExpr . ' = 0',
-            '1',
-            '0'
-        );
-        $optionsSaleabilitySelect->columns([
-            'required' => 'bundle_options.required',
-            'is_salable' => $isOptionSalableExpr,
-            'is_required_and_unsalable' => $isRequiredOptionUnsalable,
-        ]);
     }
 }
