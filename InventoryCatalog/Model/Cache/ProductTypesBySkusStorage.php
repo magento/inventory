@@ -50,6 +50,16 @@ class ProductTypesBySkusStorage implements ResetAfterRequestInterface
     }
 
     /**
+     * Invalidate cache for provided sku
+     *
+     * @param string $sku
+     */
+    public function delete(string $sku): void
+    {
+        unset($this->storage[$this->normalizeSku($sku)]);
+    }
+
+    /**
      * Clean storage
      *
      * @return void
