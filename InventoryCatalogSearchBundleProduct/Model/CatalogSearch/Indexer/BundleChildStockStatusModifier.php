@@ -141,8 +141,11 @@ class BundleChildStockStatusModifier implements SelectModifierInterface
             '(
             MAX(is_available) = 1
             AND MAX(is_required_and_unavailable) = 0
-            AND MIN((child_website_id = ' . $store->getWebsiteId() . ' AND required = 1)
-                    OR (child_website_id = -1 AND required = 0)) = 1
+            AND MIN(
+                    (child_website_id = ' . $store->getWebsiteId() . ' AND required = 1)
+                    OR (child_website_id = -1 AND required = 0)
+                    OR (child_website_id = ' . $store->getWebsiteId() . ' AND required = 0)
+               ) = 1
             )'
         );
         $bundleAvailabilitySelect = $connection->select()
