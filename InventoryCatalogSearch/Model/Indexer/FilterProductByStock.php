@@ -7,12 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalogSearch\Model\Indexer;
 
-use Magento\Framework\App\ResourceConnection;
+use Magento\CatalogInventory\Model\ResourceModel\StockStatusFilterInterface;
 use Magento\Framework\DB\Select;
-use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
-use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
-use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 use Magento\Store\Api\StoreRepositoryInterface;
 
 /**
@@ -21,57 +17,32 @@ use Magento\Store\Api\StoreRepositoryInterface;
 class FilterProductByStock
 {
     /**
-     * @var DefaultStockProviderInterface
-     */
-    private $defaultStockProvider;
-
-    /**
-     * @var ResourceConnection
-     */
-    private $resourceConnection;
-
-    /**
-     * @var StockByWebsiteIdResolverInterface
-     */
-    private $stockByWebsiteIdResolver;
-
-    /**
-     * @var StockIndexTableNameResolverInterface
-     */
-    private $stockIndexTableNameResolver;
-
-    /**
      * @var StoreRepositoryInterface
      */
     private $storeRepository;
 
     /**
-     * @var array
+     * @var StockStatusFilterInterface
+     */
+    private $stockStatusFilter;
+
+    /**
+     * @var SelectModifierInterface[]
      */
     private $selectModifiersPool;
 
     /**
-     * @param DefaultStockProviderInterface $defaultStockProvider
-     * @param ResourceConnection $resourceConnection
-     * @param StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
-     * @param StockIndexTableNameResolverInterface $stockIndexTableNameResolver
      * @param StoreRepositoryInterface $storeRepository
-     * @param array $selectModifiersPool
+     * @param StockStatusFilterInterface $stockStatusFilter
+     * @param SelectModifierInterface[] $selectModifiersPool
      */
     public function __construct(
-        DefaultStockProviderInterface $defaultStockProvider,
-        ResourceConnection $resourceConnection,
-        StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver,
-        StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
         StoreRepositoryInterface $storeRepository,
+        StockStatusFilterInterface $stockStatusFilter,
         array $selectModifiersPool = []
-    )
-    {
-        $this->defaultStockProvider = $defaultStockProvider;
-        $this->resourceConnection = $resourceConnection;
-        $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
-        $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
+    ) {
         $this->storeRepository = $storeRepository;
+        $this->stockStatusFilter = $stockStatusFilter;
         $this->selectModifiersPool = $selectModifiersPool;
     }
 
@@ -81,34 +52,17 @@ class FilterProductByStock
      * @param Select $select
      * @param int $storeId
      * @return Select
-     * @throws NoSuchEntityException
      */
     public function execute(Select $select, int $storeId): Select
     {
         $store = $this->storeRepository->getById($storeId);
-        try {
-            $stock = $this->stockByWebsiteIdResolver->execute((int)$store->getWebsiteId());
-        } catch (NoSuchEntityException $exception) {
-            return $select;
-        }
-
-        $stockId = $stock->getStockId();
-        $stockTable = $this->stockIndexTableNameResolver->execute($stockId);
-        $connection = $this->resourceConnection->getConnection();
-
-        if ($this->defaultStockProvider->getId() === $stockId ||
-            !$connection->isTableExists($stockTable)) {
-            return $select;
-        }
-
-        $select->joinInner(
-            ['stock' => $stockTable],
-            'e.sku = stock.sku',
-            []
+        $this->stockStatusFilter->execute(
+            $select,
+            'e',
+            StockStatusFilterInterface::TABLE_ALIAS,
+            (int) $store->getWebsiteId()
         );
-
-        $select->where('stock.is_salable = ?', 1);
-        $this->applySelectModifiers($select, $stockTable);
+        $this->applySelectModifiers($select, $storeId);
 
         return $select;
     }
@@ -117,13 +71,13 @@ class FilterProductByStock
      * Applying filters to select via select modifiers
      *
      * @param Select $select
-     * @param string $stockTable
+     * @param int $storeId
      * @return void
      */
-    private function applySelectModifiers(Select $select, string $stockTable): void
+    private function applySelectModifiers(Select $select, int $storeId): void
     {
         foreach ($this->selectModifiersPool as $selectModifier) {
-            $selectModifier->modify($select, $stockTable);
+            $selectModifier->modify($select, $storeId);
         }
     }
 }
