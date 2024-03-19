@@ -9,23 +9,20 @@ namespace Magento\InventoryCatalogSearchBundleProduct\Model\CatalogSearch\Indexe
 
 use Magento\Bundle\Model\Product\Type;
 use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Catalog\Model\Product;
-use Magento\Eav\Model\Config;
+use Magento\Catalog\Api\ProductAttributeRepositoryInterface;
+use Magento\Catalog\Model\Product\Attribute\Source\Status;
+use Magento\CatalogInventory\Model\ResourceModel\Stock\Status as StockStatusResource;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
 use Magento\Framework\EntityManager\MetadataPool;
 use Magento\InventoryCatalogSearch\Model\Indexer\SelectModifierInterface;
+use Magento\Store\Api\StoreRepositoryInterface;
 
 /**
  * Filter bundle products by enabled child products stock status.
  */
 class BundleChildStockStatusModifier implements SelectModifierInterface
 {
-    /**
-     * @var Config
-     */
-    private $eavConfig;
-
     /**
      * @var MetadataPool
      */
@@ -37,57 +34,111 @@ class BundleChildStockStatusModifier implements SelectModifierInterface
     private $resourceConnection;
 
     /**
-     * @param Config $eavConfig
+     * @var ProductAttributeRepositoryInterface
+     */
+    private $productAttributeRepository;
+
+    /**
+     * @var StoreRepositoryInterface
+     */
+    private $storeRepository;
+
+    /**
+     * @var StockStatusResource
+     */
+    private $stockStatusResource;
+
+    /**
      * @param MetadataPool $metadataPool
      * @param ResourceConnection $resourceConnection
+     * @param ProductAttributeRepositoryInterface $productAttributeRepository
+     * @param StoreRepositoryInterface $storeRepository
+     * @param StockStatusResource $stockStatusResource
      */
     public function __construct(
-        Config $eavConfig,
         MetadataPool $metadataPool,
-        ResourceConnection $resourceConnection
+        ResourceConnection $resourceConnection,
+        ProductAttributeRepositoryInterface $productAttributeRepository,
+        StoreRepositoryInterface $storeRepository,
+        StockStatusResource $stockStatusResource
     ) {
-        $this->eavConfig = $eavConfig;
         $this->metadataPool = $metadataPool;
         $this->resourceConnection = $resourceConnection;
+        $this->productAttributeRepository = $productAttributeRepository;
+        $this->storeRepository = $storeRepository;
+        $this->stockStatusResource = $stockStatusResource;
     }
 
     /**
-     * Add stock item filter to select
-     *
-     * @param Select $select
-     * @param string $stockTable
-     * @return void
+     * @inheritdoc
      */
-    public function modify(Select $select, string $stockTable): void
+    public function modify(Select $select, int $storeId): void
     {
         $connection = $this->resourceConnection->getConnection();
         $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
         $linkField = $metadata->getLinkField();
-        $statusAttribute = $this->eavConfig->getAttribute(Product::ENTITY, 'status');
-        $existsSelect = $connection->select()->from(
-            ['product_link_bundle' => $this->resourceConnection->getTableName('catalog_product_bundle_selection')],
-            [new \Zend_Db_Expr('1')]
-        )->where(
-            "product_link_bundle.parent_product_id = e.{$linkField}"
+        $optionsAvailabilitySelect = $connection->select()->from(
+            ['bundle_options' => $this->resourceConnection->getTableName('catalog_product_bundle_option')],
+            []
+        )->joinInner(
+            ['bundle_selections' => $this->resourceConnection->getTableName('catalog_product_bundle_selection')],
+            'bundle_selections.option_id = bundle_options.option_id',
+            []
+        )->joinInner(
+            // table alias must be "e" for joining the stock status
+            ['e' => $this->resourceConnection->getTableName('catalog_product_entity')],
+            'e.entity_id = bundle_selections.product_id',
+            []
+        )->group(
+            ['bundle_options.parent_id', 'bundle_options.option_id']
         );
-        $existsSelect->join(
-            ['bundle_product_child' => $this->resourceConnection->getTableName('catalog_product_entity')],
-            'bundle_product_child.entity_id = product_link_bundle.product_id',
+
+        $statusAttribute = $this->productAttributeRepository->get(ProductInterface::STATUS);
+        $optionsAvailabilitySelect->joinLeft(
+            ['child_status_global' => $statusAttribute->getBackendTable()],
+            "child_status_global.{$linkField} = e.{$linkField}"
+            . " AND child_status_global.attribute_id = {$statusAttribute->getAttributeId()}"
+            . " AND child_status_global.store_id = 0",
+            []
+        )->joinLeft(
+            ['child_status_store' => $statusAttribute->getBackendTable()],
+            "child_status_store.{$linkField} = e.{$linkField}"
+            . " AND child_status_store.attribute_id = {$statusAttribute->getAttributeId()}"
+            . " AND child_status_store.store_id = {$storeId}",
             []
         );
 
-        $existsSelect->join(
-            ['child_product_status' => $this->resourceConnection->getTableName($statusAttribute->getBackendTable())],
-            "bundle_product_child.{$linkField} = child_product_status.{$linkField} AND "
-            . "child_product_status.attribute_id = " . $statusAttribute->getId(),
-            []
-        )->where('child_product_status.value = 1');
+        $store = $this->storeRepository->getById($storeId);
+        $this->stockStatusResource->addStockStatusToSelect($optionsAvailabilitySelect, $store->getWebsite());
+        $columns = array_column($optionsAvailabilitySelect->getPart(Select::COLUMNS), 1, 2);
+        $isSalableColumn = $columns['is_salable'];
 
-        $existsSelect->join(
-            ['stock_status_index_child' => $stockTable],
-            'bundle_product_child.sku = stock_status_index_child.sku',
-            []
-        )->where('stock_status_index_child.is_salable = 1');
+        $optionAvailabilityExpr = sprintf(
+            'IFNULL(child_status_store.value, child_status_global.value) != %s AND %s = 1',
+            Status::STATUS_DISABLED,
+            $isSalableColumn
+        );
+        $isOptionSalableExpr = new \Zend_Db_Expr('MAX(' . $optionAvailabilityExpr . ')');
+        $isRequiredOptionUnsalable = $connection->getCheckSql(
+            'required = 1 AND ' . $isOptionSalableExpr . ' = 0',
+            '1',
+            '0'
+        );
+        $optionsAvailabilitySelect->columns([
+            'parent_id' => 'bundle_options.parent_id',
+            'required' => 'bundle_options.required',
+            'is_available' => $isOptionSalableExpr,
+            'is_required_and_unavailable' => $isRequiredOptionUnsalable,
+        ]);
+        $isBundleAvailableExpr = new \Zend_Db_Expr('(MAX(is_available) = 1 AND MAX(is_required_and_unavailable) = 0)');
+        $bundleAvailabilitySelect = $connection->select()
+            ->from($optionsAvailabilitySelect, ['parent_id' => 'parent_id', 'is_available' => $isBundleAvailableExpr])
+            ->group('parent_id');
+
+        $existsSelect = $connection->select()
+            ->from($bundleAvailabilitySelect)
+            ->where('is_available = 1')
+            ->where("parent_id = e.{$linkField}");
         $typeBundle = Type::TYPE_CODE;
         $select->where(
             "e.type_id != '{$typeBundle}' OR EXISTS ({$existsSelect->assemble()})"
