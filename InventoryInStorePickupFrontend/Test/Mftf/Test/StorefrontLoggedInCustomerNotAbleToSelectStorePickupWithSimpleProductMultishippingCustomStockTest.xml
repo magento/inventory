@@ -7,16 +7,16 @@
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="StorefrontGuestNotAbleToSelectStorePickupWithSimpleProductCustomStockTest">
+    <test name="StorefrontLoggedInCustomerNotAbleToSelectStorePickupWithSimpleProductMultishippingCustomStockTest">
         <annotations>
             <stories value="Simple Product Custom Stock."/>
-            <title value="Logged in customer not able to place order with simple product with store pickup."/>
-            <description value="Verify, logged in customer not able to place order with store pickup in case there are no sources with store pickup."/>
-            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/1063873/scenarios/3616322"/>
-            <severity value="CRITICAL"/>
+            <title value="Customer not able to place order with simple product with store pickup if multi shipping is selected."/>
+            <description value="Verify, customer not able to place order with store pickup in case multi shipping is selected."/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/1063873/scenarios/3616560"/>
+            <severity value="MAJOR"/>
             <group value="msi"/>
             <group value="store_pickup"/>
-            <group value="cloud"/>
+            <group value="pr_exclude"/>
         </annotations>
 
         <before>
@@ -34,11 +34,16 @@
             </actionGroup>
             <!--Create test data.-->
             <createData entity="Msi_US_Customer" stepKey="customer"/>
-            <createData entity="_minimalSource" stepKey="source"/>
+            <createData entity="CulverStorePickupEnabledSource" stepKey="culverSource"/>
+            <createData entity="AustinStorePickupEnabledSource" stepKey="austinSource"/>
             <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
-            <createData entity="SourceStockLinked1" stepKey="sourceStockLink">
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink1">
                 <requiredEntity createDataKey="stock"/>
-                <requiredEntity createDataKey="source"/>
+                <requiredEntity createDataKey="culverSource"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink2">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="austinSource"/>
             </createData>
             <createData entity="_defaultCategory" stepKey="category"/>
             <createData entity="SimpleProduct" stepKey="product">
@@ -50,8 +55,11 @@
             <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
                 <argument name="sourceCode" value="{{_defaultSource.name}}"/>
             </actionGroup>
-            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignsourceAndSetQty">
-                <argument name="sourceCode" value="$source.source[source_code]$"/>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignCulverSourceAndSetQty">
+                <argument name="sourceCode" value="$culverSource.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignAustinSourceAndSetQty">
+                <argument name="sourceCode" value="$austinSource.source[source_code]$"/>
             </actionGroup>
             <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
         </before>
@@ -87,7 +95,8 @@
             <argument name="product" value="$product$"/>
         </actionGroup>
         <!--Verify pick in store is disabled.-->
-        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
+        <actionGroup ref="StorefrontOpenCartFromMinicartActionGroup" stepKey="openCart"/>
+        <actionGroup ref="CheckingWithSingleAddressActionGroup" stepKey="checkoutWithSingleAddresses"/>
         <actionGroup ref="StorefrontAssertPickInStoreButtonIsAbsentActionGroup" stepKey="verifyPickInStoreDisabled"/>
     </test>
 </tests>
