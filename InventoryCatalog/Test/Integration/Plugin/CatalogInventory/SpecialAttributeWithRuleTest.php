@@ -100,6 +100,6 @@ class SpecialAttributeWithRuleTest extends TestCase
         $productIds = $r1->getMatchingProductIds();
         $this->assertArrayHasKey(1, $productIds[$p1->getId()]);
         $this->assertTrue($productIds[$p1->getId()][1]);
-        $this->assertCount(1, $productIds);
+        $this->assertCount(2, $productIds);
     }
 }

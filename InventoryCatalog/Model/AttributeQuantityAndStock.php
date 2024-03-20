@@ -57,12 +57,7 @@ class AttributeQuantityAndStock implements CustomConditionInterface
                 ['ciss' => $this->resourceConnection->getTableName('cataloginventory_stock_status')],
                 'ciss.product_id'
             )
-            ->where(
-                $this->resourceConnection->getConnection()->prepareSqlCondition(
-                    'ciss.stock_status',
-                    ['eq' => $filter->getValue() !== null ? $filter->getValue() : '0']
-                )
-            )->where('ciss.stock_id = product_website.website_id');
+            ->where('ciss.stock_id = product_website.website_id');
 
         $selectCondition = [
             $this->mapConditionType($filter->getConditionType()) => $quantitySelect
