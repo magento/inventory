@@ -54,10 +54,20 @@ class AttributeQuantityAndStock implements CustomConditionInterface
     {
         $quantitySelect = $this->resourceConnection->getConnection()->select()
             ->from(
-                ['ciss' => $this->resourceConnection->getTableName('cataloginventory_stock_status')],
-                'ciss.product_id'
+                ['cpe' => $this->resourceConnection->getTableName('catalog_product_entity')],
+                'cpe.entity_id'
             )
-            ->where('ciss.stock_id = product_website.website_id');
+            ->joinInner(
+                ['isi' => $this->resourceConnection->getTableName('inventory_source_item')],
+                'isi.sku=cpe.sku',
+                []
+            )
+        ->where(
+            $this->resourceConnection->getConnection()->prepareSqlCondition(
+                'isi.status',
+                ['eq' => $filter->getValue() !== null ? $filter->getValue() : '0']
+            )
+        );
 
         $selectCondition = [
             $this->mapConditionType($filter->getConditionType()) => $quantitySelect
