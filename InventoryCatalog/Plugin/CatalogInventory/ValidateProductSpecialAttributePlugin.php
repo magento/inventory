@@ -28,7 +28,7 @@ use Magento\Store\Api\WebsiteRepositoryInterface;
 /**
  * Plugin to customize specific condition for product attributes
  */
-class CustomizeSpecialAttributePlugin
+class ValidateProductSpecialAttributePlugin
 {
     /**
      * @var AreProductsSalableInterface
