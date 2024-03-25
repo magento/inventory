@@ -11,7 +11,6 @@ use Magento\Bundle\Model\Product\Type;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Api\ProductAttributeRepositoryInterface;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
-use Magento\Catalog\Model\Product\Attribute\Source\Status as ProductStatus;
 use Magento\CatalogInventory\Model\ResourceModel\Stock\Status as StockStatusResource;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
@@ -124,9 +123,10 @@ class BundleChildStockStatusModifier implements SelectModifierInterface
             Status::STATUS_DISABLED,
             $isSalableColumn
         );
+
         $isOptionSalableExpr = new \Zend_Db_Expr('MAX(' . $optionAvailabilityExpr . ')');
         $isRequiredOptionUnsalable = $connection->getCheckSql(
-            'required = 1 AND ' . $isOptionSalableExpr . ' = 0',
+            'required = 1 AND ' . $isOptionSalableExpr . ' = 0 ',
             '1',
             '0'
         );
@@ -139,17 +139,17 @@ class BundleChildStockStatusModifier implements SelectModifierInterface
         ]);
         $isBundleAvailableExpr = new \Zend_Db_Expr(
             '(
-            MAX(is_available) = 1
-            AND MAX(is_required_and_unavailable) = 0
-            AND MIN(
-                    (child_website_id = ' . $store->getWebsiteId() . ' AND required = 1)
-                    OR (child_website_id = -1 AND required = 0)
-                    OR (child_website_id = ' . $store->getWebsiteId() . ' AND required = 0)
-               ) = 1
-            )'
+                MAX(is_available) = 1 AND
+                MAX(is_required_and_unavailable) = 0 AND
+                MIN(child_website_id = ' . $store->getWebsiteId() . ' OR (child_website_id = -1 AND required = 0)) = 1
+                ) = 1'
         );
+        $websiteFilteredOptions = $connection->select();
+        $websiteFilteredOptions->reset();
+        $websiteFilteredOptions->from($optionsAvailabilitySelect)
+            ->where("(required = 0 AND child_website_id > 0) OR required = 1");
         $bundleAvailabilitySelect = $connection->select()
-            ->from($optionsAvailabilitySelect, ['parent_id' => 'parent_id', 'is_available' => $isBundleAvailableExpr])
+            ->from($websiteFilteredOptions, ['parent_id' => 'parent_id', 'is_available' => $isBundleAvailableExpr])
             ->group('parent_id');
 
         $existsSelect = $connection->select()

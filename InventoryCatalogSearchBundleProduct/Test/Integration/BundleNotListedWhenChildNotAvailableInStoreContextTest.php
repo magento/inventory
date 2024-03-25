@@ -1,7 +1,7 @@
 <?php
 /************************************************************************
  *
- * Copyright 2023 Adobe
+ * Copyright 2024 Adobe
  * All Rights Reserved.
  *
  * NOTICE: All information contained herein is, and remains
@@ -103,7 +103,7 @@ class BundleNotListedWhenChildNotAvailableInStoreContextTest extends TestCase
      * @return Product[]
      * @throws LocalizedException
      */
-    protected function search(string $text): array
+    private function search(string $text): array
     {
         $query = $this->queryFactory->get();
         $query->unsetData();
