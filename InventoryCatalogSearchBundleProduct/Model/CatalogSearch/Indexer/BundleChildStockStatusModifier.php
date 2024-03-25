@@ -126,7 +126,7 @@ class BundleChildStockStatusModifier implements SelectModifierInterface
 
         $isOptionSalableExpr = new \Zend_Db_Expr('MAX(' . $optionAvailabilityExpr . ')');
         $isRequiredOptionUnsalable = $connection->getCheckSql(
-            'required = 1 AND ' . $isOptionSalableExpr . ' = 0 ',
+            'required = 1 AND ' . $isOptionSalableExpr . ' = 0',
             '1',
             '0'
         );
@@ -142,7 +142,7 @@ class BundleChildStockStatusModifier implements SelectModifierInterface
                 MAX(is_available) = 1 AND
                 MAX(is_required_and_unavailable) = 0 AND
                 MIN(child_website_id = ' . $store->getWebsiteId() . ' OR (child_website_id = -1 AND required = 0)) = 1
-                ) = 1'
+                )'
         );
         $websiteFilteredOptions = $connection->select();
         $websiteFilteredOptions->reset();
