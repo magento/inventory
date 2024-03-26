@@ -80,6 +80,7 @@ class ProcessSourceItemsObserver implements ObserverInterface
                     ? $this->prepareAssignedSources($sources['assigned_sources'])
                     : [];
             $this->sourceItemsProcessor->execute((string)$productData['sku'], $assignedSources);
+            // validate rule through index in final stage of product
             $this->indexBuilder->reindexById($product->getId());
         } else {
             /** @var StockItemInterface $stockItem */
