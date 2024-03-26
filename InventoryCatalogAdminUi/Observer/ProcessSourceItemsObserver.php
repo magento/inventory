@@ -11,6 +11,7 @@ use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Controller\Adminhtml\Product\Save;
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
+use Magento\CatalogRule\Model\Indexer\IndexBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Framework\Event\Observer as EventObserver;
@@ -39,6 +40,7 @@ class ProcessSourceItemsObserver implements ObserverInterface
      * @param SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory
      * @param SourceItemRepositoryInterface $sourceItemRepository
      * @param StockRegistryInterface $stockRegistry
+     * @param IndexBuilder $indexBuilder
      */
     public function __construct(
         private IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType,
@@ -47,7 +49,8 @@ class ProcessSourceItemsObserver implements ObserverInterface
         private DefaultSourceProviderInterface $defaultSourceProvider,
         private SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory,
         private SourceItemRepositoryInterface $sourceItemRepository,
-        private StockRegistryInterface $stockRegistry
+        private StockRegistryInterface $stockRegistry,
+        private IndexBuilder $indexBuilder
     ) {
     }
 
@@ -77,6 +80,7 @@ class ProcessSourceItemsObserver implements ObserverInterface
                     ? $this->prepareAssignedSources($sources['assigned_sources'])
                     : [];
             $this->sourceItemsProcessor->execute((string)$productData['sku'], $assignedSources);
+            $this->indexBuilder->reindexById($product->getId());
         } else {
             /** @var StockItemInterface $stockItem */
             $stockItem = $product->getExtensionAttributes()?->getStockItem()

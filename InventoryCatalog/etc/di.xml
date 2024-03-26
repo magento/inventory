@@ -232,7 +232,4 @@
     <type name="Magento\Rule\Model\Condition\Product\AbstractProduct">
         <plugin name="validate_product_special_attribute" type="Magento\InventoryCatalog\Plugin\CatalogInventory\ValidateProductSpecialAttributePlugin"/>
     </type>
-    <type name="Magento\InventoryCatalogAdminUi\Observer\ProcessSourceItemsObserver">
-        <plugin name="reindex_product" type="Magento\InventoryCatalog\Plugin\CatalogInventory\ProductReindexPlugin"/>
-    </type>
 </config>

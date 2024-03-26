@@ -17,8 +17,7 @@
     },
     "suggest": {
         "magento/module-inventory-reservations-api": "*",
-        "magento/module-rule": "*",
-        "magento/module-inventory-catalog-admin-ui": "*"
+        "magento/module-rule": "*"
     },
     "type": "magento2-module",
     "license": [
