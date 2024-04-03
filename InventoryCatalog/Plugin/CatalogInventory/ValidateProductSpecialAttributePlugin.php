@@ -73,7 +73,7 @@ class ValidateProductSpecialAttributePlugin
         callable $proceed,
         AbstractModel $model
     ) {
-        if ('quantity_and_stock_status' == $subject->getAttribute()) {
+        if ('quantity_and_stock_status' === $subject->getAttribute()) {
             $website = $this->websiteRepository->getById((int)$model->getStore()->getWebsiteId());
             $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $website->getCode());
             $result = $this->areProductsSalable->execute([$model->getSku()], $stock->getStockId());

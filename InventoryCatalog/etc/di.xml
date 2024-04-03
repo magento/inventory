@@ -204,6 +204,7 @@
         <arguments>
             <argument name="saleabilityChangesProcessorsPool" xsi:type="array">
                 <item name="priceIndexUpdateProcessor" xsi:type="object">Magento\InventoryCatalog\Model\PriceIndexUpdateProcessor</item>
+                <item name="ruleIndexUpdateProcessor" xsi:type="object">Magento\InventoryCatalog\Model\RuleIndexUpdateProcessor</item>
             </argument>
         </arguments>
     </type>
