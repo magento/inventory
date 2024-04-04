@@ -16,7 +16,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Model;
+namespace Magento\InventoryCatalogRule\Model;
 
 use Magento\CatalogRule\Model\Indexer\Product\ProductRuleProcessor;
 use Magento\InventoryIndexer\Indexer\SourceItem\CompositeProductProcessorInterface;
