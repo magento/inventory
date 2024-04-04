@@ -10,7 +10,7 @@
     <section name="StorefrontSelectStoreSection">
         <element name="nextBtn" type="button" selector="//form[contains(@class, 'form-continue')]/descendant::button[@type='submit']"/>
         <element name="pickInStoreBtn" type="button" selector="//button[contains(@class, 'action-select-store-pickup')]"/>
-        <element name="selectStoreBtn" type="button" selector="//span[contains(text(), 'Select Store')]"/>
+        <element name="selectStoreBtn" type="button" selector="//button[contains(., 'Select Store')]"/>
         <element name="customerEmailField" type="input" selector="//input[contains(@id, 'store-pickup-checkout-customer-email')]"/>
         <element name="selectShipping" type="button" selector="//button[contains(@class, 'action-select-shipping')]"/>
         <element name="selectedStoreName" type="input" selector="//div[contains(@class, 'selected-location-details')]/p[contains(@class, 'location-name')]"/>
