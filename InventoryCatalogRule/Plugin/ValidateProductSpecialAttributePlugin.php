@@ -16,7 +16,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Plugin\CatalogInventory;
+namespace Magento\InventoryCatalogRule\Plugin;
 
 use Magento\Framework\Model\AbstractModel;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;

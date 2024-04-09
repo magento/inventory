@@ -13,4 +13,14 @@
             </argument>
         </arguments>
     </type>
+    <virtualType name="CatalogRuleCustomConditionProvider" type="Magento\Framework\Api\SearchCriteria\CollectionProcessor\ConditionProcessor\CustomConditionProvider">
+        <arguments>
+            <argument name="customConditionProcessors" xsi:type="array">
+                <item name="quantity_and_stock_status" xsi:type="object">Magento\InventoryCatalogRule\Model\AttributeQuantityAndStock</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Rule\Model\Condition\Product\AbstractProduct">
+        <plugin name="validate_product_special_attribute" type="Magento\InventoryCatalogRule\Plugin\ValidateProductSpecialAttributePlugin"/>
+    </type>
 </config>

@@ -16,7 +16,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Model;
+namespace Magento\InventoryCatalogRule\Model;
 
 use Magento\Framework\Api\SearchCriteria\CollectionProcessor\ConditionProcessor\CustomConditionInterface;
 use Magento\Catalog\Model\ResourceModel\Product\Collection;

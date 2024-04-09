@@ -16,7 +16,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Test\Integration\Plugin\CatalogInventory;
+namespace Magento\InventoryCatalogRule\Test\Integration\Plugin;
 
 use Magento\Catalog\Test\Fixture\Product as ProductFixture;
 use Magento\CatalogRule\Model\Rule\Condition\Combine;
