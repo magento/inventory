@@ -58,9 +58,9 @@ class AttributeQuantityAndStock implements CustomConditionInterface
                 ['stock_id', 'name']
             );
         $stocks = $this->resourceConnection->getConnection()->fetchAll($select);
-        $count = count($stocks);
+        $total = count($stocks);
         $whereSql =  '';
-        $countLoop = 1;
+        $i = 1;
         $orCondition = ' OR ';
         $quantitySelect = $this->resourceConnection->getConnection()->select()
             ->from(
@@ -68,21 +68,21 @@ class AttributeQuantityAndStock implements CustomConditionInterface
                 'cpe.entity_id'
             );
         foreach ($stocks as $stock) {
-            if ($count == $countLoop) {
+            if ($total == $i) {
                 $orCondition = '';
             }
             $stockClause = ['stock_'.$stock['stock_id'] =>
                 $this->resourceConnection->getTableName('inventory_stock_'.$stock['stock_id'])];
-            $whereSql .= 'stock_'.$stock['stock_id'].'.is_salable = 1 '.$orCondition;
 
             $quantitySelect->joinInner(
                 $stockClause,
                 'stock_'.$stock['stock_id'].'.sku=cpe.sku',
                 []
             );
-            $countLoop++;
+            $whereSql .= 'stock_'.$stock['stock_id'].'.is_salable ='. $filter->getValue() . $orCondition;
+            $i++;
         }
-        $quantitySelect->where('IF('.$whereSql.', 1, 0) = ?', $filter->getValue());
+        $quantitySelect->where($whereSql, $filter->getValue());
         $selectCondition = [
             $this->mapConditionType($filter->getConditionType()) => $quantitySelect
         ];
