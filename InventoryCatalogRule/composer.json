@@ -5,8 +5,8 @@
         "php": "~8.1.0||~8.2.0||~8.3.0",
         "magento/framework": "*",
         "magento/module-catalog": "*",
-        "magento/module-catalog-rule": "*",
         "magento/module-inventory-indexer": "*",
+        "magento/module-catalog-rule": "*",
         "magento/module-rule": "*",
         "magento/module-inventory-sales-api": "*",
         "magento/module-store": "*"
