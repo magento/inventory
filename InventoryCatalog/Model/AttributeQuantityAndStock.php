@@ -52,27 +52,40 @@ class AttributeQuantityAndStock implements CustomConditionInterface
      */
     public function build(Filter $filter): string
     {
+        $select = $this->resourceConnection->getConnection()->select()
+            ->from(
+                ['is' => 'inventory_stock'],
+                ['stock_id', 'name']
+            );
+        $stocks = $this->resourceConnection->getConnection()->fetchAll($select);
+        $count = count($stocks);
+        $whereSql =  '';
+        $countLoop = 1;
+        $orCondition = ' OR ';
         $quantitySelect = $this->resourceConnection->getConnection()->select()
             ->from(
                 ['cpe' => $this->resourceConnection->getTableName('catalog_product_entity')],
                 'cpe.entity_id'
-            )
-            ->joinInner(
-                ['isi' => $this->resourceConnection->getTableName('inventory_source_item')],
-                'isi.sku=cpe.sku',
-                []
-            )
-        ->where(
-            $this->resourceConnection->getConnection()->prepareSqlCondition(
-                'isi.status',
-                ['eq' => $filter->getValue() !== null ? $filter->getValue() : '0']
-            )
-        );
+            );
+        foreach ($stocks as $stock) {
+            if ($count == $countLoop) {
+                $orCondition = '';
+            }
+            $stockClause = ['stock_'.$stock['stock_id'] =>
+                $this->resourceConnection->getTableName('inventory_stock_'.$stock['stock_id'])];
+            $whereSql .= 'stock_'.$stock['stock_id'].'.is_salable = 1 '.$orCondition;
 
+            $quantitySelect->joinInner(
+                $stockClause,
+                'stock_'.$stock['stock_id'].'.sku=cpe.sku',
+                []
+            );
+            $countLoop++;
+        }
+        $quantitySelect->where('IF('.$whereSql.', 1, 0) = ?', $filter->getValue());
         $selectCondition = [
             $this->mapConditionType($filter->getConditionType()) => $quantitySelect
         ];
-
         return $this->resourceConnection->getConnection()
             ->prepareSqlCondition(Collection::MAIN_TABLE_ALIAS . '.entity_id', $selectCondition);
     }
