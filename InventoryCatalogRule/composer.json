@@ -6,10 +6,13 @@
         "magento/framework": "*",
         "magento/module-catalog": "*",
         "magento/module-store": "*",
-        "magento/module-catalog-rule": "*"
+        "magento/module-catalog-rule": "*",
+        "magento/module-inventory-sales-api": "*",
+        "magento/module-inventory-indexer": "*"
     },
     "suggest": {
-        "magento/module-rule": "*"
+        "magento/module-rule": "*",
+        "magento/module-inventory-indexer": "*"
     },
     "type": "magento2-module",
     "license": [
