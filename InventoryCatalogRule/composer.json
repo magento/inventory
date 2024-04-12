@@ -1,35 +1,19 @@
 {
     "name": "magento/module-inventory-catalog-rule",
     "description": "N/A",
+    "type": "magento2-module",
     "require": {
         "php": "~8.1.0||~8.2.0||~8.3.0",
         "magento/framework": "*",
         "magento/module-catalog": "*",
+        "magento/module-store": "*",
         "magento/module-catalog-rule": "*",
         "magento/module-inventory-sales-api": "*",
-        "magento/module-rule": "*",
-        "magento/module-store": "*",
-        "magento/module-catalog-inventory": "*",
-        "magento/module-inventory": "*",
-        "magento/module-inventory-api": "*",
-        "magento/module-inventory-catalog-api": "*",
-        "magento/module-inventory-configuration-api": "*",
-        "magento/module-inventory-reservations-api": "*",
-        "magento/module-inventory-source-deduction-api": "*",
-        "magento/module-inventory-source-selection-api": "*",
-        "magento/module-sales-inventory": "*",
-        "magento/module-sales": "*"
+        "magento/module-inventory-indexer": "*",
+        "magento/module-rule": "*"
     },
-    "suggest": {
-        "magento/module-inventory-catalog": "*"
-    },
-    "require-dev": {
-        "magento/module-inventory-indexer": "*"
-    },
-    "type": "magento2-module",
     "license": [
-        "OSL-3.0",
-        "AFL-3.0"
+        "proprietary"
     ],
     "autoload": {
         "files": [
