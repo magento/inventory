@@ -1,19 +1,14 @@
 {
     "name": "magento/module-inventory-catalog-rule",
     "description": "N/A",
-    "type": "magento2-module",
     "require": {
         "php": "~8.1.0||~8.2.0||~8.3.0",
-        "magento/framework": "*",
-        "magento/module-catalog": "*",
-        "magento/module-store": "*",
-        "magento/module-catalog-rule": "*",
-        "magento/module-inventory-sales-api": "*",
-        "magento/module-inventory-indexer": "*",
-        "magento/module-rule": "*"
+        "magento/framework": "*"
     },
+    "type": "magento2-module",
     "license": [
-        "proprietary"
+        "OSL-3.0",
+        "AFL-3.0"
     ],
     "autoload": {
         "files": [
