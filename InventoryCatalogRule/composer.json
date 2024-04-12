@@ -3,7 +3,15 @@
     "description": "N/A",
     "require": {
         "php": "~8.1.0||~8.2.0||~8.3.0",
-        "magento/framework": "*"
+        "magento/framework": "*",
+        "magento/module-catalog": "*",
+        "magento/module-catalog-rule": "*",
+        "magento/module-inventory-indexer": "*",
+        "magento/module-inventory-sales-api": "*",
+        "magento/module-store": "*"
+    },
+    "suggest": {
+        "magento/module-rule": "*"
     },
     "type": "magento2-module",
     "license": [
