@@ -7,12 +7,12 @@
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="StorefrontGuestNotAbleToSelectStorePickupWithSimpleProductCustomStockTest">
+    <test name="StorefrontGuestNotAbleToCreateOrderWithSimpleProductCustomStockTest">
         <annotations>
             <stories value="Simple Product Custom Stock."/>
-            <title value="Logged in customer not able to place order with simple product with store pickup."/>
-            <description value="Verify, logged in customer not able to place order with store pickup in case there are no sources with store pickup."/>
-            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/1063873/scenarios/3616322"/>
+            <title value="Guest customer not able to place order with simple product with store pickup."/>
+            <description value="Verify, guest customer not able to place order with store pickup in case there are no sources with store pickup."/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/1063873/scenarios/3616361"/>
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="store_pickup"/>
@@ -33,7 +33,6 @@
                 <argument name="tags" value=""/>
             </actionGroup>
             <!--Create test data.-->
-            <createData entity="Msi_US_Customer" stepKey="customer"/>
             <createData entity="_minimalSource" stepKey="source"/>
             <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
             <createData entity="SourceStockLinked1" stepKey="sourceStockLink">
@@ -60,10 +59,6 @@
             <magentoCLI command="config:set {{OnlineDistanceProviderForDistanceBasedSSA.path}} {{OnlineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
             <!--Disable 'In Store Pickup' shipping method.-->
             <magentoCLI command="config:set {{DisableInStorePickup.path}} {{DisableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
-            <!--Logout from customer account-->
-            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutStorefront"/>
-            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
-            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
             <!--Assign Default Stock to Default Website.-->
@@ -80,9 +75,6 @@
         </after>
 
         <!--Add product to cart.-->
-        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
-            <argument name="Customer" value="$customer$"/>
-        </actionGroup>
         <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addProductToCart">
             <argument name="product" value="$product$"/>
         </actionGroup>
