@@ -80,47 +80,38 @@ class AttributeQuantityAndStock implements CustomConditionInterface
     public function build(Filter $filter): string
     {
         $collection = $this->stockCollectionFactory->create();
-        $total = count($collection->getAllIds());
         $defaultStockId = $this->defaultStockProvider->getId();
-        $whereSql =  '';
-        $i = 1;
-        $orCondition = ' OR ';
         $quantitySelect = $this->resourceConnection->getConnection()->select()
             ->from(
                 ['cpe' => $this->resourceConnection->getTableName('catalog_product_entity')],
                 'cpe.entity_id'
             );
-        foreach ($collection->getAllIds() as $stockId) {
-            if ($total == $i) {
-                $orCondition = '';
-            }
-            $stockIndexTableName = $this->stockIndexTableNameResolver->execute((int)$stockId);
-            $stockClause = ['stock_'.$stockId => $stockIndexTableName];
+        $stockIndexTableNameDefault = $this->resourceConnection->getTableName('cataloginventory_stock_status');
 
-            $quantitySelect->joinInner(
-                $stockClause,
-                'stock_'.$stockId.'.sku=cpe.sku',
-                []
-            );
+        foreach ($collection->getAllIds() as $stockId) {
             if ((int)$stockId === $defaultStockId) {
-                $stockIndexTableName = $this->resourceConnection->getTableName('cataloginventory_stock_status');
                 $quantitySelect->joinInner(
-                    ['child_stock_default' => $stockIndexTableName],
+                    ['child_stock_default' => $stockIndexTableNameDefault],
                     'child_stock_default.product_id = product_website.product_id',
                     []
                 )->joinInner(
-                    ['parent_stock_default' => $stockIndexTableName],
+                    ['parent_stock_default' => $stockIndexTableNameDefault],
                     'parent_stock_default.product_id = cpe.entity_id',
                     []
                 )->where(
                     'child_stock_default.stock_status = 1 OR parent_stock_default.stock_status = 0'
                 );
             } else {
-                $whereSql .= 'stock_' . $stockId . '.is_salable =' . $filter->getValue() . $orCondition;
+                $stockIndexTableName = $this->stockIndexTableNameResolver->execute((int)$stockId);
+                $quantitySelect->joinInner(
+                    ['stock_'.$stockId => $stockIndexTableName],
+                    'stock_'.$stockId.'.sku = cpe.sku',
+                    []
+                )->orWhere(
+                    'stock_' . $stockId . '.is_salable =' . $filter->getValue()
+                );
             }
-            $i++;
         }
-        $quantitySelect->where($whereSql, $filter->getValue());
         $selectCondition = [
             $this->mapConditionType($filter->getConditionType()) => $quantitySelect
         ];
