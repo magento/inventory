@@ -19,9 +19,12 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalogRule\Model;
 
 use Magento\Framework\Api\SearchCriteria\CollectionProcessor\ConditionProcessor\CustomConditionInterface;
-use Magento\Catalog\Model\ResourceModel\Product\Collection;
+use Magento\Catalog\Model\ResourceModel\Product\Collection as CatalogCollection;
 use Magento\Framework\Api\Filter;
 use Magento\Framework\App\ResourceConnection;
+use Magento\Inventory\Model\ResourceModel\Stock\CollectionFactory;
+use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
+use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
 
 /**
  * Based on Magento\Framework\Api\Filter builds condition
@@ -36,12 +39,36 @@ class AttributeQuantityAndStock implements CustomConditionInterface
     private $resourceConnection;
 
     /**
+     * @var CollectionFactory
+     */
+    private $stockCollectionFactory;
+
+    /**
+     * @var StockIndexTableNameResolverInterface
+     */
+    private $stockIndexTableNameResolver;
+
+    /**
+     * @var DefaultStockProviderInterface
+     */
+    private $defaultStockProvider;
+
+    /**
      * @param ResourceConnection $resourceConnection
+     * @param CollectionFactory $stockCollectionFactory
+     * @param StockIndexTableNameResolverInterface $stockIndexTableNameResolver
+     * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
-        ResourceConnection $resourceConnection
+        ResourceConnection $resourceConnection,
+        CollectionFactory $stockCollectionFactory,
+        StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
+        DefaultStockProviderInterface $defaultStockProvider,
     ) {
         $this->resourceConnection = $resourceConnection;
+        $this->stockCollectionFactory = $stockCollectionFactory;
+        $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
+        $this->defaultStockProvider = $defaultStockProvider;
     }
 
     /**
@@ -52,13 +79,9 @@ class AttributeQuantityAndStock implements CustomConditionInterface
      */
     public function build(Filter $filter): string
     {
-        $select = $this->resourceConnection->getConnection()->select()
-            ->from(
-                ['is' => 'inventory_stock'],
-                ['stock_id', 'name']
-            );
-        $stocks = $this->resourceConnection->getConnection()->fetchAll($select);
-        $total = count($stocks);
+        $collection = $this->stockCollectionFactory->create();
+        $total = count($collection->getAllIds());
+        $defaultStockId = $this->defaultStockProvider->getId();
         $whereSql =  '';
         $i = 1;
         $orCondition = ' OR ';
@@ -67,19 +90,34 @@ class AttributeQuantityAndStock implements CustomConditionInterface
                 ['cpe' => $this->resourceConnection->getTableName('catalog_product_entity')],
                 'cpe.entity_id'
             );
-        foreach ($stocks as $stock) {
+        foreach ($collection->getAllIds() as $stockId) {
             if ($total == $i) {
                 $orCondition = '';
             }
-            $stockClause = ['stock_'.$stock['stock_id'] =>
-                $this->resourceConnection->getTableName('inventory_stock_'.$stock['stock_id'])];
+            $stockIndexTableName = $this->stockIndexTableNameResolver->execute((int)$stockId);
+            $stockClause = ['stock_'.$stockId => $stockIndexTableName];
 
             $quantitySelect->joinInner(
                 $stockClause,
-                'stock_'.$stock['stock_id'].'.sku=cpe.sku',
+                'stock_'.$stockId.'.sku=cpe.sku',
                 []
             );
-            $whereSql .= 'stock_'.$stock['stock_id'].'.is_salable ='. $filter->getValue() . $orCondition;
+            if ($stockId === $defaultStockId) {
+                $stockIndexTableName = $this->resourceConnection->getTableName('cataloginventory_stock_status');
+                $quantitySelect->joinInner(
+                    ['child_stock_default' => $stockIndexTableName],
+                    'child_stock_default.product_id = l.product_id',
+                    []
+                )->joinInner(
+                    ['parent_stock_default' => $stockIndexTableName],
+                    'parent_stock_default.product_id = le.entity_id',
+                    []
+                )->where(
+                    'child_stock_default.stock_status = 1 OR parent_stock_default.stock_status = 0'
+                );
+            } else {
+                $whereSql .= 'stock_' . $stockId . '.is_salable =' . $filter->getValue() . $orCondition;
+            }
             $i++;
         }
         $quantitySelect->where($whereSql, $filter->getValue());
@@ -87,7 +125,7 @@ class AttributeQuantityAndStock implements CustomConditionInterface
             $this->mapConditionType($filter->getConditionType()) => $quantitySelect
         ];
         return $this->resourceConnection->getConnection()
-            ->prepareSqlCondition(Collection::MAIN_TABLE_ALIAS . '.entity_id', $selectCondition);
+            ->prepareSqlCondition(CatalogCollection::MAIN_TABLE_ALIAS . '.entity_id', $selectCondition);
     }
 
     /**

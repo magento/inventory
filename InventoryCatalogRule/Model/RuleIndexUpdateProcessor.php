@@ -49,7 +49,7 @@ class RuleIndexUpdateProcessor implements CompositeProductProcessorInterface
     public function __construct(
         ProductRuleProcessor $productRuleProcessor,
         GetProductsIdsToProcess $getProductsIdsToProcess,
-        int $sortOrder = 10
+        int $sortOrder = 8
     ) {
         $this->productRuleProcessor = $productRuleProcessor;
         $this->getProductsIdsToProcess = $getProductsIdsToProcess;
