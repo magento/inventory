@@ -102,15 +102,15 @@ class AttributeQuantityAndStock implements CustomConditionInterface
                 'stock_'.$stockId.'.sku=cpe.sku',
                 []
             );
-            if ($stockId === $defaultStockId) {
+            if ((int)$stockId === $defaultStockId) {
                 $stockIndexTableName = $this->resourceConnection->getTableName('cataloginventory_stock_status');
                 $quantitySelect->joinInner(
                     ['child_stock_default' => $stockIndexTableName],
-                    'child_stock_default.product_id = l.product_id',
+                    'child_stock_default.product_id = product_website.product_id',
                     []
                 )->joinInner(
                     ['parent_stock_default' => $stockIndexTableName],
-                    'parent_stock_default.product_id = le.entity_id',
+                    'parent_stock_default.product_id = cpe.entity_id',
                     []
                 )->where(
                     'child_stock_default.stock_status = 1 OR parent_stock_default.stock_status = 0'
