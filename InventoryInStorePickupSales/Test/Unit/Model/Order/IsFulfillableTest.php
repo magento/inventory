@@ -291,7 +291,7 @@ class IsFulfillableTest extends TestCase
     /**
      * @return array
      */
-    public function dataProvider(): array
+    public static function dataProvider(): array
     {
         return [
             [false, true, 1, 0, true],

@@ -55,7 +55,7 @@ class GetListTest extends WebapiAbstract
     /**
      * @return array
      */
-    public function dataProviderGetList(): array
+    public static function dataProviderGetList(): array
     {
         return [
             'filtering' => [

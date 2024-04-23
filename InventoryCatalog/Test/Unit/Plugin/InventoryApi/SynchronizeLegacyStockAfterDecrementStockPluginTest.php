@@ -231,7 +231,7 @@ class SynchronizeLegacyStockAfterDecrementStockPluginTest extends TestCase
     /**
      * @return array[]
      */
-    public function getDataProvider(): array
+    public static function getDataProvider(): array
     {
         return [
             ['default', 1, 'SKU-1', 1.0, 1],
