@@ -59,9 +59,11 @@
         <waitForPageLoad stepKey="waitForPageLoad3"/>
 
         <click selector="{{AdminProductFormConfigurationsSection.createConfigurations}}" stepKey="clickOnTheCreateConfigurationsButton1"/>
-        <waitForElementVisible selector="{{AdminConfigurableProductSelectAttributesSlideOut.grid}}" time="30" stepKey="waitForGridPresent1"/>
+        <waitForPageLoad stepKey="waitForConfigurationsPageLoad"/>
+        <waitForElementVisible selector="{{AdminConfigurableProductSelectAttributesSlideOut.grid}}" stepKey="waitForGridPresent1"/>
 
         <waitForPageLoad stepKey="waitForPageLoad4"/>
+        <waitForElementClickable selector="{{AdminCreateProductConfigurationsPanel.createNewAttribute}}" stepKey="waitForCreateNewAttributeBtn"/>
         <click selector="{{AdminCreateProductConfigurationsPanel.createNewAttribute}}" stepKey="clickOnCreateNewAttribute1"/>
         <waitForPageLoad stepKey="waitForPageLoad5"/>
 

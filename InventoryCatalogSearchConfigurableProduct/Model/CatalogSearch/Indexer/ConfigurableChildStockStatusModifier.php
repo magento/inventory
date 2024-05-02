@@ -8,24 +8,21 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalogSearchConfigurableProduct\Model\CatalogSearch\Indexer;
 
 use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Catalog\Model\Product;
+use Magento\Catalog\Api\ProductAttributeRepositoryInterface;
+use Magento\Catalog\Model\Product\Attribute\Source\Status;
+use Magento\CatalogInventory\Model\ResourceModel\StockStatusFilterInterface;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
-use Magento\Eav\Model\Config;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
 use Magento\Framework\EntityManager\MetadataPool;
 use Magento\InventoryCatalogSearch\Model\Indexer\SelectModifierInterface;
+use Magento\Store\Api\StoreRepositoryInterface;
 
 /**
  * Filter configurable products by enabled child products stock status.
  */
 class ConfigurableChildStockStatusModifier implements SelectModifierInterface
 {
-    /**
-     * @var Config
-     */
-    private $eavConfig;
-
     /**
      * @var MetadataPool
      */
@@ -37,33 +34,49 @@ class ConfigurableChildStockStatusModifier implements SelectModifierInterface
     private $resourceConnection;
 
     /**
+     * @var ProductAttributeRepositoryInterface
+     */
+    private $productAttributeRepository;
+
+    /**
+     * @var StoreRepositoryInterface
+     */
+    private $storeRepository;
+
+    /**
+     * @var StockStatusFilterInterface
+     */
+    private $stockStatusFilter;
+
+    /**
      * @param MetadataPool $metadataPool
-     * @param Config $eavConfig
      * @param ResourceConnection $resourceConnection
+     * @param ProductAttributeRepositoryInterface $productAttributeRepository
+     * @param StoreRepositoryInterface $storeRepository
+     * @param StockStatusFilterInterface $stockStatusFilter
      */
     public function __construct(
         MetadataPool $metadataPool,
-        Config $eavConfig,
-        ResourceConnection $resourceConnection
+        ResourceConnection $resourceConnection,
+        ProductAttributeRepositoryInterface $productAttributeRepository,
+        StoreRepositoryInterface $storeRepository,
+        StockStatusFilterInterface $stockStatusFilter
     ) {
         $this->metadataPool = $metadataPool;
-        $this->eavConfig = $eavConfig;
         $this->resourceConnection = $resourceConnection;
+        $this->productAttributeRepository = $productAttributeRepository;
+        $this->storeRepository = $storeRepository;
+        $this->stockStatusFilter = $stockStatusFilter;
     }
 
     /**
-     * Add stock item filter to select
-     *
-     * @param Select $select
-     * @param string $stockTable
-     * @return void
+     * @inheritdoc
      */
-    public function modify(Select $select, string $stockTable): void
+    public function modify(Select $select, int $storeId): void
     {
         $connection = $this->resourceConnection->getConnection();
         $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
         $linkField = $metadata->getLinkField();
-        $statusAttribute = $this->eavConfig->getAttribute(Product::ENTITY, 'status');
         $existsSelect = $connection->select()->from(
             ['product_link_configurable' => $this->resourceConnection->getTableName('catalog_product_super_link')],
             [new \Zend_Db_Expr('1')]
@@ -76,18 +89,31 @@ class ConfigurableChildStockStatusModifier implements SelectModifierInterface
             []
         );
 
-        $existsSelect->join(
-            ['child_product_status' => $this->resourceConnection->getTableName($statusAttribute->getBackendTable())],
-            "product_child.{$linkField} = child_product_status.{$linkField} AND "
-            . "child_product_status.attribute_id = " . $statusAttribute->getId(),
+        $statusAttribute = $this->productAttributeRepository->get(ProductInterface::STATUS);
+        $existsSelect->joinLeft(
+            ['child_status_global' => $statusAttribute->getBackendTable()],
+            "child_status_global.{$linkField} = product_child.{$linkField}"
+            . " AND child_status_global.attribute_id = {$statusAttribute->getAttributeId()}"
+            . " AND child_status_global.store_id = 0",
             []
-        )->where('child_product_status.value = 1');
+        )->joinLeft(
+            ['child_status_store' => $statusAttribute->getBackendTable()],
+            "child_status_store.{$linkField} = product_child.{$linkField}"
+            . " AND child_status_store.attribute_id = {$statusAttribute->getAttributeId()}"
+            . " AND child_status_store.store_id = {$storeId}",
+            []
+        )->where(
+            'IFNULL(child_status_store.value, child_status_global.value) != ' . Status::STATUS_DISABLED
+        );
 
-        $existsSelect->join(
-            ['stock_status_index_child' => $stockTable],
-            'product_child.sku = stock_status_index_child.sku',
-            []
-        )->where('stock_status_index_child.is_salable = 1');
+        $store = $this->storeRepository->getById($storeId);
+        $this->stockStatusFilter->execute(
+            $existsSelect,
+            'product_child',
+            StockStatusFilterInterface::TABLE_ALIAS,
+            (int) $store->getWebsiteId()
+        );
+
         $typeConfigurable = Configurable::TYPE_CODE;
         $select->where(
             "e.type_id != '{$typeConfigurable}' OR EXISTS ({$existsSelect->assemble()})"

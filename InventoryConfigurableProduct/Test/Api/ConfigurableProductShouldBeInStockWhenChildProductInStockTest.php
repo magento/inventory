@@ -204,6 +204,46 @@ class ConfigurableProductShouldBeInStockWhenChildProductInStockTest extends Weba
     }
 
     /**
+     * @dataProvider updateConfigurableStockStatusUsingStockItemAPIDataProvider
+     */
+    #[
+        AppArea('frontend'),
+        DataFixture(Attribute::class, ['options' => [['label' => 'option', 'sort_order' => 0]]], as:'attribute'),
+        DataFixture(Product::class, as: 'simple'),
+        DataFixture(
+            ConfigurableProductFixture::class,
+            ['_options' => ['$attribute$'], '_links' => ['$simple$']],
+            as: 'configurable'
+        ),
+    ]
+    public function testUpdateConfigurableStockStatusUsingStockItemAPI(string $fixture): void
+    {
+        $product = $this->fixtures->get($fixture);
+        $configurable = $this->fixtures->get('configurable');
+
+        $collection = $this->getLayerProductCollection($configurable->getSku());
+        self::assertEquals(1, $collection->count());
+
+        $this->updateStockConfiguration($product->getSku(), ['is_in_stock' => 0]);
+
+        $collection = $this->getLayerProductCollection($configurable->getSku());
+        self::assertEquals(0, $collection->count());
+
+        $this->updateStockConfiguration($product->getSku(), ['is_in_stock' => 1]);
+
+        $collection = $this->getLayerProductCollection($configurable->getSku());
+        self::assertEquals(1, $collection->count());
+    }
+
+    public function updateConfigurableStockStatusUsingStockItemAPIDataProvider(): array
+    {
+        return [
+            ['simple'],
+            ['configurable'],
+        ];
+    }
+
+    /**
      * Get layer product collection for frontend
      *
      * @param string $sku
@@ -297,5 +337,39 @@ class ConfigurableProductShouldBeInStockWhenChildProductInStockTest extends Weba
         return (TESTS_WEB_API_ADAPTER === self::ADAPTER_REST)
             ? $this->_webApiCall($serviceInfo)
             : $this->_webApiCall($serviceInfo, $requestData);
+    }
+
+    private function updateStockConfiguration(string $sku, array $data): void
+    {
+        $data = array_merge($this->getStockItemConfiguration($sku), $data);
+        $itemId = $data['item_id'];
+        $serviceInfo = [
+            'rest' => [
+                'resourcePath' => "/V1/products/{$sku}/stockItems/{$itemId}",
+                'httpMethod' => Request::HTTP_METHOD_PUT,
+            ],
+            'soap' => [
+                'service' => 'catalogInventoryStockRegistryV1',
+                'serviceVersion' => 'V1',
+                'operation' => 'catalogInventoryStockRegistryV1UpdateStockItemBySku',
+            ],
+        ];
+        $this->_webApiCall($serviceInfo, ['stockItem' => $data, 'productSku' => $sku, 'itemId' => $itemId]);
+    }
+
+    private function getStockItemConfiguration(string $sku): array
+    {
+        $serviceInfo = [
+            'rest' => [
+                'resourcePath' => "/V1/stockItems/{$sku}",
+                'httpMethod' => \Magento\Framework\Webapi\Rest\Request::HTTP_METHOD_GET,
+            ],
+            'soap' => [
+                'service' => 'catalogInventoryStockRegistryV1',
+                'serviceVersion' => 'V1',
+                'operation' => 'catalogInventoryStockRegistryV1GetStockItemBySku',
+            ],
+        ];
+        return $this->_webApiCall($serviceInfo, ['productSku' => $sku]);
     }
 }

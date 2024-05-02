@@ -34,4 +34,11 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\InventoryIndexer\Model\CompositeProductSalabilityChangeProcessor">
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="flush_cache" sortOrder="30" xsi:type="object">Magento\InventoryCache\Model\FlushCacheOnProductSalabilityChange</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
