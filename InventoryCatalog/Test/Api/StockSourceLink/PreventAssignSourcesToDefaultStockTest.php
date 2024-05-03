@@ -19,8 +19,8 @@ class PreventAssignSourcesToDefaultStockTest extends WebapiAbstract
     /**#@+
      * Service constants
      */
-    const RESOURCE_PATH_ASSIGN_SOURCES_TO_STOCK = '/V1/inventory/stock-source-links';
-    const SERVICE_NAME_ASSIGN_SOURCES_TO_STOCK = 'inventoryApiStockSourceLinksSaveV1';
+    private const RESOURCE_PATH_ASSIGN_SOURCES_TO_STOCK = '/V1/inventory/stock-source-links';
+    private const SERVICE_NAME_ASSIGN_SOURCES_TO_STOCK = 'inventoryApiStockSourceLinksSaveV1';
     /**#@-*/
 
     /**

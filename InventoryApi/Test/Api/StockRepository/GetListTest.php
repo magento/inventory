@@ -19,8 +19,8 @@ class GetListTest extends WebapiAbstract
     /**#@+
      * Service constants
      */
-    const RESOURCE_PATH = '/V1/inventory/stocks';
-    const SERVICE_NAME = 'inventoryApiStockRepositoryV1';
+    private const RESOURCE_PATH = '/V1/inventory/stocks';
+    private const SERVICE_NAME = 'inventoryApiStockRepositoryV1';
     /**#@-*/
 
     /**
