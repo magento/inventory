@@ -11,5 +11,7 @@
         <element name="addNewStock" type="button" selector="#add" timeout="30"/>
         <element name="multicheckDropdown" type="button" selector="div[data-role='grid-wrapper'] th.data-grid-multicheck-cell button.action-multicheck-toggle"/>
         <element name="multicheckOption" type="button" selector="//div[@data-role='grid-wrapper']//th[contains(@class, data-grid-multicheck-cell)]//li//span[text() = '{{label}}']" parameterized="true"/>
+        <element name="actionDropdown" type="button" selector="//div[@class='admin__data-grid-header-row row row-gutter']//descendant::button[@title='Select Items']"/>
+        <element name="deleteOption" type="text" selector="//div[@class='admin__data-grid-header-row row row-gutter']//descendant::button[@title='Select Items']//following-sibling ::div//span[text()='Delete']"/>
     </section>
 </sections>
