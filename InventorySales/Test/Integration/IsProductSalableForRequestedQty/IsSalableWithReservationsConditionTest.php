@@ -109,7 +109,7 @@ class IsSalableWithReservationsConditionTest extends TestCase
     /**
      * @return array
      */
-    public function productIsSalableDataProvider(): array
+    public static function productIsSalableDataProvider(): array
     {
         return [
             ['SKU-1', 10, 1, true],
@@ -163,7 +163,7 @@ class IsSalableWithReservationsConditionTest extends TestCase
     /**
      * @return array
      */
-    public function productIsSalableWithUseConfigMinQtyDataProvider(): array
+    public static function productIsSalableWithUseConfigMinQtyDataProvider(): array
     {
         return [
             ['SKU-1', 10, 3, true],
@@ -215,7 +215,7 @@ class IsSalableWithReservationsConditionTest extends TestCase
     /**
      * @return array
      */
-    public function productIsSalableWithMinQtyDataProvider(): array
+    public static function productIsSalableWithMinQtyDataProvider(): array
     {
         return [
             ['SKU-1', 10, 3, true],

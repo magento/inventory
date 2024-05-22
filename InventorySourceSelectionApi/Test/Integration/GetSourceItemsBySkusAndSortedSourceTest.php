@@ -29,7 +29,7 @@ class GetSourceItemsBySkusAndSortedSourceTest extends TestCase
     /**
      * @return array
      */
-    public function shouldReturnSortedSourceItemsDataProvider(): array
+    public static function shouldReturnSortedSourceItemsDataProvider(): array
     {
         return [
             [
@@ -90,7 +90,7 @@ class GetSourceItemsBySkusAndSortedSourceTest extends TestCase
     /**
      * @return array
      */
-    public function numericOnlySkusDataProvider(): array
+    public static function numericOnlySkusDataProvider(): array
     {
         return [
             [

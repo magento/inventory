@@ -162,7 +162,7 @@ class NegativeMinQtyTest extends TestCase
      *
      * @return array
      */
-    public function isProductSalableForRequestedQtyWithBackordersEnabledGloballyDataProvider(): array
+    public static function isProductSalableForRequestedQtyWithBackordersEnabledGloballyDataProvider(): array
     {
         return [
             'salable_qty' => ['SKU-1', 10, 13, true],

@@ -114,7 +114,7 @@ class AddSalesQuoteItemOnNotDefaultStockTest extends TestCase
      * @see ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
      * @return array
      */
-    public function productsInStockDataProvider(): array
+    public static function productsInStockDataProvider(): array
     {
         return [
             ['SKU-1', 10, 4],
@@ -167,7 +167,7 @@ class AddSalesQuoteItemOnNotDefaultStockTest extends TestCase
      * @see ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
      * @return array
      */
-    public function notSalableProductsDataProvider(): array
+    public static function notSalableProductsDataProvider(): array
     {
         return [
             ['SKU-1', 20, 6],

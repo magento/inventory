@@ -56,7 +56,7 @@ class ManageConfigConditionTest extends TestCase
     /**
      * @return array
      */
-    public function executeWithManageStockFalseDataProvider(): array
+    public static function executeWithManageStockFalseDataProvider(): array
     {
         return [
             ['SKU-1', 10, [GetStockItemDataInterface::QUANTITY => 8.5, GetStockItemDataInterface::IS_SALABLE => 1]],

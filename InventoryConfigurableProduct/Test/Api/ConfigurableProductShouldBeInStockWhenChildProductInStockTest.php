@@ -235,7 +235,7 @@ class ConfigurableProductShouldBeInStockWhenChildProductInStockTest extends Weba
         self::assertEquals(1, $collection->count());
     }
 
-    public function updateConfigurableStockStatusUsingStockItemAPIDataProvider(): array
+    public static function updateConfigurableStockStatusUsingStockItemAPIDataProvider(): array
     {
         return [
             ['simple'],

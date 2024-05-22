@@ -59,7 +59,7 @@ class GetStockItemDataTest extends TestCase
     /**
      * @return array
      */
-    public function getStockItemDataDataProvider(): array
+    public static function getStockItemDataDataProvider(): array
     {
         return [
             ['SKU-1', 10, [GetStockItemDataInterface::QUANTITY => 8.5, GetStockItemDataInterface::IS_SALABLE => 1]],
