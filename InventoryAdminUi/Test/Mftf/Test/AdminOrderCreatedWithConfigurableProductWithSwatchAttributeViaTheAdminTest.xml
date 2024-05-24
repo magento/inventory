@@ -73,7 +73,8 @@
 
         <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$simpleCategory1.name$$]"  stepKey="searchAndSelectCategory1"/>
         <waitForPageLoad stepKey="waitForPageLoad3"/>
-
+        <waitForLoadingMaskToDisappear stepKey="waitForGridLoadMaskToDisappear"/>
+        <waitForElementClickable selector="{{AdminProductFormConfigurationsSection.createConfigurations}}" stepKey="waitForTheButtonCreateConfigurationsButtonToBeClickable"/>
         <click selector="{{AdminProductFormConfigurationsSection.createConfigurations}}" stepKey="clickOnTheCreateConfigurationsButton1"/>
         <waitForLoadingMaskToDisappear stepKey="waitForLoadingMaskDisappear"/>
 

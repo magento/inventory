@@ -21,4 +21,11 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\InventoryIndexer\Model\CompositeProductSalabilityChangeProcessor">
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="update_fulltext_index" sortOrder="20" xsi:type="object">Magento\InventoryCatalogSearch\Model\UpdateFulltextIndexOnProductSalabilityChange</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
