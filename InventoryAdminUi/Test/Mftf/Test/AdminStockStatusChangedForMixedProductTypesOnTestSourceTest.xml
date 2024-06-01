@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminStockStatusChangedForMixedProductTypesOnTestSourceTest">
+        <annotations>
+            <stories value="Mixed product custom source"/>
+            <title value="Stock status changed for Bundle product on Test stock and Test website"/>
+            <description value="Quantity deduction after shipment with mixed product types created on Test source"/>
+            <testCaseId value="AC-6592"/>
+            <severity value="CRITICAL"/>
+        </annotations>
+        <before>
+            <createData entity="SimpleSubCategory" stepKey="category"/>
+            <createData entity="SimpleProduct" stepKey="createSimpleProduct">
+                <field key="price">10.00</field>
+                <field key="name">Simple Product 1</field>
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <!-- Create Bundle product -->
+            <createData entity="ApiBundleProductPriceViewRange" stepKey="createBundleProduct">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <createData entity="FullSource1" stepKey="source"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="source"/>
+            </createData>
+            <createData entity="DropDownBundleOption" stepKey="bundleOption">
+                <requiredEntity createDataKey="createBundleProduct"/>
+            </createData>
+            <createData entity="ApiBundleLink" stepKey="bundleLink">
+                <requiredEntity createDataKey="createBundleProduct"/>
+                <requiredEntity createDataKey="bundleOption"/>
+                <requiredEntity createDataKey="createSimpleProduct"/>
+            </createData>
+            <!-- Create customer -->
+            <createData entity="Simple_US_Customer" stepKey="createCustomer"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <!-- Assign Test source to simple and virtual products -->
+            <actionGroup ref="NavigateToCreatedProductEditPageActionGroup" stepKey="goToSimpleProductEditPage">
+                <argument name="product" value="$$createSimpleProduct$$"/>
+            </actionGroup>
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unAssignDefaultSourceFromProduct">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignCreatedSourceToProduct">
+                <argument name="sourceCode" value="$source.source[source_code]$"/>
+            </actionGroup>
+            <waitForElementVisible selector="{{AdminProductSourcesGrid.rowQty('0')}}" stepKey="waitForSourcesQuantityToBeVisible"/>
+            <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100"
+                       stepKey="fillSourceQtyField1"/>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveCreateFirstSimpleProduct"/>
+            <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="goToProductEditPage">
+                <argument name="productId" value="$createBundleProduct.id$"/>
+            </actionGroup>
+            <waitForElementClickable selector="{{AdminProductFormBundleSection.userDefinedQuantity('0', '0')}}" stepKey="waitForUserDefinedCheckbox"/>
+            <uncheckOption selector="{{AdminProductFormBundleSection.userDefinedQuantity('0', '0')}}" stepKey="userDefined"/>
+            <waitForElementVisible selector="{{AdminProductFormBundleSection.bundleOptionXProductYQuantity('0', '0')}}" stepKey="waitForDefaultQtyToBeVisible"/>
+            <fillField selector="{{AdminProductFormBundleSection.bundleOptionXProductYQuantity('0', '0')}}" userInput="5" stepKey="fillProductDefaultQty"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCreatedBundleProduct"/>
+        </before>
+        <after>
+            <!-- Logout customer -->
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="customerLogout"/>
+            <!-- Delete customer -->
+            <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
+            <!--Delete created data-->
+            <deleteData createDataKey="createSimpleProduct" stepKey="deleteSimpleProduct"/>
+            <deleteData createDataKey="createBundleProduct" stepKey="deleteBundleProduct"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <deleteData createDataKey="stock" stepKey="deleteCustomStock"/>
+            <!--Disable all sources.-->
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="deleteSource"/>
+            <!--Admin logout-->
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="adminLogout"/>
+        </after>
+        <!-- Login as customer -->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginAsCustomer">
+            <argument name="Customer" value="$$createCustomer$$"/>
+        </actionGroup>
+        <!-- Go to Storefront as Guest and add simple product to cart -->
+        <actionGroup ref="OpenStoreFrontProductPageActionGroup" stepKey="openProductPage">
+            <argument name="productUrlKey" value="$$createSimpleProduct.custom_attributes[url_key]$$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontAddProductToCartActionGroup" stepKey="addProductToCart">
+            <argument name="product" value="$$createSimpleProduct$$"/>
+            <argument name="productCount" value="1"/>
+        </actionGroup>
+        <!-- Open Bundle Product page -->
+        <actionGroup ref="StorefrontOpenProductPageActionGroup" stepKey="openBundleProductPage">
+            <argument name="productUrl" value="$createBundleProduct.custom_attributes[url_key]$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontSelectCustomizeAndAddToTheCartButtonActionGroup" stepKey="clickOnCustomizeAndAddToCartButton"/>
+        <actionGroup ref="StorefrontEnterProductQuantityAndAddToTheCartActionGroup" stepKey="enterProductQuantityAndAddToTheCart">
+            <argument name="quantity" value="1"/>
+        </actionGroup>
+        <!-- Open MiniCart -->
+        <actionGroup ref="StorefrontOpenMiniCartActionGroup" stepKey="openMiniCart"/>
+        <waitForElementVisible selector="{{StorefrontMinicartSection.productQuantity($createSimpleProduct.name$, '1')}}" stepKey="seeProductQuantity1"/>
+        <waitForElementVisible selector="{{StorefrontMinicartSection.productQuantity($createBundleProduct.name$, '1')}}" stepKey="seeProductQuantity12"/>
+        <waitForElementClickable selector="{{StorefrontMinicartSection.goToCheckout}}" stepKey="waitForCheckoutButtonToBeClickable"/>
+        <click selector="{{StorefrontMinicartSection.goToCheckout}}" stepKey="goToCheckout"/>
+        <actionGroup ref="StorefrontCheckoutClickNextOnShippingStepActionGroup" stepKey="clickNext"/>
+        <!-- Checkout select Check/Money Order payment -->
+        <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectCheckMoneyPayment"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickPlaceOrder"/>
+        <waitForElementVisible selector="{{CheckoutSuccessMainSection.successTitle}}" stepKey="waitForLoadSuccessPageTitle"/>
+        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="grabOrderNumber"/>
+        <!--Assert order in orders grid -->
+        <!-- Go to order page -->
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openFirstOrderPage">
+            <argument name="orderId" value="{$grabOrderNumber}"/>
+        </actionGroup>
+        <!--Process full shipment.-->
+        <actionGroup ref="GoToShipmentIntoOrderActionGroup" stepKey="clickShipAction"/>
+        <actionGroup ref="VerifyBasicShipmentInformationActionGroup" stepKey="checkBasicShipmentOrderInfo">
+            <argument name="customer" value="Simple_US_Customer"/>
+            <argument name="shippingAddress" value="US_Address_TX"/>
+            <argument name="billingAddress" value="US_Address_TX"/>
+        </actionGroup>
+        <actionGroup ref="SubmitShipmentIntoOrderActionGroup" stepKey="submitShipment"/>
+        <!-- Assert Created Shipment in Shipments Tab-->
+        <actionGroup ref="AdminAssertCreatedShipmentsInShipmentsTabActionGroup" stepKey="assertCreatedShipment"/>
+        <actionGroup ref="AdminOpenShipmentFromOrderPageActionGroup" stepKey="openShipmentPage"/>
+        <!-- Check status -->
+        <actionGroup ref="AdminOrderViewCheckStatusActionGroup" stepKey="seeAdminOrderStatus">
+            <argument name="status" value="Processing"/>
+        </actionGroup>
+        <!-- Verify Source Quantities and Salable Quantity are Correct-->
+        <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="amOnProductGridPage"/>
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSearchResultsToFinalCheck">
+            <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
+            <argument name="value" value="$$createSimpleProduct.sku$$"/>
+        </actionGroup>
+        <actionGroup ref="AssertAdminSalableProductQtyActionGroup" stepKey="verifyProductQuantity">
+            <argument name="sourceName" value="$source.source[name]$"/>
+            <argument name="sourceQty" value="94"/>
+            <argument name="stockName" value="$stock.stock[name]$"/>
+            <argument name="stockQty" value="94"/>
+        </actionGroup>
+    </test>
+</tests>
