@@ -116,6 +116,7 @@
         <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="clickOnNextButton"/>
 
         <!-- Place order and Assert success message -->
+        <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectCheckMoneyOrder"/>
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
 
         <!-- Get order id -->

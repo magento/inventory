@@ -99,6 +99,7 @@
         <!--Place order.-->
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
         <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="clickOnNextButton"/>
+        <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectCheckMoneyOrder"/>
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
         <actionGroup ref="StorefrontClickOrderLinkFromCheckoutSuccessPageActionGroup" stepKey="clickOrderLink"/>
         <comment userInput="BIC workaround" stepKey="orderNumber"/>

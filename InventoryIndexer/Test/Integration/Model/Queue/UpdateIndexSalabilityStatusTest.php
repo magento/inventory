@@ -37,6 +37,7 @@ use Magento\TestFramework\Fixture\DataFixtureStorage;
 use Magento\TestFramework\Fixture\DataFixtureStorageManager;
 use Magento\TestFramework\Fixture\DbIsolation;
 use Magento\TestFramework\Helper\Bootstrap;
+use Magento\TestFramework\MessageQueue\ClearQueueProcessor;
 use PHPUnit\Framework\TestCase;
 
 class UpdateIndexSalabilityStatusTest extends TestCase
@@ -55,6 +56,18 @@ class UpdateIndexSalabilityStatusTest extends TestCase
      * @var GetStockItemData
      */
     private $getStockItemData;
+
+    /**
+     * @var ClearQueueProcessor
+     */
+    private static $clearQueueProcessor;
+
+    public static function setUpBeforeClass(): void
+    {
+        $objectManager = Bootstrap::getObjectManager();
+        self::$clearQueueProcessor = $objectManager->get(ClearQueueProcessor::class);
+        self::$clearQueueProcessor->execute('inventory.reservations.updateSalabilityStatus');
+    }
 
     protected function setUp(): void
     {

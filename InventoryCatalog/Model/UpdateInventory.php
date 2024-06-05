@@ -9,6 +9,7 @@ namespace Magento\InventoryCatalog\Model;
 
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\CatalogInventory\Model\Indexer\Stock\Processor;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -19,13 +20,18 @@ use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 use Magento\InventoryApi\Model\GetSourceCodesBySkusInterface;
 use Magento\InventoryCatalog\Model\ResourceModel\UpdateLegacyStockItems;
 use Magento\InventoryCatalog\Model\UpdateInventory\InventoryData;
+use Magento\InventoryCatalogApi\Model\CompositeProductStockStatusProcessorInterface;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
+use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 use Magento\InventoryIndexer\Indexer\SourceItem\GetSourceItemIds;
 use Magento\InventoryIndexer\Indexer\SourceItem\SourceItemIndexer;
+use Magento\InventoryIndexer\Model\ProductSalabilityChangeProcessorInterface;
 use Psr\Log\LoggerInterface;
 
 /**
  * Asynchronous inventory update service.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class UpdateInventory
 {
@@ -80,6 +86,26 @@ class UpdateInventory
     private $getSourceItemIds;
 
     /**
+     * @var UpdateDefaultStock
+     */
+    private $updateDefaultStock;
+
+    /**
+     * @var IsSingleSourceModeInterface
+     */
+    private $isSingleSourceMode;
+
+    /**
+     * @var CompositeProductStockStatusProcessorInterface
+     */
+    private $compositeProductStockStatusProcessor;
+
+    /**
+     * @var ProductSalabilityChangeProcessorInterface
+     */
+    private $productSalabilityChangeProcessor;
+
+    /**
      * @param Processor $stockIndexerProcessor
      * @param UpdateLegacyStockItems $updateLegacyStockItems
      * @param GetProductIdsBySkusInterface $getProductIdsBySkus
@@ -90,6 +116,11 @@ class UpdateInventory
      * @param SourceItemIndexer $sourceItemIndexer
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
+     * @param UpdateDefaultStock|null $updateDefaultStock
+     * @param IsSingleSourceModeInterface|null $isSingleSourceMode
+     * @param CompositeProductStockStatusProcessorInterface|null $compositeProductStockStatusProcessor
+     * @param ProductSalabilityChangeProcessorInterface|null $productSalabilityChangeProcessor
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         Processor $stockIndexerProcessor,
@@ -101,7 +132,11 @@ class UpdateInventory
         GetSourceItemIds $getSourceItemIds,
         SourceItemIndexer $sourceItemIndexer,
         SerializerInterface $serializer,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ?UpdateDefaultStock $updateDefaultStock = null,
+        ?IsSingleSourceModeInterface $isSingleSourceMode = null,
+        ?CompositeProductStockStatusProcessorInterface $compositeProductStockStatusProcessor = null,
+        ?ProductSalabilityChangeProcessorInterface $productSalabilityChangeProcessor = null
     ) {
         $this->stockIndexerProcessor = $stockIndexerProcessor;
         $this->updateLegacyStockItems = $updateLegacyStockItems;
@@ -113,6 +148,14 @@ class UpdateInventory
         $this->getSourceItemsBySku = $getSourceItemsBySku;
         $this->sourceItemIndexer = $sourceItemIndexer;
         $this->getSourceItemIds = $getSourceItemIds;
+        $this->updateDefaultStock = $updateDefaultStock
+            ?? ObjectManager::getInstance()->get(UpdateDefaultStock::class);
+        $this->isSingleSourceMode = $isSingleSourceMode
+            ?? ObjectManager::getInstance()->get(IsSingleSourceModeInterface::class);
+        $this->compositeProductStockStatusProcessor = $compositeProductStockStatusProcessor
+            ?? ObjectManager::getInstance()->get(CompositeProductStockStatusProcessorInterface::class);
+        $this->productSalabilityChangeProcessor = $productSalabilityChangeProcessor
+            ?? ObjectManager::getInstance()->get(ProductSalabilityChangeProcessorInterface::class);
     }
 
     /**
@@ -131,7 +174,9 @@ class UpdateInventory
         }
         $inventoryData = $this->serializer->unserialize($data->getData());
         $this->updateLegacyStockItems->execute($productIds, $inventoryData);
-        $this->stockIndexerProcessor->reindexList($productIds);
+        if ($this->isSingleSourceMode->execute()) {
+            $this->compositeProductStockStatusProcessor->execute($skus);
+        }
         $sourceItems = $this->getDefaultSourceItems($skus, $inventoryData);
         if ($sourceItems) {
             try {
@@ -139,6 +184,10 @@ class UpdateInventory
             } catch (CouldNotSaveException|InputException|ValidationException $e) {
                 $this->logger->error($e->getLogMessage());
             }
+        }
+        $affectedSkus = $this->updateDefaultStock->execute($skus);
+        if ($affectedSkus) {
+            $this->productSalabilityChangeProcessor->execute($affectedSkus);
         }
         $this->reindexSourceItems($skus);
     }
