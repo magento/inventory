@@ -127,7 +127,7 @@
             <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
             <argument name="value" value="$$simpleProduct.sku$$"/>
         </actionGroup>
-        <see selector="{{AdminProductGridSection.quantity('1')}}" userInput="{{SimpleProduct.quantity}}" stepKey="checkSimpleProductSourceQtyAfterPlaceOrder"/>
-        <see selector="{{AdminProductGridSection.productSalableQty('1',_defaultStock.name)}}" userInput="995" stepKey="checkSimpleProductSalableQtyAfterPlaceOrder"/>
+        <waitForText selector="{{AdminProductGridSection.quantity('1')}}" userInput="{{SimpleProduct.quantity}}" stepKey="checkSimpleProductSourceQtyAfterPlaceOrder"/>
+        <waitForText selector="{{AdminProductGridSection.productSalableQty('1',_defaultStock.name)}}" userInput="995" stepKey="checkSimpleProductSalableQtyAfterPlaceOrder"/>
     </test>
 </tests>
