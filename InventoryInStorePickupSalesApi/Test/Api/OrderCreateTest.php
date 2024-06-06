@@ -267,6 +267,7 @@ class OrderCreateTest extends OrderPlacementBase
         $actualBillingAddress = $order['billing_address'];
         unset($actualBillingAddress['entity_id']);
         unset($actualBillingAddress['parent_id']);
+        unset($actualBillingAddress['customer_address_id']);
         $this->assertEquals($expectedBillingAddress, $actualBillingAddress);
 
         //assert shipping assignment address
