@@ -106,7 +106,8 @@
             <argument name="storeCode" value="customStore.code"/>
         </actionGroup>
         <!--Place order from storefront.-->
-        <click selector="{{CheckoutCartSummarySection.proceedToCheckout}}" stepKey="clickProceedToCheckout" after="clickUpdateCart"/>
+        <waitForElementVisible selector="{{CheckoutCartSummarySection.proceedToCheckout}}" stepKey="waitForProceedToCheckoutButtonVisible" after="clickUpdateCart"/>
+        <click selector="{{CheckoutCartSummarySection.proceedToCheckout}}" stepKey="clickProceedToCheckout" after="waitForProceedToCheckoutButtonVisible"/>
         <!-- Fill customer new shipping address -->
         <actionGroup ref="CustomerCheckoutFillNewShippingAddressActionGroup" stepKey="fillShippingAddress">
             <argument name="address" value="US_Address_TX"/>
