@@ -55,7 +55,9 @@
                 <argument name="sourceCode" value="$$customSource.source[source_code]$$"/>
             </actionGroup>
             <deleteData createDataKey="CustomStockMainWebsite" stepKey="deleteStock"/>
-            <magentoCLI command="indexer:reindex" stepKey="runIndexerReindex" />
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="runIndexerReindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <magentoCLI command="cache:flush" stepKey="cleanCache"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
@@ -68,7 +70,9 @@
 
         <!-- Set out of stock threshold in admin configuration. -->
         <magentoCLI command="config:set cataloginventory/item_options/min_qty 100" stepKey="setMinQtyInConfiguration"/>
-        <magentoCLI command="indexer:reindex" stepKey="runIndexerReindex" />
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="runIndexerReindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
         <magentoCLI command="cache:flush" stepKey="cleanCacheAfter"/>
         <waitForPageLoad time="30" stepKey="waitForIndexCache"/>
 
@@ -76,7 +80,7 @@
         <reloadPage stepKey="reloadPage1"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoadToNotSeeTheProduct1"/>
         <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPageOnStorefrontToNotSeeTheProduct"/>
-        <dontSee userInput="$$simpleProduct.product[name]$$" stepKey="assertProductNotPresentOnCategoryPageOnStorefront"/>
-        <dontSee userInput="$$simpleProduct.product[price]$$" stepKey="assertProductPriceNotPresentOnCategoryPageOnStorefront"/>
+        <dontSee userInput="$$simpleProduct.product[name]$$" selector="{{StorefrontCatalogSearchMainSection.searchResults}}" stepKey="assertProductNotPresentOnCategoryPageOnStorefront"/>
+        <dontSee userInput="$$simpleProduct.product[price]$$" selector="{{StorefrontCatalogSearchMainSection.searchResults}}" stepKey="assertProductPriceNotPresentOnCategoryPageOnStorefront"/>
     </test>
 </tests>

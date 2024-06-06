@@ -49,7 +49,9 @@
             <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
             <!--Revert manage stock configuration.-->
             <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableManageStock"/>
-            <magentoCLI command="indexer:reindex" stepKey="reindexAfterManageStockRestored"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexAfterManageStockRestored">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <magentoCLI command="cache:flush" stepKey="flushCacheAfterManageStockRestored"/>
         </after>
 
@@ -73,7 +75,9 @@
         <dontSee userInput="$$product.name$$" stepKey="verifyProductIsNotPresentOnStorefront"/>
         <!--Disable manage stock on configuration page.-->
         <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOffManageStockConfig.value}}" stepKey="disableManageStock"/>
-        <magentoCLI command="indexer:reindex" stepKey="reindexAfterManageStockDisabled"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexAfterManageStockDisabled">
+            <argument name="indices" value=""/>
+        </actionGroup>
         <magentoCLI command="cache:flush" stepKey="flushCacheAfterManageStockDisabled"/>
         <!--Verify product is visible on storefront.-->
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="checkConfigurableIsPresentOnCategoryPage">

@@ -20,19 +20,25 @@
         <remove keyForRemoval="clickOnFirstCheckbox"/>
         <remove keyForRemoval="enterAttributeQuantity"/>
 
-        <click selector="{{AdminCreateProductConfigurationsPanel.attributeCheckbox(attributeCode)}}" stepKey="clickOnFirstAttributeCheckbox" after="clickCreateConfigurations"/>
-        <click selector="{{AdminCreateProductConfigurationsPanel.attributeCheckbox(secondAttributeCode)}}" stepKey="clickOnSecondAttributeCheckbox" after="clickOnFirstAttributeCheckbox"/>
+        <waitForElementClickable selector="{{AdminCreateProductConfigurationsPanel.attributeCheckbox(attributeCode)}}" stepKey="waitForCreateConfigurationsClickable" after="clickCreateConfigurations"/>
+        <click selector="{{AdminCreateProductConfigurationsPanel.attributeCheckbox(attributeCode)}}" stepKey="clickOnFirstAttributeCheckbox" after="waitForCreateConfigurationsClickable"/>
+        <waitForElementClickable selector="{{AdminCreateProductConfigurationsPanel.attributeCheckbox(secondAttributeCode)}}" stepKey="waitForFirstAttributeCheckboxClickable" after="clickOnFirstAttributeCheckbox"/>
+        <click selector="{{AdminCreateProductConfigurationsPanel.attributeCheckbox(secondAttributeCode)}}" stepKey="clickOnSecondAttributeCheckbox" after="waitForFirstAttributeCheckboxClickable"/>
         <grabTextFrom selector="{{AdminCreateProductConfigurationsPanel.defaultLabel(attributeCode)}}" stepKey="grabFirstAttributeDefaultLabel" after="clickOnSecondAttributeCheckbox"/>
         <grabTextFrom selector="{{AdminCreateProductConfigurationsPanel.defaultLabel(secondAttributeCode)}}" stepKey="grabSecondAttributeDefaultLabel" after="grabFirstAttributeDefaultLabel"/>
-        <click selector="{{AdminCreateProductConfigurationsPanel.selectAllByAttribute({$grabFirstAttributeDefaultLabel})}}" stepKey="clickOnSelectAllForFirstAttribute" after="clickOnNextButton1"/>
-        <click selector="{{AdminCreateProductConfigurationsPanel.selectAllByAttribute({$grabSecondAttributeDefaultLabel})}}" stepKey="clickOnSelectAllForSecondAttribute" after="clickOnSelectAllForFirstAttribute"/>
+
+        <waitForElementClickable selector="{{AdminCreateProductConfigurationsPanel.selectAllByAttribute({$grabFirstAttributeDefaultLabel})}}" stepKey="waitForSelectAllForFirstAttributeClickable" after="clickOnNextButton1"/>
+        <click selector="{{AdminCreateProductConfigurationsPanel.selectAllByAttribute({$grabFirstAttributeDefaultLabel})}}" stepKey="clickOnSelectAllForFirstAttribute" after="waitForSelectAllForFirstAttributeClickable"/>
+        <waitForElementClickable selector="{{AdminCreateProductConfigurationsPanel.selectAllByAttribute({$grabSecondAttributeDefaultLabel})}}" stepKey="waitForSecondAttributeCheckboxClickable" after="clickOnSelectAllForFirstAttribute"/>
+        <click selector="{{AdminCreateProductConfigurationsPanel.selectAllByAttribute({$grabSecondAttributeDefaultLabel})}}" stepKey="clickOnSelectAllForSecondAttribute" after="waitForSecondAttributeCheckboxClickable"/>
         <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="clickOnSaveButton2"/>
         <click selector="{{AdminChooseAffectedAttributeSetPopup.confirm}}" stepKey="clickOnConfirmInPopup"/>
         <click selector="{{AdminConfigurableProductAssignSourcesSlideOut.assignSources}}" stepKey="openSelectSourcesModalWindow" after="clickOnApplySingleQuantityToEachSku"/>
         <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clearSourcesFilter" after="openSelectSourcesModalWindow"/>
         <fillField selector="{{AdminDataGridHeaderSection.search}}" userInput="{{sourceName}}" stepKey="fillKeywordSearchField" after="clearSourcesFilter"/>
         <click selector="{{AdminDataGridHeaderSection.submitSearch}}" stepKey="clickKeywordSearch" after="fillKeywordSearchField"/>
-        <click selector="{{AdminGridRow.checkboxByValue(sourceName)}}" stepKey="selectCustomSource" after="clickKeywordSearch"/>
+        <waitForElementClickable selector="{{AdminGridRow.checkboxByValue(sourceName)}}" stepKey="waitForCustomSourceClickable" after="clickKeywordSearch"/>
+        <click selector="{{AdminGridRow.checkboxByValue(sourceName)}}" stepKey="selectCustomSource" after="waitForCustomSourceClickable"/>
         <click selector="{{AdminConfigurableProductAssignSourcesSlideOut.done}}" stepKey="doneAssignSources" after="selectCustomSource"/>
         <fillField selector="{{AdminConfigurableProductAssignSourcesSlideOut.quantityPerSourceForMultiMode}}" userInput="100" stepKey="fillQuantityForCustomSource" after="doneAssignSources"/>
     </actionGroup>

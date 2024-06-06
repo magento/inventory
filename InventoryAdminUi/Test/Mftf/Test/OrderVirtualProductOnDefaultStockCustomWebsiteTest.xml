@@ -46,7 +46,9 @@
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{customWebsite.name}}"/>
             </actionGroup>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </before>
         <after>
             <!--Delete created website.-->
@@ -63,7 +65,9 @@
             <!--Clean up created data.-->
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!--Set product qty..-->

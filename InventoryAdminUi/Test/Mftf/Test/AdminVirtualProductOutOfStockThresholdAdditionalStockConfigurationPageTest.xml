@@ -49,7 +49,9 @@
             <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
             <!--Revert 'Out of Stock' Threshold.-->
             <magentoCLI command="config:set cataloginventory/item_options/min_qty 0" stepKey="revertOutOfStockThreshold"/>
-            <magentoCLI command="indexer:reindex" stepKey="reindexAfterOutOfStockThresholdReverted"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexAfterOutOfStockThresholdReverted">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <magentoCLI command="cache:flush" stepKey="flushCacheAfterOutOfStockThresholdReverted"/>
         </after>
 
@@ -70,7 +72,9 @@
         </actionGroup>
         <!--Set 'Out of Stock' threshold.-->
         <magentoCLI command="config:set cataloginventory/item_options/min_qty 100" stepKey="setOutOfStockThreshold"/>
-        <magentoCLI command="indexer:reindex" stepKey="reindexAfterOutOfStockThresholdSet"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexAfterOutOfStockThresholdSet">
+            <argument name="indices" value=""/>
+        </actionGroup>
         <magentoCLI command="cache:flush" stepKey="flushCacheAfterOutOfStockThresholdSet"/>
         <!--Verify product is not visible on storefront.-->
         <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPage"/>
@@ -78,7 +82,9 @@
         <dontSee userInput="$$product.name$$" stepKey="verifyProductIsNotPresentOnStorefront"/>
         <!--Change 'Out of Stock' Threshold.-->
         <magentoCLI command="config:set cataloginventory/item_options/min_qty 99" stepKey="changeOutOfStockThreshold"/>
-        <magentoCLI command="indexer:reindex" stepKey="reindexAfterOutOfStockThresholdChanged"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexAfterOutOfStockThresholdChanged">
+            <argument name="indices" value=""/>
+        </actionGroup>
         <magentoCLI command="cache:flush" stepKey="flushCacheAfterOutOfStockThresholdChanged"/>
         <!--Verify product is visible on storefront.-->
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="checkConfigurableIsPresentOnCategoryPage">

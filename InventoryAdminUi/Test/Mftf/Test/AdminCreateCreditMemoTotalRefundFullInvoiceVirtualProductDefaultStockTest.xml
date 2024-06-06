@@ -41,9 +41,12 @@
             <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openProductsGrid"/>
             <actionGroup ref="ResetProductGridToDefaultViewActionGroup" stepKey="resetGrid"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <comment userInput="BIC workaround" stepKey="deleteCustomer"/>
             <comment userInput="BIC workaround" stepKey="deleteProduct"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!--Set product default source quantity.-->

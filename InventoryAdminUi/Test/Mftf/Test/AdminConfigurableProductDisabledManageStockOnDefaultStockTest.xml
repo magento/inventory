@@ -30,7 +30,9 @@
             <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableMangeStock"/>
 
             <comment userInput="Perform reindex and cache flush after save stock related config." stepKey="reindexCacheFlushComment"/>
-            <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <magentoCLI command="cache:flush" stepKey="cleanCache"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
         </after>
@@ -133,7 +135,9 @@
         <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOffManageStockConfig.value}}" stepKey="disableMangeStock"/>
 
         <comment userInput="Perform reindex and cache flush after disable 'Mange Stock' configuration config." stepKey="reindexCacheFlushAfterDisableManageStockComment"/>
-        <magentoCLI command="indexer:reindex" stepKey="performReindexAfterDisableManageStock"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterDisableManageStock">
+            <argument name="indices" value=""/>
+        </actionGroup>
         <magentoCLI command="cache:flush" stepKey="cleanCacheAfterDisableManageStock"/>
 
         <comment userInput="Check, configurable product back to category page and has 'In Stock' status on product view page." stepKey="checkConfigurableProductBackOnStorefront"/>

@@ -63,10 +63,13 @@
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
             <deleteData createDataKey="customStock" stepKey="deleteCustomStock"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!-- Login as Customer and add Product to Cart-->

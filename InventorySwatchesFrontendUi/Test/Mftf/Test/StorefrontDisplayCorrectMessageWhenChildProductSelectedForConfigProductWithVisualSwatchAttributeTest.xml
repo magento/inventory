@@ -18,6 +18,7 @@
             <severity value="MAJOR"/>
             <group value="catalog"/>
             <group value="swatches"/>
+            <group value="guest_checkout"/>
         </annotations>
         <before>
             <!-- Create product attribute with 3 variations -->
