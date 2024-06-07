@@ -65,7 +65,7 @@ class SourceItemConvertTest extends TestCase
      *
      * @return array
      */
-    public function dataProviderConvert(): array
+    public static function dataProviderConvert(): array
     {
         return [
             [

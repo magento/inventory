@@ -121,7 +121,7 @@ class IsSalableOptionPluginTest extends TestCase
         }
     }
 
-    public function productSalabilityDataProvider(): array
+    public static function productSalabilityDataProvider(): array
     {
         return [
             'Hide Out Of Stock' => [false, 2],

@@ -91,12 +91,23 @@ class SalableQuantityTest extends TestCase
 
         $this->isSourceItemManagementAllowedForProductTypeMock->expects(self::exactly(3))
             ->method('execute')
-            ->withConsecutive(['simple'], ['simple'], ['configurable'])
-            ->willReturnOnConsecutiveCalls(true, true, false);
+            ->willReturnCallback(function ($arg) {
+                if ($arg == 'simple') {
+                    return true;
+                } elseif ($arg == 'configurable') {
+                    return false;
+                }
+            });
         $this->getAssignedStockIdsBySkuMock->expects(self::exactly(2))
             ->method('execute')
-            ->withConsecutive(['product1'], ['product2'])
-            ->willReturnOnConsecutiveCalls([2,3], [2,3,4]);
+            ->willReturnCallback(function ($arg) {
+                if ($arg == 'product1') {
+                    return [2,3];
+                } elseif ($arg == 'product2') {
+                    return [2,3,4];
+                }
+            });
+
         $this->getSalableQuantityDataBySkuMock->expects(self::once())
             ->method('execute')
             ->with('product1')

@@ -232,7 +232,7 @@ class SourceItemImporterTest extends TestCase
      *
      * @return array[]
      */
-    public function sourceItemDataProvider(): array
+    public static function sourceItemDataProvider(): array
     {
         return [
             'non-default existing source code with 0 quantity for existing product' => [

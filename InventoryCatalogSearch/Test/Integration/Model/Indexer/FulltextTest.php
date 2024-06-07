@@ -228,7 +228,7 @@ class FulltextTest extends TestCase
     /**
      * @return array
      */
-    public function searchPerStockDataProvider(): array
+    public static function searchPerStockDataProvider(): array
     {
         return [
             ['Orange', 'store_for_eu_website', 1],
