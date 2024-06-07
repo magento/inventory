@@ -22,8 +22,8 @@ use Magento\TestFramework\Helper\Bootstrap;
  */
 class ExportStockSalableQtyTest extends OrderPlacementBase
 {
-    const API_PATH = '/V1/inventory/export-stock-salable-qty';
-    const SERVICE_NAME = 'inventoryExportStockApiExportStockSalableQtyV1';
+    private const API_PATH = '/V1/inventory/export-stock-salable-qty';
+    public const SERVICE_NAME = 'inventoryExportStockApiExportStockSalableQtyV1';
 
     /**
      * Verify salable qty export with reservations simple product types - default stock, default website.
@@ -217,7 +217,7 @@ class ExportStockSalableQtyTest extends OrderPlacementBase
      *
      * @return array
      */
-    public function simpleProductTypesDataProvider()
+    public static function simpleProductTypesDataProvider()
     {
         return [
             [

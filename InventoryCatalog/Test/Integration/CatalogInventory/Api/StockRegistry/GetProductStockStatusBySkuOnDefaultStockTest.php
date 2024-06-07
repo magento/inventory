@@ -71,7 +71,7 @@ class GetProductStockStatusBySkuOnDefaultStockTest extends TestCase
     /**
      * @return array
      */
-    public function getStatusDataProvider(): array
+    public static function getStatusDataProvider(): array
     {
         return [
             ['SKU-1', 1],
