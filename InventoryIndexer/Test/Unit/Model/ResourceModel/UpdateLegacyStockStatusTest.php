@@ -63,18 +63,18 @@ class UpdateLegacyStockStatusTest extends TestCase
         $tableName = 'cataloginventory_stock_status';
         $this->connection->expects($this->exactly(2))
             ->method('update')
-            ->withConsecutive(
-                [
-                    $tableName,
-                    ['stock_status' => false],
-                    ['product_id = ?' => 0]
-                ],
-                [
-                    $tableName,
-                    ['stock_status' => true],
-                    ['product_id = ?' => 1]
-                ],
-            );
+            ->willReturnCallback(function ($arg1, $arg2, $arg3) use ($tableName) {
+                if ($arg1 == $tableName &&
+                    empty($arg2['stock_status']) &&
+                    $arg3['product_id = ?'] == 0) {
+                    return ['stock_status' => false];
+                } elseif ($arg1 == $tableName &&
+                    $arg2['stock_status'] == 1 &&
+                    $arg3['product_id = ?'] == 1) {
+                    return ['stock_status' => true];
+                }
+            });
+
         $this->model->execute($salability);
     }
 }

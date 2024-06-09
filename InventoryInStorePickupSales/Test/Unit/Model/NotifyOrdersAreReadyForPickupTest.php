@@ -166,7 +166,7 @@ class NotifyOrdersAreReadyForPickupTest extends TestCase
     /**
      * @return array
      */
-    public function executeMethodEmailCheck(): array
+    public static function executeMethodEmailCheck(): array
     {
         return [
             ['with_exception' => true],

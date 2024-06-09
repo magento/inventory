@@ -214,7 +214,7 @@ class SortingTest extends TestCase
      *
      * @return array
      */
-    public function productListWithShowOutOfStockSortOrderDataProvider(): array
+    public static function productListWithShowOutOfStockSortOrderDataProvider(): array
     {
         return [
             'default_order_price_asc' => [

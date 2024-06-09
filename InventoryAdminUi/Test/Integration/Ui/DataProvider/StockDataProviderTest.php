@@ -56,7 +56,7 @@ class StockDataProviderTest extends TestCase
     /**
      * @return array
      */
-    public function listingDataStockDataProvider(): array
+    public static function listingDataStockDataProvider(): array
     {
         return [[
             'Global-stock',

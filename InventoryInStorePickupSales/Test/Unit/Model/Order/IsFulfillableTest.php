@@ -109,7 +109,7 @@ class IsFulfillableTest extends TestCase
     {
         $this->sourceItemRepository = $this->getMockBuilder(SourceItemRepositoryInterface::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getList'])
+            ->onlyMethods(['getList'])
             ->getMock();
 
         $this->sourceRepository = $this->getMockBuilder(SourceRepositoryInterface::class)
@@ -126,7 +126,8 @@ class IsFulfillableTest extends TestCase
 
         $this->itemMock = $this->getMockBuilder(Item::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getHasChildren', 'getQtyOrdered', 'getSku', 'getProduct'])
+            ->onlyMethods(['getQtyOrdered', 'getSku', 'getProduct'])
+            ->addMethods(['getHasChildren'])
             ->getMock();
 
         $this->productMock = $this->getMockBuilder(Product::class)
@@ -144,13 +145,13 @@ class IsFulfillableTest extends TestCase
 
         $this->stockItemMock = $this->getMockBuilder(\Magento\CatalogInventory\Model\Stock\Item::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getManageStock', 'getIsInStock'])
+            ->onlyMethods(['getManageStock', 'getIsInStock'])
             ->getMock();
 
         $this->searchCriteriaBuilderFactory = $this
             ->getMockBuilder(SearchCriteriaBuilderFactory::class)
             ->disableOriginalConstructor()
-            ->setMethods(['create'])
+            ->onlyMethods(['create'])
             ->getMock();
 
         $this->sourceItemSearchResultsInterface = $this
@@ -161,7 +162,7 @@ class IsFulfillableTest extends TestCase
         $this->abstractExtensibleObject = $this
             ->getMockBuilder(AbstractExtensibleObject::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getQuantity', 'getStatus'])
+            ->addMethods(['getQuantity', 'getStatus'])
             ->getMock();
 
         $this->searchCriteriaMock = $this
@@ -172,7 +173,7 @@ class IsFulfillableTest extends TestCase
         $this->searchCriteriaBuilderMock = $this
             ->getMockBuilder(SearchCriteriaBuilder::class)
             ->disableOriginalConstructor()
-            ->setMethods(['create', 'addFilter'])
+            ->onlyMethods(['create', 'addFilter'])
             ->getMock();
 
         $this->model = new IsFulfillable(
@@ -290,7 +291,7 @@ class IsFulfillableTest extends TestCase
     /**
      * @return array
      */
-    public function dataProvider(): array
+    public static function dataProvider(): array
     {
         return [
             [false, true, 1, 0, true],

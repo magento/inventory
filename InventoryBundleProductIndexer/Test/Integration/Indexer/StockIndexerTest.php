@@ -153,7 +153,7 @@ class StockIndexerTest extends TestCase
         self::assertEquals($expectedStockStatus, (bool) $bundleStockItem[GetStockItemDataInterface::IS_SALABLE]);
     }
 
-    public function executeListDataProvider(): array
+    public static function executeListDataProvider(): array
     {
         return [
             [

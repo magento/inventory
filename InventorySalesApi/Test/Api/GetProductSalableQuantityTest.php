@@ -64,7 +64,7 @@ class GetProductSalableQuantityTest extends WebapiAbstract
     /**
      * @return array
      */
-    public function getSalableQuantityDataProvider(): array
+    public static function getSalableQuantityDataProvider(): array
     {
         return [
             ['SKU-1', 10, 8.5],
