@@ -222,4 +222,5 @@
             <argument name="sourceItemsSave" xsi:type="object">Magento\Inventory\Model\SourceItem\Command\SourceItemsSaveWithoutLegacySynchronization</argument>
         </arguments>
     </type>
+    <preference for="Magento\Framework\Indexer\Config\Converter\SortingAdjustmentInterface" type="Magento\InventoryCatalog\Model\SortingAdjustment" />
 </config>
