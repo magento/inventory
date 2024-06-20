@@ -132,7 +132,7 @@ class ProductDataMapperPluginTest extends TestCase
     /**
      * @return array
      */
-    public function stockDataProvider(): array
+    public static function stockDataProvider(): array
     {
         return [
             ['storeId' => 1, 'websiteId' => 1, 'stockId' => 1, 'saleability' => 1],
