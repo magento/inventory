@@ -61,7 +61,7 @@
             <argument name="productId" value="$createSimpleProduct.id$"/>
         </actionGroup>
         <waitForPageLoad stepKey="waitForSimpleProductEditPage"/>
-        <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
+        <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unAssignDefaultSourceFromProduct">
             <argument name="sourceCode" value="{{_defaultSource.name}}"/>
         </actionGroup>
         <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignCreatedSourceToFirstChildProduct">
@@ -96,9 +96,6 @@
         <!--Go to simple product and update status as out of stock-->
         <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openProductToUpdateStock">
             <argument name="productId" value="$createSimpleProduct.id$"/>
-        </actionGroup>
-        <actionGroup ref="AdminUpdateAssignSourceItemStatusOutOfStockForSimpleProduct" stepKey="setOutOfStockForSimpleProduct">
-            <argument name="sourceName" value="$$source.source[name]$$"/>
         </actionGroup>
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProductPostOutOfStock"/>
         <!--Go to storefront and open category and then assert grouped product is not present-->
