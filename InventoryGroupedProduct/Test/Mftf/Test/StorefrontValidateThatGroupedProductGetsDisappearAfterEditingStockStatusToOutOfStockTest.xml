@@ -92,7 +92,7 @@
         <actionGroup ref="StorefrontGoToCategoryPageActionGroup" stepKey="againOpenEnabledCategory">
             <argument name="categoryName" value="$$category.name$$"/>
         </actionGroup>
-        <waitForText userInput="$$createGroupedProduct.name$$" selector="{{StorefrontCategoryMainSection..productNameByPosition('2')}}" stepKey="seeGroupedProduct"/>
+        <waitForText userInput="$$createGroupedProduct.name$$" selector="{{StorefrontCategoryMainSection.productNameByLink($$createGroupedProduct.name$$)}}" stepKey="seeGroupedProduct"/>
         <!--Go to simple product and update status as out of stock-->
         <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openProductToUpdateStock">
             <argument name="productId" value="$createSimpleProduct.id$"/>
