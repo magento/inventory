@@ -8,7 +8,7 @@
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="StorefrontValidateThatGroupedProductGetsDisappearAfterEditingStockStatusToOutOfStockTest">
+    <test name="StorefrontValidateGroupedProductDisappearAfterEditingStockStatusToOutOfStockTest">
         <annotations>
             <stories value="Group Product Custom Stock."/>
             <title value="Validate that Grouped product gets disappear after editing stock status to out of stock"/>
@@ -17,6 +17,20 @@
             <severity value="MINOR"/>
         </annotations>
         <before>
+            <!--Create a subcategory-->
+            <createData entity="SimpleSubCategory" stepKey="category"/>
+            <!--Create a simple product-->
+            <createData entity="SimpleProduct" stepKey="createSimpleProduct">
+                <field key="price">10.00</field>
+                <field key="name">Simple Product 1</field>
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <createData entity="ApiGroupedProduct" stepKey="createGroupedProduct"/>
+            <!-- Create a grouped product and assign simple product in it-->
+            <createData entity="OneSimpleProductLink" stepKey="linkSimpleProduct">
+                <requiredEntity createDataKey="createGroupedProduct"/>
+                <requiredEntity createDataKey="createSimpleProduct"/>
+            </createData>
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
         </before>
         <after>
@@ -35,26 +49,12 @@
             <!--Admin logout-->
             <actionGroup ref="AdminLogoutActionGroup" stepKey="adminLogout"/>
         </after>
-        <!--Create a subcategory-->
-        <createData entity="SimpleSubCategory" stepKey="category"/>
-        <!--Create a simple product-->
-        <createData entity="SimpleProduct" stepKey="createSimpleProduct">
-            <field key="price">10.00</field>
-            <field key="name">Simple Product 1</field>
-            <requiredEntity createDataKey="category"/>
-        </createData>
-        <createData entity="ApiGroupedProduct" stepKey="createGroupedProduct"/>
-        <!-- Create a grouped product and assign simple product in it-->
-        <createData entity="OneSimpleProductLink" stepKey="linkSimpleProduct">
-            <requiredEntity createDataKey="createGroupedProduct"/>
-            <requiredEntity createDataKey="createSimpleProduct"/>
-        </createData>
         <!--Create source and stock-->
-        <createData entity="FullSource1" stepKey="source"/>
-        <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
+        <createData entity="FullSource1" stepKey="createSource"/>
+        <createData entity="BasicMsiStockWithMainWebsite1" stepKey="createStock"/>
         <createData entity="SourceStockLinked1" stepKey="sourceStockLink">
-            <requiredEntity createDataKey="stock"/>
-            <requiredEntity createDataKey="source"/>
+            <requiredEntity createDataKey="createStock"/>
+            <requiredEntity createDataKey="createSource"/>
         </createData>
         <!-- Assign Test source to simple product -->
         <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openProductBeforeStaging">
@@ -65,7 +65,7 @@
             <argument name="sourceCode" value="{{_defaultSource.name}}"/>
         </actionGroup>
         <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignCreatedSourceToFirstChildProduct">
-            <argument name="sourceCode" value="$source.source[source_code]$"/>
+            <argument name="sourceCode" value="$createSource.source[source_code]$"/>
         </actionGroup>
         <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="5" stepKey="fillSourceQtyField1"/>
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveCreateFirstSimpleProduct"/>

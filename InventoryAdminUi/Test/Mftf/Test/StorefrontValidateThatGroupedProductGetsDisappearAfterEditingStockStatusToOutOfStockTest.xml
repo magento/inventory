@@ -17,7 +17,7 @@
             <severity value="MINOR"/>
         </annotations>
         <actionGroup ref="AdminUpdateAssignSourceItemStatusOutOfStockForSimpleProduct" after="openProductToUpdateStock" stepKey="setOutOfStockForSimpleProduct">
-            <argument name="sourceName" value="$$source.source[name]$$"/>
+            <argument name="sourceName" value="$$createSource.source[name]$$"/>
         </actionGroup>
     </test>
 </tests>
