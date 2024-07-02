@@ -43,7 +43,7 @@
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
             <actionGroup ref="ClearFiltersAdminDataGridActionGroup" stepKey="clearFilter"/>
-            <deleteData createDataKey="stock" stepKey="deleteCustomStock"/>
+            <deleteData createDataKey="createStock" stepKey="deleteCustomStock"/>
             <!--Disable all sources.-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="deleteSource"/>
             <!--Admin logout-->
