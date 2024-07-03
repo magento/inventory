@@ -102,6 +102,6 @@
         <actionGroup ref="StorefrontGoToCategoryPageActionGroup" stepKey="openEnabledCategory">
             <argument name="categoryName" value="$$category.name$$"/>
         </actionGroup>
-        <dontSee userInput="$$createGroupedProduct.name$$" selector="{{StorefrontCategoryMainSection.productName}}" stepKey="dontSeeGroupedProduct"/>
+        <dontSee userInput="$$createGroupedProduct.name$$" selector="{{StorefrontCategoryMainSection.specifiedProductItemInfo($$createGroupedProduct.name$$)}}" stepKey="dontSeeGroupedProduct"/>
     </test>
 </tests>
