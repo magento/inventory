@@ -54,12 +54,12 @@ class SalesChannelsValidator implements StockValidatorInterface
         if (is_array($salesChannels)) {
             foreach ($salesChannels as $salesChannel) {
                 $type = (string)$salesChannel->getType();
-                if ('' === trim($type ?? '')) {
+                if ('' === trim($type)) {
                     $errors[] = __('"%field" can not be empty.', ['field' => SalesChannelInterface::TYPE]);
                 }
 
                 $code = (string)$salesChannel->getCode();
-                if ('' === trim($code ?? '')) {
+                if ('' === trim($code)) {
                     $errors[] = __('"%field" can not be empty.', ['field' => SalesChannelInterface::CODE]);
                 }
 
