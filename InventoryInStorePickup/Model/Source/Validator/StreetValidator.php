@@ -48,7 +48,7 @@ class StreetValidator implements SourceValidatorInterface
         $value = (string)$source->getStreet();
         $errors = [];
 
-        if ($this->getIsPickupLocationActive->execute($source) && '' === trim($value)) {
+        if ($this->getIsPickupLocationActive->execute($source) && '' === trim($value ?? '')) {
             $errors[] = __('"%field" can not be empty for Pickup Location.', ['field' => SourceInterface::STREET]);
         }
 

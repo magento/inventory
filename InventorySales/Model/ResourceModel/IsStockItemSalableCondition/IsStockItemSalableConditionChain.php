@@ -74,7 +74,7 @@ class IsStockItemSalableConditionChain implements GetIsStockItemSalableCondition
         $conditionStrings = [];
         foreach ($this->conditions as $condition) {
             $conditionString = $condition->execute($select);
-            if ('' !== trim($conditionString)) {
+            if ('' !== trim($conditionString ?? '')) {
                 $conditionStrings[] = $conditionString;
             }
         }
@@ -85,7 +85,7 @@ class IsStockItemSalableConditionChain implements GetIsStockItemSalableCondition
             $requiredConditionsStrings = [];
             foreach ($this->requiredConditions as $requiredCondition) {
                 $requiredConditionString = $requiredCondition->execute($select);
-                if ('' !== trim($requiredConditionString)) {
+                if ('' !== trim($requiredConditionString ?? '')) {
                     $requiredConditionsStrings[] = $requiredConditionString;
                 }
             }
