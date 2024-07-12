@@ -19,7 +19,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryConfigurableProduct\Test\Unit\Plugin\Model\Product\ResourceModel\Attribute;
+namespace Magento\InventoryConfigurableProduct\Test\Unit\Plugin\Model\ResourceModel\Attribute;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\DB\Adapter\AdapterInterface;
@@ -38,6 +38,9 @@ use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class IsEnabledOptionSelectBuilderTest extends TestCase
 {
     /**
