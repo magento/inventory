@@ -336,7 +336,7 @@ class SourcesTest extends TestCase
      *
      * @return array
      */
-    public function getSampleFileExpectedData(): array
+    public static function getSampleFileExpectedData(): array
     {
         return [
             [
@@ -440,7 +440,7 @@ class SourcesTest extends TestCase
      *
      * @return array
      */
-    public function getSampleFileExpectedDataDeleteBehavior(): array
+    public static function getSampleFileExpectedDataDeleteBehavior(): array
     {
         return [
             [

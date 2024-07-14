@@ -97,8 +97,13 @@ class APISourceItemIndexerPluginTest extends TestCase
             ->willReturn([11 => 'child-1', 12 => 'child-2']);
         $this->getSourceItemsBySku->expects($this->exactly(2))
             ->method('execute')
-            ->withConsecutive(['child-1'], ['child-2'])
-            ->willReturnOnConsecutiveCalls([$childSourceItem1], [$childSourceItem2]);
+            ->willReturnCallback(function ($arg) use ($childSourceItem1, $childSourceItem2) {
+                if ($arg == 'child-1') {
+                    return [$childSourceItem1];
+                } elseif ($arg == 'child-2') {
+                    return [$childSourceItem2];
+                }
+            });
         $this->configurableProductsSourceItemIndexer->expects($this->once())->method('executeList')->with([1, 2]);
 
         $interceptorResult = $this->plugin->afterSave($subject, $result, $object);
