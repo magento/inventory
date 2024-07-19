@@ -61,6 +61,8 @@ class SaveMultiple
     }
 
     /**
+     * Ensure stocks for incoming items are exists
+     *
      * @param SourceItemInterface[] $sourceItems
      * @return void
      *
