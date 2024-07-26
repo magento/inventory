@@ -58,4 +58,14 @@ interface SourceRepositoryInterface
     public function getList(
         \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria = null
     ): \Magento\InventoryApi\Api\Data\SourceSearchResultsInterface;
+
+    /**
+     * Delete the Source by sourceId. If Source is not found do nothing
+     *
+     * @param SourceInterface $sourceCode
+     * @return bool
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Magento\Framework\Exception\CouldNotDeleteException
+     */
+    public function deleteBySourceCode(SourceInterface $source): bool;
 }
