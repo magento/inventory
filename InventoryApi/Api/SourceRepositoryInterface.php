@@ -60,7 +60,7 @@ interface SourceRepositoryInterface
     ): \Magento\InventoryApi\Api\Data\SourceSearchResultsInterface;
 
     /**
-     * Delete the Source by sourceId. If Source is not found do nothing
+     * Delete the Source by Source Code. If Source is not found do nothing
      *
      * @param SourceInterface $sourceCode
      * @return bool
