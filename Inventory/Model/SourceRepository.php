@@ -73,4 +73,17 @@ class SourceRepository implements SourceRepositoryInterface
     {
         return $this->commandGetList->execute($searchCriteria);
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function deleteBySourceCode(SourceInterface $source): bool
+    {
+        try {
+            $this->sourceResource->delete($source);
+        } catch (\Exception $exception) {
+            throw new CouldNotDeleteException(__($exception->getMessage()));
+        }
+        return true;
+    }
 }
