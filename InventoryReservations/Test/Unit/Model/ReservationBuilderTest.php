@@ -151,7 +151,7 @@ class ReservationBuilderTest extends TestCase
     /**
      * @return array
      */
-    public function getSettersAndValues(): array
+    public static function getSettersAndValues(): array
     {
         return [
             'with_missing_stock_id' => [
