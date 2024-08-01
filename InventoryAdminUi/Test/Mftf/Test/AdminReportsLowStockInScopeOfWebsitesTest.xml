@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminReportsLowStockInScopeOfWebsitesTest">
+        <annotations>
+            <features value="Reports"/>
+            <stories value="Admin verifies low stock reports work correctly in scope of websites"/>
+            <title value="low stock reports work correctly in scope of websites."/>
+            <description value="The testcase intends to verify low stock reports work correctly in scope of websites."/>
+            <testCaseId value="AC-6555"/>
+            <severity value="MAJOR"/>
+        </annotations>
+        <before>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <createData entity="NewSubCategoryUnderDefaultCategory" stepKey="createPreReqCategory"/>
+            <createData entity="SimpleProduct" stepKey="createFirstSimpleProduct">
+                <field key="quantity">10.00</field>
+                <requiredEntity createDataKey="createPreReqCategory"/>
+            </createData>
+            <createData entity="SimpleProduct" stepKey="createSecondSimpleProduct">
+                <requiredEntity createDataKey="createPreReqCategory"/>
+            </createData>
+            <!-- Step Create website-->
+            <actionGroup ref="AdminCreateWebsiteActionGroup" stepKey="createWebsite">
+                <argument name="newWebsiteName" value="{{customWebsite.name}}"/>
+                <argument name="websiteCode" value="{{customWebsite.code}}"/>
+            </actionGroup>
+            <!-- Step Create second store -->
+            <actionGroup ref="CreateCustomStoreActionGroup" stepKey="createCustomStore">
+                <argument name="website" value="{{customWebsite.name}}"/>
+                <argument name="store" value="{{customStoreGroup.name}}"/>
+                <argument name="rootCategory" value="Default Category"/>
+            </actionGroup>
+            <!-- Step Create second store view -->
+            <actionGroup ref="AdminCreateStoreViewActionGroup" stepKey="createCustomStoreView">
+                <argument name="StoreGroup" value="customStoreGroup"/>
+                <argument name="customStore" value="customStoreEN"/>
+            </actionGroup>
+            <createData entity="FullSource1" stepKey="createTestSource1"/>
+            <actionGroup ref="AdminCreateNewStockActionGroup" stepKey="createNewStockWithTestWebsite">
+                <argument name="assignSource" value="$$createTestSource1.source[name]$$"/>
+                <argument name="stockName" value="Test Stock 1"/>
+                <argument name="websiteName" value="{{customWebsite.name}}"/>
+            </actionGroup>
+        </before>
+        <after>
+            <!--Delete created data-->
+            <deleteData createDataKey="createFirstSimpleProduct" stepKey="deleteFirstSimpleProduct"/>
+            <deleteData createDataKey="createSecondSimpleProduct" stepKey="deleteSecondSimpleProduct"/>
+            <deleteData createDataKey="createPreReqCategory" stepKey="deletePreReqCategory"/>
+            <!--Delete website-->
+            <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite">
+                <argument name="websiteName" value="{{customWebsite.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminDeleteStockActionGroup" stepKey="deleteCreatedStock">
+                <argument name="stockName" value="Test Stock 1"/>
+            </actionGroup>
+            <!--Disable all sources.-->
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="deleteSource"/>
+            <actionGroup ref="AdminSetByDefaultNotifyQuantityBelowActionGroup" stepKey="revertNotifyQuantityBelowConfig"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logOutOfAdmin"/>
+        </after>
+        <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openFirstProductEditPage">
+            <argument name="productId" value="$createFirstSimpleProduct.id$"/>
+        </actionGroup>
+        <waitForElementVisible selector="{{AdminProductSourcesGrid.rowQty('0')}}" stepKey="waitForQtyFieldToBeVisibleForDefaultSource"/>
+        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="fillQtyField"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveFirstSimpleProduct"/>
+        <!-- Assign Test source to simple product -->
+        <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openSecondProductEditPage">
+            <argument name="productId" value="$createSecondSimpleProduct.id$"/>
+        </actionGroup>
+        <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unAssignDefaultSourceFromProduct">
+            <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignCreatedTestSource">
+            <argument name="sourceCode" value="$createTestSource1.source[source_code]$"/>
+        </actionGroup>
+        <waitForElementVisible selector="{{AdminProductSourcesGrid.rowQty('0')}}" stepKey="waitForQtyFieldToBeVisible"/>
+        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="fillSourceQtyField"/>
+        <actionGroup ref="AdminAssignProductInWebsiteActionGroup" stepKey="assignProductToSecondWebsite">
+            <argument name="website" value="{{customWebsite.name}}"/>
+        </actionGroup>
+        <actionGroup ref="AdminUnassignProductInWebsiteActionGroup" stepKey="unAssignProductFromDefaultWebsite">
+            <argument name="website" value="{{_defaultWebsite.name}}"/>
+        </actionGroup>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveSecondSimpleProduct"/>
+        <actionGroup ref="AdminSetCustomNotifyQuantityBelowActionGroup" stepKey="setCustomNotifyQtyAmount"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+            <argument name="indices" value="catalogsearch_fulltext catalog_category_product catalog_product_price catalogrule_rule"/>
+        </actionGroup>
+        <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+            <argument name="tags" value="config full_page"/>
+        </actionGroup>
+        <actionGroup ref="AdminOpenLowStockReportPageActionGroup" stepKey="openLowStockPage"/>
+        <actionGroup ref="AdminSwitchWebsiteNoConfirmationActionGroup" stepKey="AdminSwitchStoreViewToMainWebsite">
+            <argument name="website" value="_defaultWebsite"/>
+        </actionGroup>
+        <actionGroup ref="AdminVerifyLowStockProductReportActionGroup" stepKey="verifyFirstProductReport">
+            <argument name="product" value="$$createFirstSimpleProduct$$"/>
+            <argument name="productQty" value="100"/>
+            <argument name="source" value="_defaultSource"/>
+        </actionGroup>
+        <actionGroup ref="AdminSwitchWebsiteNoConfirmationActionGroup" stepKey="AdminSwitchStoreViewToCustomWebsite">
+            <argument name="website" value="customWebsite"/>
+        </actionGroup>
+        <actionGroup ref="AdminVerifyLowStockProductReportActionGroup" stepKey="verifySecondProductReport">
+            <argument name="product" value="$$createSecondSimpleProduct$$"/>
+            <argument name="productQty" value="100"/>
+            <argument name="source" value="$$createTestSource1$$"/>
+        </actionGroup>
+    </test>
+</tests>
