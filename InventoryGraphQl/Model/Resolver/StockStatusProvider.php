@@ -54,8 +54,9 @@ class StockStatusProvider implements ResolverInterface
         /* @var $product ProductInterface */
         $product = $value['model'];
 
+        $productSku = ($product->getTypeId() === "bundle") ? $value['sku'] : $product->getSku();
         $stockId = $this->getStockIdForCurrentWebsite->execute();
-        $result = $this->areProductsSalable->execute([$product->getSku()], $stockId);
+        $result = $this->areProductsSalable->execute([$productSku], $stockId);
         $result = current($result);
 
         return $result->isSalable() ? 'IN_STOCK' : 'OUT_OF_STOCK';

@@ -102,10 +102,10 @@ class GetProductSalableQty implements GetProductSalableQtyInterface
                 __('The product that was requested doesn\'t exist. Verify the product and try again.')
             );
         }
-        
+
         $productType = $productTypesBySkus[$sku];
 
-        if (false === $this->isSourceItemManagementAllowedForProductType->execute($productType)) {
+        if ($productType && false === $this->isSourceItemManagementAllowedForProductType->execute($productType)) {
             throw new InputException(
                 __('Can\'t check requested quantity for products without Source Items support.')
             );

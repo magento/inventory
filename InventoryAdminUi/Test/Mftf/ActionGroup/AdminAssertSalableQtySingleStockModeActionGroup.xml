@@ -16,8 +16,8 @@
             <argument name="quantity" type="string" defaultValue="{{defaultProductQty.value}}"/>
             <argument name="stockName" type="string" defaultValue="{{_defaultStock.name}}"/>
         </arguments>
-        <see selector="{{AdminProductGridSection.quantity('1')}}" userInput="{{quantity}}" stepKey="checkProductQty"/>
-        <see selector="{{AdminProductGridSection.singleStockSalableQuantity('1', stockName)}}" userInput="{{quantity}}" stepKey="checkSalableQty"/>
+        <waitForText selector="{{AdminProductGridSection.quantity('1')}}" userInput="{{quantity}}" stepKey="checkProductQty"/>
+        <waitForText selector="{{AdminProductGridSection.singleStockSalableQuantity('1', stockName)}}" userInput="{{quantity}}" stepKey="checkSalableQty"/>
     </actionGroup>
 </actionGroups>
 
