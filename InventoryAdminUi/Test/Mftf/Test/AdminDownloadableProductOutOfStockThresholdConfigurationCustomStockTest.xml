@@ -44,7 +44,9 @@
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
             <!--Revert 'Out of Stock' configuration.-->
             <magentoCLI command="config:set {{RevertOutOfStockThreshold.path}} {{RevertOutOfStockThreshold.value}}" stepKey="revertOutOfStockThreshold"/>
-            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <magentoCLI command="cache:flush" stepKey="cacheFlush"/>
             <!--Assign Default Stock to Default Website.-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
@@ -58,7 +60,9 @@
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
             <magentoCLI stepKey="removeDownloadableDomain" command="downloadable:domains:remove static.magento.com example.com"/>
-            <magentoCron groups="index" stepKey="reindex1"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex1">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!--Assign source to product.-->
@@ -75,7 +79,9 @@
         </actionGroup>
         <!--Set out of stock threshold greater than product quantity.-->
         <magentoCLI command="config:set {{SetOutOfStockThreshold.path}} {{SetOutOfStockThreshold.value}}" stepKey="setOutOfStockThreshold"/>
-        <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
         <magentoCLI command="cache:flush" stepKey="cacheFlush"/>
         <!--Verify product is absent on category page.-->
         <actionGroup ref="AssertStorefrontProductAbsentOnCategoryPageActionGroup" stepKey="verifyProductIsAbsentOnCategoryPage">

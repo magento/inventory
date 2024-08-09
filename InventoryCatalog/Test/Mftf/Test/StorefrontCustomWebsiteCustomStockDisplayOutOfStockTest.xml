@@ -65,7 +65,9 @@
                 <argument name="stockName" value="$stock.stock[name]$"/>
                 <argument name="websiteName" value="{{customWebsite.name}}"/>
             </actionGroup>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <!--Open product edit page-->
             <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openProductEditPage">
                 <argument name="productId" value="$$product.id$$"/>
@@ -102,7 +104,9 @@
             </actionGroup>
             <!--Logout from backend-->
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
         <!-- Assert product is visible on default website category page-->
         <actionGroup ref="StorefrontAssertProductOnCategoryPageAdditionalWebsiteActionGroup" stepKey="assertProductPresentOnDefaultWebsite">

@@ -77,7 +77,7 @@
         <!--Proceed to checkout-->
         <click selector="{{StorefrontMinicartSection.goToCheckout}}" stepKey="GoToCheckoutFromMinicartActionGroup"
                after="seeVirtualProductQty"/>
-        <waitForElementVisible selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}"
+        <waitForElementClickable selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}"
                                stepKey="waitForShippingMethodsLoad" after="GoToCheckoutFromMinicartActionGroup"/>
         <click selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="selectShippingMethod"
                after="waitForShippingMethodsLoad"/>

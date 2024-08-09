@@ -77,13 +77,16 @@
                 <argument name="stockName" value="{{BasicMsiStock1.name}}"/>
                 <argument name="websiteName" value="{{NewWebSiteData.name}}"/>
             </actionGroup>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </before>
         <after>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableThirdCreatedSource">
                 <argument name="sourceCode" value="$$customSource.source[source_code]$$"/>
             </actionGroup>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <!--Assign Default Stock to Main Website.-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">

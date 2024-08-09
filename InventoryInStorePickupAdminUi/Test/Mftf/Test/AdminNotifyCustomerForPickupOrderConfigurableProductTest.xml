@@ -17,6 +17,7 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="store_pickup"/>
+            <group value="guest_checkout"/>
         </annotations>
 
         <before>
@@ -26,7 +27,9 @@
             <magentoCLI command="config:set {{EnableInStorePickup.path}} {{EnableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
             <!--Download tables for 'US'-->
             <magentoCLI command="{{ImportTables.path}} {{USTable.value}}" stepKey="downloadTables"/>
-            <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <magentoCLI command="cache:flush" stepKey="cleanCache"/>
             <!--Create test data.-->
             <createData entity="CulverStorePickupEnabledSource" stepKey="culverSource"/>

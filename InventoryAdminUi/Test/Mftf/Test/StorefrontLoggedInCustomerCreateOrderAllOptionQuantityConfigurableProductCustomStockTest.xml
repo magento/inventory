@@ -88,7 +88,9 @@
             </actionGroup>
             <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct2"/>
 
-            <magentoCron groups="index default" stepKey="reindexInvalidatedIndices"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexInvalidatedIndices">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </before>
         <after>
             <deleteData createDataKey="configurableProduct" stepKey="deleteConfigurableProduct"/>

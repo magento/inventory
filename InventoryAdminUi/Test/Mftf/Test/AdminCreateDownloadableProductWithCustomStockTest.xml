@@ -62,7 +62,9 @@
             <deleteData createDataKey="simpleCategory1" stepKey="deleteCategory"/>
             <deleteData createDataKey="downloadableProduct1" stepKey="deleteProduct"/>
             <deleteData createDataKey="createStock1" stepKey="deleteCustomStock"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="adminProductIndexPageAdd"/>
@@ -71,6 +73,7 @@
             <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
             <argument name="value" value="$$downloadableProduct1.product[sku]$$"/>
         </actionGroup>
+        <waitForElementClickable selector="{{AdminGridRow.editByValue($$downloadableProduct1.product[sku]$$)}}" stepKey="waitForClickOnEditDownloadableProductForCheckInStock"/>
         <click selector="{{AdminGridRow.editByValue($$downloadableProduct1.product[sku]$$)}}" stepKey="clickOnEditDownloadableProductForCheckInStock"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad2"/>
 
