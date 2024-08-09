@@ -20,6 +20,9 @@
         </annotations>
         <before>
             <magentoCLI stepKey="addDownloadableDomain" command="downloadable:domains:add static.magento.com example.com"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexAfterCLICommand">
+              <argument name="indices" value=""/>
+            </actionGroup>
             <!--Create stock and source.-->
             <createData entity="FullSource1" stepKey="source"/>
             <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
