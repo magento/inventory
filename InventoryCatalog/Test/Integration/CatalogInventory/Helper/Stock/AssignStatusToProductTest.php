@@ -109,7 +109,7 @@ class AssignStatusToProductTest extends TestCase
     /**
      * @return array
      */
-    public function assignStatusToProductDataProvider(): array
+    public static function assignStatusToProductDataProvider(): array
     {
         return [
             'eu_website' => [

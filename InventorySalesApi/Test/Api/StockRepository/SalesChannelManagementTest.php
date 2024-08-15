@@ -19,8 +19,8 @@ class SalesChannelManagementTest extends WebapiAbstract
     /**#@+
      * Service constants
      */
-    const RESOURCE_PATH = '/V1/inventory/stocks';
-    const SERVICE_NAME = 'inventoryApiStockRepositoryV1';
+    private const RESOURCE_PATH = '/V1/inventory/stocks';
+    private const SERVICE_NAME = 'inventoryApiStockRepositoryV1';
     /**#@-*/
 
     /**
@@ -101,7 +101,7 @@ class SalesChannelManagementTest extends WebapiAbstract
     /**
      * @return array
      */
-    public function deleteSalesChannelDataProvider(): array
+    public static function deleteSalesChannelDataProvider(): array
     {
         return [
             'one_channel_delete' . SalesChannelInterface::TYPE => [
@@ -176,7 +176,7 @@ class SalesChannelManagementTest extends WebapiAbstract
     /**
      * @return array
      */
-    public function dataProviderSalesChannelsAssignment(): array
+    public static function dataProviderSalesChannelsAssignment(): array
     {
         return [
             'not_given_' . SalesChannelInterface::TYPE => [

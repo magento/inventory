@@ -17,8 +17,8 @@ class ValidationTest extends WebapiAbstract
     /**#@+
      * Service constants
      */
-    const RESOURCE_PATH = '/V1/inventory/sources';
-    const SERVICE_NAME = 'inventoryApiSourceRepositoryV1';
+    private const RESOURCE_PATH = '/V1/inventory/sources';
+    private const SERVICE_NAME = 'inventoryApiSourceRepositoryV1';
     /**#@-*/
 
     /**
@@ -58,7 +58,7 @@ class ValidationTest extends WebapiAbstract
     /**
      * @return array
      */
-    public function dataProviderRequiredFields(): array
+    public static function dataProviderRequiredFields(): array
     {
         return [
             'without_' . SourceInterface::NAME => [
@@ -162,7 +162,7 @@ class ValidationTest extends WebapiAbstract
      * @return array
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function failedValidationDataProvider(): array
+    public static function failedValidationDataProvider(): array
     {
         return [
             'null_' . SourceInterface::SOURCE_CODE => [
@@ -375,7 +375,7 @@ class ValidationTest extends WebapiAbstract
      * @return array
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function failedValidationUpdateDataProvider(): array
+    public static function failedValidationUpdateDataProvider(): array
     {
         return [
             'null_' . SourceInterface::NAME => [

@@ -124,7 +124,7 @@ class SetDataToLegacyCatalogInventoryTest extends TestCase
     /**
      * @return array
      */
-    public function getDataProvider(): array
+    public static function getDataProvider(): array
     {
         return [
             [201, 'COC002-Red-M', 10, SourceItemInterface::STATUS_IN_STOCK],

@@ -71,7 +71,7 @@ class AllowNegativeMinQtyInConfigPluginTest extends TestCase
      *
      * @return array
      */
-    public function beforeSaveDataProvider(): array
+    public static function beforeSaveDataProvider(): array
     {
         return [
             'min_qty_positive' => [

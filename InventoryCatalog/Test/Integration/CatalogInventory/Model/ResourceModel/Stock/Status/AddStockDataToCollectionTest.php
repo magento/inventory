@@ -79,7 +79,7 @@ class AddStockDataToCollectionTest extends TestCase
     /**
      * @return array
      */
-    public function addStockDataToCollectionDataProvider(): array
+    public static function addStockDataToCollectionDataProvider(): array
     {
         return [
             ['store_for_eu_website', 3, true],
