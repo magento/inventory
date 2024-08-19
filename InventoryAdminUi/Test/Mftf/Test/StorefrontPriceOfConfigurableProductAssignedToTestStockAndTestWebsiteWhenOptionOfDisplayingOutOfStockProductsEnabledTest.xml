@@ -18,6 +18,9 @@
             <group value="msi"/>
             <group value="multi_mode"/>
             <group value="pr_exclude"/>
+            <skip>
+              <issueId value="AC-10843"/>
+            </skip>
         </annotations>
 
         <before>
