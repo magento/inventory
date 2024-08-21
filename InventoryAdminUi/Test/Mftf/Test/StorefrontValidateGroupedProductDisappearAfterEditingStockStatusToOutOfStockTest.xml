@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontValidateGroupedProductDisappearAfterEditingStockStatusToOutOfStockTest">
+        <annotations>
+            <stories value="Group Product Custom Stock."/>
+            <title value="Validate that Grouped product gets disappear after editing stock status to out of stock"/>
+            <description value="Admin create a grouped product and validate that Grouped product gets disappear after editing stock status to out of stock"/>
+            <testCaseId value="AC-2834"/>
+            <severity value="MINOR"/>
+        </annotations>
+        <actionGroup ref="AdminUpdateAssignSourceItemStatusOutOfStockForSimpleProduct" after="openProductToUpdateStock" stepKey="setOutOfStockForSimpleProduct">
+            <argument name="sourceName" value="$$createSource.source[name]$$"/>
+        </actionGroup>
+    </test>
+</tests>
