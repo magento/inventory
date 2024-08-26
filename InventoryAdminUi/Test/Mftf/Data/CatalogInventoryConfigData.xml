@@ -98,6 +98,14 @@
         <data key="path">cataloginventory/item_options/notify_stock_qty</data>
         <data key="value">0</data>
     </entity>
+    <entity name="CustomNotifyQuantityBelow">
+      <data key="path">cataloginventory/item_options/notify_stock_qty</data>
+      <data key="value">101</data>
+    </entity>
+    <entity name="ByDefaultNotifyQuantityBelow">
+      <data key="path">cataloginventory/item_options/notify_stock_qty</data>
+      <data key="value">1</data>
+    </entity>
     <entity name="OfflineDistanceProviderForDistanceBasedSSA">
         <data key="path">cataloginventory/source_selection_distance_based/provider</data>
         <data key="value">offline</data>
