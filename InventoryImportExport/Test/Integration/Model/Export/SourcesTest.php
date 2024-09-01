@@ -196,7 +196,7 @@ class SourcesTest extends TestCase
         );
     }
 
-    public function exportWithWebsiteFilterDataProvider()
+    public static function exportWithWebsiteFilterDataProvider()
     {
         return [
             [0, 'export_empty.csv'],

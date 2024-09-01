@@ -122,7 +122,7 @@ class OptionsAvailabilityTest extends TestCase
     /**
      * @return array
      */
-    public function getSalableOptionsDataProvider()
+    public static function getSalableOptionsDataProvider()
     {
         return [
             [

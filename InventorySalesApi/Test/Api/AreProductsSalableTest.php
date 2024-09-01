@@ -15,9 +15,9 @@ use Magento\TestFramework\TestCase\WebapiAbstract;
  */
 class AreProductsSalableTest extends WebapiAbstract
 {
-    const API_PATH = '/V1/inventory/are-products-salable';
-    const SERVICE_NAME = 'inventorySalesApiAreProductsSalableV1';
-    const SERVICE_VERSION = 'V1';
+    private const API_PATH = '/V1/inventory/are-products-salable';
+    private const SERVICE_NAME = 'inventorySalesApiAreProductsSalableV1';
+    private const SERVICE_VERSION = 'V1';
 
     /**
      * Verify product salable status for different stocks.
@@ -68,7 +68,7 @@ class AreProductsSalableTest extends WebapiAbstract
      *
      * @return array
      */
-    public function executeDataProvider(): array
+    public static function executeDataProvider(): array
     {
         return [
             ['SKU-1', 10, true],

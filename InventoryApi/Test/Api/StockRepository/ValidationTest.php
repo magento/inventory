@@ -18,8 +18,8 @@ class ValidationTest extends WebapiAbstract
     /**#@+
      * Service constants
      */
-    const RESOURCE_PATH = '/V1/inventory/stocks';
-    const SERVICE_NAME = 'inventoryApiStockRepositoryV1';
+    private const RESOURCE_PATH = '/V1/inventory/stocks';
+    private const SERVICE_NAME = 'inventoryApiStockRepositoryV1';
     /**#@-*/
 
     /**
@@ -56,7 +56,7 @@ class ValidationTest extends WebapiAbstract
     /**
      * @return array
      */
-    public function dataProviderRequiredFields(): array
+    public static function dataProviderRequiredFields(): array
     {
         return [
             'without_' . StockInterface::NAME => [
@@ -167,7 +167,7 @@ class ValidationTest extends WebapiAbstract
     /**
      * @return array
      */
-    public function failedValidationDataProvider(): array
+    public static function failedValidationDataProvider(): array
     {
         return [
             'empty_' . StockInterface::NAME => [

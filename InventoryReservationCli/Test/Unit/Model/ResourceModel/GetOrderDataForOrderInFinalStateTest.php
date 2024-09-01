@@ -87,16 +87,18 @@ class GetOrderDataForOrderInFinalStateTest extends TestCase
             ->willReturnArgument(0);
         $this->resourceConnection->expects($this->exactly(2))
             ->method('getConnection')
-            ->withConsecutive(
-                [$this->equalTo($salesConnectionName)],
-                [$this->equalTo($defaultConnectionName)]
-            )
-            ->willReturnMap(
-                [
-                    [$salesConnectionName, $salesConnection],
-                    [$defaultConnectionName, $defaultConnection],
-                ]
-            );
+            ->willReturnCallback(function ($arg) use (
+                $salesConnectionName,
+                $defaultConnectionName,
+                $salesConnection,
+                $defaultConnection
+            ) {
+                if ($arg == $salesConnectionName) {
+                    return $salesConnection;
+                } elseif ($arg == $defaultConnectionName) {
+                    return $defaultConnection;
+                }
+            });
         $this->assertEquals($expected, $this->model->execute([1, 2, 3], []));
     }
 

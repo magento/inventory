@@ -60,7 +60,9 @@ class OnlyXLeftInStockResolver implements ResolverInterface
     {
         /* @var $product ProductInterface */
         $product = $value['model'];
-        $onlyXLeftQty = $this->getOnlyXLeftQty($product->getSku());
+
+        $productSku = ($product->getTypeId() === "bundle") ? $value['sku'] : $product->getSku();
+        $onlyXLeftQty = $this->getOnlyXLeftQty($productSku);
 
         return $onlyXLeftQty;
     }

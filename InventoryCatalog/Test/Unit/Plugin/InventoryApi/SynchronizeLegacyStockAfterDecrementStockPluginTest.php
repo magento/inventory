@@ -190,11 +190,17 @@ class SynchronizeLegacyStockAfterDecrementStockPluginTest extends TestCase
             $searchCriteria = $this->createMock(StockItemCriteriaInterface::class);
             $searchCriteria->expects($this->exactly(2))
                 ->method('addFilter')
-                ->withConsecutive(
-                    [StockItemInterface::PRODUCT_ID, StockItemInterface::PRODUCT_ID, $productId],
-                    [StockItemInterface::STOCK_ID, StockItemInterface::STOCK_ID, Stock::DEFAULT_STOCK_ID]
-                )
-                ->willReturnSelf();
+                ->willReturnCallback(function ($arg1, $arg2, $arg3) use ($productId, $searchCriteria) {
+                    if ($arg1 == StockItemInterface::PRODUCT_ID &&
+                        $arg2 == StockItemInterface::PRODUCT_ID &&
+                        $arg3 == $productId) {
+                        return $searchCriteria;
+                    } elseif ($arg1 == StockItemInterface::STOCK_ID &&
+                        $arg2 == StockItemInterface::STOCK_ID &&
+                        $arg3 == Stock::DEFAULT_STOCK_ID) {
+                            return $searchCriteria;
+                    }
+                });
             $stockItemCollection->expects($this->once())->method('getTotalCount')->willReturn(1);
             $this->legacyStockItemRepositoryMock->method('getList')
                 ->willReturn($stockItemCollection);
@@ -225,7 +231,7 @@ class SynchronizeLegacyStockAfterDecrementStockPluginTest extends TestCase
     /**
      * @return array[]
      */
-    public function getDataProvider(): array
+    public static function getDataProvider(): array
     {
         return [
             ['default', 1, 'SKU-1', 1.0, 1],
