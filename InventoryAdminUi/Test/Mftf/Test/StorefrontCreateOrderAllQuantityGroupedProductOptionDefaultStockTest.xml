@@ -89,6 +89,9 @@
         <actionGroup ref="StorefrontOpenProductEntityPageActionGroup" stepKey="navigateToGroupedProductPDPAfterOrderPlacement">
             <argument name="product" value="$groupedProduct$"/>
         </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache" after="deleteImportImagesFilesDirectoryS3">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <!--Verify that product1 is not present.-->
         <dontSee selector="{{StorefrontProductInfoMainSection.groupedProductsTable}}" userInput="$product1.name$" stepKey="dontSeeProduct1"/>
         <!--Verify that product2 is present.-->
