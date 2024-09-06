@@ -89,7 +89,7 @@
         <actionGroup ref="StorefrontOpenProductEntityPageActionGroup" stepKey="navigateToGroupedProductPDPAfterOrderPlacement">
             <argument name="product" value="$groupedProduct$"/>
         </actionGroup>
-        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache" after="deleteImportImagesFilesDirectoryS3">
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache" after="flushCache">
             <argument name="tags" value=""/>
         </actionGroup>
         <!--Verify that product1 is not present.-->
