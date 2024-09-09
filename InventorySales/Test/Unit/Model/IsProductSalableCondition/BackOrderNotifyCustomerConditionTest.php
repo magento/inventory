@@ -163,7 +163,7 @@ class BackOrderNotifyCustomerConditionTest extends TestCase
      * @return array
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function executeDataProvider(): array
+    public static function executeDataProvider(): array
     {
         return [
             'StockQty=1, ReqQty=2, SalableQty=1, Backorders=YesNotify, ManageStock=Yes' => [

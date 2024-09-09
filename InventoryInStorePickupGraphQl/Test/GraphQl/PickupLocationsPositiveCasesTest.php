@@ -128,7 +128,7 @@ QUERY;
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function dataProvider(): array
+    public static function dataProvider(): array
     {
         return [
             [ /* Data set #0. Without any filters. */

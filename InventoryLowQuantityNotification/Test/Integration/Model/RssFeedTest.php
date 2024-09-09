@@ -124,7 +124,7 @@ class RssFeedTest extends TestCase
     /**
      * @return array
      */
-    public function getRssDataDataProvider(): array
+    public static function getRssDataDataProvider(): array
     {
         return [
             ['SKU-1', 'eu-disabled', 12, 4],

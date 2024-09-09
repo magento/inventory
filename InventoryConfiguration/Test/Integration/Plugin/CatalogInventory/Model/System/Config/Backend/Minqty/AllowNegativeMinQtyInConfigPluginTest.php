@@ -76,11 +76,11 @@ class AllowNegativeMinQtyInConfigPluginTest extends TestCase
         return [
             'min_qty_positive' => [
                 'value' => '5',
-                'expected_min_qty' => '5',
+                'expectedMinQty' => '5',
             ],
             'min_qty_negative' => [
                 'value' => '-5',
-                'expected_min_qty' => '-5',
+                'expectedMinQty' => '-5',
             ],
         ];
     }

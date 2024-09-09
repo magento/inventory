@@ -78,7 +78,7 @@ class GetProductSalableQtyTest extends TestCase
     /**
      * @return array
      */
-    public function getProductQuantityProvider(): array
+    public static function getProductQuantityProvider(): array
     {
         return [
             ['SKU-1', 10, 8.5],

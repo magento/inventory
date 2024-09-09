@@ -105,7 +105,7 @@ class IsAnySourceItemInStockConditionTest extends TestCase
     /**
      * @return array
      */
-    public function sourceItemsStockData(): array
+    public static function sourceItemsStockData(): array
     {
         return [
             ['SKU-1', 10, true],

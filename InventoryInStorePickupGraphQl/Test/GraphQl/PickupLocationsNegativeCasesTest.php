@@ -91,7 +91,7 @@ QUERY;
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function dataProvider(): array
+    public static function dataProvider(): array
     {
         /* Data set #0. Search by not existing address */
         return [

@@ -257,7 +257,7 @@ class BackorderConditionTest extends TestCase
     /**
      * @return array
      */
-    public function backordersWithReservationsDataProvider(): array
+    public static function backordersWithReservationsDataProvider(): array
     {
         return  [
             'infinite backorders' => [
@@ -307,7 +307,7 @@ class BackorderConditionTest extends TestCase
      *
      * @return array
      */
-    public function backordersGlobalEnabledDataProvider(): array
+    public static function backordersGlobalEnabledDataProvider(): array
     {
         return [
             ['SKU-1', 10, [GetStockItemDataInterface::QUANTITY => 8.5, GetStockItemDataInterface::IS_SALABLE => 1]],
@@ -322,7 +322,7 @@ class BackorderConditionTest extends TestCase
      *
      * @return array
      */
-    public function backordersEnabledDataProvider(): array
+    public static function backordersEnabledDataProvider(): array
     {
         return [
             [
@@ -379,7 +379,7 @@ class BackorderConditionTest extends TestCase
      *
      * @return array
      */
-    public function backordersDisabledDataProvider(): array
+    public static function backordersDisabledDataProvider(): array
     {
         return [
             ['SKU-1', 10, [GetStockItemDataInterface::QUANTITY => 8.5, GetStockItemDataInterface::IS_SALABLE => 1]],
