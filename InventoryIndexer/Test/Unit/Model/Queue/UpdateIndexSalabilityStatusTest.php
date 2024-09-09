@@ -127,7 +127,7 @@ class UpdateIndexSalabilityStatusTest extends TestCase
                 'affectedParentSkus' => [],
             ],
             [
-                'stock_id' => 2,
+                'stockId' => 2,
                 'updateLegacyStockInvokeCount' => 0,
                 'indexProcessorInvokeCount' => 2,
                 'parentSkusOfChildrenSkus' => [
@@ -136,7 +136,7 @@ class UpdateIndexSalabilityStatusTest extends TestCase
                 'affectedParentSkus' => ['PConf1', 'PConf2'],
             ],
             [
-                'stock_id' => 3,
+                'stockId' => 3,
                 'updateLegacyStockInvokeCount' => 0,
                 'indexProcessorInvokeCount' => 2,
                 'parentSkusOfChildrenSkus' => [
