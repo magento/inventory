@@ -41,7 +41,7 @@ class GetApiKey
      */
     public function execute(): string
     {
-        $apiKey = trim((string) $this->scopeConfig->getValue(self::XML_PATH_API_KEY));
+        $apiKey = trim((string) $this->scopeConfig->getValue(self::XML_PATH_API_KEY) ?? '');
         if (!$apiKey) {
             throw new LocalizedException(__('Google API key is not defined'));
         }
