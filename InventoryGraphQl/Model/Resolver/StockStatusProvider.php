@@ -14,6 +14,7 @@ use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
+use Magento\Catalog\Model\Product\Type;
 
 /**
  * @inheritdoc
@@ -54,7 +55,8 @@ class StockStatusProvider implements ResolverInterface
         /* @var $product ProductInterface */
         $product = $value['model'];
 
-        $productSku = ($product->getTypeId() === "bundle") ? $value['sku'] : $product->getSku();
+        $productSku = ($product->getTypeId() === TYPE::TYPE_BUNDLE || !empty($product->getOptions()))
+            ? $value['sku'] : $product->getSku();
         $stockId = $this->getStockIdForCurrentWebsite->execute();
         $result = $this->areProductsSalable->execute([$productSku], $stockId);
         $result = current($result);
