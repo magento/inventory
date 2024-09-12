@@ -61,6 +61,6 @@ class CountryParser implements ParserInterface
         }
         $searchTerm = explode($this->delimiterConfig->getDelimiter(), $searchTerm);
 
-        return trim(end($searchTerm));
+        return trim(end($searchTerm) ?? '');
     }
 }
