@@ -84,7 +84,11 @@
         <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectCheckMoneyOrder"/>
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
         <!--Run queue consumer.-->
-        <magentoCLI command="queue:consumers:start" arguments="inventory.reservations.updateSalabilityStatus" stepKey="startSalabilityUpdate" timeout="30"/>
+        <magentoCLI command="queue:consumers:start" arguments="inventory.reservations.updateSalabilityStatus" stepKey="startSalabilityUpdate" timeout="60"/>
+        <wait time="30" stepKey="waitForSalabilityUpdate"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <!--Navigate to group product PDP.-->
         <actionGroup ref="StorefrontOpenProductEntityPageActionGroup" stepKey="navigateToGroupedProductPDPAfterOrderPlacement">
             <argument name="product" value="$groupedProduct$"/>
