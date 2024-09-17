@@ -41,7 +41,7 @@ class GetActiveStorePickupOrdersBySource
     }
 
     /**
-     * ets list of orders ids placed by store pickup which are not complete yet.
+     * Gets list of orders ids placed by store pickup which are not complete yet.
      *
      * @param string $pickupLocationCode
      *
