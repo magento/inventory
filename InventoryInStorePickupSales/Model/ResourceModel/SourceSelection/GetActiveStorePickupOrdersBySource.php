@@ -56,10 +56,10 @@ class GetActiveStorePickupOrdersBySource
             ->from($table1, 'entity_id')
             ->joinLeft($table2, 'sales_order.entity_id = ' . self::ORDER_ID)
             ->where(
-                'inventory_pickup_location_order.' . PickupLocationInterface::PICKUP_LOCATION_CODE,
+                'inventory_pickup_location_order.' . PickupLocationInterface::PICKUP_LOCATION_CODE . '= ?',
                 $pickupLocationCode
             )
-            ->where(OrderInterface::STATE . ' NOT IN (?)', implode(',', $this->statesToFilter));
+            ->where(OrderInterface::STATE . ' NOT IN (?)', $this->statesToFilter);
 
         return $connection->fetchAll($select);
     }
