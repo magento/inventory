@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2024 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -12,7 +12,7 @@ use Magento\Sales\Api\Data\OrderInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 
 /**
- * Save Order Pickup Location by Order Id.
+ * Get list of orders based on pickup location code
  */
 class GetActiveStorePickupOrdersBySource
 {
