@@ -58,7 +58,7 @@ class GetOrderItemsByOrdersListAndSku
                 implode(
                     ',',
                     array_map(
-                        function ($row) {
+                        function (array $row) {
                             return $row['entity_id'];
                         },
                         $orders
