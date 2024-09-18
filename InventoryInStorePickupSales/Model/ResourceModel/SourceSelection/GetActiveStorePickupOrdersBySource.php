@@ -44,7 +44,6 @@ class GetActiveStorePickupOrdersBySource
      * Gets list of orders ids placed by store pickup which are not complete yet.
      *
      * @param string $pickupLocationCode
-     *
      * @return array
      */
     public function execute(string $pickupLocationCode): array
