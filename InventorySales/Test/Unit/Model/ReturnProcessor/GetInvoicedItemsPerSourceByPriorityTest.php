@@ -172,7 +172,7 @@ class GetInvoicedItemsPerSourceByPriorityTest extends TestCase
     /**
      * @return array
      */
-    public function executeDataProvider(): array
+    public static function executeDataProvider(): array
     {
         return [
             [

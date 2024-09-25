@@ -64,7 +64,7 @@ class InvalidateAfterEnablingOrDisablingSourceTest extends TestCase
     /**
      * @return array
      */
-    public function indexerInvalidationDataProvider(): array
+    public static function indexerInvalidationDataProvider(): array
     {
         return [
             ['eu-1', true, true],
@@ -146,7 +146,7 @@ class InvalidateAfterEnablingOrDisablingSourceTest extends TestCase
     /**
      * @return array
      */
-    public function sourceDoesNotHaveAllRelationsDataProvider(): array
+    public static function sourceDoesNotHaveAllRelationsDataProvider(): array
     {
         return [
             ['eu-1', true, true],

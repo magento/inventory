@@ -125,7 +125,7 @@ class CacheFlushProcessorTest extends TestCase
     /**
      * @return array
      */
-    public function processDataProvider(): array
+    public static function processDataProvider(): array
     {
         return [
             [[1], ['sku1' => [1 => true]], ['sku1' => [1 => true]], [], 0],

@@ -62,7 +62,7 @@ class GetProductsIdsToProcessTest extends TestCase
      * @return array[]
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function dataProvider(): array
+    public static function dataProvider(): array
     {
         return [
             'test with no difference' => [

@@ -168,7 +168,7 @@ class SourceDeductionServiceTest extends TestCase
      * @return array[]
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function executeDataProvider(): array
+    public static function executeDataProvider(): array
     {
         return [
             'Test Can back in stock' => [

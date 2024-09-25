@@ -36,7 +36,7 @@ class SnakeToCamelCaseConverterTest extends TestCase
     /**
      * @return array
      */
-    public function getElementsToConvert(): array
+    public static function getElementsToConvert(): array
     {
         return [
             'with_empty_data' => [[], []],

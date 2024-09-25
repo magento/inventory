@@ -76,7 +76,7 @@ class SourceIndexerTest extends TestCase
     /**
      * @return array
      */
-    public function reindexRowDataProvider(): array
+    public static function reindexRowDataProvider(): array
     {
         return [
             ['SKU-1', 10, [GetStockItemDataInterface::QUANTITY => 8.5, GetStockItemDataInterface::IS_SALABLE => 1]],
@@ -142,7 +142,7 @@ class SourceIndexerTest extends TestCase
     /**
      * @return array
      */
-    public function reindexListDataProvider(): array
+    public static function reindexListDataProvider(): array
     {
         return [
             ['SKU-1', 10, [GetStockItemDataInterface::QUANTITY => 8.5, GetStockItemDataInterface::IS_SALABLE => 1]],

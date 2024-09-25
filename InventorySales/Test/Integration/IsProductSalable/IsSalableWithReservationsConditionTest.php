@@ -120,7 +120,7 @@ class IsSalableWithReservationsConditionTest extends TestCase
     /**
      * @return array
      */
-    public function productIsSalableDataProvider(): array
+    public static function productIsSalableDataProvider(): array
     {
         return [
             ['SKU-1', 10, true],
