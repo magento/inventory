@@ -21,4 +21,5 @@ $stock = $objectManager->create(\Magento\ProductAlert\Model\Stock::class);
 $stock->setCustomerId(2)
     ->setProductId($product->getId())
     ->setWebsiteId($website->getId())
+    ->setStoreId($website->getDefaultStore()->getId())
     ->save();
