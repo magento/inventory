@@ -1,19 +1,20 @@
 {
     "name": "magento/module-inventory-in-store-pickup-shipping-admin-ui",
     "description": "N/A",
-    "require": {
-        "php": "~7.4.0||~8.1.0",
-        "magento/framework": "*",
-        "magento/module-inventory-in-store-pickup-shipping-api": "*"
-    },
-    "suggest": {
-        "magento/module-shipping": "*"
-    },
     "type": "magento2-module",
     "license": [
         "OSL-3.0",
         "AFL-3.0"
     ],
+    "version": "1.1.1",
+    "require": {
+        "php": "~7.4.0||~8.1.0",
+        "magento/framework": "*",
+        "magento/module-inventory-in-store-pickup-shipping-api": "1.1.*"
+    },
+    "suggest": {
+        "magento/module-shipping": "*"
+    },
     "autoload": {
         "files": [
             "registration.php"
@@ -23,3 +24,4 @@
         }
     }
 }
+
