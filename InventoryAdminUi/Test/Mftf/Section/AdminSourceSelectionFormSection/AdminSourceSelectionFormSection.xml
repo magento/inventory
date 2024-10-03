@@ -13,5 +13,6 @@
         <element name="selectDistancePriority" type="button" selector=".item[title='Distance Priority']"/>
         <element name="proceedToShipment" type="button" selector="#save[data-ui-id='save-button']"/>
         <element name="sourceSelection" type="select" selector="select[name='sourceCode']"/>
+        <element name="sourceSelectionHeader" type="text" selector=".page-title"/>
     </section>
 </sections>

@@ -22,6 +22,8 @@
         <selectOption selector="{{AdminSourceSelectionFormSection.sourceSelection}}" userInput="{{sourceName}}" stepKey="selectSourceToCreateShipment"/>
         <waitForPageLoad stepKey="waitForSourceSelected"/>
         <fillField selector="{{AdminSourceSelectionOrderedItemsGrid.rowAvailableSourcesQtyToDeduct('0', '0')}}" userInput="{{sourceQty}}" stepKey="fillQuantity"/>
+        <click selector="{{AdminSourceSelectionFormSection.sourceSelectionHeader}}" stepKey="unFocus"/>
+        <waitForElementVisible selector="{{AdminSourceSelectionFormSection.proceedToShipment}}" stepKey="waitForCreateShipment"/>
         <click selector="{{AdminSourceSelectionFormSection.proceedToShipment}}" stepKey="createShipment"/>
         <waitForElementVisible selector="{{AdminShipmentInventorySection.sourceList}}" stepKey="waitForShipmentPage"/>
         <see selector="{{AdminShipmentInventorySection.sourceList}}" userInput="{{sourceName}}" stepKey="checkSourceNameOnShipmentPage"/>

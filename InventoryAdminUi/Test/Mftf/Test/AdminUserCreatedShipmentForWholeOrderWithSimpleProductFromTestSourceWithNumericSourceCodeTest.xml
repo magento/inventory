@@ -123,7 +123,7 @@
              userInput="2" stepKey="sourceSelectionCheckSourceQtyAvailable"/>
         <fillField selector="{{AdminItemsOrderedSection.availableSourcesQtyToDeduct('0', '1')}}" userInput="1"
                    stepKey="sourceSelectionCheckQtyToDeduct"/>
-
+        <click selector="{{AdminSourceSelectionFormSection.sourceSelectionHeader}}" stepKey="unFocus"/>
         <click selector="{{AdminSourceSelectionControlsSection.proceedToShipmentButton}}" stepKey="proceedToShipment"/>
         <waitForPageLoad stepKey="waitShipmentPage"/>
         <click selector="{{AdminShipmentMainActionsSection.submitShipment}}" stepKey="submitShipment"/>
