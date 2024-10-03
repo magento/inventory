@@ -62,6 +62,7 @@
             </actionGroup>
 
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="customStock" stepKey="deleteCustomStock"/>
             <deleteData createDataKey="simpleProduct" stepKey="deleteSimpleProduct"/>
@@ -73,7 +74,9 @@
             <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="clearFilters"/>
 
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <comment userInput="Create bundle product." stepKey="createBundleProductComment"/>
@@ -116,7 +119,7 @@
         <conditionalClick selector="{{StorefrontMinicartSection.showCart}}" dependentSelector="{{StorefrontMinicartSection.miniCartOpened}}" visible="false" stepKey="openMiniCart"/>
         <waitForElementVisible selector="{{StorefrontMinicartSection.viewAndEditCart}}" stepKey="waitForViewAndEditCartVisible"/>
         <click selector="{{StorefrontMinicartSection.goToCheckout}}" stepKey="goToCheckout"/>
-        <waitForElementVisible selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="waitForShippingMethodsLoad"/>
+        <waitForElementClickable selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="waitForShippingMethodsLoad"/>
         <click selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="selectShippingMethod"/>
         <comment userInput="BIC workaround" stepKey="waitForNextButtonVisible"/>
         <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="navigateToSecondCheckoutStep"/>

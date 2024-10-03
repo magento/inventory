@@ -79,7 +79,9 @@
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
             <deleteData createDataKey="createVirtualProduct" stepKey="deleteProduct"/>
             <deleteData createDataKey="customStock" stepKey="deleteCustomStock"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!-- add Product to Cart-->

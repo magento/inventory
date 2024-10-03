@@ -24,7 +24,9 @@
             <magentoCLI command="config:set cataloginventory/item_options/backorders 1" stepKey="fillConfigValue"/>
 
             <comment userInput="Perform reindex and cache flush after fill 'Backorders' configuration config." stepKey="reindexCacheFlushAfterFillBackordersConfigComment"/>
-            <magentoCLI command="indexer:reindex" stepKey="performReindexAfterFillBackordersConfig"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterFillBackordersConfig">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <magentoCLI command="cache:flush" stepKey="cleanCacheAfterFillBackordersConfig"/>
 
             <createData entity="_minimalSource" stepKey="createSource"/>
@@ -80,7 +82,9 @@
             <magentoCLI command="config:set cataloginventory/item_options/backorders 0" stepKey="revertConfigValue"/>
 
             <comment userInput="Perform reindex and cache flush after revert 'Backorders' configuration config." stepKey="reindexCacheFlushAfterFillBackordersConfigComment"/>
-            <magentoCLI command="indexer:reindex" stepKey="performReindexAfterRevertBackordersConfig"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterRevertBackordersConfig">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <magentoCLI command="cache:flush" stepKey="cleanCacheAfterRevertBackordersConfig"/>
 
             <comment userInput="Disable created source." stepKey="disableCreatedSourceComment"/>
@@ -102,9 +106,12 @@
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
             <deleteData createDataKey="createProduct" stepKey="deleteProduct"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="createStock" stepKey="deleteStock"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <comment userInput="Customer login to storefront." stepKey="customerLoginToStorefrontComment"/>
@@ -123,7 +130,7 @@
         <conditionalClick selector="{{StorefrontMinicartSection.showCart}}" dependentSelector="{{StorefrontMinicartSection.miniCartOpened}}" visible="false" stepKey="openMiniCart"/>
         <waitForElementVisible selector="{{StorefrontMinicartSection.viewAndEditCart}}" stepKey="waitForViewAndEditCartVisible"/>
         <click selector="{{StorefrontMinicartSection.goToCheckout}}" stepKey="goToCheckout"/>
-        <waitForElementVisible selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="waitForShippingMethodsLoad"/>
+        <waitForElementClickable selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="waitForShippingMethodsLoad"/>
         <click selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="selectShippingMethod"/>
         <comment userInput="BIC workaround" stepKey="waitForNextButtonVisible"/>
         <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="navigateToSecondCheckoutStep"/>

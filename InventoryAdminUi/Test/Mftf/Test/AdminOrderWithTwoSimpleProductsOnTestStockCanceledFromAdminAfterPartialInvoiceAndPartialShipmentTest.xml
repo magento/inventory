@@ -29,7 +29,9 @@
                 <requiredEntity createDataKey="additionalStock"/>
                 <requiredEntity createDataKey="createSource"/>
             </createData>
-            <magentoCLI stepKey="reindex" command="indexer:reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <magentoCLI stepKey="flushCache" command="cache:flush"/>
             <createData entity="SimpleProduct" stepKey="simpleProduct">
                 <requiredEntity createDataKey="simpleCategory"/>
@@ -47,12 +49,15 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedCustomSource">
                 <argument name="sourceCode" value="$$createSource.source[source_code]$$"/>
             </actionGroup>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
             <deleteData createDataKey="simpleCategory" stepKey="deleteCategory"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteCustomStock"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!-- assign first simple product to custom source -->
@@ -80,7 +85,7 @@
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct2" after="setCustomSourceQuantity2"/>
 
         <!-- Create order -->
-        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="newOrder">
+        <actionGroup ref="AdminNavigateToNewOrderPageExistingCustomerActionGroup" stepKey="newOrder">
             <argument name="customer" value="$$customer$$"/>
         </actionGroup>
         <actionGroup ref="AddSimpleProductWithQtyToOrderActionGroup" stepKey="addFirstProductToOrder" >

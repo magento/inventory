@@ -16,6 +16,7 @@
             <severity value="MAJOR"/>
             <useCaseId value="ACP2E-201"/>
             <testCaseId value="AC-2078"/>
+            <group value="guest_checkout"/>
         </annotations>
 
         <before>

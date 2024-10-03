@@ -31,14 +31,18 @@
             <actionGroup ref="AdminCreateStoreViewActionGroup" stepKey="createStoreView">
                 <argument name="StoreGroup" value="CustomStoreGroupCustomWebsite"/>
             </actionGroup>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </before>
         <after>
             <!-- todo temporary solution as it is impossible to parse website_id from the post request and as a consequence can not delete it via post -->
             <actionGroup ref="DeleteCustomWebsiteActionGroup" stepKey="deleteWebsite">
                 <argument name="websiteName" value="$$createCustomWebsite.website[name]$$"/>
             </actionGroup>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 

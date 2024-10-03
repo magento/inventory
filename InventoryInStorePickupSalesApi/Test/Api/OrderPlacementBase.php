@@ -108,7 +108,7 @@ abstract class OrderPlacementBase extends OrderPlacementBaseSales
 
         $addressData = $this->getBaseAddressData();
         if ($addressId) {
-            $addressData['id'] = $addressId;
+            $addressData['customer_address_id'] = $addressId;
         }
 
         if ($saveInAddressBook) {

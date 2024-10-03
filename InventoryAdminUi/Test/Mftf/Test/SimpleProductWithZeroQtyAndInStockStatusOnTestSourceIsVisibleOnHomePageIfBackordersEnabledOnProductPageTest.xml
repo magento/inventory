@@ -29,7 +29,9 @@
             <!--Create additional source and stock.-->
             <createData entity="BasicMsiStockWithMainWebsite1" stepKey="additionalStock" after="simpleProduct"/>
 
-            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <magentoCLI command="cache:flush" stepKey="flushCache"/>
         </before>
         <after>

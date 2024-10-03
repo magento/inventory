@@ -40,6 +40,7 @@
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
         </before>
         <after>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
             <deleteData createDataKey="groupedProduct" stepKey="deleteGroupedProduct"/>
@@ -58,7 +59,9 @@
                 <argument name="sourceCode" value="$$additionalSource2.source[source_code]$$"/>
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!--Assign simple product to additional sources.-->

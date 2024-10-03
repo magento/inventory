@@ -23,7 +23,9 @@
             <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="fillManageStockConfigValue"/>
 
             <comment userInput="Perform reindex and cache flush after fill 'Only X left Threshold' configuration config." stepKey="reindexCacheFlushAfterFillThresholdConfigComment"/>
-            <magentoCLI command="indexer:reindex" stepKey="performReindexAfterFillThresholdConfig"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterFillThresholdConfig">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <magentoCLI command="cache:flush" stepKey="cleanCacheAfterFillThresholdConfig"/>
 
             <createData entity="SimpleSubCategory" stepKey="createCategory"/>
@@ -43,7 +45,9 @@
             <magentoCLI command="config:set cataloginventory/options/stock_threshold_qty 0" stepKey="revertConfigValue"/>
 
             <comment userInput="Perform reindex and cache flush after revert 'Only X left Threshold' configuration config." stepKey="reindexCacheFlushAfterFillThresholdConfigComment"/>
-            <magentoCLI command="indexer:reindex" stepKey="performReindexAfterRevertThresholdConfig"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterRevertThresholdConfig">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <magentoCLI command="cache:flush" stepKey="cleanCacheAfterRevertThresholdConfig"/>
 
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>

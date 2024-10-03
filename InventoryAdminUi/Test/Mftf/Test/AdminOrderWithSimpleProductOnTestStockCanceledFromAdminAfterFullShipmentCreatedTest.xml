@@ -23,7 +23,9 @@
             <remove keyForRemoval="additionalStock"/>
             <remove keyForRemoval="assignMainWebsiteToDefaultStock"/>
             <createData entity="BasicMsiStockWithMainWebsite1" stepKey="additionalStock" before="createSource"/>
-            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <magentoCLI command="cache:flush" stepKey="flushCache"/>
         </before>
         <after>

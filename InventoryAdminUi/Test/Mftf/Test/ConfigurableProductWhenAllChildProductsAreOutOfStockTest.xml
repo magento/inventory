@@ -127,7 +127,9 @@
         <!-- Step8.3 Save the White Configurable Product -->
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveRedConfigProductPostOutOfStock"/>
 
-        <magentoCLI command="indexer:reindex" stepKey="performReindexPostOutOfStock"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexPostOutOfStock">
+            <argument name="indices" value=""/>
+        </actionGroup>
         <magentoCLI command="cache:flush" stepKey="cleanCachePostOutOfStock"/>
 
         <!-- Step9 Verify the Configurable Product in Created Category in Storefront is no more present -->
