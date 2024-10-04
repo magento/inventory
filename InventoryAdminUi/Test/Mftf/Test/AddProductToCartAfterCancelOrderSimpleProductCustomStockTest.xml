@@ -87,7 +87,7 @@
         <fillField selector="{{StorefrontProductPageSection.qtyInput}}" userInput="{{101ProductQty.value}}" stepKey="fillQuantity"/>
         <click selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="addToCart"/>
         <waitForElementVisible selector="{{StorefrontProductPageSection.errorMsg}}" stepKey="waitForErrorMessage"/>
-        <see selector="{{StorefrontProductPageSection.errorMsg}}" userInput="The requested qty is not available" stepKey="verifyErrorMessage"/>
+        <see selector="{{StorefrontProductPageSection.errorMsg}}" userInput="Not enough items for sale" stepKey="verifyErrorMessage"/>
         <!--Add simple product with proper quantity.-->
         <actionGroup ref="StorefrontAddProductToCartWithQtyActionGroup" stepKey="addProductToCartWithProperQty">
             <argument name="productQty" value="{{defaultProductQty.value}}"/>
