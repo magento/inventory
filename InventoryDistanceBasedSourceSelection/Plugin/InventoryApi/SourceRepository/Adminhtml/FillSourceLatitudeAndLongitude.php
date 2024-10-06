@@ -6,12 +6,14 @@
 
 declare(strict_types=1);
 
-namespace Magento\InventoryDistanceBasedSourceSelection\Plugin;
+namespace Magento\InventoryDistanceBasedSourceSelection\Plugin\InventoryApi\SourceRepository\Adminhtml;
 
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\InventoryDistanceBasedSourceSelection\Model\DistanceProvider\GetLatLngFromSource;
-use Magento\InventoryDistanceBasedSourceSelectionApi\Model\GetLatLngFromSourceInterface;
+use Magento\Framework\Message\ManagerInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Psr\Log\LoggerInterface;
 
 /**
  * Compute latitude and longitude for a source if none is defined
@@ -24,15 +26,31 @@ class FillSourceLatitudeAndLongitude
     private $getLatLngFromSource;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * @var ManagerInterface
+     */
+    private $messageManager;
+
+    /**
      * ComputeSourceLatitudeAndLongitude constructor.
      *
      * @param GetLatLngFromSource $getLatLngFromSource
+     * @param LoggerInterface $logger
+     * @param ManagerInterface $messageManager
      * @SuppressWarnings(PHPMD.LongVariable)
      */
     public function __construct(
-        GetLatLngFromSource $getLatLngFromSource
+        GetLatLngFromSource $getLatLngFromSource,
+        LoggerInterface $logger,
+        ManagerInterface $messageManager
     ) {
         $this->getLatLngFromSource = $getLatLngFromSource;
+        $this->logger = $logger;
+        $this->messageManager = $messageManager;
     }
 
     /**
@@ -53,8 +71,12 @@ class FillSourceLatitudeAndLongitude
 
                 $source->setLatitude($latLng->getLat());
                 $source->setLongitude($latLng->getLng());
-            } catch (\Exception $e) {
-                unset($e); // Silently fail geo coding
+            } catch (LocalizedException $exception) {
+                $this->logger->error($exception);
+                $this->messageManager->addWarningMessage($exception->getMessage());
+            } catch (\Exception $exception) {
+                $this->logger->error($exception);
+                $this->messageManager->addWarningMessage(__('Failed to geocode the source address'));
             }
         }
 
