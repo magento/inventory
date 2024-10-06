@@ -46,7 +46,7 @@ class ResolveArea implements ResolverInterface
     ): void {
         $codes = $this->getSourceCodes($searchRequest);
 
-        if ($codes !== null) {
+        if (!empty($codes)) {
             $codes = implode(',', $codes);
             $searchCriteriaBuilder->addFilter(SourceInterface::SOURCE_CODE, $codes, 'in');
         }
