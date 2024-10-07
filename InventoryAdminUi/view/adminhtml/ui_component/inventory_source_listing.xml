@@ -82,6 +82,17 @@
                     <label translate="true">Disable</label>
                 </settings>
             </action>
+            <action name="delete">
+                <settings>
+                    <confirm>
+                        <message translate="true">Are you sure you want to delete selected source?</message>
+                        <title translate="true">Delete items</title>
+                    </confirm>
+                    <url path="inventory/block/massDelete"/>
+                    <type>delete</type>
+                    <label translate="true">Delete</label>
+                </settings>
+            </action>
         </massaction>
         <paging name="listing_paging"/>
     </listingToolbar>
