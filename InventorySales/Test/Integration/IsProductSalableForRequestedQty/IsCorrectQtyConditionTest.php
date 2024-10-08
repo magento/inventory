@@ -111,7 +111,7 @@ class IsCorrectQtyConditionTest extends TestCase
     /**
      * @return array
      */
-    public function executeWithMissingConfigurationDataProvider(): array
+    public static function executeWithMissingConfigurationDataProvider(): array
     {
         return [
             ['SKU-2', 10, 1, false],
@@ -158,7 +158,7 @@ class IsCorrectQtyConditionTest extends TestCase
     /**
      * @return array
      */
-    public function executeWithDecimalQtyDataProvider(): array
+    public static function executeWithDecimalQtyDataProvider(): array
     {
         return [
             ['SKU-1', 10, 2.5, true],
@@ -209,7 +209,7 @@ class IsCorrectQtyConditionTest extends TestCase
     /**
      * @return array
      */
-    public function executeWithUseConfigMinSaleQtyDataProvider(): array
+    public static function executeWithUseConfigMinSaleQtyDataProvider(): array
     {
         return [
             ['SKU-1', 10, 1, false],
@@ -281,7 +281,7 @@ class IsCorrectQtyConditionTest extends TestCase
     /**
      * @return array
      */
-    public function executeWithMinSaleQtyDataProvider(): array
+    public static function executeWithMinSaleQtyDataProvider(): array
     {
         return [
             ['SKU-1', 10, 1, false],
@@ -342,7 +342,7 @@ class IsCorrectQtyConditionTest extends TestCase
     /**
      * @return array
      */
-    public function executeWithUseConfigMaxSaleQtyDataProvider(): array
+    public static function executeWithUseConfigMaxSaleQtyDataProvider(): array
     {
         return [
             ['SKU-1', 10, 1, true],
@@ -417,7 +417,7 @@ class IsCorrectQtyConditionTest extends TestCase
     /**
      * @return array
      */
-    public function executeWithMaxSaleQtyDataProvider(): array
+    public static function executeWithMaxSaleQtyDataProvider(): array
     {
         return [
             ['SKU-1', 10, 1, true],
@@ -481,7 +481,7 @@ class IsCorrectQtyConditionTest extends TestCase
     /**
      * @return array
      */
-    public function executeWithUseConfigQtyIncrementsDataProvider(): array
+    public static function executeWithUseConfigQtyIncrementsDataProvider(): array
     {
         return [
             ['SKU-1', 10, 1, false],
@@ -560,7 +560,7 @@ class IsCorrectQtyConditionTest extends TestCase
     /**
      * @return array
      */
-    public function executeWithQtyIncrementsDataProvider(): array
+    public static function executeWithQtyIncrementsDataProvider(): array
     {
         return [
             ['SKU-1', 10, 1, false],

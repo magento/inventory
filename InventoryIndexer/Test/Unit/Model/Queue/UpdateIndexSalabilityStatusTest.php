@@ -80,7 +80,7 @@ class UpdateIndexSalabilityStatusTest extends TestCase
      * @param int $stockId
      * @param int $updateLegacyStockInvokeCount
      * @param int $indexProcessorInvokeCount
-     * @param array $parentSkus
+     * @param array $parentSkusOfChildrenSkus
      * @param array $affectedParentSkus
      * @dataProvider executeDataProvider
      */
@@ -116,33 +116,33 @@ class UpdateIndexSalabilityStatusTest extends TestCase
     /**
      * @return array
      */
-    public function executeDataProvider(): array
+    public static function executeDataProvider(): array
     {
         return [
             [
-                'stock_id' => 1,
-                'update_legacy_stock_invoke_count' => 1,
-                'index_processor_invoke_count' => 0,
-                'parent_skus_of_children_skus' => [],
-                'affected_parent_skus' => [],
+                'stockId' => 1,
+                'updateLegacyStockInvokeCount' => 1,
+                'indexProcessorInvokeCount' => 0,
+                'parentSkusOfChildrenSkus' => [],
+                'affectedParentSkus' => [],
             ],
             [
-                'stock_id' => 2,
-                'update_legacy_stock_invoke_count' => 0,
-                'index_processor_invoke_count' => 2,
-                'parent_skus_of_children_skus' => [
+                'stockId' => 2,
+                'updateLegacyStockInvokeCount' => 0,
+                'indexProcessorInvokeCount' => 2,
+                'parentSkusOfChildrenSkus' => [
                     'P1' => ['PConf1', 'PConf2']
                 ],
-                'affected_parent_skus' => ['PConf1', 'PConf2'],
+                'affectedParentSkus' => ['PConf1', 'PConf2'],
             ],
             [
-                'stock_id' => 3,
-                'update_legacy_stock_invoke_count' => 0,
-                'index_processor_invoke_count' => 2,
-                'parent_skus_of_children_skus' => [
+                'stockId' => 3,
+                'updateLegacyStockInvokeCount' => 0,
+                'indexProcessorInvokeCount' => 2,
+                'parentSkusOfChildrenSkus' => [
                     'P1' => ['PConf3']
                 ],
-                'affected_parent_skus' => ['PConf3'],
+                'affectedParentSkus' => ['PConf3'],
             ],
         ];
     }

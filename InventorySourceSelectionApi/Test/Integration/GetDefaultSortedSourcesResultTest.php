@@ -50,7 +50,7 @@ class GetDefaultSortedSourcesResultTest extends TestCase
     /**
      * @return array
      */
-    public function shouldReturnDefaultResultsDataProvider(): array
+    public static function shouldReturnDefaultResultsDataProvider(): array
     {
         return [
             [

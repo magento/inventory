@@ -56,7 +56,7 @@ class MinQtyConditionTest extends TestCase
     /**
      * @return array
      */
-    public function executeWithMinQtyDataProvider(): array
+    public static function executeWithMinQtyDataProvider(): array
     {
         return [
             ['SKU-1', 10, true],
@@ -101,7 +101,7 @@ class MinQtyConditionTest extends TestCase
     /**
      * @return array
      */
-    public function executeWithManageStockFalseAndMinQty(): array
+    public static function executeWithManageStockFalseAndMinQty(): array
     {
         return [
             ['SKU-1', 10, true],

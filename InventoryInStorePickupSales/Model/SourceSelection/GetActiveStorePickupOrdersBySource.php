@@ -16,6 +16,9 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 
 /**
  * Gets list of orders placed by store pickup which are not complete yet
+ *
+ * @deprecated
+ * @see Magento\InventoryInStorePickupSales\Model\ResourceModel\SourceSelection\GetActiveStorePickupOrdersBySource
  */
 class GetActiveStorePickupOrdersBySource
 {

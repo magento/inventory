@@ -82,7 +82,7 @@ class IsEnabledOptionSelectBuilder
             . " AND entity_status_store.store_id = {$storeId}",
             []
         )->where(
-            $select->getConnection()->getIfNullSql('entity_status_global.value', 'entity_status_store.value') . ' = ?',
+            $select->getConnection()->getIfNullSql('entity_status_store.value', 'entity_status_global.value') . ' = ?',
             ProductStatus::STATUS_ENABLED
         );
 

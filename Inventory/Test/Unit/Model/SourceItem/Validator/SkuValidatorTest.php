@@ -61,7 +61,7 @@ class SkuValidatorTest extends TestCase
     /**
      * @return array
      */
-    public function sourceDataProvider(): array
+    public static function sourceDataProvider(): array
     {
         return [
             [
