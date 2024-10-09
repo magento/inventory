@@ -10,10 +10,6 @@
     <type name="Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync">
         <plugin name="grouped_product_index" type="Magento\InventoryGroupedProductIndexer\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync\SourceItemIndexerPlugin" />
     </type>
-    <type name="Magento\InventoryIndexer\Indexer\Stock\Strategy\Sync">
-        <plugin name="grouped_product_index_list" type="Magento\InventoryGroupedProductIndexer\Plugin\InventoryIndexer\Indexer\Stock\Strategy\Sync\ReindexListPlugin" />
-        <plugin name="grouped_product_index_full" type="Magento\InventoryGroupedProductIndexer\Plugin\InventoryIndexer\Indexer\Stock\Strategy\Sync\ReindexFullPlugin" />
-    </type>
     <type name="Magento\InventoryGroupedProductIndexer\Indexer\Stock\StockIndexer">
         <arguments>
             <argument name="indexHandler" xsi:type="object">Magento\InventoryIndexer\Indexer\IndexHandler</argument>
@@ -30,6 +26,13 @@
         <arguments>
             <argument name="tableNameSourceItem" xsi:type="const">Magento\Inventory\Model\ResourceModel\SourceItem::TABLE_NAME_SOURCE_ITEM</argument>
             <argument name="tableNameStockSourceLink" xsi:type="const">Magento\Inventory\Model\ResourceModel\StockSourceLink::TABLE_NAME_STOCK_SOURCE_LINK</argument>
+        </arguments>
+    </type>
+    <type name="Magento\InventoryIndexer\Indexer\Stock\IndexDataProviderByStockId">
+        <arguments>
+            <argument name="selectBuilders" xsi:type="array">
+                <item name="grouped_product" xsi:type="object">Magento\InventoryGroupedProductIndexer\Indexer\SelectBuilder</item>
+            </argument>
         </arguments>
     </type>
 </config>
