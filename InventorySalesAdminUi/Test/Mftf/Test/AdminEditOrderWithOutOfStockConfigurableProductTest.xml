@@ -139,7 +139,7 @@
         </actionGroup>
 
         <!-- Check error message is absent -->
-        <dontSee selector="{{AdminOrderEditMessagesSection.error}}" userInput="The requested qty is not available" stepKey="verifyErrorMessageIsAbsent"/>
+        <dontSee selector="{{AdminOrderEditMessagesSection.error}}" userInput="Not enough items for sale" stepKey="verifyErrorMessageIsAbsent"/>
 
         <!-- Update customer address -->
         <actionGroup ref="FillOrderCustomerInformationActionGroup" stepKey="updateCustomerInformation">

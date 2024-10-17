@@ -12,6 +12,7 @@
         <actionGroup ref="AssertAdminItemOrderedErrorActionGroup" stepKey="assertProductErrorRemains">
             <argument name="productName" value="$simpleProduct.name$"/>
             <argument name="messageType" value="error"/>
+            <argument name="message" value="Not enough items for sale"/>
         </actionGroup>
     </test>
 </tests>

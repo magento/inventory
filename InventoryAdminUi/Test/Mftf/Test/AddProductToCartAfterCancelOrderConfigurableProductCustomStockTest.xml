@@ -115,7 +115,7 @@
         <fillField selector="{{StorefrontProductPageSection.qtyInput}}" userInput="{{101ProductQty.value}}" stepKey="fillQuantity"/>
         <click selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="addToCart"/>
         <waitForElementVisible selector="{{StorefrontProductPageSection.errorMsg}}" stepKey="waitForErrorMessage"/>
-        <see selector="{{StorefrontProductPageSection.errorMsg}}" userInput="The requested qty is not available" stepKey="verifyErrorMessage"/>
+        <see selector="{{StorefrontProductPageSection.errorMsg}}" userInput="Not enough items for sale" stepKey="verifyErrorMessage"/>
         <!--Add configurable to cart with proper quantity-->
         <actionGroup ref="StorefrontAddConfigurableProductToTheCartActionGroup" stepKey="addConfigurableProductToCartWithProperQty">
             <argument name="urlKey" value="$configurableProduct.custom_attributes[url_key]$" />
