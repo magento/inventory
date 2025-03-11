@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryImportExport\Plugin\Import;
 
 use Magento\CatalogImportExport\Model\Import\Product\SkuProcessor;
+use Magento\CatalogImportExport\Model\Import\Product\SkuStorage;
 use Magento\CatalogImportExport\Model\StockItemProcessorInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\CouldNotSaveException;
@@ -64,6 +65,11 @@ class SourceItemImporter
     private $skuProcessor;
 
     /**
+     * @var SkuStorage
+     */
+    private SkuStorage $skuStorage;
+
+    /**
      * StockItemImporter constructor
      *
      * @param SourceItemsSaveInterface $sourceItemsSave
@@ -72,6 +78,7 @@ class SourceItemImporter
      * @param IsSingleSourceModeInterface $isSingleSourceMode
      * @param ResourceConnection $resourceConnection
      * @param SkuProcessor $skuProcessor
+     * @param SkuStorage $skuStorage
      */
     public function __construct(
         SourceItemsSaveInterface $sourceItemsSave,
@@ -79,7 +86,8 @@ class SourceItemImporter
         DefaultSourceProviderInterface $defaultSourceProvider,
         IsSingleSourceModeInterface $isSingleSourceMode,
         ResourceConnection $resourceConnection,
-        SkuProcessor $skuProcessor
+        SkuProcessor $skuProcessor,
+        SkuStorage $skuStorage
     ) {
         $this->sourceItemsSave = $sourceItemsSave;
         $this->sourceItemFactory = $sourceItemFactory;
@@ -87,6 +95,7 @@ class SourceItemImporter
         $this->isSingleSourceMode = $isSingleSourceMode;
         $this->resourceConnection = $resourceConnection;
         $this->skuProcessor = $skuProcessor;
+        $this->skuStorage = $skuStorage;
     }
 
     /**
@@ -113,7 +122,7 @@ class SourceItemImporter
         $skusHavingDefaultSource = $this->getSkusHavingDefaultSource(array_keys($stockData));
 
         foreach ($stockData as $sku => $stockDatum) {
-            $isNewSku = !array_key_exists(strtolower((string)$sku), $this->skuProcessor->getOldSkus());
+            $isNewSku = !$this->skuStorage->has((string)$sku);
             $isQtyExplicitlySet = $importedData[$sku]['qty'] ?? false;
 
             $inStock = $stockDatum['is_in_stock'] ?? 0;

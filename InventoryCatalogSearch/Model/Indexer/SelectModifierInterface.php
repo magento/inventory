@@ -18,8 +18,8 @@ interface SelectModifierInterface
      * Add stock item filter to select
      *
      * @param Select $select
-     * @param string $stockTable
+     * @param int $storeId
      * @return void
      */
-    public function modify(Select $select, string $stockTable): void;
+    public function modify(Select $select, int $storeId): void;
 }

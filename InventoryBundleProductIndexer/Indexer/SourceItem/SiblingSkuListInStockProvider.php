@@ -64,7 +64,6 @@ class SiblingSkuListInStockProvider
         $sourceItemTable = $this->resourceConnection->getTableName('inventory_source_item');
 
         $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
-        $linkField = $metadata->getIdentifierField();
         $items = [];
 
         $select = $connection
@@ -86,11 +85,11 @@ class SiblingSkuListInStockProvider
                 []
             )->joinInner(
                 ['sibling_link' => $this->resourceConnection->getTableName('catalog_product_bundle_selection')],
-                'sibling_link.product_id = child_product_entity.' . $linkField,
+                'sibling_link.product_id = child_product_entity.' . $metadata->getIdentifierField(),
                 []
             )->joinInner(
                 ['sibling_product_entity' => $this->resourceConnection->getTableName('catalog_product_entity')],
-                'sibling_product_entity.' . $linkField . ' = sibling_link.product_id',
+                'sibling_product_entity.' . $metadata->getLinkField() . ' = sibling_link.parent_product_id',
                 []
             )->where(
                 'source_item.source_item_id IN (?)',

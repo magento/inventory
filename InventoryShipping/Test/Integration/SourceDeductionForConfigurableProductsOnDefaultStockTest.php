@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryShipping\Test\Integration;
 
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\ObjectManagerInterface;
 use Magento\Inventory\Model\SourceItem\Command\Handler\SourceItemsSaveHandler;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
@@ -55,6 +56,16 @@ class SourceDeductionForConfigurableProductsOnDefaultStockTest extends TestCase
      * @var SourceItemsSaveHandler
      */
     private $sourceItemsSaveHandler;
+
+    /**
+     * @var ObjectManagerInterface
+     */
+    private $objectManager;
+
+    /**
+     * @var ShipmentRepositoryInterface
+     */
+    private $shipmentRepository;
 
     protected function setUp(): void
     {

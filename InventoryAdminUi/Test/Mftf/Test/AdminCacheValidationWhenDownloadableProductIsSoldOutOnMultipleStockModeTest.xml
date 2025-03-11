@@ -33,8 +33,12 @@
                 <requiredEntity createDataKey="createSource1"/>
             </createData>
             <comment userInput="Perform reindex and cache flush after assign default stock to main website." stepKey="reindexCacheFlushAfterAssignDefaultStockToMainWebsite"/>
-            <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
             <createData entity="Msi_US_Customer" stepKey="customer"/>
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin1"/>
         </before>
@@ -59,20 +63,22 @@
             <deleteData createDataKey="simpleCategory1" stepKey="deleteCategory"/>
             <deleteData createDataKey="downloadableProduct1" stepKey="deleteProduct"/>
             <deleteData createDataKey="createStock1" stepKey="deleteCustomStock"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
-        <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="adminProductIndexPageAdd"/>
-        <waitForPageLoad stepKey="waitForPageLoad1"/>
-        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findDownloadableProductBySkuForFillData">
-            <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
-            <argument name="value" value="$$downloadableProduct1.product[sku]$$"/>
-        </actionGroup>
-        <click selector="{{AdminGridRow.editByValue($$downloadableProduct1.product[sku]$$)}}" stepKey="clickOnEditDownloadableProductForCheckInStock"/>
+        <comment userInput="Preserve BIC. AdminProductIndexPage.url" stepKey="adminProductIndexPageAdd"/>
+        <comment userInput="Preserve BIC." stepKey="waitForPageLoad1"/>
+        <comment userInput="Preserving BIC. AdminGridFilterSearchResultsByInput" stepKey="findDownloadableProductBySkuForFillData" />
+        <comment userInput="Preserve BIC." stepKey="clickOnEditDownloadableProductForCheckInStock"/>
+
+        <amOnPage url="{{AdminProductEditPage.url($$downloadableProduct1.id$$)}}" stepKey="openDownloadableProductEditPage" />
 
         <comment userInput="Assign category to product." stepKey="assignCategoryComment"/>
-        <waitForPageLoad time="30" stepKey="waitForPageLoad2"/>
+        <waitForPageLoad stepKey="waitForPageLoad2"/>
         <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$simpleCategory1.name$$]" requiredAction="true" stepKey="searchAndSelectCategory"/>
 
         <click selector="{{AdminProductDownloadableSection.sectionHeader}}" stepKey="openDownloadableSection1"/>

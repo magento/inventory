@@ -53,7 +53,7 @@ class GetIsQtySalableForBundleProduct
         string $sku,
         int $stockId
     ): bool {
-        return $this->getProductTypesBySkus->execute([$sku])[$sku] === Type::TYPE_CODE
+        return $isSalable && $this->getProductTypesBySkus->execute([$sku])[$sku] === Type::TYPE_CODE
             ? $this->isBundleProductChildrenSalable->execute($sku, $stockId)
             : $isSalable;
     }

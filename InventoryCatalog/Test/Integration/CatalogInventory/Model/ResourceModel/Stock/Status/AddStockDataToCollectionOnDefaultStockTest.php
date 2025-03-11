@@ -50,7 +50,7 @@ class AddStockDataToCollectionOnDefaultStockTest extends TestCase
     /**
      * @return array
      */
-    public function addStockDataToCollectionDataProvider(): array
+    public static function addStockDataToCollectionDataProvider(): array
     {
         return [
             [4, true],

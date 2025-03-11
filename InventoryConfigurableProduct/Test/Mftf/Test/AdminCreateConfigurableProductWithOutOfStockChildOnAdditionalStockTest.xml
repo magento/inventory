@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright 2024 Adobe
+  * All Rights Reserved.
+  */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminCreateConfigurableProductWithOutOfStockChildOnAdditionalStockTest">
+        <annotations>
+            <stories value="Configurable Product"/>
+            <title value="Configurable Product with 'Out of Stock' Child on Additional Stock."/>
+            <description value="Admin create configurable product with size attribute and set out of stock of one of the simple products and assert it in storefront."/>
+            <severity value="MAJOR"/>
+            <testCaseId value="AC-4359"/>
+        </annotations>
+        <before>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+        </before>
+        <after>
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <deleteData createDataKey="stock" stepKey="deleteCustomStock"/>
+            <!--Disable all sources.-->
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="deleteSource"/>
+            <!--Delete all created product-->
+            <actionGroup ref="DeleteProductBySkuActionGroup" stepKey="deleteCreatedProducts">
+                <argument name="sku" value="{{ApiConfigurableProduct.sku}}"/>
+            </actionGroup>
+            <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="clearFilters"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="adminLogout"/>
+        </after>
+        <createData entity="FullSource1" stepKey="source"/>
+        <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
+        <createData entity="SourceStockLinked1" stepKey="sourceStockLink">
+            <requiredEntity createDataKey="stock"/>
+            <requiredEntity createDataKey="source"/>
+        </createData>
+        <!--Open product page and start creating configurable product-->
+        <actionGroup ref="AdminOpenProductIndexPageActionGroup" after="saveAttribute" stepKey="openProductIndexPage"/>
+        <actionGroup ref="GoToCreateProductPageActionGroup" stepKey="goToCreateConfigurableProduct">
+            <argument name="product" value="ApiConfigurableProduct"/>
+        </actionGroup>
+        <!-- Fill all the necessary information such as weight, name, SKU etc -->
+        <actionGroup ref="FillMainProductFormActionGroup" stepKey="fillProductForm">
+            <argument name="product" value="ApiConfigurableProduct"/>
+        </actionGroup>
+        <actionGroup ref="AdminCreateOptionsForAttributeMultiStockActionGroup" stepKey="generateVariations">
+            <argument name="attributeCode" value="{{sizeAttribute.attribute_code}}"/>
+            <argument name="sourceCode" value="$source.source[source_code]$"/>
+        </actionGroup>
+        <actionGroup ref="SaveConfigurableProductActionGroup" stepKey="saveConfigurable">
+            <argument name="product" value="ApiConfigurableProduct"/>
+        </actionGroup>
+        <!-- Go to child product S and update status as out of stock-->
+        <actionGroup ref="AdminOpenChildVariationOfConfigurableProductActionGroup" stepKey="OpenChildVariation"/>
+        <switchToNextTab stepKey="switchToConfigChildProductPage"/>
+        <waitForPageLoad stepKey="waitForProductPageLoad"/>
+        <actionGroup ref="AdminUpdateStatusOfChildVariationOfConfigurableProductActionGroup" stepKey="updateStatusAndSave"/>
+        <closeTab stepKey="closeConfigChildProductPage"/>
+        <!--Reindex and clear cache-->
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value="full_page"/>
+            </actionGroup>
+        <!-- Go to storefront and assert the configurable product-->
+        <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="goToStoreFront2"/>
+        <actionGroup ref="StorefrontOpenProductPageActionGroup" stepKey="GoToProductPage">
+            <argument name="productUrl" value="{{ApiConfigurableProduct.urlKey}}"/>
+        </actionGroup>
+        <waitForPageLoad stepKey="waitingForPageLoad"/>
+        <waitForElementClickable selector="{{StorefrontConfigurableProductPage.productAttributeDropDown}}" stepKey="waitForDropDownOptionToBeSelected"/>
+        <click selector="{{StorefrontConfigurableProductPage.productAttributeDropDown}}" stepKey="clickOnDropDown"/>
+        <dontSeeElement selector="{{StorefrontProductInfoMainSection.dropDownOption('S')}}" stepKey="seeSSizeIsAvailable"/>
+    </test>
+</tests>

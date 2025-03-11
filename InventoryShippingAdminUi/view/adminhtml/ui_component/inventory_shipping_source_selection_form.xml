@@ -203,7 +203,7 @@
                                 <label translate="true">Qty To Deduct</label>
                                 <imports>
                                     <link name="sourceCode">${$.provider}:${ $.parentScope }.sourceCode</link>
-                                    <link name="qtyAvailable">${$.parentName}.qtyAvailable:value</link>
+                                    <link name="qtyAvailable">${$.provider}:${ $.parentScope }.qtyAvailable</link>
                                     <link name="toggleDisable">ns = ${ $.ns }, index = sourceCode:value</link>
                                 </imports>
                                 <disabled>true</disabled>

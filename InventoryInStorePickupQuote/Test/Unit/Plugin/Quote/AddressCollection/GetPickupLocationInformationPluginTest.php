@@ -46,10 +46,11 @@ class GetPickupLocationInformationPluginTest extends TestCase
     {
         $this->addressExtensionInterfaceFactory = $this->getMockBuilder(AddressExtensionInterfaceFactory::class)
             ->disableOriginalConstructor()
-            ->setMethods(['create'])
+            ->onlyMethods(['create'])
             ->getMockForAbstractClass();
         $this->connection = $this->getMockBuilder(ResourceConnection::class)
-            ->setMethods(['getSelect', 'getTableName'])
+            ->onlyMethods(['getTableName'])
+            ->addMethods(['getSelect'])
             ->disableOriginalConstructor()
             ->getMock();
         $objectManager = new ObjectManager($this);
@@ -87,7 +88,7 @@ class GetPickupLocationInformationPluginTest extends TestCase
             )->willReturnSelf();
         /** @var Collection|MockObject $collection */
         $collection = $this->getMockBuilder(Collection::class)
-            ->setMethods(['getSelect', 'isLoaded'])
+            ->onlyMethods(['getSelect', 'isLoaded'])
             ->disableOriginalConstructor()
             ->getMock();
         $collection->expects(self::exactly(2))

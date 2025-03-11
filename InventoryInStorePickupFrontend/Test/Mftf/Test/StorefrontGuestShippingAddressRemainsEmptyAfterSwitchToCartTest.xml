@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontGuestShippingAddressRemainsEmptyAfterSwitchToCartTest">
+        <annotations>
+            <stories value="Simple Product Custom Stock."/>
+            <title value="Checkout page shipping address should remain empty after selecting store pickup delivery method, switching to Cart page and return back"/>
+            <description value="Checkout page shipping address should remain empty after selecting store pickup delivery method, switching to Cart page and return back"/>
+            <testCaseId value="AC-9055"/>
+            <useCaseId value="ACP2E-1988"/>
+            <severity value="MAJOR"/>
+            <group value="msi"/>
+            <group value="store_pickup"/>
+        </annotations>
+        <before>
+            <!--Set Distance Provider for Distance Based SSA to offline-->
+            <magentoCLI command="config:set {{OfflineDistanceProviderForDistanceBasedSSA.path}} {{OfflineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
+            <!--Enable 'In Store Pickup' shipping method-->
+            <magentoCLI command="config:set {{EnableInStorePickup.path}} {{EnableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
+            <!--Download tables for 'US'-->
+            <magentoCLI command="{{ImportTables.path}} {{USTable.value}}" stepKey="downloadTables"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
+            <!--Create test data-->
+            <createData entity="CulverStorePickupEnabledSource" stepKey="culverSource"/>
+            <createData entity="AustinStorePickupEnabledSource" stepKey="austinSource"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink1">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="culverSource"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink2">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="austinSource"/>
+            </createData>
+            <createData entity="_defaultCategory" stepKey="category"/>
+            <createData entity="SimpleProduct" stepKey="product">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <!--Assign product to sources-->
+            <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openProductEditPage">
+                <argument name="productId" value="$$product.id$$"/>
+            </actionGroup>
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignCulverSourceAndSetQty">
+                <argument name="sourceCode" value="$culverSource.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignAustinSourceAndSetQty">
+                <argument name="sourceCode" value="$austinSource.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
+        </before>
+        <after>
+            <!--Revert Distance Provider for Distance Based SSA to online-->
+            <magentoCLI command="config:set {{OnlineDistanceProviderForDistanceBasedSSA.path}} {{OnlineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
+            <!--Disable 'In Store Pickup' shipping method-->
+            <magentoCLI command="config:set {{DisableInStorePickup.path}} {{DisableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <!--Assign Default Stock to Default Website-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <deleteData createDataKey="stock" stepKey="deleteStock"/>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+        </after>
+        <!--Add product to cart-->
+        <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addProductToCart">
+            <argument name="product" value="$product$"/>
+        </actionGroup>
+        <!--Navigate to checkout-->
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="goToCheckoutFromMinicart"/>
+        <!--Switch to In Pick In Store-->
+        <actionGroup ref="StorefrontPickInStoreActionGroup" stepKey="pickInStoreAustin"/>
+        <!--Fill customer email-->
+        <actionGroup ref="StorefrontPickInStoreFillCustomerEmail" stepKey="fillCustomerEmail"/>
+        <!--Click 'Select Store'-->
+        <actionGroup ref="StorefrontPickInStoreNavigateToSelectStoreActionGroup" stepKey="navigateToSelectStores"/>
+        <!--Select store-->
+        <actionGroup ref="StorefrontPickInStoreSelectSourceActionGroup" stepKey="selectSourceAustin">
+            <argument name="searchString" value="{{AustinStorePickupEnabledSource.city}}"/>
+            <argument name="sourceName" value="$austinSource.source[name]$"/>
+        </actionGroup>
+        <!--Verify that store is selected-->
+        <actionGroup ref="StorefrontAssertSelectedStoreActionGroup" stepKey="verifyThatStoreIsSelectedAustin">
+            <argument name="sourceName" value="$austinSource.source[name]$"/>
+        </actionGroup>
+        <!--Navigate to payment page-->
+        <actionGroup ref="StorefrontPickInStoreNavigateToPaymentActionGroup" stepKey="navigateToPaymentStep"/>
+        <!--Navigate to shopping cart-->
+        <actionGroup ref="StorefrontCartPageOpenActionGroup" stepKey="navigateToShoppingCart"/>
+        <!--Navigate to checkout from shopping cart-->
+        <actionGroup ref="GoToCheckoutFromCartActionGroup" stepKey="goToCheckoutFromCart"/>
+        <!--Switch to 'Shipping'-->
+        <actionGroup ref="StorefrontSelectShippingActionGroup" stepKey="switchToShippingTab"/>
+        <!--Grab value from first name field-->
+        <grabValueFrom selector="{{CheckoutShippingSection.firstName}}" stepKey="grabShippingGuestFirstName"/>
+        <!--Verify that field FirstName is empty, it means shipping address wasn't pre-filled with Pick-In-Store address-->
+        <assertEmpty stepKey="verifyEmptyShippingGuestFirstName">
+            <actualResult type="const">$grabShippingGuestFirstName</actualResult>
+        </assertEmpty>
+    </test>
+</tests>

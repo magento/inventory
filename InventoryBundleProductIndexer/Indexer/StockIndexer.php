@@ -9,7 +9,7 @@ namespace Magento\InventoryBundleProductIndexer\Indexer;
 
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\StateException;
-use Magento\InventoryBundleProductIndexer\Indexer\Stock\IndexDataByStockIdProvider;
+use Magento\InventoryBundleProductIndexer\Indexer\SourceItem\IndexDataBySkuListProvider;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Indexer\InventoryIndexer;
 use Magento\InventoryIndexer\Indexer\Stock\GetAllStockIds;
@@ -46,9 +46,9 @@ class StockIndexer
     private $indexNameBuilder;
 
     /**
-     * @var IndexDataByStockIdProvider
+     * @var IndexDataBySkuListProvider
      */
-    private $indexDataByStockIdProvider;
+    private $indexDataBySkuListProvider;
 
     /**
      * @var IndexTableSwitcherInterface
@@ -72,7 +72,7 @@ class StockIndexer
      * @param IndexStructureInterface $indexStructure
      * @param IndexHandlerInterface $indexHandler
      * @param IndexNameBuilder $indexNameBuilder
-     * @param IndexDataByStockIdProvider $indexDataByStockIdProvider
+     * @param IndexDataBySkuListProvider $indexDataBySkuListProvider
      * @param IndexTableSwitcherInterface $indexTableSwitcher
      * @param DefaultStockProviderInterface $defaultStockProvider
      * @param PrepareIndexDataForClearingIndex $prepareIndexDataForClearingIndex
@@ -82,7 +82,7 @@ class StockIndexer
         IndexStructureInterface $indexStructure,
         IndexHandlerInterface $indexHandler,
         IndexNameBuilder $indexNameBuilder,
-        IndexDataByStockIdProvider $indexDataByStockIdProvider,
+        IndexDataBySkuListProvider $indexDataBySkuListProvider,
         IndexTableSwitcherInterface $indexTableSwitcher,
         DefaultStockProviderInterface $defaultStockProvider,
         PrepareIndexDataForClearingIndex $prepareIndexDataForClearingIndex
@@ -91,7 +91,7 @@ class StockIndexer
         $this->indexStructure = $indexStructure;
         $this->indexHandler = $indexHandler;
         $this->indexNameBuilder = $indexNameBuilder;
-        $this->indexDataByStockIdProvider = $indexDataByStockIdProvider;
+        $this->indexDataBySkuListProvider = $indexDataBySkuListProvider;
         $this->indexTableSwitcher = $indexTableSwitcher;
         $this->defaultStockProvider = $defaultStockProvider;
         $this->prepareIndexDataForClearingIndex = $prepareIndexDataForClearingIndex;
@@ -113,22 +113,24 @@ class StockIndexer
      * Index bundle products for given stock.
      *
      * @param int $stockId
+     * @param array $skuList
      * @return void
      * @throws StateException
      */
-    public function executeRow(int $stockId)
+    public function executeRow(int $stockId, array $skuList = [])
     {
-        $this->executeList([$stockId]);
+        $this->executeList([$stockId], $skuList);
     }
 
     /**
      * Index bundle products for given stocks.
      *
      * @param array $stockIds
+     * @param array $skuList
      * @return void
      * @throws StateException
      */
-    public function executeList(array $stockIds)
+    public function executeList(array $stockIds, array $skuList = [])
     {
         foreach ($stockIds as $stockId) {
             if ($this->defaultStockProvider->getId() === $stockId) {
@@ -145,7 +147,7 @@ class StockIndexer
                 $this->indexStructure->create($mainIndexName, ResourceConnection::DEFAULT_CONNECTION);
             }
 
-            $indexData = $this->indexDataByStockIdProvider->execute($stockId);
+            $indexData = $this->indexDataBySkuListProvider->execute($stockId, $skuList);
 
             $this->indexHandler->cleanIndex(
                 $mainIndexName,

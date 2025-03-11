@@ -155,7 +155,7 @@ class InventorySourceExtensionTest extends TestCase
      *
      * @return array
      */
-    public function dataProvider(): array
+    public static function dataProvider(): array
     {
         return [
             [ /* Data set #0. Default Source. */

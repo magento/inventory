@@ -12,6 +12,7 @@ use Magento\Inventory\Model\SourceItem\Command\DecrementSourceItemQty;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
+use Magento\InventoryConfigurationApi\Model\InventoryConfigurationInterface;
 use Magento\InventorySalesApi\Api\GetStockBySalesChannelInterface;
 
 /**
@@ -45,21 +46,29 @@ class SourceDeductionService implements SourceDeductionServiceInterface
     private $decrementSourceItem;
 
     /**
+     * @var InventoryConfigurationInterface
+     */
+    private $inventoryConfiguration;
+
+    /**
      * @param GetSourceItemBySourceCodeAndSku $getSourceItemBySourceCodeAndSku
      * @param GetStockItemConfigurationInterface $getStockItemConfiguration
      * @param GetStockBySalesChannelInterface $getStockBySalesChannel
      * @param DecrementSourceItemQty $decrementSourceItem
+     * @param InventoryConfigurationInterface $inventoryConfiguration
      */
     public function __construct(
         GetSourceItemBySourceCodeAndSku $getSourceItemBySourceCodeAndSku,
         GetStockItemConfigurationInterface $getStockItemConfiguration,
         GetStockBySalesChannelInterface $getStockBySalesChannel,
-        DecrementSourceItemQty $decrementSourceItem
+        DecrementSourceItemQty $decrementSourceItem,
+        InventoryConfigurationInterface $inventoryConfiguration
     ) {
         $this->getSourceItemBySourceCodeAndSku = $getSourceItemBySourceCodeAndSku;
         $this->getStockItemConfiguration = $getStockItemConfiguration;
         $this->getStockBySalesChannel = $getStockBySalesChannel;
         $this->decrementSourceItem = $decrementSourceItem;
+        $this->inventoryConfiguration = $inventoryConfiguration;
     }
 
     /**
@@ -121,9 +130,17 @@ class SourceDeductionService implements SourceDeductionServiceInterface
     ): int {
         $sourceItemQty = $sourceItem->getQuantity() ?: self::ZERO_STOCK_QUANTITY;
         $currentStatus = (int)$stockItemConfiguration->getExtensionAttributes()->getIsInStock();
-        $calculatedStatus = $sourceItemQty === $stockItemConfiguration->getMinQty() && !$stockItemConfiguration->getBackorders()
-            ? SourceItemInterface::STATUS_OUT_OF_STOCK
-            : SourceItemInterface::STATUS_IN_STOCK;
+        $calculatedStatus =  SourceItemInterface::STATUS_IN_STOCK;
+
+        if ($sourceItemQty === $stockItemConfiguration->getMinQty() && !$stockItemConfiguration->getBackorders()) {
+            $calculatedStatus = SourceItemInterface::STATUS_OUT_OF_STOCK;
+        }
+
+        if ($this->inventoryConfiguration->isCanBackInStock() && $sourceItemQty > $stockItemConfiguration->getMinQty()
+            && $currentStatus === SourceItemInterface::STATUS_OUT_OF_STOCK
+        ) {
+            return SourceItemInterface::STATUS_IN_STOCK;
+        }
 
         return $currentStatus === SourceItemInterface::STATUS_OUT_OF_STOCK ? $currentStatus : $calculatedStatus;
     }

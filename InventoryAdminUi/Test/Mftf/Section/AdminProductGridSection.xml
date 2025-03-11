@@ -37,7 +37,7 @@
         <element name="textMassSourceAssignmentHeader" type="text" selector="//aside[@data-type='popup']//header[@class='modal-header']//h1[contains(text(),'{{var1}}')]" parameterized="true" />
         <element name="textMassSourceAssignmentBody" type="text" selector="//aside[@data-type='popup']//div[contains(text(),'{{var1}}')]" parameterized="true" />
         <element name="acceptOKPopup" type="button" selector="//aside[@data-type='popup']//button[@class='action-primary action-accept']" />
-        <element name="qtyPerSourceInGrid" type="block" selector="//td//div[contains(text(),'{{var}}')]/../..//td[9]//div//li//strong[text()='Default Source']" parameterized="true" />
+        <element name="qtyPerSourceInGrid" type="block" selector="//td//div[contains(text(),'{{var}}')]/ancestor::div//li//strong[text()='Default Source']" parameterized="true" />
         <element name="qtyPerSourceOnHover" type="block" selector="//div[contains(text(),'Quantity per Source:')]/..//strong[contains(text(),'{{var1}}')]/..//span[contains(text(),'{{var2}}')]" parameterized="true" />
         <element name="scalableQty" type="text" selector="//span[contains(@data-bind,'salableQuantityData().qty')]"/>
         <element name="btnAdvancedInventory" type="button" selector="//button//span[contains(text(),'Advanced Inventory')]"/>

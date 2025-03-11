@@ -68,7 +68,7 @@ class GetStockStatusBySkuOnDefaultStockTest extends TestCase
     /**
      * @return array
      */
-    public function getStockDataProvider(): array
+    public static function getStockDataProvider(): array
     {
         return [
             ['grouped_in_stock', 1],

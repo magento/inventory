@@ -49,8 +49,12 @@
             <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
             <!--Revert 'Out of Stock' Threshold.-->
             <magentoCLI command="config:set cataloginventory/item_options/min_qty 0" stepKey="revertOutOfStockThreshold"/>
-            <magentoCLI command="indexer:reindex" stepKey="reindexAfterOutOfStockThresholdReverted"/>
-            <magentoCLI command="cache:flush" stepKey="flushCacheAfterOutOfStockThresholdReverted"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexAfterOutOfStockThresholdReverted">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCacheAfterOutOfStockThresholdReverted">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </after>
 
         <!--Assign create product to additional stock and set qty.-->
@@ -70,16 +74,24 @@
         </actionGroup>
         <!--Set 'Out of Stock' threshold.-->
         <magentoCLI command="config:set cataloginventory/item_options/min_qty 100" stepKey="setOutOfStockThreshold"/>
-        <magentoCLI command="indexer:reindex" stepKey="reindexAfterOutOfStockThresholdSet"/>
-        <magentoCLI command="cache:flush" stepKey="flushCacheAfterOutOfStockThresholdSet"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexAfterOutOfStockThresholdSet">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCacheAfterOutOfStockThresholdSet">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <!--Verify product is not visible on storefront.-->
         <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPage"/>
         <waitForPageLoad stepKey="waitForCategoryPageLoad"/>
         <dontSee userInput="$$product.name$$" stepKey="verifyProductIsNotPresentOnStorefront"/>
         <!--Change 'Out of Stock' Threshold.-->
         <magentoCLI command="config:set cataloginventory/item_options/min_qty 99" stepKey="changeOutOfStockThreshold"/>
-        <magentoCLI command="indexer:reindex" stepKey="reindexAfterOutOfStockThresholdChanged"/>
-        <magentoCLI command="cache:flush" stepKey="flushCacheAfterOutOfStockThresholdChanged"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexAfterOutOfStockThresholdChanged">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCacheAfterOutOfStockThresholdChanged">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <!--Verify product is visible on storefront.-->
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="checkConfigurableIsPresentOnCategoryPage">
             <argument name="category" value="$$category$$"/>

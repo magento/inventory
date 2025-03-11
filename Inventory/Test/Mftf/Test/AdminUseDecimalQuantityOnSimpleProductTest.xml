@@ -101,6 +101,7 @@
         <fillField selector="{{CheckoutShippingGuestInfoSection.postcode}}" userInput="{{CustomerAddressSimple.postcode}}" stepKey="enterPostcode"/>
         <fillField selector="{{CheckoutShippingGuestInfoSection.telephone}}" userInput="{{CustomerAddressSimple.telephone}}" stepKey="enterTelephone"/>
 
+        <waitForElementClickable selector="{{CheckoutShippingGuestInfoSection.next}}" stepKey="waitForNextButtonClickable"/>
         <click selector=".action.continue" stepKey="clickOnUpdate1"/>
         <waitForPageLoad stepKey="waitForPageLoad19"/>
 

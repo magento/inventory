@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
+ * Copyright 2024 Adobe
+ * All rights reserved.
  * See COPYING.txt for license details.
  */
 declare(strict_types=1);
@@ -64,7 +65,7 @@ class InvalidateAfterEnablingOrDisablingSourceTest extends TestCase
     /**
      * @return array
      */
-    public function indexerInvalidationDataProvider(): array
+    public static function indexerInvalidationDataProvider(): array
     {
         return [
             ['eu-1', true, true],
@@ -146,7 +147,7 @@ class InvalidateAfterEnablingOrDisablingSourceTest extends TestCase
     /**
      * @return array
      */
-    public function sourceDoesNotHaveAllRelationsDataProvider(): array
+    public static function sourceDoesNotHaveAllRelationsDataProvider(): array
     {
         return [
             ['eu-1', true, true],

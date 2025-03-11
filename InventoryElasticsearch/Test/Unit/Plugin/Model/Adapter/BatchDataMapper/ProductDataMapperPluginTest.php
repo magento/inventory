@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2022 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -10,11 +10,12 @@ namespace Magento\InventoryElasticsearch\Test\Unit\Plugin\Model\Adapter\BatchDat
 use Magento\Elasticsearch\Model\Adapter\BatchDataMapper\ProductDataMapper;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Magento\InventoryApi\Api\Data\StockInterface;
+use Magento\InventoryCatalog\Model\GetSkusByProductIds;
 use Magento\InventoryElasticsearch\Plugin\Model\Adapter\BatchDataMapper\ProductDataMapperPlugin;
-use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
+use Magento\InventorySalesApi\Model\GetStockItemsDataInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
+use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Api\StoreRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -40,9 +41,9 @@ class ProductDataMapperPluginTest extends TestCase
     private $storeRepositoryMock;
 
     /**
-     * @var GetStockItemDataInterface|MockObject
+     * @var GetStockItemsDataInterface|MockObject
      */
-    private $getStockItemDataMock;
+    private $getStockItemsDataMock;
 
     /**
      * @var ProductDataMapper|MockObject
@@ -50,25 +51,25 @@ class ProductDataMapperPluginTest extends TestCase
     private $productDataMapperMock;
 
     /**
+     * @var GetSkusByProductIds|MockObject
+     */
+    private $getSkusByProductIdsMock;
+
+    /**
      * @inheirtDoc
      */
     protected function setUp(): void
     {
-        $this->stockByWebsiteIdResolverMock = $this->getMockForAbstractClass(StockByWebsiteIdResolverInterface::class);
-        $this->storeRepositoryMock = $this->getMockBuilder(StoreRepositoryInterface::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['getById'])
-            ->addMethods(['getWebsiteId'])
-            ->getMockForAbstractClass();
-        $this->getStockItemDataMock = $this->createMock(GetStockItemDataInterface::class);
+        $this->stockByWebsiteIdResolverMock = $this->createMock(StockByWebsiteIdResolverInterface::class);
+        $this->storeRepositoryMock = $this->createMock(StoreRepositoryInterface::class);
+        $this->getStockItemsDataMock = $this->createMock(GetStockItemsDataInterface::class);
         $this->productDataMapperMock = $this->createMock(ProductDataMapper::class);
-        $this->plugin = (new ObjectManager($this))->getObject(
-            ProductDataMapperPlugin::class,
-            [
-                'stockByWebsiteIdResolver' => $this->stockByWebsiteIdResolverMock,
-                'storeRepository' => $this->storeRepositoryMock,
-                'getStockItemData' => $this->getStockItemDataMock
-            ]
+        $this->getSkusByProductIdsMock = $this->createMock(GetSkusByProductIds::class);
+        $this->plugin = new ProductDataMapperPlugin(
+            $this->stockByWebsiteIdResolverMock,
+            $this->storeRepositoryMock,
+            $this->getStockItemsDataMock,
+            $this->getSkusByProductIdsMock
         );
     }
 
@@ -85,43 +86,42 @@ class ProductDataMapperPluginTest extends TestCase
      */
     public function testAfterMap(int $storeId, int $websiteId, int $stockId, int $salability): void
     {
+        $productId = 123;
         $sku = '24-MB01';
-        $attribute = ['is_out_of_stock' => $salability];
+        $attribute = ['is_out_of_stock' => (int)!$salability];
         $documents = [
-            1 => [
+            $productId => [
                 'store_id' => $storeId,
-                'sku' => $sku,
-                'status' => $salability
+                'status' => 1,
             ],
         ];
-        $expectedResult[1] = array_merge($documents[1], $attribute);
+        $expectedResult = [$productId => array_merge($documents[$productId], $attribute)];
 
-        $this->storeRepositoryMock
-            ->expects($this->once())
+        $storeMock = $this->createMock(StoreInterface::class);
+        $this->storeRepositoryMock->expects(self::once())
             ->method('getById')
             ->with($storeId)
-            ->willReturnSelf();
-        $this->storeRepositoryMock
-            ->expects($this->once())
+            ->willReturn($storeMock);
+        $storeMock->expects(self::atLeastOnce())
             ->method('getWebsiteId')
             ->willReturn($websiteId);
 
-        $stock = $this->getMockForAbstractClass(StockInterface::class);
-        $stock->method('getStockId')
+        $stock = $this->createMock(StockInterface::class);
+        $stock->expects(self::atLeastOnce())
+            ->method('getStockId')
             ->willReturn($stockId);
-        $this->stockByWebsiteIdResolverMock
+        $this->stockByWebsiteIdResolverMock->expects(self::once())
             ->method('execute')
+            ->with($websiteId)
             ->willReturn($stock);
-
-        $this->getStockItemDataMock->expects($this->atLeastOnce())
+        $this->getSkusByProductIdsMock->expects(self::once())
             ->method('execute')
-            ->willReturnCallback(
-                function ($sku) use ($salability) {
-                    return isset($sku)
-                        ? ['is_salable' => $salability]
-                        : null;
-                }
-            );
+            ->with([$productId])
+            ->willReturn([$productId => $sku]);
+        $this->getStockItemsDataMock->expects(self::once())
+            ->method('execute')
+            ->with([$sku], $stockId)
+            ->willReturn([$sku => ['is_salable' => $salability]]);
 
         $this->assertSame(
             $expectedResult,
@@ -132,11 +132,11 @@ class ProductDataMapperPluginTest extends TestCase
     /**
      * @return array
      */
-    public function stockDataProvider(): array
+    public static function stockDataProvider(): array
     {
         return [
-            ['storeId' => 1, 'websiteId' => 1, 'stockId' => 1, 'saleability' => 1],
-            ['storeId' => 2, 'websiteId' => 20, 'stockId' => 45, 'saleability' => 0],
+            ['storeId' => 1, 'websiteId' => 1, 'stockId' => 1, 'salability' => 1],
+            ['storeId' => 2, 'websiteId' => 20, 'stockId' => 45, 'salability' => 0],
         ];
     }
 }

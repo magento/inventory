@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -99,7 +99,7 @@ class ReservationBuilder implements ReservationBuilderInterface
     /**
      * @inheritdoc
      */
-    public function setMetadata(string $metadata = null): ReservationBuilderInterface
+    public function setMetadata(?string $metadata = null): ReservationBuilderInterface
     {
         $this->metadata = $metadata;
         return $this;
@@ -133,6 +133,8 @@ class ReservationBuilder implements ReservationBuilderInterface
     }
 
     /**
+     * Validate
+     *
      * @return ValidationResult
      */
     private function validate()
@@ -143,7 +145,7 @@ class ReservationBuilder implements ReservationBuilderInterface
             $errors[] = __('"%field" is expected to be a number.', ['field' => ReservationInterface::STOCK_ID]);
         }
 
-        if (null === $this->sku || '' === trim($this->sku)) {
+        if (null === $this->sku || '' === trim($this->sku ?? '')) {
             $errors[] = __('"%field" can not be empty.', ['field' => ReservationInterface::SKU]);
         }
 
@@ -156,6 +158,7 @@ class ReservationBuilder implements ReservationBuilderInterface
 
     /**
      * Used to clean state after object creation
+     *
      * @return void
      */
     private function reset()
@@ -168,7 +171,8 @@ class ReservationBuilder implements ReservationBuilderInterface
 
     /**
      * Used to convert database field names (that use snake case) into constructor parameter names (that use camel case)
-     * to avoid to define them twice in domain model interface.
+     *
+     * To avoid to define them twice in domain model interface.
      *
      * @param array $array
      * @return array

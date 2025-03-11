@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -65,7 +65,7 @@ class SelectBuilder
         IndexNameBuilder $indexNameBuilder,
         IndexNameResolverInterface $indexNameResolver,
         MetadataPool $metadataPool,
-        DefaultStockProviderInterface $defaultStockProvider = null
+        ?DefaultStockProviderInterface $defaultStockProvider = null
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->indexNameBuilder = $indexNameBuilder;
@@ -120,7 +120,7 @@ class SelectBuilder
             'child_stock.sku = child_product_entity.sku',
             [
                 IndexStructure::QUANTITY => 'SUM(child_stock.quantity)',
-                IndexStructure::IS_SALABLE => 'IF(inventory_stock_item.is_in_stock = 0, 0, 
+                IndexStructure::IS_SALABLE => 'IF(inventory_stock_item.is_in_stock = 0, 0,
                 MAX(child_stock.is_salable))',
             ]
         )->joinInner(

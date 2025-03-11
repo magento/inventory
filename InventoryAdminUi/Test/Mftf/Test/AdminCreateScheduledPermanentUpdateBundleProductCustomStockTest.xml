@@ -59,8 +59,12 @@
                 <argument name="categoryName" value="$createCategory.name$"/>
             </actionGroup>
             <!--Create source.-->
-            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </before>
         <after>
             <deleteData createDataKey="product" stepKey="deleteVirtualProduct" before="deleteBundleProduct"/>
@@ -75,7 +79,9 @@
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
             <deleteData createDataKey="stock" stepKey="deleteStock" before="amOnLogoutPage"/>
-            <magentoCron groups="index" stepKey="reindex" after="amOnLogoutPage"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex" after="amOnLogoutPage">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!--Verify bundle product on storefront.-->

@@ -10,9 +10,4 @@
         <title translate="true">Inventory</title>
         <description translate="true">Inventory index (MSI)</description>
     </indexer>
-    <indexer id="catalog_product_price">
-        <dependencies>
-            <indexer id="inventory"/>
-        </dependencies>
-    </indexer>
 </config>

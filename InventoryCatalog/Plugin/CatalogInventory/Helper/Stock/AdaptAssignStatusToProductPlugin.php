@@ -10,8 +10,7 @@ namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Helper\Stock;
 use Magento\Catalog\Model\Product;
 use Magento\CatalogInventory\Helper\Stock;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
-use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
+use Magento\InventoryCatalog\Model\GetStockIdForByStoreId;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 
@@ -21,41 +20,15 @@ use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 class AdaptAssignStatusToProductPlugin
 {
     /**
-     * @var GetStockIdForCurrentWebsite
-     */
-    private $getStockIdForCurrentWebsite;
-
-    /**
-     * @var AreProductsSalableInterface
-     */
-    private $areProductsSalable;
-
-    /**
-     * @var DefaultStockProviderInterface
-     */
-    private $defaultStockProvider;
-
-    /**
-     * @var GetProductIdsBySkusInterface
-     */
-    private $getProductIdsBySkus;
-
-    /**
-     * @param GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite
      * @param AreProductsSalableInterface $areProductsSalable
-     * @param DefaultStockProviderInterface $defaultStockProvider
      * @param GetProductIdsBySkusInterface $getProductIdsBySkus
+     * @param GetStockIdForByStoreId $getStockIdForByStoreId
      */
     public function __construct(
-        GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite,
-        AreProductsSalableInterface $areProductsSalable,
-        DefaultStockProviderInterface $defaultStockProvider,
-        GetProductIdsBySkusInterface $getProductIdsBySkus
+        private readonly AreProductsSalableInterface $areProductsSalable,
+        private readonly GetProductIdsBySkusInterface $getProductIdsBySkus,
+        private readonly GetStockIdForByStoreId $getStockIdForByStoreId
     ) {
-        $this->getStockIdForCurrentWebsite = $getStockIdForCurrentWebsite;
-        $this->areProductsSalable = $areProductsSalable;
-        $this->defaultStockProvider = $defaultStockProvider;
-        $this->getProductIdsBySkus = $getProductIdsBySkus;
     }
 
     /**
@@ -80,7 +53,7 @@ class AdaptAssignStatusToProductPlugin
         try {
             $this->getProductIdsBySkus->execute([$product->getSku()]);
             if (null === $status) {
-                $stockId = $this->getStockIdForCurrentWebsite->execute();
+                $stockId = $this->getStockIdForByStoreId->execute((int) $product->getStoreId());
                 $result = $this->areProductsSalable->execute([$product->getSku()], $stockId);
                 $result = current($result);
                 return [$product, (int)$result->isSalable()];

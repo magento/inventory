@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="GuestCustomerPlaceOrderWithPickupInStoreMethodWithGoogleAPIEnabledTest">
+        <annotations>
+            <stories value="Simple Product Custom Stock."/>
+            <title value="Guest customer place order with Pickup In store method with Google API enabled."/>
+            <description value="As a guest customer place an order with Pickup In store method along with Google API enabled."/>
+            <testCaseId value="AC-1798"/>
+            <severity value="CRITICAL"/>
+        </annotations>
+        <before>
+            <!--Enable Store pickup-->
+            <magentoCLI command="config:set {{EnableInStorePickup.path}} {{EnableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
+            <!--Enable Distance Provider for Distance Based SSA to online-->
+            <magentoCLI command="config:set {{OnlineDistanceProviderForDistanceBasedSSA.path}} {{OnlineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOnline"/>
+            <createData entity="CulverStorePickupEnabledSource2" stepKey="createSource1"/>
+            <createData entity="AustinStorePickupEnabledSource" stepKey="createSource2"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="createStock"/>
+            <createData entity="SimpleProduct" stepKey="createSimpleProduct"/>
+            <createData entity="_defaultCategory" stepKey="category"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <!--Go to Stores -> Configuration -> Catalog -> Inventory  and open google distance provider Tab-->
+            <actionGroup ref="AdminFillGoogleDistanceProviderAPIKeyActionGroup" stepKey="fillGoogleApiKey"/>
+            <!--Go to Stores -> Stock and filter created stock to edit -->
+            <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStock"
+                         stepKey="goToStockGridFilterResultsByInputEditStock1">
+                <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
+                <argument name="filter_value" value="$$createStock.stock[name]$$"/>
+            </actionGroup>
+            <!--Assign Sources to stock-->
+            <actionGroup ref="AdminOnStockEditPageAssignSourceToStock" stepKey="onStockEditPageAssignSourceToStock1">
+                <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
+                <argument name="filter_value" value="$$createSource1.source[name]$$"/>
+            </actionGroup>
+            <!--Add source to stock -->
+            <actionGroup ref="AdminOnStockEditPageAssignSourceToStock" stepKey="onStockEditPageAssignSourceToStock2">
+                <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
+                <argument name="filter_value" value="$$createSource2.source[name]$$"/>
+            </actionGroup>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose"/>
+            <!--Go to product and open product to edit-->
+            <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openProductEditPage">
+                <argument name="productId" value="$createSimpleProduct.id$"/>
+            </actionGroup>
+            <!--Add category to product-->
+            <actionGroup ref="AdminAssignCategoryToProductAndSaveActionGroup" stepKey="assignProduct">
+                <argument name="categoryName" value="$$category.name$$"/>
+            </actionGroup>
+            <!--Assign Source to product and update quantity-->
+            <actionGroup ref="AdminOnProductEditPageAssignSourceToProduct" stepKey="AdminOnProductEditPageAssignSourceToProduct1">
+                <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+                <argument name="filter_value" value="$$createSource1.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="AdminOnProductEditPageAssignSourceToProduct" stepKey="AdminOnProductEditPageAssignSourceToProduct2">
+                <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+                <argument name="filter_value" value="$$createSource2.source[source_code]$$"/>
+            </actionGroup>
+            <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="fillDefaultQuantityField1"/>
+            <fillField selector="{{AdminProductSourcesGrid.rowQty('2')}}" userInput="100" stepKey="fillDefaultQuantityField2"/>
+            <!--Save the product-->
+            <actionGroup ref="AdminProductFormSaveActionGroup" stepKey="saveProduct"/>
+            <!--Clean cache and reindex-->
+            <actionGroup ref="ClearCacheActionGroup" stepKey="clearCache" />
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+
+        </before>
+        <after>
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <!--Set Distance Provider for Distance Based SSA to offline-->
+            <magentoCLI command="config:set {{OfflineDistanceProviderForDistanceBasedSSA.path}} {{OfflineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
+            <!--Disable 'In Store Pickup' shipping method.-->
+            <magentoCLI command="config:set {{DisableInStorePickup.path}} {{DisableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
+            <deleteData createDataKey="createStock" stepKey="deleteStock"/>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <!--Clean cache and reindex-->
+            <actionGroup ref="ClearCacheActionGroup" stepKey="clearCacheAfterDisablingSources" />
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexAfterDisablingSources">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <deleteData createDataKey="createSimpleProduct" stepKey="deleteProduct"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+        </after>
+        <!--Go to storefront -->
+        <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="goToFrontend"/>
+        <!--Open product in storefront-->
+        <actionGroup ref="StorefrontOpenProductPageActionGroup" stepKey="GoToProductPage">
+            <argument name="productUrl" value="$$createSimpleProduct.custom_attributes[url_key]$$"/>
+        </actionGroup>
+        <!--Add product to cart-->
+        <actionGroup ref="StorefrontAddSimpleProductWithQtyActionGroup" stepKey="addSimpleProductToCart">
+            <argument name="product" value="$$createSimpleProduct$$"/>
+            <argument name="quantity" value="5"/>
+        </actionGroup>
+        <!-- Grab Quantity Value from Product Details Page-->
+        <waitForElement selector="{{StorefrontProductPageSection.qtyInput($$createSimpleProduct.name$$)}}" stepKey="waitForQtyElementVisibleOnProduct1"/>
+        <grabValueFrom selector="{{StorefrontProductPageSection.qtyInput($$createSimpleProduct.name$$)}}" stepKey="grabProductQtyInProductDetailsPage"/>
+        <actionGroup ref="StorefrontClickOnMiniCartActionGroup" stepKey="clickMiniCart"/>
+        <!-- Grab Quantity Value from MiniCart-->
+        <waitForElement selector="{{StorefrontMinicartSection.itemQuantity($$createSimpleProduct.name$$)}}" stepKey="waitForQtyElementVisibleOnProduct1InMiniCart"/>
+        <grabValueFrom selector="{{StorefrontMinicartSection.itemQuantity($$createSimpleProduct.name$$)}}" stepKey="grabProductQtyInShowMinicart"/>
+        <!-- Assert Quantity is same as mentioned in product details page -->
+        <assertEquals stepKey="assertquantityValuesAreEqualfromProductPage">
+            <actualResult type="string">$grabProductQtyInShowMinicart</actualResult>
+            <expectedResult type="string">$grabProductQtyInProductDetailsPage</expectedResult>
+        </assertEquals>
+        <!--Click on Proceed to checkout-->
+        <actionGroup ref="StorefrontCartPageOpenActionGroup" stepKey="goToCart"/>
+        <actionGroup ref="StorefrontClickProceedToCheckoutActionGroup" stepKey="goToCheckout"/>
+        <!--Click on Store Pickup and Fill Email -->
+        <waitForElement selector="{{StorefrontSelectStoreSection.pickInStoreBtn}}" stepKey="waitForPickInStoreBtn"/>
+        <actionGroup ref="StorefrontPickInStoreActionGroup" stepKey="pickInStore"/>
+        <actionGroup ref="StorefrontPickInStoreFillCustomerEmail" stepKey="fillCustomerEmail"/>
+        <!-- Click on select Store and select a store-->
+        <actionGroup ref="StorefrontPickInStoreNavigateToSelectStoreActionGroup" stepKey="navigateToSelectStores"/>
+        <click selector="{{StorefrontPickInStoreModalSection.shipBtn($$createSource1.source[name]$$)}}" stepKey="clickShipButton"/>
+        <waitForPageLoad stepKey="waitForSourceSelection"/>
+        <!--Navigate to Payment-->
+        <actionGroup ref="StorefrontPickInStoreNavigateToPaymentActionGroup" stepKey="navigateToPaymentStep"/>
+        <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="clickCheckMoneyOrderPayment"/>
+        <!--Fill Shipping address -->
+        <actionGroup ref="StorefrontPickInStoreGuestCustomerFillBillingAddressActionGroup" stepKey="fillAddress">
+            <argument name="customerVar" value="Simple_US_Customer"/>
+            <argument name="customerAddressVar" value="US_Address_TX"/>
+        </actionGroup>
+        <!--Click on place order -->
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
+        <waitForElement selector="{{CheckoutSuccessMainSection.orderNumber}}" stepKey="waitForOrderNumber"/>
+        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber}}" stepKey="orderNumber"/>
+        <!--Open recently submitted order in backend-->
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
+            <argument name="orderId" value="{$orderNumber}"/>
+        </actionGroup>
+        <!--Verify ship is not present and Notify Order Is Ready For Pickup is present-->
+        <actionGroup ref="AdminAssertOrderWithStorePickupShippingMethodActionGroup" stepKey="verifyShippingInformation">
+            <argument name="sourceName" value="$createSource1.source[name]$"/>
+        </actionGroup>
+    </test>
+</tests>

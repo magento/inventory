@@ -107,18 +107,22 @@
             <argument name="value" value="{{SimpleMsiProduct.sku}}"/>
         </actionGroup>
 
+        <scrollToTopOfPage stepKey="scrollToTopOfPage2"/>
+        <waitForElementClickable selector="{{AdminGridColumnsControls.columns}}" stepKey="waitForColumns"/>
         <click selector="{{AdminGridColumnsControls.columns}}" stepKey="clickOnColumns"/>
         <click selector="{{AdminGridColumnsControls.reset}}" stepKey="clickOnResetToRestoreDefaultColumns"/>
-        <see selector="{{AdminProductGridSection.productGridCell('1', 'Name')}}" userInput="{{SimpleMsiProduct.name}}"  stepKey="seeSimpleProductNameInFirstRow"/>
-        <see selector="{{AdminProductGridSection.productGridCell('1', 'SKU')}}" userInput="{{SimpleMsiProduct.sku}}" stepKey="seeSimpleProductSkuInFirstRow"/>
-        <see selector="{{AdminProductGridSection.productGridCell('1', 'Price')}}" userInput="{{SimpleMsiProduct.price}}"  stepKey="seeSimpleProductPriceInFirstRow"/>
-        <see selector="{{AdminProductGridSection.productSalableQty('1',_defaultStock.name)}}" userInput="{{SimpleMsiProduct.quantity}}"  stepKey="seeSimpleProductQuantityInFirstRow"/>
-        <see selector="{{AdminProductGridSection.productGridCell('1', 'Status')}}" userInput="Enabled" stepKey="seeSimpleProductStatusInFirstRow"/>
-        <see selector="{{AdminProductGridSection.productGridCell('1', 'Websites')}}" userInput="Main Website" stepKey="seeSimpleProductWebsiteInFirstRow"/>
-
+        <waitForText  selector="{{AdminProductGridSection.productGridCell('1', 'Name')}}" userInput="{{SimpleMsiProduct.name}}"  stepKey="seeSimpleProductNameInFirstRow"/>
+        <waitForText  selector="{{AdminProductGridSection.productGridCell('1', 'SKU')}}" userInput="{{SimpleMsiProduct.sku}}" stepKey="seeSimpleProductSkuInFirstRow"/>
+        <waitForText  selector="{{AdminProductGridSection.productGridCell('1', 'Price')}}" userInput="{{SimpleMsiProduct.price}}"  stepKey="seeSimpleProductPriceInFirstRow"/>
+        <waitForText  selector="{{AdminProductGridSection.productSalableQty('1',_defaultStock.name)}}" userInput="{{SimpleMsiProduct.quantity}}"  stepKey="seeSimpleProductQuantityInFirstRow"/>
+        <waitForText  selector="{{AdminProductGridSection.productGridCell('1', 'Status')}}" userInput="Enabled" stepKey="seeSimpleProductStatusInFirstRow"/>
+        <waitForText  selector="{{AdminProductGridSection.productGridCell('1', 'Websites')}}" userInput="Main Website" stepKey="seeSimpleProductWebsiteInFirstRow"/>
+        <waitForElementClickable selector="{{AdminGridColumnsControls.cancel}}" stepKey="waitForCancelToHideColumnsBlock"/>
         <click selector="{{AdminGridColumnsControls.cancel}}" stepKey="clickOnCancelToHideColumnsBlock"/>
+        <waitForElementClickable selector="{{AdminGridRow.editByValue(SimpleMsiProduct.sku)}}" stepKey="waitForEditSimpleMsiProduct"/>
         <click selector="{{AdminGridRow.editByValue(SimpleMsiProduct.sku)}}" stepKey="clickOnEditSimpleMsiProduct"/>
         <waitForPageLoad stepKey="waitForSimpleProductPageLoad"/>
+
 
         <selectOption selector="{{AdminProductSourcesGrid.rowStatus('1')}}" userInput="Out of Stock" stepKey="fillOutOfStockForCustomSource1Item"/>
         <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="clickOnSaveAndContinueToCheckCustomSource1ItemIsOutOfStock"/>

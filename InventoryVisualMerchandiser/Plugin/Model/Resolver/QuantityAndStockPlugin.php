@@ -10,11 +10,11 @@ namespace Magento\InventoryVisualMerchandiser\Plugin\Model\Resolver;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\DB\Select;
 use Magento\Framework\EntityManager\MetadataPool;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Inventory\Model\ResourceModel\SourceItem;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
-use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
@@ -54,11 +54,6 @@ class QuantityAndStockPlugin
     private $defaultStockProvider;
 
     /**
-     * @var DefaultSourceProviderInterface
-     */
-    private $defaultSourceProvider;
-
-    /**
      * @var MetadataPool
      */
     private $metadataPool;
@@ -69,7 +64,6 @@ class QuantityAndStockPlugin
      * @param StockResolverInterface $stockResolver
      * @param StockIndexTableNameResolverInterface $stockIndexTableNameResolver
      * @param DefaultStockProviderInterface $defaultStockProvider
-     * @param DefaultSourceProviderInterface $defaultSourceProvider
      * @param MetadataPool $metadataPool
      */
     public function __construct(
@@ -78,7 +72,6 @@ class QuantityAndStockPlugin
         StockResolverInterface $stockResolver,
         StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
         DefaultStockProviderInterface $defaultStockProvider,
-        DefaultSourceProviderInterface $defaultSourceProvider,
         MetadataPool $metadataPool
     ) {
         $this->resource = $resource;
@@ -86,7 +79,6 @@ class QuantityAndStockPlugin
         $this->stockResolver = $stockResolver;
         $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
         $this->defaultStockProvider = $defaultStockProvider;
-        $this->defaultSourceProvider = $defaultSourceProvider;
         $this->metadataPool = $metadataPool;
     }
 
@@ -97,16 +89,19 @@ class QuantityAndStockPlugin
      * @param callable $proceed
      * @param Collection $collection
      * @return Collection
-     * @throws LocalizedException
+     * @throws LocalizedException|\Zend_Db_Select_Exception
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundJoinStock(QuantityAndStock $subject, callable $proceed, Collection $collection): Collection
     {
-        $websiteCode = $this->storeManager->getWebsite()->getCode();
-        $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
-        $stockId = (int)$stock->getStockId();
-        if ($stockId === $this->defaultStockProvider->getId()) {
-            $defaultCode = $this->defaultSourceProvider->getCode();
+        if ($collection->getStoreId() !== null) {
+            $websiteId = $this->storeManager->getStore($collection->getStoreId())->getWebsiteId();
+            $websiteCode = $this->storeManager->getWebsite($websiteId)->getCode();
+        } else {
+            $websiteCode = $this->storeManager->getWebsite()->getCode();
+        }
+
+        if ($websiteCode === 'admin') {
             $productLinkField = $this->metadataPool->getMetadata(ProductInterface::class)
                 ->getLinkField();
             $collection->joinField(
@@ -114,7 +109,7 @@ class QuantityAndStockPlugin
                 $this->resource->getTableName(SourceItem::TABLE_NAME_SOURCE_ITEM),
                 null,
                 'sku = sku',
-                ['source_code' => $defaultCode],
+                [],
                 'left'
             );
             $collection->joinField(
@@ -133,21 +128,37 @@ class QuantityAndStockPlugin
                 )
                 ->joinLeft(
                     ['child_stock' => $this->resource->getTableName(SourceItem::TABLE_NAME_SOURCE_ITEM)],
-                    'child_stock.sku = child_product.sku'
-                    . $collection->getConnection()->quoteInto(' AND child_stock.source_code = ?', $defaultCode),
+                    'child_stock.sku = child_product.sku',
                     []
-                )
-                ->columns(
-                    new \Zend_Db_Expr(
-                        'COALESCE( SUM(child_stock.quantity),
-                         at_parent_stock.quantity) AS stock'
-                    )
                 );
+
+            $subSelect = clone($collection->getSelect());
+            $subSelect->columns(
+                [
+                    'SUM(IFNULL(at_parent_stock.quantity, 0)) as parent_stock',
+                    'SUM(IFNULL(child_stock.quantity, 0)) as child_stock'
+                ]
+            );
+            $subSelect->group(['e.entity_id', 'at_parent_stock.source_code']);
+
+            $collection->getSelect()->reset();
+            $collection->getSelect()->from(['e' => $subSelect]);
+            $collection->getSelect()->columns(
+                new \Zend_Db_Expr(
+                    'IF(
+                        SUM(IFNULL(parent_stock, 0)) = 0,
+                        SUM(IFNULL(child_stock, 0)),
+                        SUM(IFNULL(parent_stock, 0))
+                    )  AS stock'
+                )
+            );
         } else {
+            $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
+            $stockId = (int)$stock->getStockId();
             $collection->getSelect()->joinLeft(
                 ['inventory_stock' => $this->stockIndexTableNameResolver->execute($stockId)],
                 'inventory_stock.sku = e.sku',
-                ['stock' => 'quantity']
+                ['stock' => 'IFNULL(quantity, 0)']
             );
         }
 

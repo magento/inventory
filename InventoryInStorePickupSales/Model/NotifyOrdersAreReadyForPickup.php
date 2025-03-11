@@ -108,14 +108,15 @@ class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInte
         foreach ($orderIds as $orderId) {
             try {
                 $order = $this->orderRepository->get($orderId);
-                $this->emailNotifier->notify($order);
                 $searchCriteria = $this->searchCriteriaBuilder->addFilter('order_id', $orderId);
                 $shipments = $this->shipmentRepository->getList($searchCriteria->create());
                 $isShipmentCreated = $shipments->getTotalCount() > 0;
                 if ($isShipmentCreated === false) {
+                    $order->getExtensionAttributes()->setSendNotification(0);
                     $this->createShippingDocument->execute($order);
                 }
                 $this->addStorePickupAttributesToOrder->execute($order);
+                $this->emailNotifier->notify($order);
             } catch (LocalizedException $exception) {
                 $errors[] = [
                     'id' => $orderId,

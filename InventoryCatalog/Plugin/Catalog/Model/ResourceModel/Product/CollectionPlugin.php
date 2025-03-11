@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2022 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -82,7 +82,7 @@ class CollectionPlugin
                 $collection->setFlag('is_sorted_by_oos', true);
 
                 if ($this->isOutOfStockBottom() && $this->sortableBySaleabilityProvider->isSortableBySaleability()) {
-                    $collection->setOrder(SortableBySaleabilityInterface::IS_OUT_OF_STOCK, Select::SQL_DESC);
+                    $collection->setOrder(SortableBySaleabilityInterface::IS_OUT_OF_STOCK, Select::SQL_ASC);
                 }
             }
             $collection->setFlag('is_processing', false);

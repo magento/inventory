@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2022 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -94,8 +94,8 @@ class ProductDataMapperTest extends TestCase
                 'select_attribute_value' => 'Table_fixture_second_store'
             ],
         ];
-        $defaultStoreMap[$productId] += ['is_out_of_stock' => 1];
-        $secondStoreMap[$productId] += ['is_out_of_stock' => 1];
+        $defaultStoreMap[$productId] += ['is_out_of_stock' => 0];
+        $secondStoreMap[$productId] += ['is_out_of_stock' => 0];
 
         $data = [
             $productId => [

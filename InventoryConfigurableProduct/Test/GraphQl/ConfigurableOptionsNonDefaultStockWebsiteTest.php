@@ -9,10 +9,16 @@ namespace Magento\InventoryConfigurableProduct\Test\GraphQl;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Model\Product\Attribute\Source\Status;
+use Magento\Catalog\Test\Fixture\Product as ProductFixture;
 use Magento\ConfigurableProduct\Api\Data\OptionInterface;
+use Magento\ConfigurableProduct\Test\Fixture\Attribute as AttributeFixture;
+use Magento\ConfigurableProduct\Test\Fixture\Product as ConfigurableProductFixture;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\TestFramework\Fixture\DataFixture;
+use Magento\TestFramework\Fixture\DataFixtureStorageManager;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\TestCase\GraphQlAbstract;
 
@@ -149,5 +155,60 @@ QUERY;
                 ]
             );
         }
+    }
+
+    #[
+        DataFixture(AttributeFixture::class, ['options' => ['brown', 'beige', 'black']], 'attr'),
+        DataFixture(ProductFixture::class, as: 'p1'),
+        DataFixture(ProductFixture::class, ['status' => Status::STATUS_DISABLED], 'p2'),
+        DataFixture(ProductFixture::class, as: 'p3'),
+        DataFixture(
+            ConfigurableProductFixture::class,
+            ['_options' => ['$attr$'],'_links' => ['$p1$', '$p2$', '$p3$']],
+            'conf1'
+        ),
+    ]
+    public function testShouldNotReturnOptionsWithDisabledProductsDefaultStock(): void
+    {
+        $fixtures = Bootstrap::getObjectManager()->get(DataFixtureStorageManager::class)->getStorage();
+        $sku = $fixtures->get('conf1')->getSku();
+        $brown = $fixtures->get('p1')->getSku();
+        $black = $fixtures->get('p3')->getSku();
+        $query = <<<QUERY
+{
+  products(filter: { sku: { eq: "$sku" } }) {
+    items {
+      sku
+      ... on ConfigurableProduct {
+        configurable_options {
+          label
+          values {
+            label
+          }
+        }
+        variants {
+          product {
+            sku
+          }
+        }
+      }
+    }
+  }
+}
+QUERY;
+        $response = $this->graphQlQuery($query, [], '', ['Store' => 'default']);
+        $this->assertCount(1, $response['products']['items']);
+        $product = $response['products']['items'][0];
+        $this->assertEquals($sku, $product['sku']);
+        $this->assertCount(1, $product['configurable_options']);
+        $this->assertEqualsCanonicalizing(
+            ['brown', 'black'],
+            array_column($product['configurable_options'][0]['values'], 'label')
+        );
+        $this->assertCount(2, $product['variants']);
+        $this->assertEqualsCanonicalizing(
+            [$brown, $black],
+            array_column(array_column($product['variants'], 'product'), 'sku')
+        );
     }
 }

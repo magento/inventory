@@ -79,9 +79,13 @@
             </actionGroup>
             <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveEditedSimpleProduct2"/>
 
-            <magentoCron groups="index" stepKey="reindexInvalidatedIndices"/>
-            <magentoCLI command="indexer:reindex" arguments="catalogsearch_fulltext" stepKey="performReindexAfterElasticSearchEnable"/>
-            <magentoCLI command="cache:clean" arguments="full_page" stepKey="cleanCacheAfterElasticSearchEnable"/>
+            <comment userInput="BIC workaround" stepKey="reindexInvalidatedIndices"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterElasticSearchEnable">
+                <argument name="indices" value="catalogsearch_fulltext"/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCacheAfterElasticSearchEnable">
+                <argument name="tags" value="full_page"/>
+            </actionGroup>
         </before>
         <after>
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
@@ -101,13 +105,18 @@
                 <argument name="sourceCode" value="$$customSource.source[source_code]$$"/>
             </actionGroup>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
             <deleteData createDataKey="simpleProduct2" stepKey="deleteProduct2"/>
             <deleteData createDataKey="customStock" stepKey="deleteCustomStock"/>
 
-            <magentoCLI command="indexer:reindex" stepKey="performReindexAfterElasticSearchDisable"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCacheAfterElasticSearchDisable"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterElasticSearchDisable">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterElasticSearchDisable">
+                <argument name="tags" value=""/>
+            </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
         </after>
 

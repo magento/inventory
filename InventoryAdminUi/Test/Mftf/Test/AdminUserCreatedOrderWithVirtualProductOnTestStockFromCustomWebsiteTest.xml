@@ -44,11 +44,13 @@
         <remove keyForRemoval="checkOrderPlaceSuccessMessage"/>
 
         <!--- Place order via Admin -->
-        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer" before="navigateToProductIndexPageForCheckProductQtyAfterReorder">
+        <actionGroup ref="AdminNavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer" before="navigateToProductIndexPageForCheckProductQtyAfterReorder">
             <argument name="customer" value="MsiCustomer1"/>
+        </actionGroup>
+        <actionGroup ref="AdminSelectStoreDuringOrderCreationActionGroup" stepKey="selectCustomStore" after="createNewOrderForCustomer">
             <argument name="storeView" value="customStore"/>
         </actionGroup>
-        <waitForPageLoad time="20" stepKey="waitForPageLoad" after="createNewOrderForCustomer"/>
+        <waitForPageLoad time="20" stepKey="waitForPageLoad" after="selectCustomStore"/>
         <actionGroup ref="AddSimpleProductToOrderActionGroup" stepKey="addSimpleProductToOrder" after="waitForPageLoad">
             <argument name="product" value="$$simpleProduct$$"/>
             <argument name="productQty" value="5"/>

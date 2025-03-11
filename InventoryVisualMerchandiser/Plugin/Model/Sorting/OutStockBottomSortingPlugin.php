@@ -16,6 +16,7 @@ use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\VisualMerchandiser\Model\Sorting\OutStockBottom;
+use Zend_Db_Select_Exception;
 
 /**
  * This plugin adds multi-source stock to the Visual Merchandiser out stock to bottom sorting.
@@ -68,6 +69,7 @@ class OutStockBottomSortingPlugin
      * @param Collection $collection
      * @return Collection
      * @throws LocalizedException
+     * @throws Zend_Db_Select_Exception
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundSort(OutStockBottom $subject, callable $proceed, Collection $collection): Collection
@@ -80,13 +82,16 @@ class OutStockBottomSortingPlugin
             return $proceed($collection);
         }
 
-        $stockTable = $this->stockIndexTableNameResolver->execute((int)$stock->getStockId());
-        $collection->getSelect()
-            ->joinLeft(
+        $select = $collection->getSelect();
+        if (!array_key_exists('inventory_stock', $select->getPart(Select::FROM))) {
+            $stockTable = $this->stockIndexTableNameResolver->execute((int)$stock->getStockId());
+            $select->joinLeft(
                 ['inventory_stock' => $stockTable],
                 'inventory_stock.sku = e.sku',
                 []
-            )->reset(Select::ORDER)
+            );
+        }
+        $select->reset(Select::ORDER)
             ->order('inventory_stock.is_salable ' . Select::SQL_DESC);
 
         return $collection;

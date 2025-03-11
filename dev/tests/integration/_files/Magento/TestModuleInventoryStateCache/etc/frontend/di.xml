@@ -7,6 +7,7 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Magento\InventorySalesApi\Model\GetStockItemDataInterface" type="Magento\InventoryIndexer\Model\ResourceModel\GetStockItemData"/>
+    <preference for="Magento\InventorySalesApi\Model\GetStockItemsDataInterface" type="Magento\InventoryIndexer\Model\ResourceModel\GetStockItemsData"/>
     <type name="Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface">
         <plugin name="get_non_cached_stock_items" type="Magento\TestModuleInventoryStateCache\Plugin\CatalogInventory\Model\StockRegistryProvider\GetNonCachedStockItemPlugin"/>
     </type>

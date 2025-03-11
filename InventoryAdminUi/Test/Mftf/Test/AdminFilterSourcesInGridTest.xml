@@ -43,6 +43,11 @@
         <see userInput="$$createSource3.source[source_code]$$" selector="{{AdminGridRow.rowOne}}" stepKey="seeCodeInRow1"/>
         <see userInput="$$createSource3.source[name]$$" selector="{{AdminGridRow.rowOne}}" stepKey="seeNameInRow1"/>
         <see userInput="Enabled" selector="{{AdminGridRow.rowOne}}" stepKey="seeIsEnabledInRow1"/>
+        <grabTextFrom selector="{{AdminGridHeaders.totalRecords}}" stepKey="grabTotalRecords1"/>
+        <assertEquals stepKey="assertTotalRecords1">
+            <expectedResult type="string">1 records found</expectedResult>
+            <actualResult type="string">$grabTotalRecords1</actualResult>
+        </assertEquals>
 
         <click selector="{{AdminGridColumnsControls.columns}}" stepKey="clickOnColumns1"/>
         <click selector="{{AdminGridColumnsControls.reset}}" stepKey="clickOnResetToRestoreDefaultColumns1"/>
@@ -57,5 +62,10 @@
         <see userInput="$$createSource4.source[source_code]$$" selector="{{AdminGridRow.rowOne}}" stepKey="seeCodeInRow2"/>
         <see userInput="$$createSource4.source[name]$$" selector="{{AdminGridRow.rowOne}}" stepKey="seeNameInRow2"/>
         <see userInput="Enabled" selector="{{AdminGridRow.rowOne}}" stepKey="seeIsEnabledInRow2"/>
+        <grabTextFrom selector="{{AdminGridHeaders.totalRecords}}" stepKey="grabTotalRecords2"/>
+        <assertEquals stepKey="assertTotalRecords2">
+            <expectedResult type="string">1 records found</expectedResult>
+            <actualResult type="string">$grabTotalRecords2</actualResult>
+        </assertEquals>
     </test>
 </tests>

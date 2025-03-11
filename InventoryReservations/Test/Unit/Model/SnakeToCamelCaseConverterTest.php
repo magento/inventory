@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
+ * Copyright 2024 Adobe
+ * All rights reserved.
  * See COPYING.txt for license details.
  */
 declare(strict_types=1);
@@ -36,7 +37,7 @@ class SnakeToCamelCaseConverterTest extends TestCase
     /**
      * @return array
      */
-    public function getElementsToConvert(): array
+    public static function getElementsToConvert(): array
     {
         return [
             'with_empty_data' => [[], []],

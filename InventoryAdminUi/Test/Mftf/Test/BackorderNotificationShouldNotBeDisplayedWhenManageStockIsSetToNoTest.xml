@@ -15,6 +15,7 @@
             <description value="Backorder notification should not be displayed when manage stock is set to No"/>
             <testCaseId value="AC-6584"/>
             <severity value="CRITICAL"/>
+            <group value="cloud"/>
         </annotations>
 
         <before>

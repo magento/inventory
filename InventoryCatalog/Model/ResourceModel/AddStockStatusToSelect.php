@@ -11,9 +11,6 @@ use Magento\Framework\DB\Select;
 use Magento\InventoryIndexer\Indexer\IndexStructure;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
 
-/**
- * Adapt adding stock status to select for Multi Stocks.
- */
 class AddStockStatusToSelect
 {
     /**
@@ -30,6 +27,8 @@ class AddStockStatusToSelect
     }
 
     /**
+     * Adapt adding stock status to select for Multi Stocks.
+     *
      * @param Select $select
      * @param int $stockId
      * @return void
@@ -41,7 +40,7 @@ class AddStockStatusToSelect
         $select->joinLeft(
             ['stock_status' => $tableName],
             'e.sku = stock_status.sku',
-            [IndexStructure::IS_SALABLE]
+            [IndexStructure::IS_SALABLE => IndexStructure::IS_SALABLE]
         );
     }
 }

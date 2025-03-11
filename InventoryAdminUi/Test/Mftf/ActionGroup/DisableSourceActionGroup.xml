@@ -17,6 +17,7 @@
         <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}"
                           dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true"
                           stepKey="clearSourcesFilter"/>
+        <conditionalClick selector="{{AdminGridColumnsControls.cancel}}" dependentSelector="{{AdminGridColumnsControls.cancel}}" visible="true" stepKey="closeGridColumnsPopupIfPresent"/>
         <conditionalClick selector="{{AdminGridFilterControls.clearAll}}" dependentSelector=".admin__data-grid-header[data-bind='afterRender: \$data.setToolbarNode'] .admin__data-grid-filters-current._show" visible="true" stepKey="clearTheFiltersIfPresent"/>
         <waitForPageLoad stepKey="waitForPageLoad" time="5"/>
         <click selector="{{AdminGridFilterControls.filters}}" stepKey="clickOnFilters"/>

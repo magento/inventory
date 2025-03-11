@@ -70,7 +70,9 @@
             <deleteData createDataKey="stock" stepKey="deleteStock" before="amOnLogoutPage"/>
 
             <!-- Reindex invalidated indices after product attribute has been created/deleted -->
-            <magentoCron groups="index" stepKey="reindexInvalidatedIndices"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexInvalidatedIndices">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!--Assign source to configurable product.-->
@@ -82,8 +84,12 @@
             <argument name="sourceCode" value="$source.source[source_code]$"/>
         </actionGroup>
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveConfigurableVariation"/>
-        <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
-        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <!--Verify configurable product on storefront.-->
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="checkConfigurableProductIsPresentOnCategoryPage">

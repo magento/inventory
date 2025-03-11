@@ -17,6 +17,7 @@
             <severity value="MAJOR"/>
             <group value="msi"/>
             <group value="single_mode"/>
+            <group value="cloud"/>
         </annotations>
         <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
         <comment userInput="Create Configurable product with qty 0" stepKey="CreateConfigurableProductComment"/>

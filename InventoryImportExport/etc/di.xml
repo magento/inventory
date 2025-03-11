@@ -33,6 +33,9 @@
     <type name="Magento\CatalogImportExport\Model\StockItemProcessorInterface">
         <plugin name="importStockItemDataForSourceItem" type="Magento\InventoryImportExport\Plugin\Import\SourceItemImporter"/>
     </type>
+    <type name="Magento\ImportExport\Model\Import\EntityInterface">
+        <plugin name="SourceNeedToLogin" type="Magento\InventoryImportExport\Plugin\Import\EntityHistoryLoginFlag"/>
+    </type>
     <!-- Prevent stock indexer to execute twice as it is run by default -->
     <type name="Magento\CatalogImportExport\Model\Import\Product\StockProcessor">
         <arguments>

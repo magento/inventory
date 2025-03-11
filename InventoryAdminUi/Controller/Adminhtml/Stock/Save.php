@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -29,7 +29,7 @@ class Save extends Action implements HttpPostActionInterface
     /**
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Magento_InventoryApi::stock_edit';
+    public const ADMIN_RESOURCE = 'Magento_InventoryApi::stock_edit';
 
     /**
      * @var StockSaveProcessor
@@ -139,7 +139,7 @@ class Save extends Action implements HttpPostActionInterface
      *
      * @return void
      */
-    private function processRedirectAfterFailureSave(Redirect $resultRedirect, int $stockId = null)
+    private function processRedirectAfterFailureSave(Redirect $resultRedirect, ?int $stockId = null)
     {
         if (null === $stockId) {
             $resultRedirect->setPath('*/*/new');

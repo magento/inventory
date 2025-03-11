@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
+ * Copyright 2024 Adobe
+ * All rights reserved.
  * See COPYING.txt for license details.
  */
 
@@ -46,7 +47,7 @@ class GetOrderItemsByOrdersListAndSku
     /**
      * Get order items by the orders list provided and a certain order item`s SKU.
      *
-     * @param OrderInterface[] $orders
+     * @param array $orders
      * @param string $sku
      * @return OrderItemSearchResultInterface
      */
@@ -58,8 +59,8 @@ class GetOrderItemsByOrdersListAndSku
                 implode(
                     ',',
                     array_map(
-                        function (OrderInterface $order) {
-                            return $order->getEntityId();
+                        function (array $row) {
+                            return $row['entity_id'];
                         },
                         $orders
                     )

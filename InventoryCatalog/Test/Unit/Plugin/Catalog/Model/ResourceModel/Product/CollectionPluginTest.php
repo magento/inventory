@@ -140,7 +140,7 @@ class CollectionPluginTest extends TestCase
      *
      * @return array[]
      */
-    public function dataProviderForAutomaticSorting(): array
+    public static function dataProviderForAutomaticSorting(): array
     {
         $attribute = 'is_out_of_stock';
         $dir = 'DESC';

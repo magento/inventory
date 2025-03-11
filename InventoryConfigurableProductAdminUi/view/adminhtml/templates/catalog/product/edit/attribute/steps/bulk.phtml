@@ -79,12 +79,7 @@
                         <div data-role="uploader" class="uploader">
                             <div class="image-browse">
                                 <span><?= $block->escapeHtml(__('Browse Files...')) ?></span>
-                                <input type="file"
-                                       id=""
-                                       name="image"
-                                       class="admin__control-file"
-                                       multiple="multiple"
-                                       data-url="<?= /* @noEscape */ $block->getUrl('catalog/product_gallery/upload') ?>" />
+                                <span class="browse-file" data-url="<?= /* @noEscape */ $block->getUrl('catalog/product_gallery/upload') ?>"></span>
                             </div>
                         </div>
                         <div class="product-image-wrapper">
@@ -351,8 +346,7 @@
                                     <span><?= $block->escapeHtml(
                                             __('Browse Files...')
                                         ); ?></span>
-                                        <input type="file" name="image" multiple="multiple"
-                                               data-url="<?= /* @noEscape */ $block->getUrl('catalog/product_gallery/upload') ?>" />
+                                        <span class="browse-file" data-url="<?= /* @noEscape */ $block->getUrl('catalog/product_gallery/upload') ?>"></span>
                                     </div>
                                 </div>
                                 <div class="product-image-wrapper">

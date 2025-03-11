@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Copyright © Magento, Inc. All rights reserved.
+ * Copyright 2024 Adobe All rights reserved.
  * See COPYING.txt for license details.
  */
 -->
@@ -18,6 +18,15 @@
         </arguments>
     </type>
     <type name="Magento\InventoryInStorePickupSales\Model\SourceSelection\GetActiveStorePickupOrdersBySource">
+        <arguments>
+            <argument name="statesToFilter" xsi:type="array">
+                <item xsi:type="const" name="complete">Magento\Sales\Model\Order::STATE_COMPLETE</item>
+                <item xsi:type="const" name="closed">Magento\Sales\Model\Order::STATE_CLOSED</item>
+                <item xsi:type="const" name="canceled">Magento\Sales\Model\Order::STATE_CANCELED</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\InventoryInStorePickupSales\Model\ResourceModel\SourceSelection\GetActiveStorePickupOrdersBySource">
         <arguments>
             <argument name="statesToFilter" xsi:type="array">
                 <item xsi:type="const" name="complete">Magento\Sales\Model\Order::STATE_COMPLETE</item>

@@ -32,7 +32,9 @@
             <actionGroup ref="AdminSetWebsiteAsDefaultActionGroup" stepKey="SetTheMainWebsiteAsDefault">
                 <argument name="WebsiteName" value="Main Website"/>
             </actionGroup>
-            <magentoCron groups="index" stepKey="reindexForResettingTheMainWebsite"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexForResettingTheMainWebsite">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <actionGroup ref="AdminDeleteStockActionGroup" stepKey="deleteCreatedStock">
                 <argument name="stockName" value="Test Stock 1"/>
                 <argument name="websiteName" value="{{customWebsite.name}}"/>
@@ -48,7 +50,9 @@
             <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite">
                 <argument name="websiteName" value="{{customWebsite.name}}"/>
             </actionGroup>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
@@ -74,8 +78,12 @@
         <magentoCLI command="config:set {{StorefrontEnableAddStoreCodeToUrls.path}} {{StorefrontEnableAddStoreCodeToUrls.value}}" stepKey="setAddStoreCodeToUrlsToYes"/>
 
         <!-- Step6 perform re-indexing and cache flush -->
-        <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-        <magentoCLI command="cache:flush" stepKey="flushCache"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <!-- Step7 and 8 Create New Source -->
         <createData entity="FullSource1" stepKey="createTestSource1"/>
@@ -94,7 +102,9 @@
         <magentoCLI command="config:set cataloginventory/options/show_out_of_stock 1" stepKey="setDisplayOutOfStockProductOnConfigPage"/>
 
         <!-- Step13 perform cache flush -->
-        <magentoCLI command="cache:flush" stepKey="flushCachePostDeisplayOutOfStockProductAsYes"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCachePostDeisplayOutOfStockProductAsYes">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <!-- Step14 Create Simple Product and assign to subcategory-->
         <createData entity="SimpleProduct" stepKey="createSimpleProduct">
@@ -116,8 +126,12 @@
             <argument name="WebsiteName" value="{{customWebsite.name}}"/>
         </actionGroup>
 
-        <magentoCLI command="indexer:reindex" stepKey="reindexPostSwitchingToTestWebsite"/>
-        <magentoCLI command="cache:flush" stepKey="flushCachePostSwitchingToTestWebsite"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexPostSwitchingToTestWebsite">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCachePostSwitchingToTestWebsite">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <!-- Step16.2 Navigate to Test website  -->
         <amOnPage url="{{StorefrontHomePage.url}}" stepKey="navigateToCategoryPage"/>

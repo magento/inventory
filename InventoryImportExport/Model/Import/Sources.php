@@ -1,22 +1,24 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
 namespace Magento\InventoryImportExport\Model\Import;
 
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\ImportExport\Helper\Data as DataHelper;
 use Magento\ImportExport\Model\Import\Entity\AbstractEntity;
 use Magento\ImportExport\Model\Import\ErrorProcessing\ProcessingErrorAggregatorInterface;
 use Magento\ImportExport\Model\ResourceModel\Helper as ResourceHelper;
 use Magento\ImportExport\Model\ResourceModel\Import\Data as ImportData;
+use Magento\InventoryApi\Api\Data\SourceItemInterface;
+use Magento\InventoryApi\Model\GetSourceCodesBySkusInterface;
 use Magento\InventoryImportExport\Model\Import\Command\CommandInterface;
 use Magento\InventoryImportExport\Model\Import\Serializer\Json;
 use Magento\InventoryImportExport\Model\Import\Validator\ValidatorInterface;
-use Magento\InventoryApi\Api\Data\SourceItemInterface;
 
 /**
  * @inheritdoc
@@ -26,10 +28,10 @@ class Sources extends AbstractEntity
     /**
      * Column names for import file
      */
-    const COL_SKU = SourceItemInterface::SKU;
-    const COL_SOURCE_CODE = SourceItemInterface::SOURCE_CODE;
-    const COL_QTY = SourceItemInterface::QUANTITY;
-    const COL_STATUS = SourceItemInterface::STATUS;
+    public const COL_SKU = SourceItemInterface::SKU;
+    public const COL_SOURCE_CODE = SourceItemInterface::SOURCE_CODE;
+    public const COL_QTY = SourceItemInterface::QUANTITY;
+    public const COL_STATUS = SourceItemInterface::STATUS;
 
     protected $validColumnNames = [
         self::COL_SKU,
@@ -54,6 +56,11 @@ class Sources extends AbstractEntity
     private $commands = [];
 
     /**
+     * @var GetSourceCodesBySkusInterface
+     */
+    private $getSourceCodesBySkus;
+
+    /**
      * @param Json $jsonHelper
      * @param ProcessingErrorAggregatorInterface $errorAggregator
      * @param ResourceHelper $resourceHelper
@@ -61,6 +68,7 @@ class Sources extends AbstractEntity
      * @param ImportData $importData
      * @param ValidatorInterface $validator
      * @param CommandInterface[] $commands
+     * @param GetSourceCodesBySkusInterface|null $getSourceCodesBySkus
      * @throws LocalizedException
      */
     public function __construct(
@@ -70,7 +78,8 @@ class Sources extends AbstractEntity
         DataHelper $dataHelper,
         ImportData $importData,
         ValidatorInterface $validator,
-        array $commands = []
+        array $commands = [],
+        ?GetSourceCodesBySkusInterface $getSourceCodesBySkus = null,
     ) {
         $this->jsonHelper = $jsonHelper;
         $this->errorAggregator = $errorAggregator;
@@ -87,6 +96,8 @@ class Sources extends AbstractEntity
             }
         }
         $this->commands = $commands;
+        $this->getSourceCodesBySkus = $getSourceCodesBySkus ?: ObjectManager::getInstance()
+            ->get(\Magento\InventoryApi\Model\GetSourceCodesBySkusInterface::class);
 
         foreach ($this->errorMessageTemplates as $errorCode => $message) {
             $this->getErrorAggregator()->addErrorMessageTemplate($errorCode, $message);
@@ -95,13 +106,29 @@ class Sources extends AbstractEntity
 
     /**
      * Import data rows.
+     *
      * @return boolean
      * @throws LocalizedException
      */
     protected function _importData()
     {
         $command = $this->getCommandByBehavior($this->getBehavior());
-        while ($bunch = $this->_dataSourceModel->getNextBunch()) {
+
+        while ($bunch = $this->_dataSourceModel->getNextUniqueBunch($this->getIds())) {
+            foreach ($bunch as $rowData) {
+                if ($this->getBehavior() == \Magento\ImportExport\Model\Import::BEHAVIOR_APPEND) {
+                    $sourceCodes = $this->getSourceCodesBySkus->execute([$rowData['sku']]);
+                    if (in_array($rowData['source_code'], $sourceCodes)) {
+                        $this->countItemsUpdated ++;
+                    } else {
+                        $this->countItemsCreated ++;
+                    }
+                } elseif ($this->getBehavior() == \Magento\ImportExport\Model\Import::BEHAVIOR_REPLACE) {
+                    $this->countItemsUpdated ++;
+                } elseif ($this->getBehavior() == \Magento\ImportExport\Model\Import::BEHAVIOR_DELETE) {
+                    $this->countItemsDeleted ++;
+                }
+            }
             $command->execute($bunch);
         }
 
@@ -109,6 +136,8 @@ class Sources extends AbstractEntity
     }
 
     /**
+     * To fetch command by behavior
+     *
      * @param string $behavior
      * @return CommandInterface
      * @throws LocalizedException

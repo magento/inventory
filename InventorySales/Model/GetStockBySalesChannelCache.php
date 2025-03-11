@@ -7,12 +7,13 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Model;
 
+use Magento\Framework\ObjectManager\ResetAfterRequestInterface;
 use Magento\InventorySalesApi\Api\GetStockBySalesChannelInterface;
 
 /**
  * @inheritdoc
  */
-class GetStockBySalesChannelCache implements GetStockBySalesChannelInterface
+class GetStockBySalesChannelCache implements GetStockBySalesChannelInterface, ResetAfterRequestInterface
 {
     /**
      * @var GetStockBySalesChannel
@@ -31,6 +32,14 @@ class GetStockBySalesChannelCache implements GetStockBySalesChannelInterface
         GetStockBySalesChannel $getStockBySalesChannel
     ) {
         $this->getStockBySalesChannel = $getStockBySalesChannel;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function _resetState(): void
+    {
+        $this->channelCodes = [];
     }
 
     /**

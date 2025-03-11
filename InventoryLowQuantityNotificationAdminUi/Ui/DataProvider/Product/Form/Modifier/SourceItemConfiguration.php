@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -73,7 +73,7 @@ class SourceItemConfiguration extends AbstractModifier
         ScopeConfigInterface $scopeConfig,
         ArrayManager $arrayManager,
         IsSingleSourceModeInterface $isSingleSourceMode,
-        GetDataModel $getDataResourceModel = null
+        ?GetDataModel $getDataResourceModel = null
     ) {
         $this->isSourceItemManagementAllowedForProductType = $isSourceItemManagementAllowedForProductType;
         $this->locator = $locator;

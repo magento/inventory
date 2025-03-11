@@ -1,13 +1,17 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2025 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupQuoteGraphQl\Model\Cart\GetShippingAddress;
 
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\GraphQl\Exception\GraphQlInputException;
 use Magento\GraphQl\Model\Query\ContextInterface;
+use Magento\Inventory\Model\SourceRepository;
 use Magento\Quote\Api\Data\AddressExtensionFactory;
 use Magento\Quote\Model\Quote\Address;
 use Magento\QuoteGraphQl\Model\Cart\GetShippingAddress;
@@ -18,17 +22,47 @@ use Magento\QuoteGraphQl\Model\Cart\GetShippingAddress;
 class AdaptGetShippingAddressPlugin
 {
     /**
-     * @var AddressExtensionFactory
-     */
-    private $addressExtensionFactory;
-
-    /**
+     * AdaptGetShippingAddressPlugin Constructor
+     *
      * @param AddressExtensionFactory $addressExtensionFactory
+     * @param SourceRepository $sourceRepository
      */
     public function __construct(
-        AddressExtensionFactory $addressExtensionFactory
+        private readonly AddressExtensionFactory $addressExtensionFactory,
+        private readonly SourceRepository        $sourceRepository
     ) {
-        $this->addressExtensionFactory = $addressExtensionFactory;
+    }
+
+    /**
+     * Set shipping address in quote from pickup_location_code
+     *
+     * @param GetShippingAddress $subject
+     * @param ContextInterface $context
+     * @param array $shippingAddressInput
+     * @return array
+     * @throws GraphQlInputException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function beforeExecute(
+        GetShippingAddress $subject,
+        ContextInterface $context,
+        array $shippingAddressInput
+    ): array {
+        try {
+            if (!empty($shippingAddressInput['pickup_location_code']) &&
+                empty($shippingAddressInput['customer_address_id']) &&
+                empty($shippingAddressInput['address'])
+            ) {
+                $address = $this->getStoreAddress($shippingAddressInput['pickup_location_code']);
+                if ($address) {
+                    $shippingAddressInput['address'] = $address;
+                }
+            }
+        } catch (LocalizedException $e) {
+            throw new GraphQlInputException(__($e->getMessage()));
+        }
+
+        return [$context, $shippingAddressInput];
     }
 
     /**
@@ -73,5 +107,31 @@ class AdaptGetShippingAddressPlugin
         }
 
         $extension->setPickupLocationCode($pickupLocationCode);
+    }
+
+    /**
+     * Get store address
+     *
+     * @param string $pickupLocationCode
+     * @return array
+     * @throws NoSuchEntityException
+     */
+    private function getStoreAddress(string $pickupLocationCode): array
+    {
+        $storeAddress = $this->sourceRepository->get($pickupLocationCode);
+        if ($storeAddress->getEnabled() && $storeAddress->getIsPickupLocationActive()) {
+            return [
+                'firstname' => $storeAddress->getFrontendName(),
+                'lastname' => 'Store',
+                'street' => $storeAddress->getStreet(),
+                'city' => $storeAddress->getCity(),
+                'region' => $storeAddress->getRegionId(),
+                'postcode' => $storeAddress->getPostcode(),
+                'country_code' => $storeAddress->getCountryId(),
+                'telephone' => $storeAddress->getPhone()
+            ];
+        }
+
+        return [];
     }
 }

@@ -8,17 +8,11 @@ declare(strict_types=1);
 namespace Magento\InventoryBundleProductIndexer\Indexer;
 
 use Exception;
-use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Framework\App\ObjectManager;
+use Magento\Bundle\Model\Product\Type as BundleProductType;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
-use Magento\Framework\EntityManager\MetadataPool;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Indexer\IndexStructure;
-use Magento\InventoryIndexer\Indexer\InventoryIndexer;
-use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
-use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
-use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameResolverInterface;
 
 /**
  * Get bundle product for given stock select builder.
@@ -31,96 +25,79 @@ class SelectBuilder
     private $resourceConnection;
 
     /**
-     * @var IndexNameBuilder
-     */
-    private $indexNameBuilder;
-
-    /**
-     * @var IndexNameResolverInterface
-     */
-    private $indexNameResolver;
-
-    /**
-     * @var MetadataPool
-     */
-    private $metadataPool;
-
-    /**
      * @var DefaultStockProviderInterface
      */
-    private DefaultStockProviderInterface $defaultStockProvider;
+    private $defaultStockProvider;
+
+    /**
+     * @var OptionsStatusSelectBuilder
+     */
+    private $optionsStatusSelectBuilder;
 
     /**
      * @param ResourceConnection $resourceConnection
-     * @param IndexNameBuilder $indexNameBuilder
-     * @param IndexNameResolverInterface $indexNameResolver
-     * @param MetadataPool $metadataPool
      * @param DefaultStockProviderInterface $defaultStockProvider
+     * @param OptionsStatusSelectBuilder $optionsStatusSelectBuilder
      */
     public function __construct(
         ResourceConnection $resourceConnection,
-        IndexNameBuilder $indexNameBuilder,
-        IndexNameResolverInterface $indexNameResolver,
-        MetadataPool $metadataPool,
-        DefaultStockProviderInterface $defaultStockProvider = null
+        DefaultStockProviderInterface $defaultStockProvider,
+        OptionsStatusSelectBuilder $optionsStatusSelectBuilder
     ) {
         $this->resourceConnection = $resourceConnection;
-        $this->indexNameBuilder = $indexNameBuilder;
-        $this->indexNameResolver = $indexNameResolver;
-        $this->metadataPool = $metadataPool;
-        $this->defaultStockProvider = $defaultStockProvider ?:
-            ObjectManager::getInstance()->get(DefaultStockProviderInterface::class);
+        $this->defaultStockProvider = $defaultStockProvider;
+        $this->optionsStatusSelectBuilder = $optionsStatusSelectBuilder;
     }
 
     /**
      * Prepare select for getting bundle products on given stock.
      *
      * @param int $stockId
+     * @param array $skuList
      * @return Select
      * @throws Exception
      */
-    public function execute(int $stockId): Select
+    public function execute(int $stockId, array $skuList = []): Select
     {
         $connection = $this->resourceConnection->getConnection();
 
-        $indexName = $this->indexNameBuilder
-            ->setIndexId(InventoryIndexer::INDEXER_ID)
-            ->addDimension('stock_', (string)$stockId)
-            ->setAlias(Alias::ALIAS_MAIN)
-            ->build();
-
-        $indexTableName = $this->indexNameResolver->resolveName($indexName);
-
-        $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
-        $linkField = $metadata->getLinkField();
-
+        $optionsStatusSelect = $this->optionsStatusSelectBuilder->execute($stockId, $skuList);
+        $isRequiredOptionUnavailable = $connection->getCheckSql(
+            'options.required AND options.stock_status = 0',
+            '1',
+            '0'
+        );
         $select = $connection->select()
             ->from(
-                ['stock' => $indexTableName],
-                [
-                    IndexStructure::SKU => 'parent_product_entity.sku',
-                    IndexStructure::QUANTITY => 'SUM(stock.quantity)',
-                    IndexStructure::IS_SALABLE => 'IF(inventory_stock_item.is_in_stock = 0, 0, MAX(stock.is_salable))',
-                ]
-            )->joinInner(
                 ['product_entity' => $this->resourceConnection->getTableName('catalog_product_entity')],
-                'product_entity.sku = stock.sku',
-                []
-            )->joinInner(
-                ['parent_link' => $this->resourceConnection->getTableName('catalog_product_bundle_selection')],
-                'parent_link.product_id = product_entity.entity_id',
-                []
-            )->joinInner(
-                ['parent_product_entity' => $this->resourceConnection->getTableName('catalog_product_entity')],
-                'parent_product_entity.' . $linkField . ' = parent_link.parent_product_id',
                 []
             )->joinLeft(
-                ['inventory_stock_item' => $this->resourceConnection->getTableName('cataloginventory_stock_item')],
-                'inventory_stock_item.product_id = parent_product_entity.entity_id'
-                . ' AND inventory_stock_item.stock_id = ' . $this->defaultStockProvider->getId(),
+                ['options' => $optionsStatusSelect],
+                'options.sku = product_entity.sku',
                 []
-            )
-            ->group(['parent_product_entity.sku']);
+            )->joinLeft(
+                ['legacy_stock_item' => $this->resourceConnection->getTableName('cataloginventory_stock_item')],
+                'legacy_stock_item.product_id = product_entity.entity_id'
+                . ' AND legacy_stock_item.stock_id = ' . $this->defaultStockProvider->getId(),
+                []
+            )->where(
+                'product_entity.type_id = ?',
+                BundleProductType::TYPE_CODE
+            )->group(
+                ['product_entity.sku']
+            )->columns([
+                IndexStructure::SKU => 'product_entity.sku',
+                IndexStructure::QUANTITY => $connection->getIfNullSql('SUM(options.quantity)', '0'),
+                IndexStructure::IS_SALABLE => $connection->getCheckSql(
+                    'legacy_stock_item.is_in_stock = 0 OR options.sku IS NULL',
+                    '0',
+                    'MAX(' . $isRequiredOptionUnavailable . ') = 0 AND MAX(options.stock_status) = 1'
+                ),
+            ]);
+
+        if (!empty($skuList)) {
+            $select->where('product_entity.sku IN (?)', $skuList);
+        }
 
         return $select;
     }

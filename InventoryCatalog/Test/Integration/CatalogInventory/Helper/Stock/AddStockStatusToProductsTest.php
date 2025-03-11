@@ -79,7 +79,7 @@ class AddStockStatusToProductsTest extends TestCase
     /**
      * @return array
      */
-    public function addStockStatusToProductsDataProvider(): array
+    public static function addStockStatusToProductsDataProvider(): array
     {
         return [
             'eu_website' => [

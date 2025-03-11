@@ -51,8 +51,12 @@
             <argument name="assignSource" value="$$createTestSource1.source[name]$$"/>
             <argument name="stockName" value="Test Stock 1"/>
         </actionGroup>
-        <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
-        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <!-- Step4.1 Create Simple Product -->
         <createData entity="SimpleProduct" stepKey="createMSISimpleProduct">
@@ -107,8 +111,12 @@
 
         <!-- Step6.3 Save the Bundle Product -->
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProductPostOutOfStock"/>
-        <magentoCLI command="indexer:reindex" stepKey="performReindexPostOutOfStock"/>
-        <magentoCLI command="cache:flush" stepKey="cleanCachePostOutOfStock"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexPostOutOfStock">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCachePostOutOfStock">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <!-- Step7.1 Verify the Bundle Product in Created Category in Storefront is not present -->
         <actionGroup ref="AssertProductNotPresentInStorefrontCategoryPage" stepKey="assertProductNotPresentInStorefrontPostMakingTheBundleProductOutOfStock">
@@ -126,8 +134,12 @@
 
         <!-- Step8.3 Save the Bundle Product -->
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProductPostInStock"/>
-        <magentoCLI command="indexer:reindex" stepKey="performReindexPostInStock"/>
-        <magentoCLI command="cache:flush" stepKey="cleanCachePostInStock"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexPostInStock">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCachePostInStock">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <!-- Step9 Verify the Bundle Product name , SKU and status for product in Storefront is present -->
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="assertProductInStorefrontPostSwitchingBackToInStock">

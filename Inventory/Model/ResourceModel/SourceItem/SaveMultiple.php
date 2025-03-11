@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\Inventory\Model\ResourceModel\SourceItem;
 
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Inventory\Model\ResourceModel\SourceItem as SourceItemResourceModel;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 
@@ -46,27 +47,13 @@ class SaveMultiple
         $connection = $this->resourceConnection->getConnection();
         $tableName = $this->resourceConnection->getTableName(SourceItemResourceModel::TABLE_NAME_SOURCE_ITEM);
 
-        $columnsSql = $this->buildColumnsSqlPart([
-            SourceItemInterface::SOURCE_CODE,
-            SourceItemInterface::SKU,
-            SourceItemInterface::QUANTITY,
-            SourceItemInterface::STATUS
-        ]);
-        $valuesSql = $this->buildValuesSqlPart($sourceItems);
-        $onDuplicateSql = $this->buildOnDuplicateSqlPart([
-            SourceItemInterface::QUANTITY,
-            SourceItemInterface::STATUS,
-        ]);
-        $bind = $this->getSqlBindData($sourceItems);
-
-        $insertSql = sprintf(
-            'INSERT INTO `%s` (%s) VALUES %s %s',
-            $tableName,
-            $columnsSql,
-            $valuesSql,
-            $onDuplicateSql
-        );
-        $connection->query($insertSql, $bind);
+        [$newItems, $existingItems] = $this->separateExistingAndNewItems($sourceItems);
+        if (count($newItems)) {
+            $this->insertNewItems($newItems, $connection, $tableName);
+        }
+        if (count($existingItems)) {
+            $this->updateExistentItems($existingItems, $connection, $tableName);
+        }
     }
 
     /**
@@ -128,5 +115,97 @@ class SaveMultiple
         }
         $sql = 'ON DUPLICATE KEY UPDATE ' . implode(', ', $processedFields);
         return $sql;
+    }
+
+    /**
+     * Separate and return new and existing Source Items by mapping provided Items with stored ones.
+     *
+     * @param array $sourceItems
+     * @return array
+     */
+    private function separateExistingAndNewItems(array $sourceItems): array
+    {
+        $connection = $this->resourceConnection->getConnection();
+        $tableName = $this->resourceConnection->getTableName(SourceItemResourceModel::TABLE_NAME_SOURCE_ITEM);
+
+        $skus = [];
+        $stock = [];
+        foreach ($sourceItems as $sourceItem) {
+            $skus[] = $sourceItem->getSku();
+            $stock[] = $sourceItem->getSourceCode();
+        }
+
+        $storedSourceItems = $connection->fetchAll(
+            $connection->select()
+                ->from($tableName, ['source_item_id', 'source_code', 'sku'])
+                ->where('sku IN (?)', $skus)->where('source_code IN (?)', $stock)
+        );
+
+        $exisingSourceItems = [];
+        foreach ($sourceItems as $key => $sourceItem) {
+            foreach ($storedSourceItems as $storedSourceItem) {
+                if ($sourceItem->getSku() === $storedSourceItem['sku'] &&
+                    $sourceItem->getSourceCode() === $storedSourceItem['source_code']) {
+                    unset($sourceItems[$key]);
+                    $exisingSourceItems[$storedSourceItem['source_item_id']] = $sourceItem;
+                }
+            }
+        }
+        return [$sourceItems, $exisingSourceItems];
+    }
+
+    /**
+     * Insert new Source Items.
+     *
+     * @param array $sourceItems
+     * @param AdapterInterface $connection
+     * @param string $tableName
+     * @return void
+     */
+    private function insertNewItems(array $sourceItems, AdapterInterface $connection, string $tableName): void
+    {
+        $columnsSql = $this->buildColumnsSqlPart([
+            SourceItemInterface::SOURCE_CODE,
+            SourceItemInterface::SKU,
+            SourceItemInterface::QUANTITY,
+            SourceItemInterface::STATUS
+        ]);
+        $valuesSql = $this->buildValuesSqlPart($sourceItems);
+        $onDuplicateSql = $this->buildOnDuplicateSqlPart([
+            SourceItemInterface::QUANTITY,
+            SourceItemInterface::STATUS,
+        ]);
+        $bind = $this->getSqlBindData($sourceItems);
+
+        $insertSql = sprintf(
+            'INSERT INTO `%s` (%s) VALUES %s %s',
+            $tableName,
+            $columnsSql,
+            $valuesSql,
+            $onDuplicateSql
+        );
+        $connection->query($insertSql, $bind);
+    }
+
+    /**
+     * Update existing Source Items.
+     *
+     * @param array $sourceItems
+     * @param AdapterInterface $connection
+     * @param string $tableName
+     * @return void
+     */
+    private function updateExistentItems(array $sourceItems, AdapterInterface $connection, string $tableName): void
+    {
+        foreach ($sourceItems as $sourceItemId => $sourceItem) {
+            $bind = [
+                SourceItemInterface::SOURCE_CODE => $sourceItem->getSourceCode(),
+                SourceItemInterface::SKU => $sourceItem->getSku(),
+                SourceItemInterface::QUANTITY => $sourceItem->getQuantity(),
+                SourceItemInterface::STATUS => $sourceItem->getStatus()
+            ];
+
+            $connection->update($tableName, $bind, ['source_item_id = ?' => $sourceItemId]);
+        }
     }
 }

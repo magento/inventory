@@ -62,8 +62,9 @@
 
         <!--Create configuration-->
         <click selector="{{AdminProductFormConfigurationsSection.createConfigurations}}" stepKey="clickOnTheCreateConfigurationsButton1"/>
-        <waitForPageLoad time="30" stepKey="waitForPageLoad4"/>
+        <waitForPageLoad stepKey="waitForPageLoad4"/>
         <!--Add new attribute-->
+        <waitForElementClickable selector="{{AdminCreateProductConfigurationsPanel.createNewAttribute}}" stepKey="waitForCreateAttributeButton"/>
         <click selector="{{AdminCreateProductConfigurationsPanel.createNewAttribute}}" stepKey="clickOnCreateNewAttributeButton1"/>
         <switchToIFrame selector="{{AdminNewAttributePanel.newAttributeIFrame}}" stepKey="enterAttributePanelIFrame"/>
         <wait time="2" stepKey="waitForModalIframeReady"/>

@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
+ * Copyright 2024 Adobe
+ * All rights reserved.
  * See COPYING.txt for license details.
  */
 
@@ -12,6 +13,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\InventorySourceSelectionApi\Model\GetSourceItemQtyAvailableInterface;
+use Magento\InventoryInStorePickupSales\Model\ResourceModel\SourceSelection\GetActiveStorePickupOrdersBySource;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderItemInterface;
 
@@ -102,8 +104,7 @@ class GetSourceItemQtyAvailableService implements GetSourceItemQtyAvailableInter
 
         if ($source->getExtensionAttributes() && $source->getExtensionAttributes()->getIsPickupLocationActive()) {
             return $this->getSourceActiveStorePickupOrders
-                ->execute($source->getSourceCode())
-                ->getItems();
+                ->execute($source->getSourceCode());
         }
 
         return [];

@@ -61,7 +61,9 @@
                 <argument name="stockName" value="$$additionalStockAdditionalWebsite.stock[name]$$"/>
                 <argument name="websiteName" value="{{customWebsite.name}}"/>
             </actionGroup>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </before>
         <after>
             <!--Delete created website.-->
@@ -88,7 +90,9 @@
             <deleteData createDataKey="configurableProduct" stepKey="deleteConfigurable"/>
             <deleteData createDataKey="additionalStockAdditionalWebsite" stepKey="deleteMainWebsiteStock"/>
             <deleteData createDataKey="additionalStockMainWebsite" stepKey="deleteAdditionalWebsiteStock"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!--Create configurable variations.-->
@@ -159,8 +163,12 @@
         <amOnPage url="{{AdminProductEditPage.url($$configurableProduct.id$$)}}" stepKey="openProductEditPage"/>
         <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="In Stock" stepKey="setProductStockStatus"/>
         <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveConfigurableProduct"/>
-        <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
-        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <!--Verify configurable product with red variation on main website.-->
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="verifyConfigurableVisibleOnStoreFrontMainWebsite">
             <argument name="category" value="$$category$$"/>

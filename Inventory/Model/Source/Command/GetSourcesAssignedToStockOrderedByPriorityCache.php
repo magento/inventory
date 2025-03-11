@@ -7,12 +7,15 @@ declare(strict_types=1);
 
 namespace Magento\Inventory\Model\Source\Command;
 
+use Magento\Framework\ObjectManager\ResetAfterRequestInterface;
 use Magento\InventoryApi\Api\GetSourcesAssignedToStockOrderedByPriorityInterface;
 
 /**
  * @inheritdoc
  */
-class GetSourcesAssignedToStockOrderedByPriorityCache implements GetSourcesAssignedToStockOrderedByPriorityInterface
+class GetSourcesAssignedToStockOrderedByPriorityCache implements
+    GetSourcesAssignedToStockOrderedByPriorityInterface,
+    ResetAfterRequestInterface
 {
     /**
      * @var GetSourcesAssignedToStockOrderedByPriority
@@ -34,6 +37,14 @@ class GetSourcesAssignedToStockOrderedByPriorityCache implements GetSourcesAssig
     }
 
     /**
+     * @inheritDoc
+     */
+    public function _resetState(): void
+    {
+        $this->sourcesAssignedToStock = [];
+    }
+
+    /**
      * @inheritdoc
      */
     public function execute(int $stockId): array
@@ -41,7 +52,6 @@ class GetSourcesAssignedToStockOrderedByPriorityCache implements GetSourcesAssig
         if (!isset($this->sourcesAssignedToStock[$stockId])) {
             $this->sourcesAssignedToStock[$stockId] = $this->getSourcesAssignedToStock->execute($stockId);
         }
-
         return $this->sourcesAssignedToStock[$stockId];
     }
 }

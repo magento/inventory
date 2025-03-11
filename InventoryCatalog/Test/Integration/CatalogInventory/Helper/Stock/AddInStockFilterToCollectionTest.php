@@ -75,7 +75,7 @@ class AddInStockFilterToCollectionTest extends TestCase
     /**
      * @return array
      */
-    public function addInStockFilterToCollectionDataProvider(): array
+    public static function addInStockFilterToCollectionDataProvider(): array
     {
         return [
             ['store_for_eu_website', 3],

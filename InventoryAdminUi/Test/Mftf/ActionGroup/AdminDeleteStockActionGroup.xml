@@ -16,6 +16,7 @@
             <argument name="websiteName" defaultValue="Main Website" type="string"/>
         </arguments>
         <amOnPage url="{{AdminStockPage.url}}" stepKey="navigateToManageStockPage"/>
+        <conditionalClick selector="{{AdminProductGridFilterSection.clearFilters}}" dependentSelector="{{AdminProductGridFilterSection.clearFilters}}" visible="true" stepKey="clickClearFilters"/>
         <fillField selector="{{AdminManageStockGridBody.searchStockText}}" userInput="{{stockName}}" stepKey="enterStockName" />
         <click selector="{{AdminManageStockGridBody.clickSearchStock}}" stepKey="clickSearchStockButton" />
         <waitForPageLoad stepKey="waitForStoreGroupPageLoad" />

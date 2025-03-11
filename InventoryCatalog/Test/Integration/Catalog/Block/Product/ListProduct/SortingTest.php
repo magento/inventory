@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
+ * Copyright 2024 Adobe
+ * All rights reserved.
  * See COPYING.txt for license details.
  */
 declare(strict_types=1);
@@ -214,28 +215,28 @@ class SortingTest extends TestCase
      *
      * @return array
      */
-    public function productListWithShowOutOfStockSortOrderDataProvider(): array
+    public static function productListWithShowOutOfStockSortOrderDataProvider(): array
     {
         return [
             'default_order_price_asc' => [
-                'sort' => 'price',
+                'sortBy' => 'price',
                 'direction' => 'ASC',
-                'expectation' => ['simple_1', 'simple_2', 'configurable2', 'configurable1'],
+                'expected' => ['simple_1', 'simple_2', 'configurable2', 'configurable1'],
             ],
             'default_order_price_desc' => [
-                'sort' => 'price',
+                'sortBy' => 'price',
                 'direction' => 'DESC',
-                'expectation' => ['configurable2', 'simple_2', 'simple_1', 'configurable1'],
+                'expected' => ['configurable2', 'simple_2', 'simple_1', 'configurable1'],
             ],
             'default_order_name_asc' => [
-                'sort' => 'name',
+                'sortBy' => 'name',
                 'direction' => 'ASC',
-                'expectation' => ['configurable2', 'simple_1', 'simple_2', 'configurable1'],
+                'expected' => ['configurable2', 'simple_1', 'simple_2', 'configurable1'],
             ],
             'default_order_name_desc' => [
-                'sort' => 'name',
+                'sortBy' => 'name',
                 'direction' => 'DESC',
-                'expectation' => ['simple_2', 'simple_1', 'configurable2', 'configurable1'],
+                'expected' => ['simple_2', 'simple_1', 'configurable2', 'configurable1'],
             ],
         ];
     }

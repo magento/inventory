@@ -15,9 +15,9 @@ use Magento\TestFramework\TestCase\WebapiAbstract;
  */
 class AreProductsSalableForRequestedQtyTest extends WebapiAbstract
 {
-    const API_PATH = '/V1/inventory/are-product-salable-for-requested-qty';
-    const SERVICE_NAME = 'inventorySalesApiAreProductsSalableForRequestedQtyV1';
-    const SERVICE_VERSION = 'V1';
+    private const API_PATH = '/V1/inventory/are-product-salable-for-requested-qty';
+    private const SERVICE_NAME = 'inventorySalesApiAreProductsSalableForRequestedQtyV1';
+    private const SERVICE_VERSION = 'V1';
 
     /**
      * Verify product salable status for requested qty for different stocks.
@@ -77,7 +77,7 @@ class AreProductsSalableForRequestedQtyTest extends WebapiAbstract
      *
      * @return array
      */
-    public function executeDataProvider(): array
+    public static function executeDataProvider(): array
     {
         return [
             ['SKU-1', 10, 1, true, []],

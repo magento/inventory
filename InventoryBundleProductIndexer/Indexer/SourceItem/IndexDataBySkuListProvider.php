@@ -9,7 +9,6 @@ namespace Magento\InventoryBundleProductIndexer\Indexer\SourceItem;
 
 use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryBundleProductIndexer\Indexer\SelectBuilder;
-use Magento\InventoryIndexer\Indexer\IndexStructure;
 
 /**
  * Returns all data for the index by source item list condition.
@@ -46,12 +45,9 @@ class IndexDataBySkuListProvider
      * @return \ArrayIterator
      * @throws \Exception
      */
-    public function execute(int $stockId, array $skuList): \ArrayIterator
+    public function execute(int $stockId, array $skuList = []): \ArrayIterator
     {
-        $select = $this->selectBuilder->execute($stockId);
-        if (count($skuList)) {
-            $select->where('stock.' . IndexStructure::SKU . ' IN (?)', $skuList);
-        }
+        $select = $this->selectBuilder->execute($stockId, $skuList);
         $connection = $this->resourceConnection->getConnection();
 
         return new \ArrayIterator($connection->fetchAll($select));

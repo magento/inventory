@@ -11,6 +11,9 @@
         <annotations>
             <description>Clicks on the 'In Store Pickup' Button on the Storefront Checkout page.</description>
         </annotations>
+        <waitForPageLoad stepKey="waitForPageLoad1"/>
+        <waitForElement selector="{{CheckoutShippingSection.firstName}}" stepKey="waitForFirstNameElement"/>
+        <waitForPageLoad stepKey="waitForPageLoad2"/>
         <scrollTo selector="{{StorefrontSelectStoreSection.pickInStoreBtn}}" stepKey="scrollPickInStoreBtn"/>
         <waitForElementClickable selector="{{StorefrontSelectStoreSection.pickInStoreBtn}}" stepKey="waitForPickInStoreBtnClickable"/>
         <click selector="{{StorefrontSelectStoreSection.pickInStoreBtn}}" stepKey="clickPickInStoreBtn"/>

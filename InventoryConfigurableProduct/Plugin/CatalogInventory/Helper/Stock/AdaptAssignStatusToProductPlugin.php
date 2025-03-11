@@ -11,11 +11,9 @@ use Magento\Catalog\Model\Product;
 use Magento\CatalogInventory\Helper\Stock;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\InventoryCatalog\Model\GetStockIdForByStoreId;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
-use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
-use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
-use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * Process configurable product stock status considering configurable options salable status.
@@ -23,49 +21,17 @@ use Magento\Store\Model\StoreManagerInterface;
 class AdaptAssignStatusToProductPlugin
 {
     /**
-     * @var Configurable
-     */
-    private $configurable;
-
-    /**
-     * @var AreProductsSalableInterface
-     */
-    private $areProductsSalable;
-
-    /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
-
-    /**
-     * @var StockResolverInterface
-     */
-    private $stockResolver;
-
-    /**
-     * @var GetStockItemDataInterface
-     */
-    private $getStockItemData;
-
-    /**
      * @param Configurable $configurable
      * @param AreProductsSalableInterface $areProductsSalable
-     * @param StoreManagerInterface $storeManager
-     * @param StockResolverInterface $stockResolver
      * @param GetStockItemDataInterface $getStockItemData
+     * @param GetStockIdForByStoreId $getStockIdForByStoreId
      */
     public function __construct(
-        Configurable $configurable,
-        AreProductsSalableInterface $areProductsSalable,
-        StoreManagerInterface $storeManager,
-        StockResolverInterface $stockResolver,
-        GetStockItemDataInterface $getStockItemData
+        private readonly Configurable $configurable,
+        private readonly AreProductsSalableInterface $areProductsSalable,
+        private readonly GetStockItemDataInterface $getStockItemData,
+        private readonly GetStockIdForByStoreId $getStockIdForByStoreId
     ) {
-        $this->configurable = $configurable;
-        $this->areProductsSalable = $areProductsSalable;
-        $this->storeManager = $storeManager;
-        $this->stockResolver = $stockResolver;
-        $this->getStockItemData = $getStockItemData;
     }
 
     /**
@@ -84,9 +50,7 @@ class AdaptAssignStatusToProductPlugin
         $status = null
     ): array {
         if ($product->getTypeId() === Configurable::TYPE_CODE) {
-            $website = $this->storeManager->getWebsite();
-            $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $website->getCode());
-            $stockId = $stock->getStockId();
+            $stockId = $this->getStockIdForByStoreId->execute((int) $product->getStoreId());
             try {
                 $stockItemData = $this->getStockItemData->execute($product->getSku(), $stockId);
             } catch (NoSuchEntityException $exception) {
@@ -104,7 +68,7 @@ class AdaptAssignStatusToProductPlugin
                 $skus[] = array_column($attribute, 'sku');
             }
             $skus = array_merge(...$skus);
-            $results = $this->areProductsSalable->execute($skus, $stock->getStockId());
+            $results = $this->areProductsSalable->execute($skus, $stockId);
             foreach ($results as $result) {
                 if ($result->isSalable()) {
                     $status = 1;

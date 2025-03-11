@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="CorrectWorkForChildProductsOfConfigurableProductOnTestStockWithDisplayOutOfStockProductsEnabledTest">
+        <annotations>
+            <stories value="Configurable Product"/>
+            <title value="Correct work for child products of Configurable Product on Test stock with 'Display out of stock products' enabled"/>
+            <description value="Correct work for child products of Configurable Product on Test stock with 'Display out of stock products' enabled"/>
+            <severity value="MAJOR"/>
+            <testCaseId value="AC-6571"/>
+        </annotations>
+
+        <before>
+            <createData entity="FullSource1" stepKey="source"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="source"/>
+            </createData>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value="full_page"/>
+            </actionGroup>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+        </before>
+
+        <after>
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <deleteData createDataKey="stock" stepKey="deleteCustomStock"/>
+            <!--Disable all sources.-->
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="deleteSource"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value="full_page"/>
+            </actionGroup>
+            <!-- Don't display out of stock product -->
+            <actionGroup ref="NoDisplayOutOfStockProductActionGroup" stepKey="revertDisplayOutOfStockProduct"/>
+            <!--Delete all created product-->
+            <actionGroup ref="DeleteProductBySkuActionGroup" stepKey="deleteCreatedProducts">
+                <argument name="sku" value="{{ApiConfigurableProduct.sku}}"/>
+            </actionGroup>
+            <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="clearFilters"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="adminLogout"/>
+        </after>
+
+        <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openProductIndexPage"/>
+        <actionGroup ref="GoToCreateProductPageActionGroup" stepKey="goToCreateConfigurableProduct">
+            <argument name="product" value="ApiConfigurableProduct"/>
+        </actionGroup>
+        <!-- Fill all the necessary information such as weight, name, SKU etc -->
+        <actionGroup ref="FillMainProductFormActionGroup" stepKey="fillProductForm">
+            <argument name="product" value="ApiConfigurableProduct"/>
+        </actionGroup>
+        <click selector="{{AdminProductFormConfigurationsSection.createConfigurations}}" stepKey="clickCreateConfigurations"/>
+        <waitForElementVisible stepKey="waitForNewAttributePageOpened" selector="{{AdminCreateProductConfigurationsPanel.createNewAttribute}}"/>
+        <click stepKey="clickOnCreateNewAttributeButton" selector="{{NewProduct.createNewAttributeButton}}"/>
+        <waitForPageLoad stepKey="waitForLoadAttributePage"/>
+        <switchToIFrame selector="#create_new_attribute_container" stepKey="switchToIframe"/>
+        <!-- Set Catalog Input Type for Store Owner: Visual Swatch -->
+        <actionGroup ref="AdminFillProductAttributePropertiesActionGroup" stepKey="fillAttributeProperties">
+            <argument name="attributeName" value="{{VisualSwatchProductAttribute.attribute_code}}"/>
+            <argument name="attributeType" value="{{VisualSwatchProductAttribute.frontend_input}}"/>
+        </actionGroup>
+        <!-- Add a few Swatches and add images to Manage Swatch (Values of Your Attribute)
+             1. Set swatch #1 using the color picker -->
+        <click selector="{{AdminManageSwatchSection.addSwatch}}" stepKey="clickAddFirstSwatch"/>
+        <actionGroup ref="OpenSwatchMenuByIndexActionGroup" stepKey="clickFirstSwatch">
+            <argument name="index" value="0"/>
+        </actionGroup>
+        <click selector="{{AdminManageSwatchSection.nthChooseColor('1')}}" stepKey="clickChooseColor"/>
+        <actionGroup ref="SetColorPickerByHexActionGroup" stepKey="fillFirstHex">
+            <argument name="nthColorPicker" value="1"/>
+            <argument name="hexColor" value="e74c3c"/>
+        </actionGroup>
+        <fillField selector="{{AdminManageSwatchSection.adminInputByIndex('0')}}" userInput="red" stepKey="fillFirstAdminField"/>
+        <fillField selector="{{AdminCreateNewProductAttributeSection.visualSwatchAdmin('0')}}" userInput="red" stepKey="fillSwatchForStoreView"/>
+        <!-- Set swatch #2 using the color picker -->
+        <click selector="{{AdminManageSwatchSection.addSwatch}}" stepKey="clickAddSwatch2"/>
+        <actionGroup ref="OpenSwatchMenuByIndexActionGroup" stepKey="clickSwatch2">
+            <argument name="index" value="1"/>
+        </actionGroup>
+        <click selector="{{AdminManageSwatchSection.nthChooseColor('2')}}" stepKey="clickChooseColor2"/>
+        <actionGroup ref="SetColorPickerByHexActionGroup" stepKey="fillHex3">
+            <argument name="nthColorPicker" value="2"/>
+            <argument name="hexColor" value="3498db"/>
+        </actionGroup>
+        <fillField selector="{{AdminManageSwatchSection.adminInputByIndex('1')}}" userInput="blue" stepKey="fillSecondAdminField"/>
+        <fillField selector="{{AdminCreateNewProductAttributeSection.visualSwatchAdmin('1')}}" userInput="blue" stepKey="fillSwatchForStoreView2"/>
+        <click selector="{{AdminProductFormNewAttributeSection.saveAttribute}}" stepKey="saveAttribute"/>
+        <switchToIFrame stepKey="switchOutFromIframe"/>
+        <!-- Admin create configurations -->
+        <click selector="{{AdminCreateProductConfigurationsPanel.filters}}" stepKey="clickFilters"/>
+        <fillField selector="{{AdminCreateProductConfigurationsPanel.attributeCode}}" userInput="{{VisualSwatchProductAttribute.attribute_code}}" stepKey="fillFilterAttributeCodeField"/>
+        <click selector="{{AdminCreateProductConfigurationsPanel.applyFilters}}" stepKey="clickApplyFiltersButton"/>
+        <checkOption selector="{{AdminCreateProductConfigurationsPanel.firstCheckbox}}" stepKey="clickOnFirstCheckbox"/>
+        <click selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="clickOnNextButton1"/>
+        <click selector="{{AdminCreateProductConfigurationsPanel.selectAll}}" stepKey="clickOnSelectAll"/>
+        <click selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="clickOnNextButton2"/>
+        <checkOption selector="{{AdminCreateProductConfigurationsPanel.applySingleQuantityToEachSkus}}" stepKey="clickOnApplySingleQuantityToEachSku"/>
+        <click selector="{{AdminConfigurableProductAssignSourcesSlideOut.assignSources}}" stepKey="openSelectSourcesModalWindow1"/>
+        <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clearSourcesFilter"/>
+        <!-- Select source and fill qty-->
+        <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchCustomSourceByNameForAssignment">
+            <argument name="keyword" value="$$source.source[name]$$"/>
+        </actionGroup>
+        <click selector="{{AdminGridRow.checkboxByValue($$source.source[name]$$)}}" stepKey="selectCustomSource1"/>
+        <click selector="{{AdminConfigurableProductAssignSourcesSlideOut.done}}" stepKey="doneAssignSources1"/>
+        <fillField selector="{{AdminConfigurableProductAssignSourcesSlideOut.quantityPerSource('0')}}"
+                   userInput="100" stepKey="fillQuantityForCustomSource1"/>
+        <click selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="navigateToFourthStep"/>
+        <click selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="doneGeneratingConfigurableVariations"/>
+        <waitForPageLoad stepKey="waitForLoadProductPage"/>
+        <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveConfigurableProduct"/>
+        <!-- click confirm on popup-->
+        <conditionalClick selector="{{AdminChooseAffectedAttributeSetPopup.confirm}}" dependentSelector="{{AdminChooseAffectedAttributeSetPopup.confirm}}" visible="true" stepKey="confirmDefaultAttributeSetForConfigurableProduct"/>
+        <seeElement selector="{{AdminProductMessagesSection.successMessage}}" stepKey="checkProductSavedMessage"/>
+        <!-- Go to child product Red and update qty as 0-->
+        <click selector="{{AdminProductFormConfigurationsSection.variationProductLinkByName('red')}}" stepKey="clickOnFirstProductLink"/>
+        <switchToNextTab stepKey="switchToConfigChildProductPage"/>
+        <waitForPageLoad stepKey="waitForProductPageLoad"/>
+        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="0" stepKey="fillSourceQuantityField1"/>
+        <selectOption selector="{{AdminProductSourcesGrid.rowStatus('0')}}" userInput="Out of Stock" stepKey="setWhiteConfigurableVariationToOutOfStock"/>
+        <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveSimpleProduct"/>
+        <closeTab stepKey="closeConfigChildProductPage"/>
+        <!-- Display out of stock product -->
+        <actionGroup ref="DisplayOutOfStockProductActionGroup" stepKey="displayOutOfStockProduct"/>
+        <actionGroup ref="StorefrontOpenProductPageActionGroup" stepKey="GoToProductPage">
+            <argument name="productUrl" value="{{ApiConfigurableProduct.urlKey}}"/>
+        </actionGroup>
+        <seeElement selector="{{StorefrontProductInfoMainSection.swatchOptionDisabled}}" stepKey="seeSwatchOptionDisabled"/>
+    </test>
+</tests>

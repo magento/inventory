@@ -39,7 +39,9 @@
             <createData entity="VirtualProduct" stepKey="virtualProduct">
                 <requiredEntity createDataKey="category"/>
             </createData>
-            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
                 <argument name="tags" value=""/>
             </actionGroup>
@@ -56,12 +58,15 @@
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <!--Clean up created data.-->
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
             <deleteData createDataKey="virtualProduct" stepKey="deleteProduct2"/>
             <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableStockManagement"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openProductGrid2"/>
@@ -95,7 +100,9 @@
             <argument name="categoryName" value="$category.name$"/>
         </actionGroup>
 
-        <magentoCLI command="indexer:reindex" stepKey="reindexBeforeQuickSearch"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexBeforeQuickSearch">
+            <argument name="indices" value=""/>
+        </actionGroup>
 
         <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="openStoreFrontHomePage"/>
         <actionGroup ref="StorefrontCheckQuickSearchStringActionGroup" stepKey="quickSearchByProductName">
@@ -103,7 +110,9 @@
         </actionGroup>
         <dontSee selector="{{StorefrontCatalogSearchMainSection.searchResults}}" userInput="$groupedProduct.name$" stepKey="verifyProductNotPresentOnStorefront"/>
         <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOffManageStockConfig.value}}" stepKey="manageStockToNo"/>
-        <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
         <actionGroup ref="CliCacheCleanActionGroup" stepKey="flushCache">
             <argument name="tags" value=""/>
         </actionGroup>

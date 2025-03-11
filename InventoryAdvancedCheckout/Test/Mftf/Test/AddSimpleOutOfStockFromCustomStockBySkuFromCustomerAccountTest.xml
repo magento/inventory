@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AddSimpleOutOfStockFromCustomStockBySkuFromCustomerAccountTest" extends="AddSimpleOutOfStockProductBySkuFromCustomerAccountTest">
+        <annotations>
+            <stories value="Add Product By SKU from custom stock"/>
+            <title value="Add simple out of stock product by sku from customer account test, additional stock."/>
+            <description value="Add simple out of stock product by sku from customer account test, additional stock."/>
+            <severity value="MAJOR"/>
+            <group value="msi_ee"/>
+            <group value="multi_mode"/>
+            <group value="cloud"/>
+        </annotations>
+        <before>
+            <!--Create additional stock ans source.-->
+            <createData entity="_minimalSource" stepKey="additionalSource" before="additionalStock"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="additionalStock" before="stockSourceLink"/>
+            <!--Link additional source with stock.-->
+            <createData entity="SourceStockLinked1" stepKey="stockSourceLink" before="reindex">
+                <requiredEntity createDataKey="additionalStock"/>
+                <requiredEntity createDataKey="additionalSource"/>
+            </createData>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex" before="cleanCache">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache" before="createSimpleProduct">
+                <argument name="tags" value="full_page"/>
+            </actionGroup>
+            <!--Assign create product to additional stock and set qty.-->
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminPanel" after="createSimpleProduct"/>
+            <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openProductEditPageToSetQty" after="loginToAdminPanel">
+                <argument name="productId" value="$$createSimpleProduct.id$$"/>
+            </actionGroup>
+            <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSourceToCreatedProduct" after="openProductEditPageToSetQty">
+                <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
+            </actionGroup>
+            <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="0" stepKey="setProductQuantity" after="assignSourceToCreatedProduct"/>
+            <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveProduct" after="setProductQuantity"/>
+        </before>
+        <after>
+            <!--Assign Default Stock to Default Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock" before="disableCreatedSource">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <!--Disable additional source.-->
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedSource" before="logout">
+                <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logout" before="deleteStock"/>
+            <deleteData createDataKey="additionalStock" stepKey="deleteStock" before="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex" before="cleanCache">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache" before="deleteSimpleProduct">
+                <argument name="tags" value="full_page"/>
+            </actionGroup>
+        </after>
+    </test>
+</tests>

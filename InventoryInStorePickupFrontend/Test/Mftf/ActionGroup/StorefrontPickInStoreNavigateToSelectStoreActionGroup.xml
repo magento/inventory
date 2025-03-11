@@ -11,6 +11,7 @@
         <annotations>
             <description>Click 'Select Store' button in store pickup tab</description>
         </annotations>
+        <waitForElementClickable selector="{{StorefrontSelectStoreSection.selectStoreBtn}}" stepKey="waitForSelectStoreClickable" />
         <click selector="{{StorefrontSelectStoreSection.selectStoreBtn}}" stepKey="clickSelectStoreBtn"/>
         <waitForPageLoad stepKey="waitForModalWindow"/>
     </actionGroup>

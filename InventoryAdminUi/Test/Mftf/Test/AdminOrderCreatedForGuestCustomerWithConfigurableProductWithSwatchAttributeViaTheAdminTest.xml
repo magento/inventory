@@ -72,10 +72,12 @@
         <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$simpleCategory1.name$$]"  stepKey="searchAndSelectCategory1"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad3"/>
 
+        <waitForElementClickable selector="{{AdminProductFormConfigurationsSection.createConfigurations}}" stepKey="waitForCreateConfigurationsButtonClickable" />
         <click selector="{{AdminProductFormConfigurationsSection.createConfigurations}}" stepKey="clickOnTheCreateConfigurationsButton1"/>
         <waitForElementVisible selector="{{AdminConfigurableProductSelectAttributesSlideOut.grid}}" time="30" stepKey="waitForGridPresent1"/>
 
         <waitForPageLoad time="30" stepKey="waitForPageLoad4"/>
+        <waitForElementClickable selector="{{AdminCreateProductConfigurationsPanel.createNewAttribute}}" stepKey="waitForCreateNewAttributeButtonClickable" />
         <click selector="{{AdminCreateProductConfigurationsPanel.createNewAttribute}}" stepKey="clickOnCreateNewAttribute1"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad5"/>
 
@@ -83,17 +85,21 @@
         <fillField selector="{{AdminNewAttributePanel.defaultLabel}}" userInput="{{visualSwatchAttribute.name}}" stepKey="fillDefaultLabel1"/>
         <selectOption selector="#frontend_input" userInput="{{visualSwatchAttribute.catalogInputType}}" stepKey="fillCatalogInputTypeForStoreOwner1"/>
 
-        <click selector="#add_new_swatch_visual_option_button" stepKey="clickOnAddSwatch1"/>
+        <waitForElementClickable selector="{{AdminNewAttributePanel.addVisualSwatchOption}}" stepKey="waitForAddSwatch1ButtonClickable" />
+        <click selector="{{AdminNewAttributePanel.addVisualSwatchOption}}" stepKey="clickOnAddSwatch1"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad6"/>
 
-        <fillField selector="input[name='optionvisual[value][option_0][0]']" userInput="{{visualSwatchColor1.name}}" stepKey="fillAdminName1"/>
-        <fillField selector="input[name='optionvisual[value][option_0][1]']" userInput="{{visualSwatchColor1.name}}" stepKey="fillAdminName2"/>
+        <waitForElementVisible selector="{{AdminCreateNewProductAttributeSection.visualSwatchAdmin('0')}}" stepKey="waitForVisualSwatch1FieldVisible" />
+        <fillField selector="{{AdminCreateNewProductAttributeSection.visualSwatchStore('0')}}" userInput="{{visualSwatchColor1.name}}" stepKey="fillAdminName1"/>
+        <fillField selector="{{AdminCreateNewProductAttributeSection.visualSwatchAdmin('0')}}" userInput="{{visualSwatchColor1.name}}" stepKey="fillAdminName2"/>
 
-        <click selector="#add_new_swatch_visual_option_button" stepKey="clickOnAddSwatch2"/>
+        <waitForElementClickable selector="{{AdminNewAttributePanel.addVisualSwatchOption}}" stepKey="waitForAddSwatch2ButtonClickable" />
+        <click selector="{{AdminNewAttributePanel.addVisualSwatchOption}}" stepKey="clickOnAddSwatch2"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad7"/>
 
-        <fillField selector="input[name='optionvisual[value][option_1][0]']" userInput="{{visualSwatchColor2.name}}" stepKey="fillAdminName3"/>
-        <fillField selector="input[name='optionvisual[value][option_1][1]']" userInput="{{visualSwatchColor2.name}}" stepKey="fillAdminName4"/>
+        <waitForElementVisible selector="{{AdminCreateNewProductAttributeSection.visualSwatchAdmin('1')}}" stepKey="waitForVisualSwatchFieldVisible" />
+        <fillField selector="{{AdminCreateNewProductAttributeSection.visualSwatchStore('1')}}" userInput="{{visualSwatchColor2.name}}" stepKey="fillAdminName3"/>
+        <fillField selector="{{AdminCreateNewProductAttributeSection.visualSwatchAdmin('1')}}" userInput="{{visualSwatchColor2.name}}" stepKey="fillAdminName4"/>
 
         <click selector="{{AdminNewAttributePanel.saveAttribute}}" stepKey="clickOnNewAttributePanel1"/>
         <waitForPageLoad stepKey="waitForPageLoad8"/>
@@ -106,12 +112,18 @@
             <argument name="value" value="{{visualSwatchAttribute.name}}"/>
         </actionGroup>
 
+        <waitForElementClickable selector="{{AdminGridRow.checkboxByValue(visualSwatchAttribute.name)}}" stepKey="waitForClickOnTheColorAttribute1" />
         <click selector="{{AdminGridRow.checkboxByValue(visualSwatchAttribute.name)}}" stepKey="clickOnTheColorAttribute1"/>
+        <waitForElementClickable selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="waitForClickOnNextButton1" />
         <click selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="clickOnNextButton1"/>
+        <waitForElementClickable selector="{{AdminCreateProductConfigurationsPanel.selectAll}}" stepKey="waitForClickOnSelectAll1" />
         <click selector="{{AdminCreateProductConfigurationsPanel.selectAll}}" stepKey="clickOnSelectAll1"/>
 
+        <waitForElementClickable selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="waitForClickOnNextButton2" />
         <click selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="clickOnNextButton2"/>
+        <waitForElementClickable selector="{{AdminCreateProductConfigurationsPanel.applySingleQuantityToEachSkus}}" stepKey="waitForClickOnApplySingleQuantityToEachSku1" />
         <click selector="{{AdminCreateProductConfigurationsPanel.applySingleQuantityToEachSkus}}" stepKey="clickOnApplySingleQuantityToEachSku1"/>
+        <waitForElementClickable selector="{{AdminConfigurableProductAssignSourcesSlideOut.assignSources}}" stepKey="waitForClickOnAssignSources2" />
         <click selector="{{AdminConfigurableProductAssignSourcesSlideOut.assignSources}}" stepKey="clickOnAssignSources2"/>
 
         <waitForPageLoad time="30" stepKey="waitForPageLoad"/>
@@ -122,22 +134,27 @@
             <argument name="value" value="$$createSource1.source[source_code]$$"/>
         </actionGroup>
         <click selector="{{AdminGridRow.checkboxByValue($$createSource1.source[name]$$)}}" stepKey="clickOnTheCheckboxForSource2"/>
+        <waitForElementClickable selector="{{AdminConfigurableProductAssignSourcesSlideOut.done}}" stepKey="waitForClickOnDone3" />
         <click selector="{{AdminConfigurableProductAssignSourcesSlideOut.done}}" stepKey="clickOnDone3"/>
 
         <fillField selector="{{AdminConfigurableProductAssignSourcesSlideOut.quantityPerSourceForMultiMode}}" userInput="100" stepKey="fillTheQuantityField1"/>
+        <waitForElementClickable selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="waitForClickOnNextButton4" />
         <click selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="clickOnNextButton4"/>
+        <waitForElementClickable selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="waitForClickOnNextButton5" />
         <click selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="clickOnNextButton5"/>
 
+        <waitForElementClickable selector="{{AdminProductFormActionSection.saveButton}}" stepKey="waitForClickOnSaveButton2" />
         <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="clickOnSaveButton2"/>
+        <waitForElementClickable selector="button[data-index='confirm_button']" stepKey="waitForClickOnConfirm1" />
         <click selector="button[data-index='confirm_button']" stepKey="clickOnConfirm1"/>
         <waitForPageLoad stepKey="waitForPageLoad10"/>
-        <seeElement selector="{{AdminProductMessagesSection.successMessage}}" stepKey="seeSaveProductMessage1"/>
+        <waitForElementVisible selector="{{AdminProductMessagesSection.successMessage}}" stepKey="seeSaveProductMessage1"/>
 
         <amOnPage url="{{AdminOrdersPage.url}}" stepKey="goToOrdersPage1"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad11"/>
 
         <click selector="{{AdminOrdersGridSection.createNewOrder}}" stepKey="clickOnCreateNewOrder1"/>
-
+        <waitForElementClickable selector="button[title='Create New Customer']" stepKey="waitForClickOnCreateNewCustomer1" />
         <click selector="button[title='Create New Customer']" stepKey="clickOnCreateNewCustomer1"/>
         <waitForPageLoad stepKey="waitForPageLoad12"/>
 

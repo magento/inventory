@@ -42,7 +42,9 @@
             </actionGroup>
             <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="clickOnSaveAndContinue"/>
             <seeElement selector=".success" stepKey="seeSuccessMessage"/>
-            <magentoCron groups="index" stepKey="doReindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="doReindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
                 <argument name="tags" value="full_page"/>
             </actionGroup>
@@ -56,7 +58,9 @@
             </actionGroup>
             <deleteData createDataKey="createSimpleProduct" stepKey="deleteProduct"/>
             <magentoCLI command="config:set {{TurnOffOutOfStockConfig.path}} {{TurnOffOutOfStockConfig.value}}" stepKey="displayOutOfStockNo"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
                 <argument name="tags" value="full_page"/>
             </actionGroup>

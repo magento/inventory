@@ -17,6 +17,7 @@
             <severity value="MAJOR"/>
             <group value="msi_ee"/>
             <group value="multi_mode"/>
+            <group value="cloud"/>
         </annotations>
         <before>
             <!--Create additional stock ans source.-->
@@ -48,7 +49,9 @@
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logout" before="deleteStock"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteStock" before="deleteSimpleProduct"/>
-            <magentoCron groups="index" stepKey="reindex" after="deleteSimpleProduct"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex" after="deleteSimpleProduct">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
     </test>
 </tests>

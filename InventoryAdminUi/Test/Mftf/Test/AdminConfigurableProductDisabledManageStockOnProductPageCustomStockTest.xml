@@ -59,6 +59,8 @@
         <fillField userInput="{{ConfigurableMsiProduct.weight}}" selector="{{AdminConfigurableProductFormSection.productWeight}}" stepKey="fillProductWeight"/>
 
         <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$category.name$$]"  stepKey="searchAndSelectCategory"/>
+        <waitForLoadingMaskToDisappear stepKey="waitForGridLoad"/>
+        <waitForElementClickable  selector="{{AdminProductFormConfigurationsSection.createConfigurations}}" stepKey="waitForElementTheCreateConfigurationsButton"/>
         <click selector="{{AdminProductFormConfigurationsSection.createConfigurations}}" stepKey="clickOnTheCreateConfigurationsButton"/>
         <waitForElementVisible selector="{{AdminConfigurableProductSelectAttributesSlideOut.grid}}" time="30" stepKey="waitForGridPresents"/>
 

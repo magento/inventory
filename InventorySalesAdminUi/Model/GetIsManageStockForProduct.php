@@ -7,10 +7,10 @@ declare(strict_types=1);
 
 namespace Magento\InventorySalesAdminUi\Model;
 
+use Magento\Catalog\Model\ProductRepository;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryConfigurationApi\Exception\SkuIsNotAssignedToStockException;
-use Magento\InventorySalesAdminUi\Model\ResourceModel\GetAssignedStockIdsBySku;
 use Magento\InventoryApi\Api\StockRepositoryInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
@@ -36,18 +36,26 @@ class GetIsManageStockForProduct
     private $getStockItemConfiguration;
 
     /**
+     * @var ProductRepository
+     */
+    private $productRepository;
+
+    /**
      * @param GetSalableQuantityDataBySku $getSalableQuantityDataBySku
      * @param StockRepositoryInterface $stockRepository
      * @param GetStockItemConfigurationInterface $getStockItemConfiguration
+     * @param ProductRepository $productRepository
      */
     public function __construct(
         GetSalableQuantityDataBySku $getSalableQuantityDataBySku,
         StockRepositoryInterface $stockRepository,
-        GetStockItemConfigurationInterface $getStockItemConfiguration
+        GetStockItemConfigurationInterface $getStockItemConfiguration,
+        ProductRepository $productRepository
     ) {
         $this->getSalableQuantityDataBySku = $getSalableQuantityDataBySku;
         $this->stockRepository = $stockRepository;
         $this->getStockItemConfiguration = $getStockItemConfiguration;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -62,6 +70,12 @@ class GetIsManageStockForProduct
      */
     public function execute(string $sku, string $websiteCode): ?bool
     {
+        try {
+            $this->productRepository->get($sku);
+        } catch (NoSuchEntityException $e) {
+            return false;
+        }
+
         $isManageStock = null;
         $stockIds = $this->getProductStockIds($sku);
         foreach ($stockIds as $stockId) {
@@ -92,7 +106,7 @@ class GetIsManageStockForProduct
     private function getProductStockIds(string $sku): array
     {
         $stockIds = [];
-        $stocksInfo =$this->getSalableQuantityDataBySku->execute($sku);
+        $stocksInfo = $this->getSalableQuantityDataBySku->execute($sku);
         foreach ($stocksInfo as $stockInfo) {
             $stockIds[] = (int)$stockInfo['stock_id'];
         }

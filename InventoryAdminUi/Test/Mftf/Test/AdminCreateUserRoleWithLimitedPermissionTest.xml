@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+  <test name="AdminCreateUserRoleWithLimitedPermissionTest">
+    <annotations>
+      <features value="User"/>
+      <stories value="Create User Role with limited permission"/>
+      <title value="User with limited right can't amend Stocks"/>
+      <description value="The testcase purpose to verify User cannot make changes in stock with limited access"/>
+      <testCaseId value="AC-6618"/>
+      <group value="user"/>
+      <severity value="MAJOR"/>
+    </annotations>
+    <before>
+      <createData entity="BasicMsiStock1" stepKey="createStock"/>
+    </before>
+    <after>
+      <deleteData createDataKey="createStock" stepKey="deleteStock"/>
+    </after>
+    <dontSeeElement selector="{{AdminManageStockGridControls.addNewStock}}" stepKey="verifyAddNewStockButtonNotVisible" after="loginAsNewUser"/>
+    <dontSeeElement selector="{{AdminManageStockGridBody.editStock(BasicMsiStock1.name)}}" stepKey="verifyEditStockButtonNotVisible"/>
+    <waitForElementClickable selector="{{AdminManageStockGridControls.actionDropdown}}" stepKey="waitForActionToBeClickable"/>
+    <click  selector="{{AdminManageStockGridControls.actionDropdown}}" stepKey="clickOnActionButton"/>
+    <dontSeeElement selector="{{AdminManageStockGridControls.deleteOption}}" stepKey="verifyDeleteStockButtonNotVisible"/>
+  </test>
+</tests>

@@ -74,6 +74,7 @@ define(
             window.AdminOrder.prototype.setShippingMethod = function (method) {
                 var data = {},
                     areas = [
+                        'items',
                         'shipping_method',
                         'totals',
                         'billing_method',

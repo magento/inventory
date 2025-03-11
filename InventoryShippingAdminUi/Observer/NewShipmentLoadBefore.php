@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -52,7 +52,7 @@ class NewShipmentLoadBefore implements ObserverInterface
         OrderRepositoryInterface $orderRepository,
         IsWebsiteInMultiSourceMode $isWebsiteInMultiSourceMode,
         RedirectInterface $redirect,
-        IsOrderSourceManageable $isOrderSourceManageable = null
+        ?IsOrderSourceManageable $isOrderSourceManageable = null
     ) {
         $this->orderRepository = $orderRepository;
         $this->isWebsiteInMultiSourceMode = $isWebsiteInMultiSourceMode;
@@ -62,6 +62,8 @@ class NewShipmentLoadBefore implements ObserverInterface
     }
 
     /**
+     * Event execute method
+     *
      * @param EventObserver $observer
      * @return void
      */
@@ -97,7 +99,5 @@ class NewShipmentLoadBefore implements ObserverInterface
                 'sales/order/index'
             );
         }
-
-        return;
     }
 }

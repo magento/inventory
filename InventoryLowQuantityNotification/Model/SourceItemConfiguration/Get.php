@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -58,9 +58,9 @@ class Get implements GetSourceItemConfigurationInterface
         $sourceItemConfigurationFactory,
         $dataObjectHelper,
         LoggerInterface $logger,
-        ProductRepositoryInterface $productRepository = null,
-        SourceRepositoryInterface $sourceRepository = null,
-        GetConfiguration $getConfiguration = null
+        ?ProductRepositoryInterface $productRepository = null,
+        ?SourceRepositoryInterface $sourceRepository = null,
+        ?GetConfiguration $getConfiguration = null
     ) {
         $this->logger = $logger;
         $this->productRepository = $productRepository ??

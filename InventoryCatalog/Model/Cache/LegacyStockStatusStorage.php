@@ -8,16 +8,25 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalog\Model\Cache;
 
 use Magento\CatalogInventory\Api\Data\StockStatusInterface;
+use Magento\Framework\ObjectManager\ResetAfterRequestInterface;
 
 /**
  * Cache storage for legacy stock status
  */
-class LegacyStockStatusStorage
+class LegacyStockStatusStorage implements ResetAfterRequestInterface
 {
     /**
      * @var array
      */
     private $storage = [];
+
+    /**
+     * @inheritDoc
+     */
+    public function _resetState(): void
+    {
+        $this->clean();
+    }
 
     /**
      * Load stock status from cache

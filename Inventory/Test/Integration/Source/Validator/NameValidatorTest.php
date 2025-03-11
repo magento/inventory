@@ -63,7 +63,7 @@ class NameValidatorTest extends TestCase
     /**
      * @return array
      */
-    public function dataProvider()
+    public static function dataProvider()
     {
         return [
             'valid code string' => [

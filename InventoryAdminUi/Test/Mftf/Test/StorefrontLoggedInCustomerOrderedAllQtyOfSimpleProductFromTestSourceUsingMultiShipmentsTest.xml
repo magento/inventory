@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+  <test name="StorefrontLoggedInCustomerOrderedAllQtyOfSimpleProductFromTestSourceUsingMultiShipmentsTest">
+    <annotations>
+      <stories value="simple product custom stock"/>
+      <title value="Logged in customer ordered all qty of Simple product from Test source using multi-shipments"/>
+      <description value="Logged in customer ordered all qty of Simple product from Test source using multi-shipments."/>
+      <testCaseId value="AC-6630"/>
+      <severity value="CRITICAL"/>
+    </annotations>
+    <before>
+      <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+      <createData entity="NewSubCategoryUnderDefaultCategory" stepKey="createPreReqCategory"/>
+      <createData entity="SimpleProduct" stepKey="createSimpleProduct">
+        <field key="price">10.00</field>
+        <requiredEntity createDataKey="createPreReqCategory"/>
+      </createData>
+      <createData entity="FullSource1" stepKey="source"/>
+      <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
+      <createData entity="SourceStockLinked1" stepKey="sourceStockLink" before="createCustomer">
+        <requiredEntity createDataKey="stock"/>
+        <requiredEntity createDataKey="source"/>
+      </createData>
+    </before>
+    <after>
+      <!--Delete created data-->
+      <deleteData createDataKey="createSimpleProduct" stepKey="deleteSimpleProduct"/>
+      <deleteData createDataKey="createPreReqCategory" stepKey="deletePreReqCategory"/>
+      <actionGroup ref="AdminOrdersGridClearFiltersActionGroup" stepKey="clearOrderFilters"/>
+      <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+        <argument name="stockName" value="{{_defaultStock.name}}"/>
+        <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+      </actionGroup>
+      <deleteData createDataKey="stock" stepKey="deleteCustomStock"/>
+      <!--Disable all sources.-->
+      <actionGroup ref="DisableAllSourcesActionGroup" stepKey="deleteSource"/>
+      <actionGroup ref="AdminLogoutActionGroup" stepKey="logOutOfAdmin" before="deleteCustomer"/>
+    </after>
+    <!-- Assign Test source to simple product -->
+    <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openProductEditPage">
+      <argument name="productId" value="$createSimpleProduct.id$"/>
+    </actionGroup>
+    <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
+      <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+    </actionGroup>
+    <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignCreatedSourceToFirstChildProduct">
+      <argument name="sourceCode" value="$source.source[source_code]$"/>
+    </actionGroup>
+    <waitForElementVisible selector="{{AdminProductSourcesGrid.rowQty('0')}}" stepKey="waitForQtyFieldToBeVisible"/>
+    <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="3" stepKey="fillSourceQtyField"/>
+    <actionGroup ref="SaveProductFormActionGroup" stepKey="saveSimpleProduct"/>
+    <actionGroup ref="StorefrontAddSimpleProductWithQtyActionGroup" stepKey="addSimpleProductToCart" before="gotoCart">
+      <argument name="product" value="$$$createSimpleProduct$$"/>
+      <argument name="quantity" value="3"/>
+    </actionGroup>
+  </test>
+</tests>
