@@ -9,6 +9,8 @@ namespace Magento\Inventory\Model\ResourceModel\SourceItem;
 
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Adapter\AdapterInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Inventory\Model\ResourceModel\Source as SourceResourceModel;
 use Magento\Inventory\Model\ResourceModel\SourceItem as SourceItemResourceModel;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 
@@ -47,12 +49,49 @@ class SaveMultiple
         $connection = $this->resourceConnection->getConnection();
         $tableName = $this->resourceConnection->getTableName(SourceItemResourceModel::TABLE_NAME_SOURCE_ITEM);
 
+        $this->assertSourceCodesIntegrity($sourceItems);
+
         [$newItems, $existingItems] = $this->separateExistingAndNewItems($sourceItems);
         if (count($newItems)) {
             $this->insertNewItems($newItems, $connection, $tableName);
         }
         if (count($existingItems)) {
             $this->updateExistentItems($existingItems, $connection, $tableName);
+        }
+    }
+
+    /**
+     * Ensure stocks for incoming items are exists
+     *
+     * @param SourceItemInterface[] $sourceItems
+     * @return void
+     *
+     * @throws LocalizedException
+     */
+    private function assertSourceCodesIntegrity($sourceItems)
+    {
+        $sourceCodes = array_unique(array_map(function($sourceItem) {
+            return $sourceItem->getSourceCode();
+        }, $sourceItems));
+
+        $sourcesCheckSql = sprintf(
+            'SELECT `%s` FROM `%s` WHERE `%s` in (%s)',
+            SourceItemInterface::SOURCE_CODE,
+            $this->resourceConnection->getTableName(SourceResourceModel::TABLE_NAME_SOURCE),
+            SourceItemInterface::SOURCE_CODE,
+            implode(', ', array_map(function ($code) {
+                return '"' . $code . '"';
+            }, $sourceCodes)),
+        );
+
+        $existingSources = $this->resourceConnection
+            ->getConnection()
+            ->query($sourcesCheckSql)
+            ->fetchAll(\Zend_Db::FETCH_COLUMN);
+
+        $missing = array_diff($sourceCodes, $existingSources);
+        if (count($missing) > 0) {
+            throw new LocalizedException(__("Requested source(s) was not found by the source_code: %1", implode(', ', $missing)));
         }
     }
 
