@@ -15,18 +15,11 @@ use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 class IsSalableQtyAvailableForDisplaying
 {
     /**
-     * @var StockItemConfigurationInterface
-     */
-    private $stockItemConfig;
-
-    /**
      * @param StockItemConfigurationInterface $stockItemConfiguration
      */
     public function __construct(
-        StockItemConfigurationInterface $stockItemConfiguration
-    ) {
-        $this->stockItemConfig = $stockItemConfiguration;
-    }
+        private StockItemConfigurationInterface $stockItemConfiguration
+    ) {}
 
     /**
      * Is salable quantity available for displaying.
@@ -37,8 +30,8 @@ class IsSalableQtyAvailableForDisplaying
     public function execute(float $productSalableQty): bool
     {
         return ($this->stockItemConfig->getBackorders() === StockItemConfigurationInterface::BACKORDERS_NO
-                || $this->stockItemConfig->getBackorders() !== StockItemConfigurationInterface::BACKORDERS_NO
-                && $this->stockItemConfig->getMinQty() < 0)
+                || ($this->stockItemConfig->getBackorders() !== StockItemConfigurationInterface::BACKORDERS_NO
+                && $this->stockItemConfig->getMinQty() < 0))
             && $productSalableQty <= (float) $this->stockItemConfig->getStockThresholdQty()
             && $productSalableQty > 0;
     }
