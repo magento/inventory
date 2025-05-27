@@ -84,7 +84,7 @@ class AdaptAddQuantityFilterPlugin
             }
         }
         if ($skusToExclude) {
-            $subject->getSelect()->where('e.sku NOT IN(?)', implode(',', $skusToExclude));
+            $subject->getSelect()->where('e.sku NOT IN(?)', $skusToExclude);
         }
         $subject->resetData();
 
