@@ -70,16 +70,18 @@ class AbstractStockqtyPlugin
     public function aroundIsMsgVisible(AbstractStockqty $subject, callable $proceed): bool
     {
         $product = $subject->getProduct();
-        $productType = $product->getTypeId();
-        $sku = $product->getSku();
-        $stockId = (int)$this->stockByWebsiteId->execute(
-            (int)$subject->getProduct()->getStore()->getWebsiteId()
-        )->getStockId();
-        $stockItemConfig = $this->getStockItemConfiguration->execute($sku, $stockId);
+        if ($this->isSourceItemManagementAllowedForProductType->execute($product->getTypeId())) {
+            $sku = $product->getSku();
+            $stockId = (int)$this->stockByWebsiteId->execute(
+                (int)$subject->getProduct()->getStore()->getWebsiteId()
+            )->getStockId();
+            $stockItemConfig = $this->getStockItemConfiguration->execute($sku, $stockId);
 
-        return $stockItemConfig->isManageStock()
-            && $this->isSourceItemManagementAllowedForProductType->execute($productType)
-            && $this->qtyLeftChecker->execute($this->getProductSalableQty->execute($sku, $stockId), $stockItemConfig);
+            return $stockItemConfig->isManageStock()
+                && $this->qtyLeftChecker->execute($this->getProductSalableQty->execute($sku, $stockId), $stockItemConfig);
+        }
+
+        return false;
     }
 
     /**
