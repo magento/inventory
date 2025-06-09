@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -27,6 +27,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * This command may be used to simplify migrations from Magento versions without new Inventory or to track down
  * incorrect behavior of customizations.
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class CreateCompensations extends Command
 {

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2021 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -55,7 +55,8 @@ class GetOrderDataForOrderInFinalStateTest extends TestCase
         /** @var OrderRepositoryInterface $orderRepository */
         $orderRepository = $this->objectManager->get(OrderRepositoryInterface::class);
         /** @var \Magento\Sales\Api\Data\OrderInterface $order */
-        $order = $this->objectManager->get(OrderInterfaceFactory::class)->create()->loadByIncrementId($orderIncrementId);
+        $order = $this->objectManager->get(OrderInterfaceFactory::class)
+            ->create()->loadByIncrementId($orderIncrementId);
         $order->setState('complete');
         $order->setStoreId(null);
         $orderRepository->save($order);

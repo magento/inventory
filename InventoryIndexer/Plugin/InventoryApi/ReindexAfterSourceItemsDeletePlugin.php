@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -12,7 +12,8 @@ use Magento\InventoryApi\Api\SourceItemsDeleteInterface;
 use Magento\InventoryIndexer\Indexer\Source\SourceIndexer;
 
 /**
- * Reindex after source items delete plugin
+ * Handles reindexing of source items after they are deleted by intercepting the execution
+ * and triggering the source indexer.
  */
 class ReindexAfterSourceItemsDeletePlugin
 {
@@ -30,6 +31,8 @@ class ReindexAfterSourceItemsDeletePlugin
     }
 
     /**
+     * Reindexes source items after deletion by intercepting execution and triggering the source indexer.
+     *
      * @param SourceItemsDeleteInterface $subject
      * @param callable $proceed
      * @param SourceItemInterface[] $sourceItems

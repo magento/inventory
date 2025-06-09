@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -15,6 +15,8 @@ namespace Magento\InventoryConfigurationApi\Api;
 interface GetStockItemConfigurationInterface
 {
     /**
+     * Returns stock item configuration for a given SKU and stock ID or throws an exception if not found.
+     *
      * @param string $sku
      * @param int $stockId
      * @return \Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface

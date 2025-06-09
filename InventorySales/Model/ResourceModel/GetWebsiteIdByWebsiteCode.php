@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -10,7 +10,7 @@ namespace Magento\InventorySales\Model\ResourceModel;
 use Magento\Framework\App\ResourceConnection;
 
 /**
- * Get website id by website code
+ * Retrieves the website ID associated with a given website code from the `store_website` database table.
  */
 class GetWebsiteIdByWebsiteCode
 {
@@ -29,6 +29,8 @@ class GetWebsiteIdByWebsiteCode
     }
 
     /**
+     * Retrieves the website ID associated with a given website code from the `store_website` database table.
+     *
      * @param string $websiteCode
      * @return int|null
      */

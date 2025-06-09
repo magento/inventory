@@ -39,6 +39,7 @@ class StockItemRepositoryPlugin
      * @param StockItemInterface $stockItem
      * @return StockItemInterface
      * @throws NoSuchEntityException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterSave(StockItemRepository $subject, StockItemInterface $stockItem): StockItemInterface
     {

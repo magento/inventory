@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -40,6 +40,8 @@ class IndexDataBySkuListProvider
     }
 
     /**
+     * Fetches index data for a given stock ID and SKU list using a database query and returns it as an iterator.
+     *
      * @param int $stockId
      * @param array $skuList
      * @return ArrayIterator

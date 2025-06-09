@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -19,14 +19,14 @@ interface SalesChannelInterface extends \Magento\Framework\Api\ExtensibleDataInt
     /**
      * Constants for keys of data array. Identical to the name of the getter in snake case
      */
-    const TYPE = 'type';
-    const CODE = 'code';
+    public const TYPE = 'type';
+    public const CODE = 'code';
     /**#@-*/
 
     /**
      * Default sales channel type
      */
-    const TYPE_WEBSITE = 'website';
+    public const TYPE_WEBSITE = 'website';
 
     /**
      * Get sales channel type

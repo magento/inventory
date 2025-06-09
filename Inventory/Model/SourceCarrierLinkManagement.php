@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -83,6 +83,8 @@ class SourceCarrierLinkManagement implements SourceCarrierLinkManagementInterfac
     }
 
     /**
+     * Deletes existing carrier links for a source and saves new ones if provided, using database operations.
+     *
      * @param SourceInterface $source
      * @return void
      */
@@ -96,6 +98,8 @@ class SourceCarrierLinkManagement implements SourceCarrierLinkManagementInterfac
     }
 
     /**
+     * Loads carrier links for a source using search criteria and sets them to the source object from the collection.
+     *
      * @param SourceInterface $source
      * @return void
      */

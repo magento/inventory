@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -52,6 +52,7 @@ class GetStockSourceLinks implements GetStockSourceLinksInterface
      * @param StockSourceLinkCollectionFactory $stockSourceLinkCollectionFactory
      * @param StockSourceLinkSearchResultsInterfaceFactory $stockSourceLinkSearchResultsFactory
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param StockSourceLinksExtensionAttributes $stockSourceLinksExtensionAttributes
      */
     public function __construct(
         CollectionProcessorInterface $collectionProcessor,

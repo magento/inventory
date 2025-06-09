@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2021 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -14,7 +14,8 @@ use Magento\InventoryReservationsApi\Model\ReservationBuilderInterface;
 use Magento\InventoryReservationsApi\Model\ReservationInterface;
 
 /**
- * Load existing reservations
+ * Loads existing reservations from the database, processes their metadata,
+ * and builds reservation models grouped by order increment ID and stock ID.
  */
 class LoadExistingReservations
 {

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -78,6 +78,8 @@ class SetToZeroLegacyCatalogInventoryAtSourceItemsDeletePlugin
     }
 
     /**
+     * Sets legacy stock item quantity to zero and reindexes products when default source items are deleted.
+     *
      * @param SourceItemsDeleteInterface $subject
      * @param void $result
      * @param SourceItemInterface[] $sourceItems

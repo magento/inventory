@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2021 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -29,6 +29,8 @@ class GetWebsiteCodesByWebsiteIds
     }
 
     /**
+     * Fetches website codes from the store_website table based on the provided array of website IDs.
+     *
      * @param array $websiteIds
      * @return array
      */

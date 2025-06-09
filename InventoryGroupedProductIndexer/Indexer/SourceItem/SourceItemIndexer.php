@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -80,6 +80,8 @@ class SourceItemIndexer
     }
 
     /**
+     * Processes a list of source item IDs, updates stock indexes, and saves the index data for each stock ID.
+     *
      * @param array $sourceItemIds
      */
     public function executeList(array $sourceItemIds)

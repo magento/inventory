@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -14,6 +14,8 @@ class PartialInventoryTransferItem extends AbstractSimpleObject implements Parti
 {
 
     /**
+     * Returns the SKU for the partial inventory transfer item.
+     *
      * @return string
      */
     public function getSku(): string
@@ -22,6 +24,8 @@ class PartialInventoryTransferItem extends AbstractSimpleObject implements Parti
     }
 
     /**
+     * Sets the SKU for the partial inventory transfer item.
+     *
      * @param string $sku
      */
     public function setSku(string $sku): void
@@ -30,6 +34,8 @@ class PartialInventoryTransferItem extends AbstractSimpleObject implements Parti
     }
 
     /**
+     * Returns the quantity for the partial inventory transfer item.
+     *
      * @return float
      */
     public function getQty(): float
@@ -38,6 +44,8 @@ class PartialInventoryTransferItem extends AbstractSimpleObject implements Parti
     }
 
     /**
+     * Sets the quantity for the partial inventory transfer item.
+     *
      * @param float $qty
      */
     public function setQty(float $qty): void

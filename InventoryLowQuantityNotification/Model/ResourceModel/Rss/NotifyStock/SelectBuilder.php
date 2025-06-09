@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -59,6 +59,8 @@ class SelectBuilder
     }
 
     /**
+     * Executes a series of SQL modifications on the provided `Select` object to build a complete query structure.
+     *
      * @param Select $select
      *
      * @return void

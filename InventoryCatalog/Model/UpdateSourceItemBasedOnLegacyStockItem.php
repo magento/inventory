@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -64,6 +64,8 @@ class UpdateSourceItemBasedOnLegacyStockItem
     }
 
     /**
+     * Updates default source item based on legacy stock item by syncing quantity, status, and source code details.
+     *
      * @param Item $legacyStockItem
      * @return void
      * @throws \Magento\Framework\Exception\CouldNotSaveException

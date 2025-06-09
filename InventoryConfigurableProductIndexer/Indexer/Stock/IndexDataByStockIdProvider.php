@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -39,6 +39,8 @@ class IndexDataByStockIdProvider
     }
 
     /**
+     * Fetches indexed data for a given stock ID using a database query and returns it as an array iterator.
+     *
      * @param int $stockId
      * @return ArrayIterator
      */

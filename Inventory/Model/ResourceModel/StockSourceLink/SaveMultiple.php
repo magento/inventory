@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -70,6 +70,8 @@ class SaveMultiple
     }
 
     /**
+     * Generates a comma-separated list of SQL column names by quoting identifiers for safe database queries.
+     *
      * @param array $columns
      * @return string
      */
@@ -81,6 +83,8 @@ class SaveMultiple
     }
 
     /**
+     * Builds an SQL `VALUES` clause for bulk inserts by repeating placeholders based on the number of input links.
+     *
      * @param StockSourceLinkInterface[] $links
      * @return string
      */
@@ -91,6 +95,8 @@ class SaveMultiple
     }
 
     /**
+     * Generates SQL bind data for bulk inserts by extracting source code, stock ID, and priority from links.
+     *
      * @param StockSourceLinkInterface[] $links
      * @return array
      */
@@ -98,6 +104,7 @@ class SaveMultiple
     {
         $bind = [];
         foreach ($links as $link) {
+            // phpcs:ignore Magento2.Performance.ForeachArrayMerge
             $bind = array_merge($bind, [
                 $link->getSourceCode(),
                 $link->getStockId(),
@@ -108,6 +115,8 @@ class SaveMultiple
     }
 
     /**
+     * Builds an SQL `ON DUPLICATE KEY UPDATE` clause by quoting field names and mapping them to their new values.
+     *
      * @param array $fields
      * @return string
      */

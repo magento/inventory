@@ -1,3 +1,8 @@
+/**
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
+ */
+
 var config = {
     config: {
         mixins: {

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -30,6 +30,8 @@ class GetAllStockIds
     }
 
     /**
+     * Fetches all stock IDs from the database by querying the stock table and returns them as an integer array.
+     *
      * @return int[]
      */
     public function execute(): array

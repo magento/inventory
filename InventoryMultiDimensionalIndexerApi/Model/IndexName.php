@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -35,7 +35,7 @@ class IndexName
     /**
      * @param string $indexId
      * @param Dimension[] $dimensions
-     * @param Alias $alias*
+     * @param Alias $alias
      * @throws LocalizedException
      */
     public function __construct(string $indexId, array $dimensions, Alias $alias)
@@ -54,6 +54,8 @@ class IndexName
     }
 
     /**
+     * Returns the index ID of the `IndexName` object as a string.
+     *
      * @return string
      */
     public function getIndexId(): string
@@ -62,6 +64,8 @@ class IndexName
     }
 
     /**
+     * Returns the dimensions of the `IndexName` object as an array of `Dimension` objects.
+     *
      * @return Dimension[]
      */
     public function getDimensions(): array
@@ -70,6 +74,8 @@ class IndexName
     }
 
     /**
+     * Returns the alias of the `IndexName` object as an `Alias` object.
+     *
      * @return Alias
      */
     public function getAlias(): Alias
