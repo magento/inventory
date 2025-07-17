@@ -7,29 +7,16 @@
 -->
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <type name="Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync">
-        <plugin name="grouped_product_index" type="Magento\InventoryGroupedProductIndexer\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync\SourceItemIndexerPlugin" />
-    </type>
-    <type name="Magento\InventoryIndexer\Indexer\Stock\Strategy\Sync">
-        <plugin name="grouped_product_index_list" type="Magento\InventoryGroupedProductIndexer\Plugin\InventoryIndexer\Indexer\Stock\Strategy\Sync\ReindexListPlugin" />
-        <plugin name="grouped_product_index_full" type="Magento\InventoryGroupedProductIndexer\Plugin\InventoryIndexer\Indexer\Stock\Strategy\Sync\ReindexFullPlugin" />
-    </type>
-    <type name="Magento\InventoryGroupedProductIndexer\Indexer\Stock\StockIndexer">
+    <type name="Magento\InventoryGroupedProductIndexer\Indexer\SiblingProductsProvider">
         <arguments>
-            <argument name="indexHandler" xsi:type="object">Magento\InventoryIndexer\Indexer\IndexHandler</argument>
-            <argument name="indexStructure" xsi:type="object">Magento\InventoryIndexer\Indexer\IndexStructure</argument>
+            <argument name="selectBuilder" xsi:type="object">Magento\InventoryGroupedProductIndexer\Indexer\SelectBuilder</argument>
         </arguments>
     </type>
-    <type name="Magento\InventoryGroupedProductIndexer\Indexer\SourceItem\SourceItemIndexer">
+    <type name="Magento\InventoryIndexer\Indexer\Stock\IndexDataFiller">
         <arguments>
-            <argument name="indexHandler" xsi:type="object">Magento\InventoryIndexer\Indexer\IndexHandler</argument>
-            <argument name="indexStructure" xsi:type="object">Magento\InventoryIndexer\Indexer\IndexStructure</argument>
-        </arguments>
-    </type>
-    <type name="Magento\InventoryGroupedProductIndexer\Indexer\SourceItem\SiblingSkuListInStockProvider">
-        <arguments>
-            <argument name="tableNameSourceItem" xsi:type="const">Magento\Inventory\Model\ResourceModel\SourceItem::TABLE_NAME_SOURCE_ITEM</argument>
-            <argument name="tableNameStockSourceLink" xsi:type="const">Magento\Inventory\Model\ResourceModel\StockSourceLink::TABLE_NAME_STOCK_SOURCE_LINK</argument>
+            <argument name="siblingProductsProviders" xsi:type="array">
+                <item name="grouped" xsi:type="object">Magento\InventoryGroupedProductIndexer\Indexer\SiblingProductsProvider</item>
+            </argument>
         </arguments>
     </type>
 </config>

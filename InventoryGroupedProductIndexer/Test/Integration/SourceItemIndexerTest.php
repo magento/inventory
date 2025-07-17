@@ -8,11 +8,10 @@ declare(strict_types=1);
 namespace Magento\InventoryGroupedProductIndexer\Test\Integration;
 
 use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Inventory\Model\SourceItem;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
-use Magento\InventoryGroupedProductIndexer\Indexer\SourceItem\SourceItemIndexer;
+use Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync as SyncSourceItemIndexer;
 use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -46,7 +45,7 @@ class SourceItemIndexerTest extends TestCase
     private $getStockItemData;
 
     /**
-     * @var SourceItemIndexer
+     * @var SyncSourceItemIndexer
      */
     private $sourceItemIndexer;
 
@@ -61,7 +60,7 @@ class SourceItemIndexerTest extends TestCase
         $this->searchCriteriaBuilder = $objectManager->get(SearchCriteriaBuilder::class);
         $this->sourceItemsSave = $objectManager->get(SourceItemsSaveInterface::class);
         $this->getStockItemData = $objectManager->get(GetStockItemDataInterface::class);
-        $this->sourceItemIndexer = $objectManager->get(SourceItemIndexer::class);
+        $this->sourceItemIndexer = $objectManager->get(SyncSourceItemIndexer::class);
     }
 
     /**

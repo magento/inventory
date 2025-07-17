@@ -83,14 +83,13 @@ class SiblingSkuListInStockProvider
         $sourceItemTable = $this->resourceConnection->getTableName($this->tableNameSourceItem);
 
         $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
-        $linkField = $metadata->getIdentifierField();
         $items = [];
 
         $select = $connection
             ->select()
             ->from(
                 ['source_item' => $sourceItemTable],
-                [SourceItemInterface::SKU => 'sibling_product_entity.' . SourceItemInterface::SKU]
+                []
             )->joinInner(
                 ['stock_source_link' => $sourceStockLinkTable],
                 sprintf(
@@ -105,19 +104,17 @@ class SiblingSkuListInStockProvider
                 []
             )->joinInner(
                 ['parent_link' => $this->resourceConnection->getTableName('catalog_product_super_link')],
-                'parent_link.product_id = child_product_entity.' . $linkField,
-                []
-            )->joinInner(
-                ['sibling_link' => $this->resourceConnection->getTableName('catalog_product_super_link')],
-                'sibling_link.parent_id = parent_link.parent_id',
+                'parent_link.product_id = child_product_entity.' . $metadata->getIdentifierField(),
                 []
             )->joinInner(
                 ['sibling_product_entity' => $this->resourceConnection->getTableName('catalog_product_entity')],
-                'sibling_product_entity.' . $linkField . ' = sibling_link.product_id',
-                []
+                'sibling_product_entity.' . $metadata->getLinkField() . ' = parent_link.parent_id',
+                ['sku' => 'sibling_product_entity.sku']
             )->where(
                 'source_item.source_item_id IN (?)',
                 $sourceItemIds
+            )->group(
+                ['stock_source_link.' . StockSourceLinkInterface::STOCK_ID, 'sibling_product_entity.sku']
             );
 
         $dbStatement = $connection->query($select);

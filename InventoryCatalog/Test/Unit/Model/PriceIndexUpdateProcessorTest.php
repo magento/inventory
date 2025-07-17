@@ -32,12 +32,8 @@ class PriceIndexUpdateProcessorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->priceIndexProcessor = $this->getMockBuilder(Processor::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->getProductsIdsToProcess = $this->getMockBuilder(GetProductsIdsToProcess::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->priceIndexProcessor = $this->createMock(Processor::class);
+        $this->getProductsIdsToProcess = $this->createMock(GetProductsIdsToProcess::class);
 
         $this->priceIndexUpdateProcessor = new PriceIndexUpdateProcessor(
             $this->priceIndexProcessor,
@@ -47,7 +43,6 @@ class PriceIndexUpdateProcessorTest extends TestCase
 
     /**
      * @dataProvider processDataProvider
-     * @param array $sourceItemIds
      * @param array $beforeSalableList
      * @param array $afterSalableList
      * @param array $changedProductIds,
@@ -55,7 +50,6 @@ class PriceIndexUpdateProcessorTest extends TestCase
      * @return void
      */
     public function testProcess(
-        array $sourceItemIds,
         array $beforeSalableList,
         array $afterSalableList,
         array $changedProductIds,
@@ -69,7 +63,7 @@ class PriceIndexUpdateProcessorTest extends TestCase
             ->method('reindexList')
             ->with($changedProductIds, true);
 
-        $this->priceIndexUpdateProcessor->process($sourceItemIds, $beforeSalableList, $afterSalableList);
+        $this->priceIndexUpdateProcessor->process($beforeSalableList, $afterSalableList);
     }
 
     /**
@@ -78,8 +72,8 @@ class PriceIndexUpdateProcessorTest extends TestCase
     public static function processDataProvider(): array
     {
         return [
-            [[1], ['sku1' => [1 => true]], ['sku1' => [1 => true]], [], 0],
-            [[1], ['sku1' => [1 => true]], ['sku1' => [1 => false]], [1], 1]
+            [['sku1' => [1 => true]], ['sku1' => [1 => true]], [], 0],
+            [['sku1' => [1 => true]], ['sku1' => [1 => false]], [1], 1]
         ];
     }
 }

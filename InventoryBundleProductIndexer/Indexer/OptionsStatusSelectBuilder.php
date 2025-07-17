@@ -13,8 +13,7 @@ use Magento\Framework\DB\Select;
 use Magento\Framework\EntityManager\MetadataPool;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryConfigurationApi\Model\InventoryConfigurationInterface;
-use Magento\InventoryIndexer\Indexer\InventoryIndexer;
-use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
+use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexName;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameResolverInterface;
 
@@ -24,11 +23,6 @@ class OptionsStatusSelectBuilder
      * @var ResourceConnection
      */
     private $resourceConnection;
-
-    /**
-     * @var IndexNameBuilder
-     */
-    private $indexNameBuilder;
 
     /**
      * @var IndexNameResolverInterface
@@ -52,7 +46,6 @@ class OptionsStatusSelectBuilder
 
     /**
      * @param ResourceConnection $resourceConnection
-     * @param IndexNameBuilder $indexNameBuilder
      * @param IndexNameResolverInterface $indexNameResolver
      * @param MetadataPool $metadataPool
      * @param DefaultStockProviderInterface $defaultStockProvider
@@ -60,14 +53,12 @@ class OptionsStatusSelectBuilder
      */
     public function __construct(
         ResourceConnection $resourceConnection,
-        IndexNameBuilder $indexNameBuilder,
         IndexNameResolverInterface $indexNameResolver,
         MetadataPool $metadataPool,
         DefaultStockProviderInterface $defaultStockProvider,
         InventoryConfigurationInterface $inventoryConfiguration
     ) {
         $this->resourceConnection = $resourceConnection;
-        $this->indexNameBuilder = $indexNameBuilder;
         $this->indexNameResolver = $indexNameResolver;
         $this->metadataPool = $metadataPool;
         $this->defaultStockProvider = $defaultStockProvider;
@@ -77,19 +68,13 @@ class OptionsStatusSelectBuilder
     /**
      * Build bundle options stock status select
      *
-     * @param int $stockId
+     * @param IndexName $indexName
      * @param array $skuList
      * @return Select
      */
-    public function execute(int $stockId, array $skuList = []): Select
+    public function execute(IndexName $indexName, array $skuList = []): Select
     {
-        $indexName = $this->indexNameBuilder
-            ->setIndexId(InventoryIndexer::INDEXER_ID)
-            ->addDimension('stock_', (string) $stockId)
-            ->setAlias(Alias::ALIAS_MAIN)
-            ->build();
         $indexTableName = $this->indexNameResolver->resolveName($indexName);
-
         $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
         $productLinkField = $metadata->getLinkField();
 

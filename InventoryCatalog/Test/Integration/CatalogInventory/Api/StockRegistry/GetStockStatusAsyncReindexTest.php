@@ -8,8 +8,10 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalog\Test\Integration\CatalogInventory\Api\StockRegistry;
 
 use Magento\CatalogInventory\Api\StockRegistryInterface;
+use Magento\Framework\App\DeploymentConfig\FileReader;
+use Magento\Framework\App\DeploymentConfig\Writer;
+use Magento\Framework\Config\File\ConfigFilePool;
 use Magento\Framework\MessageQueue\ConsumerFactory;
-use Magento\Framework\MessageQueue\QueueFactoryInterface;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\Helper\Bootstrap;
@@ -36,9 +38,19 @@ class GetStockStatusAsyncReindexTest extends TestCase
     private $storeManager;
 
     /**
+     * @var Writer
+     */
+    private $writer;
+
+    /**
      * @var string
      */
     private $storeCodeBefore;
+
+    /**
+     * @var array
+     */
+    private $envConfig;
 
     /**
      * @inheritdoc
@@ -48,7 +60,13 @@ class GetStockStatusAsyncReindexTest extends TestCase
         $this->stockRegistry = Bootstrap::getObjectManager()->get(StockRegistryInterface::class);
         $this->getProductIdsBySkus = Bootstrap::getObjectManager()->get(GetProductIdsBySkusInterface::class);
         $this->storeManager = Bootstrap::getObjectManager()->get(StoreManagerInterface::class);
+        $this->writer = Bootstrap::getObjectManager()->get(Writer::class);
         $this->storeCodeBefore = $this->storeManager->getStore()->getCode();
+
+        $reader = Bootstrap::getObjectManager()->get(FileReader::class);
+        $this->envConfig = $envConfig = $reader->load(ConfigFilePool::APP_ENV);
+        $envConfig['queue']['consumers_wait_for_messages'] = 0;
+        $this->writer->saveConfig([ConfigFilePool::APP_ENV => $envConfig], true);
     }
 
     /**
@@ -143,6 +161,7 @@ class GetStockStatusAsyncReindexTest extends TestCase
     protected function tearDown(): void
     {
         $this->storeManager->setCurrentStore($this->storeCodeBefore);
+        $this->writer->saveConfig([ConfigFilePool::APP_ENV => $this->envConfig], true);
 
         parent::tearDown();
     }
@@ -157,7 +176,5 @@ class GetStockStatusAsyncReindexTest extends TestCase
         $consumerFactory = Bootstrap::getObjectManager()->get(ConsumerFactory::class);
         $consumer = $consumerFactory->get('inventory.indexer.stock');
         $consumer->process(2);
-        /*Wait till stock will be reindex asynchronously.*/
-        sleep(20);
     }
 }

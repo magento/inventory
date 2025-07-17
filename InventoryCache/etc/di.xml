@@ -27,7 +27,7 @@
             <argument name="sortOrder" xsi:type="number">30</argument>
         </arguments>
     </type>
-    <type name="Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync">
+    <type name="Magento\InventoryIndexer\Indexer\Stock\SkuListsProcessor">
         <arguments>
             <argument name="saleabilityChangesProcessorsPool" xsi:type="array">
                 <item name="cacheFlushProcessor" xsi:type="object">Magento\InventoryCache\Model\CacheFlushProcessor</item>

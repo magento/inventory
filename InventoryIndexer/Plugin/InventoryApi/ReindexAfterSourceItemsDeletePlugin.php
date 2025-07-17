@@ -9,7 +9,9 @@ namespace Magento\InventoryIndexer\Plugin\InventoryApi;
 
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemsDeleteInterface;
-use Magento\InventoryIndexer\Indexer\Source\SourceIndexer;
+use Magento\InventoryIndexer\Indexer\SourceItem\GetSkuListInStock;
+use Magento\InventoryIndexer\Indexer\SourceItem\GetSourceItemIds;
+use Magento\InventoryIndexer\Indexer\Stock\SkuListsProcessor;
 
 /**
  * Handles reindexing of source items after they are deleted by intercepting the execution
@@ -18,16 +20,15 @@ use Magento\InventoryIndexer\Indexer\Source\SourceIndexer;
 class ReindexAfterSourceItemsDeletePlugin
 {
     /**
-     * @var SourceIndexer
+     * @param GetSourceItemIds $getSourceItemIds
+     * @param GetSkuListInStock $getSkuListInStock
+     * @param SkuListsProcessor $skuListsProcessor
      */
-    private $sourceIndexer;
-
-    /**
-     * @param SourceIndexer $sourceIndexer
-     */
-    public function __construct(SourceIndexer $sourceIndexer)
-    {
-        $this->sourceIndexer = $sourceIndexer;
+    public function __construct(
+        private readonly GetSourceItemIds $getSourceItemIds,
+        private readonly GetSkuListInStock $getSkuListInStock,
+        private readonly SkuListsProcessor $skuListsProcessor,
+    ) {
     }
 
     /**
@@ -44,15 +45,13 @@ class ReindexAfterSourceItemsDeletePlugin
         callable $proceed,
         array $sourceItems
     ) {
-        $sourceCodes = [];
-        foreach ($sourceItems as $sourceItem) {
-            $sourceCodes[] = $sourceItem->getSourceCode();
-        }
+        $sourceItemIds = $this->getSourceItemIds->execute($sourceItems);
+        $skuListInStockList = $this->getSkuListInStock->execute($sourceItemIds);
 
         $proceed($sourceItems);
 
-        if (count($sourceCodes)) {
-            $this->sourceIndexer->executeList($sourceCodes);
+        if ($skuListInStockList) {
+            $this->skuListsProcessor->reindexList($skuListInStockList);
         }
     }
 }

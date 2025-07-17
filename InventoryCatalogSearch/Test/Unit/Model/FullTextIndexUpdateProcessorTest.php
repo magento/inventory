@@ -32,13 +32,8 @@ class FullTextIndexUpdateProcessorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->getProductsIdsToProcess = $this->getMockBuilder(GetProductsIdsToProcess::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->fulltextUpdateProcessor = $this->getMockBuilder(Processor::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->getProductsIdsToProcess = $this->createMock(GetProductsIdsToProcess::class);
+        $this->fulltextUpdateProcessor = $this->createMock(Processor::class);
 
         $this->fullTextIndexUpdateProcessor = new FullTextIndexUpdateProcessor(
             $this->fulltextUpdateProcessor,
@@ -48,7 +43,6 @@ class FullTextIndexUpdateProcessorTest extends TestCase
 
     /**
      * @dataProvider processDataProvider
-     * @param array $sourceItemIds
      * @param array $beforeSalableList
      * @param array $afterSalableList
      * @param array $changedProductIds,
@@ -56,7 +50,6 @@ class FullTextIndexUpdateProcessorTest extends TestCase
      * @return void
      */
     public function testAroundExecuteList(
-        array $sourceItemIds,
         array $beforeSalableList,
         array $afterSalableList,
         array $changedProductIds,
@@ -69,7 +62,7 @@ class FullTextIndexUpdateProcessorTest extends TestCase
         $this->fulltextUpdateProcessor->expects($this->exactly($numberOfIndexUpdates))
             ->method('reindexList')
             ->with($changedProductIds, true);
-        $this->fullTextIndexUpdateProcessor->process($sourceItemIds, $beforeSalableList, $afterSalableList);
+        $this->fullTextIndexUpdateProcessor->process($beforeSalableList, $afterSalableList);
     }
 
     /**
@@ -78,8 +71,8 @@ class FullTextIndexUpdateProcessorTest extends TestCase
     public static function processDataProvider(): array
     {
         return [
-            [[1], ['sku1' => [1 => true]], ['sku1' => [1 => true]], [], 0],
-            [[1], ['sku1' => [1 => true]], ['sku1' => [1 => false]], [1], 1]
+            [['sku1' => [1 => true]], ['sku1' => [1 => true]], [], 0],
+            [['sku1' => [1 => true]], ['sku1' => [1 => false]], [1], 1]
         ];
     }
 }

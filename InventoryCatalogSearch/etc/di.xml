@@ -14,7 +14,7 @@
             <argument name="sortOrder" xsi:type="number">20</argument>
         </arguments>
     </type>
-    <type name="Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync">
+    <type name="Magento\InventoryIndexer\Indexer\Stock\SkuListsProcessor">
         <arguments>
             <argument name="saleabilityChangesProcessorsPool" xsi:type="array">
                 <item name="fullTextIndexUpdateProcessor" xsi:type="object">Magento\InventoryCatalogSearch\Model\FullTextIndexUpdateProcessor</item>

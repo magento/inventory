@@ -6,20 +6,9 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <type name="Magento\InventoryIndexer\Indexer\Stock\Strategy\Sync">
-        <plugin name="bundle_product_index_full" type="Magento\InventoryBundleProductIndexer\Plugin\InventoryIndexer\Indexer\Stock\Strategy\Sync\ReindexFullPlugin"/>
-        <plugin name="bundle_product_index_list" type="Magento\InventoryBundleProductIndexer\Plugin\InventoryIndexer\Indexer\Stock\Strategy\Sync\ReindexListPlugin"/>
-    </type>
-    <type name="Magento\InventoryBundleProductIndexer\Indexer\Stock\StockIndexer">
+    <type name="Magento\InventoryBundleProductIndexer\Indexer\StockIndexer">
         <arguments>
-            <argument name="indexHandler" xsi:type="object">Magento\InventoryIndexer\Indexer\IndexHandler</argument>
-            <argument name="indexStructure" xsi:type="object">Magento\InventoryIndexer\Indexer\IndexStructure</argument>
-        </arguments>
-    </type>
-    <type name="Magento\InventoryBundleProductIndexer\Indexer\SourceItem\SourceItemIndexer">
-        <arguments>
-            <argument name="indexHandler" xsi:type="object">Magento\InventoryIndexer\Indexer\IndexHandler</argument>
-            <argument name="indexStructure" xsi:type="object">Magento\InventoryIndexer\Indexer\IndexStructure</argument>
+            <argument name="productsProvider" xsi:type="object">Magento\InventoryBundleProductIndexer\Indexer\SiblingProductsProvider</argument>
         </arguments>
     </type>
     <type name="Magento\Bundle\Api\ProductLinkManagementInterface">
@@ -30,15 +19,15 @@
     <type name="Magento\Bundle\Api\ProductLinkManagementAddChildrenInterface">
         <plugin name="reindex_source_items_after_bulk_add_bundle_selection" type="Magento\InventoryBundleProductIndexer\Plugin\Bundle\Model\LinkManagement\ReindexSourceItemsAfterBulkAddBundleSelectionPlugin"/>
     </type>
-    <type name="Magento\InventoryBundleProductIndexer\Indexer\SourceItemIndexerProcessor">
+    <type name="Magento\InventoryBundleProductIndexer\Indexer\SiblingProductsProvider">
         <arguments>
-            <argument name="sortOrder" xsi:type="number">5</argument>
+            <argument name="selectBuilder" xsi:type="object">Magento\InventoryBundleProductIndexer\Indexer\SelectBuilder</argument>
         </arguments>
     </type>
-    <type name="Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync">
+    <type name="Magento\InventoryIndexer\Indexer\Stock\IndexDataFiller">
         <arguments>
-            <argument name="saleabilityChangesProcessorsPool" xsi:type="array">
-                <item name="sourceItemIndexerProcessor" xsi:type="object">Magento\InventoryBundleProductIndexer\Indexer\SourceItemIndexerProcessor</item>
+            <argument name="siblingProductsProviders" xsi:type="array">
+                <item name="bundle" xsi:type="object">Magento\InventoryBundleProductIndexer\Indexer\SiblingProductsProvider</item>
             </argument>
         </arguments>
     </type>

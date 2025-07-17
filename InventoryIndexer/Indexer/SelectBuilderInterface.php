@@ -13,6 +13,9 @@ use Magento\Framework\DB\Select;
  * Prepare select for data provider
  *
  * @api
+ * @deprecated
+ * @see \Magento\InventoryIndexer\Indexer\SelectBuilder
+ * @see \Magento\InventoryIndexer\Indexer\SiblingSelectBuilderInterface
  */
 interface SelectBuilderInterface
 {

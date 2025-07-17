@@ -7,17 +7,18 @@ declare(strict_types=1);
 
 namespace Magento\InventoryBundleProductIndexer\Indexer;
 
-use Exception;
 use Magento\Bundle\Model\Product\Type as BundleProductType;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Indexer\IndexStructure;
+use Magento\InventoryIndexer\Indexer\SiblingSelectBuilderInterface;
+use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexName;
 
 /**
  * Get bundle product for given stock select builder.
  */
-class SelectBuilder
+class SelectBuilder implements SiblingSelectBuilderInterface
 {
     /**
      * @var ResourceConnection
@@ -50,18 +51,13 @@ class SelectBuilder
     }
 
     /**
-     * Prepare select for getting bundle products on given stock.
-     *
-     * @param int $stockId
-     * @param array $skuList
-     * @return Select
-     * @throws Exception
+     * @inheritdoc
      */
-    public function execute(int $stockId, array $skuList = []): Select
+    public function getSelect(IndexName $indexName, array $skuList = []): Select
     {
         $connection = $this->resourceConnection->getConnection();
 
-        $optionsStatusSelect = $this->optionsStatusSelectBuilder->execute($stockId, $skuList);
+        $optionsStatusSelect = $this->optionsStatusSelectBuilder->execute($indexName, $skuList);
         $isRequiredOptionUnavailable = $connection->getCheckSql(
             'options.required AND options.stock_status = 0',
             '1',
