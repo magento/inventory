@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -28,6 +28,8 @@ class DeleteSourceForShipmentPlugin
     }
 
     /**
+     * Deletes the source code associated with a shipment after it is removed, using the shipment ID for execution.
+     *
      * @param ShipmentResource $subject
      * @param ShipmentResource $result
      * @param AbstractModel $shipment

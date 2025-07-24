@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -19,6 +19,8 @@ use Magento\InventorySourceSelectionApi\Api\Data\SourceSelectionResultInterface;
 interface SourceSelectionInterface
 {
     /**
+     * Executes the source selection algorithm for a given inventory request, returning the selection result.
+     *
      * @param InventoryRequestInterface $inventoryRequest
      * @return SourceSelectionResultInterface
      */

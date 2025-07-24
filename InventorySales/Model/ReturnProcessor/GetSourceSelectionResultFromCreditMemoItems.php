@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 
 declare(strict_types=1);
@@ -65,6 +65,8 @@ class GetSourceSelectionResultFromCreditMemoItems
     }
 
     /**
+     * Generates a source selection result by processing refunded items, calculating quantities, and creating requests.
+     *
      * @param OrderInterface $order
      * @param array $itemsToRefund
      * @param array $itemsToDeductFromSource
@@ -93,12 +95,14 @@ class GetSourceSelectionResultFromCreditMemoItems
 
         $inventoryRequest = $this->getInventoryRequestFromOrder->execute((int)$order->getEntityId(), $requestItems);
         $selectionAlgorithmCode = $this->getDefaultSourceSelectionAlgorithmCode->execute();
-        
+
         return $this->sourceSelectionService->execute($inventoryRequest, $selectionAlgorithmCode);
     }
 
     /**
-     * @param $item
+     * Calculates the total deducted quantity for an item by summing matching SKUs from deducted items.
+     *
+     * @param float $item
      * @param array $deductedItems
      * @return float
      */

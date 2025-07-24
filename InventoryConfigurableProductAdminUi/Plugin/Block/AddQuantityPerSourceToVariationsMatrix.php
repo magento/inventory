@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -40,8 +40,10 @@ class AddQuantityPerSourceToVariationsMatrix
     }
 
     /**
+     * Adds `quantityPerSource` to product variations matrix if multi-source inventory mode is enabled.
+     *
      * @param Matrix $subject
-     * @param $result
+     * @param array $result
      *
      * @return array
      *
@@ -49,7 +51,7 @@ class AddQuantityPerSourceToVariationsMatrix
      */
     public function afterGetProductMatrix(
         Matrix $subject,
-        $result
+        array $result
     ) {
         if ($this->isSingleSourceMode->execute() === false && is_array($result)) {
             foreach ($result as $key => $variation) {

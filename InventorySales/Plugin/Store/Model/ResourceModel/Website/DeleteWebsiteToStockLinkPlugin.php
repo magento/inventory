@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -34,6 +34,8 @@ class DeleteWebsiteToStockLinkPlugin
     }
 
     /**
+     * Deletes the link between a stock and a website by removing the associated sales channel after deletion.
+     *
      * @param WebsiteResourceModel $subject
      * @param WebsiteResourceModel $result
      * @param Website|AbstractModel $website

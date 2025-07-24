@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -33,6 +33,8 @@ class SourceDeductedOrderItem
     }
 
     /**
+     * Returns the SKU of the deducted order item associated with the current source deduction result.
+     *
      * @return string
      */
     public function getSku(): string
@@ -41,6 +43,8 @@ class SourceDeductedOrderItem
     }
 
     /**
+     * Returns the quantity of the deducted order item associated with the current source deduction result.
+     *
      * @return float
      */
     public function getQuantity(): float

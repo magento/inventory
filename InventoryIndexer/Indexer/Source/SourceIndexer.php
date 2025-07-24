@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -10,7 +10,7 @@ namespace Magento\InventoryIndexer\Indexer\Source;
 use Magento\InventoryIndexer\Indexer\Stock\StockIndexer;
 
 /**
- * Source indexer
+ * Represents the Source Indexer, responsible for executing full, single, or multiple source indexing operations.
  *
  * @api
  */
@@ -39,6 +39,8 @@ class SourceIndexer
     }
 
     /**
+     * Triggers a full reindexing operation for all stock data using the stock indexer.
+     *
      * @return void
      */
     public function executeFull()
@@ -47,6 +49,8 @@ class SourceIndexer
     }
 
     /**
+     * Performs reindexing for a single source code by delegating to the executeList method.
+     *
      * @param string $sourceCode
      * @return void
      */
@@ -56,6 +60,8 @@ class SourceIndexer
     }
 
     /**
+     * Reindexes stock data for a list of source codes by fetching stock IDs and invoking the stock indexer.
+     *
      * @param array $sourceCodes
      */
     public function executeList(array $sourceCodes)

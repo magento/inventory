@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -19,8 +19,8 @@ class CreateTest extends WebapiAbstract
     /**#@+
      * Service constants
      */
-    const RESOURCE_PATH = '/V1/inventory/sources';
-    const SERVICE_NAME = 'inventoryApiSourceRepositoryV1';
+    public const RESOURCE_PATH = '/V1/inventory/sources';
+    public const SERVICE_NAME = 'inventoryApiSourceRepositoryV1';
     /**#@-*/
 
     /**

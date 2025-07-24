@@ -267,6 +267,11 @@ define([
                 selectedSourceCode = this.getPickupLocationCodeFromAddress(selectedPickupAddress);
             }
 
+            if (!selectedSourceCode) {
+                // Get the source code from the checkout config
+                selectedSourceCode = window.checkoutConfig.selectedPickupLocationCode;
+            }
+
             if (selectedSourceCode) {
                 pickupLocationsService
                     .getLocation(selectedSourceCode)

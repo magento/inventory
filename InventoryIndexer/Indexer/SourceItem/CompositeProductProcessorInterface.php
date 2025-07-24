@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2023 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -19,13 +19,11 @@ interface CompositeProductProcessorInterface
     /**
      * Process product list with saleability changes
      *
-     * @param array $sourceItemIds
      * @param array $saleableStatusesBeforeSync
      * @param array $saleableStatusesAfterSync
      * @return void
      */
     public function process(
-        array $sourceItemIds,
         array $saleableStatusesBeforeSync,
         array $saleableStatusesAfterSync
     ): void;

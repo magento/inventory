@@ -1,12 +1,12 @@
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
  */
 define([
     'mage/translate',
     'Magento_Ui/js/form/element/abstract'
 ], function ($t, Abstract) {
-    'use strict';
+    'use strict'; //eslint-disable-line
 
     return Abstract.extend({
         defaults: {

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -14,6 +14,9 @@ use Magento\InventoryDistanceBasedSourceSelectionApi\Api\GetLatLngFromAddressInt
 use Magento\InventoryDistanceBasedSourceSelectionApi\Api\Data\LatLngInterfaceFactory;
 
 /**
+ * Handles the retrieval of latitude and longitude coordinates for a given source,
+ * using either stored values or address-based lookup.
+ *
  * Class GetLatLngFromSource
  */
 class GetLatLngFromSource

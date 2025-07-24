@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -28,6 +28,8 @@ class GetSourceCodesBySkus implements GetSourceCodesBySkusInterface
     }
 
     /**
+     * Executes a resource model to retrieve source codes for the provided SKUs and returns the result as an array.
+     *
      * @param array $skus
      * @return array
      */

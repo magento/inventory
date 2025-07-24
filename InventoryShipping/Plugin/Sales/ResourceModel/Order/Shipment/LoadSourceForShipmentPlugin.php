@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -37,6 +37,8 @@ class LoadSourceForShipmentPlugin
     }
 
     /**
+     * Loads the source code for a shipment after loading, using the shipment ID and setting it in extension attributes.
+     *
      * @param ShipmentResource $subject
      * @param ShipmentResource $result
      * @param AbstractModel $shipment

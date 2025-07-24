@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -19,24 +19,24 @@ interface SourceInterface extends \Magento\Framework\Api\ExtensibleDataInterface
     /**
      * Constants for keys of data array. Identical to the name of the getter in snake case
      */
-    const SOURCE_CODE = 'source_code';
-    const NAME = 'name';
-    const CONTACT_NAME = 'contact_name';
-    const EMAIL = 'email';
-    const ENABLED = 'enabled';
-    const DESCRIPTION = 'description';
-    const LATITUDE = 'latitude';
-    const LONGITUDE = 'longitude';
-    const COUNTRY_ID = 'country_id';
-    const REGION_ID = 'region_id';
-    const REGION = 'region';
-    const CITY = 'city';
-    const STREET = 'street';
-    const POSTCODE = 'postcode';
-    const PHONE = 'phone';
-    const FAX = 'fax';
-    const USE_DEFAULT_CARRIER_CONFIG = 'use_default_carrier_config';
-    const CARRIER_LINKS = 'carrier_links';
+    public const SOURCE_CODE = 'source_code';
+    public const NAME = 'name';
+    public const CONTACT_NAME = 'contact_name';
+    public const EMAIL = 'email';
+    public const ENABLED = 'enabled';
+    public const DESCRIPTION = 'description';
+    public const LATITUDE = 'latitude';
+    public const LONGITUDE = 'longitude';
+    public const COUNTRY_ID = 'country_id';
+    public const REGION_ID = 'region_id';
+    public const REGION = 'region';
+    public const CITY = 'city';
+    public const STREET = 'street';
+    public const POSTCODE = 'postcode';
+    public const PHONE = 'phone';
+    public const FAX = 'fax';
+    public const USE_DEFAULT_CARRIER_CONFIG = 'use_default_carrier_config';
+    public const CARRIER_LINKS = 'carrier_links';
 
     /**
      * Get source code
@@ -286,17 +286,23 @@ interface SourceInterface extends \Magento\Framework\Api\ExtensibleDataInterface
     public function isUseDefaultCarrierConfig(): ?bool;
 
     /**
+     * Sets whether to use the default carrier configuration for the source as a boolean value or null.
+     *
      * @param bool|null $useDefaultCarrierConfig
      * @return void
      */
     public function setUseDefaultCarrierConfig(?bool $useDefaultCarrierConfig): void;
 
     /**
+     * Retrieves carrier links for the source as an array of SourceCarrierLinkInterface objects or null.
+     *
      * @return \Magento\InventoryApi\Api\Data\SourceCarrierLinkInterface[]|null
      */
     public function getCarrierLinks(): ?array;
 
     /**
+     * Sets the carrier links for the source as an array of `SourceCarrierLinkInterface` objects or null.
+     *
      * @param \Magento\InventoryApi\Api\Data\SourceCarrierLinkInterface[]|null $carrierLinks
      * @return void
      */

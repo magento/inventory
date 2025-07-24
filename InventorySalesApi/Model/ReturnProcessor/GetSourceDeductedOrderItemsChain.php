@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -61,15 +61,18 @@ class GetSourceDeductedOrderItemsChain implements GetSourceDeductedOrderItemsInt
     }
 
     /**
-     * @param $sourceDeductedItems
+     * Groups source deducted items by source code and creates result objects for each source with its items.
+     *
+     * @param array $sourceDeductedItems
      * @return array
      */
-    private function groupResultBySourceCode($sourceDeductedItems): array
+    private function groupResultBySourceCode(array $sourceDeductedItems): array
     {
         $groupedItems = $result = [];
         foreach ($sourceDeductedItems as $resultItems) {
             foreach ($resultItems as $resultItem) {
                 if (!empty($groupedItems[$resultItem->getSourceCode()])) {
+                    //phpcs:ignore Magento2.Performance.ForeachArrayMerge
                     $resultArray = array_merge($groupedItems[$resultItem->getSourceCode()], $resultItem->getItems());
                     $groupedItems[$resultItem->getSourceCode()] = $resultArray;
                 } else {
