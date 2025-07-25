@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2023 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -74,14 +74,11 @@ class CacheFlushProcessor implements CompositeProductProcessorInterface
     /**
      * Clean cache for specific products after source items reindex.
      *
-     * @param array $sourceItemIds
      * @param array $saleableStatusesBeforeSync
      * @param array $saleableStatusesAfterSync
      * @return void
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function process(
-        array $sourceItemIds,
         array $saleableStatusesBeforeSync,
         array $saleableStatusesAfterSync
     ): void {

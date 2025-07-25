@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2022 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -140,7 +140,7 @@ class CollectionPluginTest extends TestCase
      *
      * @return array[]
      */
-    public function dataProviderForAutomaticSorting(): array
+    public static function dataProviderForAutomaticSorting(): array
     {
         $attribute = 'is_out_of_stock';
         $dir = 'DESC';

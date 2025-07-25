@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -25,7 +25,7 @@ class SourceItemCollectionFactory implements SourceItemCollectionFactoryInterfac
     /**
      * Source code field name
      */
-    const SOURCE_CODE_FIELD = 'source_' . SourceInterface::SOURCE_CODE;
+    public const SOURCE_CODE_FIELD = 'source_' . SourceInterface::SOURCE_CODE;
 
     /**
      * @var ObjectManagerInterface
@@ -74,6 +74,8 @@ class SourceItemCollectionFactory implements SourceItemCollectionFactoryInterfac
     }
 
     /**
+     * Creates a source item collection, applies filters, and processes attributes based on their backend types.
+     *
      * @param AttributeCollection $attributeCollection
      * @param array $filters
      * @return Collection
@@ -115,6 +117,8 @@ class SourceItemCollectionFactory implements SourceItemCollectionFactoryInterfac
     }
 
     /**
+     * Filters the input array to exclude empty values from the `FILTER_ELEMENT_GROUP` key, if it exists.
+     *
      * @param array $filters
      * @return array
      */

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -42,6 +42,8 @@ class AdaptStockResolverToAdminWebsitePlugin
     }
 
     /**
+     * Resolves stock for admin website sales channel by adapting the stock resolver to use the default stock.
+     *
      * @param GetStockBySalesChannelInterface $getStockBySalesChannel
      * @param callable $proceed
      * @param SalesChannelInterface $salesChannel

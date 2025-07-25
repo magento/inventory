@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -37,6 +37,8 @@ class RevertQuoteInventoryObserver implements ObserverInterface
     }
 
     /**
+     * Reindexes product prices and resets the inventory processed flag for a quote to allow retrying order placement.
+     *
      * @param EventObserver $observer
      * @return void
      */

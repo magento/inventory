@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -29,7 +29,7 @@ class CheckQuoteItemQtyPlugin
      * @param GetBackorder|null $getBackorder
      */
     public function __construct(
-        GetBackorder $getBackorder = null
+        ?GetBackorder $getBackorder = null
     ) {
         $this->getBackorder = $getBackorder
             ?? ObjectManager::getInstance()->get(GetBackorder::class);

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -60,7 +60,7 @@ class ValidationTest extends WebapiAbstract
     /**
      * @return array
      */
-    public function dataProviderRequiredFields(): array
+    public static function dataProviderRequiredFields(): array
     {
         return [
             'without_' . SourceItemInterface::SKU => [
@@ -152,7 +152,7 @@ class ValidationTest extends WebapiAbstract
      * @return array
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function failedValidationDataProvider(): array
+    public static function failedValidationDataProvider(): array
     {
         if (TESTS_WEB_API_ADAPTER === self::ADAPTER_SOAP) {
             $nonExistedSourceCodeError = [
@@ -357,7 +357,7 @@ class ValidationTest extends WebapiAbstract
     /**
      * @return array
      */
-    public function failedValidationRelatedOnlyForRestDataProvider(): array
+    public static function failedValidationRelatedOnlyForRestDataProvider(): array
     {
         return [
             'empty_' . SourceItemInterface::QUANTITY => [

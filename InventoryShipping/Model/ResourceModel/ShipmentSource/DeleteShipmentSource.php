@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -10,15 +10,15 @@ namespace Magento\InventoryShipping\Model\ResourceModel\ShipmentSource;
 use Magento\Framework\App\ResourceConnection;
 
 /**
- * Delete Shipment Source
+ * Deletes shipment source records from the `inventory_shipment_source` table based on the provided shipment ID.
  */
 class DeleteShipmentSource
 {
     /**
      * Constant for fields in data array
      */
-    const SHIPMENT_ID = 'shipment_id';
-    
+    public const SHIPMENT_ID = 'shipment_id';
+
     /**
      * @var ResourceConnection
      */
@@ -34,6 +34,8 @@ class DeleteShipmentSource
     }
 
     /**
+     * Deletes shipment source records from the `inventory_shipment_source` table based on the provided shipment ID.
+     *
      * @param int $shipmentId
      * @return void
      */

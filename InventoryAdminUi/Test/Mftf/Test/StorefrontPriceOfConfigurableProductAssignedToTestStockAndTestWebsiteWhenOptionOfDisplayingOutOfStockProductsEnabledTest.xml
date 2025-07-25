@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -18,6 +18,9 @@
             <group value="msi"/>
             <group value="multi_mode"/>
             <group value="pr_exclude"/>
+            <skip>
+              <issueId value="AC-10843"/>
+            </skip>
         </annotations>
 
         <before>

@@ -1,6 +1,6 @@
-/*
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+/**
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 
 define(
@@ -9,7 +9,7 @@ define(
         'Magento_Sales/order/create/form'
     ],
     function ($) {
-        'use strict';
+        'use strict'; //eslint-disable-line
 
         return function () {
             var storePickupCheckbox = $('#s_method_instore_pickup');

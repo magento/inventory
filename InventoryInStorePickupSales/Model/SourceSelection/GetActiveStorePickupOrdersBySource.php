@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 
 declare(strict_types=1);
@@ -16,6 +16,9 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 
 /**
  * Gets list of orders placed by store pickup which are not complete yet
+ *
+ * @deprecated
+ * @see Magento\InventoryInStorePickupSales\Model\ResourceModel\SourceSelection\GetActiveStorePickupOrdersBySource
  */
 class GetActiveStorePickupOrdersBySource
 {

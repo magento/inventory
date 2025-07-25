@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -100,6 +100,7 @@ class Bulk extends \Magento\ConfigurableProduct\Block\Adminhtml\Product\Steps\Bu
         if (!empty($children)) {
             $config[$name]['children'] = $config[$name]['children'] ?? [];
             foreach ($children as $child) {
+                // phpcs:ignore Magento2.Performance.ForeachArrayMerge
                 $config[$name]['children'] = array_merge(
                     $config[$name]['children'],
                     $this->generateJsonConfig($child, $provider)

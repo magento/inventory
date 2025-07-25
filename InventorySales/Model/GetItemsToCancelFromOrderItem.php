@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 
 declare(strict_types=1);
@@ -47,6 +47,8 @@ class GetItemsToCancelFromOrderItem
     }
 
     /**
+     * Processes an order item to determine items to cancel, handling child items and grouping them by SKU and quantity.
+     *
      * @param OrderItem $orderItem
      * @return ItemToSellInterface[]
      */
@@ -71,6 +73,8 @@ class GetItemsToCancelFromOrderItem
     }
 
     /**
+     * Determines items to cancel from an order, handling child items, grouping by SKU, and calculating quantities.
+     *
      * @param ItemToSellInterface[] $itemsToCancel
      * @return ItemToSellInterface[]
      */
@@ -99,6 +103,8 @@ class GetItemsToCancelFromOrderItem
     }
 
     /**
+     * Determines items to cancel from an order, handling complex products and grouping items by SKU and quantity.
+     *
      * @param OrderItem $orderItem
      * @return ItemToSellInterface[]
      */
@@ -133,6 +139,8 @@ class GetItemsToCancelFromOrderItem
     }
 
     /**
+     * Processes order items to determine quantities to cancel, grouping items by SKU and handling complex products.
+     *
      * @param OrderItem $item
      * @return float
      */

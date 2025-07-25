@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -22,9 +22,9 @@ use Magento\TestFramework\TestCase\WebapiAbstract;
  */
 class PartialInventoryTransferTest extends WebapiAbstract
 {
-    const SERVICE_NAME = 'inventoryCatalogApiBulkPartialInventoryTransferV1';
-    const RESOURCE_PATH = '/V1/inventory/bulk-partial-source-transfer';
-    const VALIDATION_FAIL_MESSAGE = 'Transfer validation failed';
+    public const SERVICE_NAME = 'inventoryCatalogApiBulkPartialInventoryTransferV1';
+    public const RESOURCE_PATH = '/V1/inventory/bulk-partial-source-transfer';
+    public const VALIDATION_FAIL_MESSAGE = 'Transfer validation failed';
 
     /** @var SourceItemRepositoryInterface */
     private $sourceItemRepository;

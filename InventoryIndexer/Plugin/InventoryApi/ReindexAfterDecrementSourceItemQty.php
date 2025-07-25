@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2021 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -38,9 +38,11 @@ class ReindexAfterDecrementSourceItemQty
     }
 
     /**
+     * Reindexes source items after decrementing their quantity by retrieving IDs and executing the indexer.
+     *
      * @param DecrementSourceItemQty $subject
      * @param void $result
-     * @param SourceItemInterface[] $sourceItems
+     * @param SourceItemInterface[] $sourceItemDecrementData
      * @return void
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */

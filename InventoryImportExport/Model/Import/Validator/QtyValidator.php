@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -39,6 +39,8 @@ class QtyValidator implements ValidatorInterface
 
         if (!isset($rowData[Sources::COL_QTY])) {
             $errors[] = __('Missing required column "%column"', ['column' => Sources::COL_QTY]);
+        } elseif (!is_numeric($rowData[Sources::COL_QTY])) {
+            $errors[] = __('"%column" contains incorrect value', ['column' => Sources::COL_QTY]);
         }
 
         return $this->validationResultFactory->create(['errors' => $errors]);

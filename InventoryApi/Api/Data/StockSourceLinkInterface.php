@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -19,9 +19,9 @@ interface StockSourceLinkInterface extends \Magento\Framework\Api\ExtensibleData
     /**
      * Constants for keys of data array. Identical to the name of the getter in snake case
      */
-    const STOCK_ID = 'stock_id';
-    const SOURCE_CODE = 'source_code';
-    const PRIORITY = 'priority';
+    public const STOCK_ID = 'stock_id';
+    public const SOURCE_CODE = 'source_code';
+    public const PRIORITY = 'priority';
     /**#@-*/
 
     /**

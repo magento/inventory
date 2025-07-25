@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 
 declare(strict_types=1);
@@ -16,6 +16,8 @@ use Magento\Sales\Api\Data\OrderItemInterface;
 interface GetSkuFromOrderItemInterface
 {
     /**
+     * Gets the SKU from the provided order item.
+     *
      * @param OrderItemInterface $orderItem
      * @return string
      */

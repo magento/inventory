@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
@@ -27,10 +27,17 @@
             <argument name="sortOrder" xsi:type="number">30</argument>
         </arguments>
     </type>
-    <type name="Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync">
+    <type name="Magento\InventoryIndexer\Indexer\Stock\SkuListsProcessor">
         <arguments>
             <argument name="saleabilityChangesProcessorsPool" xsi:type="array">
                 <item name="cacheFlushProcessor" xsi:type="object">Magento\InventoryCache\Model\CacheFlushProcessor</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\InventoryIndexer\Model\CompositeProductSalabilityChangeProcessor">
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="flush_cache" sortOrder="30" xsi:type="object">Magento\InventoryCache\Model\FlushCacheOnProductSalabilityChange</item>
             </argument>
         </arguments>
     </type>

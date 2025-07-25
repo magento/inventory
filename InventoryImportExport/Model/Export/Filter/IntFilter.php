@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -16,6 +16,8 @@ use Magento\InventoryImportExport\Model\Export\FilterProcessorInterface;
 class IntFilter implements FilterProcessorInterface
 {
     /**
+     * Filters a collection by applying range or exact match conditions to the specified column based on the input value
+     *
      * @param Collection $collection
      * @param string $columnName
      * @param array|string $value

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -18,8 +18,8 @@ use Magento\InventorySales\Test\Api\OrderPlacementBase;
  */
 class ExportStockIndexDataTest extends OrderPlacementBase
 {
-    const API_PATH = '/V1/inventory/dump-stock-index-data';
-    const SERVICE_NAME = 'inventoryExportStockApiExportStockIndexDataV1';
+    public const API_PATH = '/V1/inventory/dump-stock-index-data';
+    public const SERVICE_NAME = 'inventoryExportStockApiExportStockIndexDataV1';
 
     /**
      * Export stock index with simple product types - default stock and default website.

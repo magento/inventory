@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -336,7 +336,7 @@ class SourcesTest extends TestCase
      *
      * @return array
      */
-    public function getSampleFileExpectedData(): array
+    public static function getSampleFileExpectedData(): array
     {
         return [
             [
@@ -440,7 +440,7 @@ class SourcesTest extends TestCase
      *
      * @return array
      */
-    public function getSampleFileExpectedDataDeleteBehavior(): array
+    public static function getSampleFileExpectedDataDeleteBehavior(): array
     {
         return [
             [

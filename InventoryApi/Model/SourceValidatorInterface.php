@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -19,6 +19,8 @@ use Magento\InventoryApi\Api\Data\SourceInterface;
 interface SourceValidatorInterface
 {
     /**
+     * Validates a source entity using predefined rules and returns a ValidationResult indicating validation success.
+     *
      * @param SourceInterface $source
      * @return ValidationResult
      */

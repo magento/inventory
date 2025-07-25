@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -11,7 +11,7 @@ use Magento\Framework\Indexer\ActionInterface;
 use Magento\InventoryIndexer\Indexer\SourceItem\SourceItemIndexer;
 
 /**
- * Inventory indexer
+ * Represents the Inventory Indexer, responsible for handling full, single, or multiple source item indexing operations.
  *
  * @api
  */
@@ -20,7 +20,7 @@ class InventoryIndexer implements ActionInterface
     /**
      * Indexer ID in configuration
      */
-    const INDEXER_ID = 'inventory';
+    public const INDEXER_ID = 'inventory';
 
     /**
      * @var SourceItemIndexer

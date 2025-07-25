@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -12,8 +12,10 @@ use Magento\CatalogInventory\Api\Data\StockItemInterface;
 class AdaptMinQtyToBackordersPlugin
 {
     /**
+     * Adapts the minimum quantity for backorders by ensuring it returns 0 or the result based on backorder status.
+     *
      * @param StockItemInterface $subject
-     * @param callable $proceed
+     * @param float $result
      * @return int
      */
     public function afterGetMinQty(StockItemInterface $subject, float $result)

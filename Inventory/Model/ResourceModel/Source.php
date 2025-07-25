@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -28,7 +28,7 @@ class Source extends AbstractDb
     /**#@+
      * Constants related to specific db layer
      */
-    const TABLE_NAME_SOURCE = 'inventory_source';
+    public const TABLE_NAME_SOURCE = 'inventory_source';
     /**#@-*/
 
     /**
@@ -46,7 +46,7 @@ class Source extends AbstractDb
     /**
      * @param Context $context
      * @param SourceCarrierLinkManagementInterface $sourceCarrierLinkManagement
-     * @param null $connectionName
+     * @param string|null $connectionName
      */
     public function __construct(
         Context $context,
