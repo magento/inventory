@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -64,7 +64,6 @@ class SourceItemIndexerTest extends TestCase
         $this->sourceItemRepository = Bootstrap::getObjectManager()->get(SourceItemRepositoryInterface::class);
         $this->searchCriteriaBuilder = Bootstrap::getObjectManager()->get(SearchCriteriaBuilder::class);
         $this->removeIndexData = Bootstrap::getObjectManager()->get(RemoveIndexData::class);
-        $this->removeIndexData->execute([10, 20, 30]);
     }
 
     /**
@@ -95,6 +94,7 @@ class SourceItemIndexerTest extends TestCase
      */
     public function testReindexRow(string $sku, int $stockId, $expectedData)
     {
+        $this->removeIndexData->execute([10, 20, 30]);
         $sourceItem = $this->getSourceItem('SKU-1', 'eu-1');
         $sourceItemIds = $this->getSourceItemIds->execute([$sourceItem]);
         foreach ($sourceItemIds as $sourceItemId) {
@@ -108,7 +108,7 @@ class SourceItemIndexerTest extends TestCase
     /**
      * @return array
      */
-    public function reindexRowDataProvider(): array
+    public static function reindexRowDataProvider(): array
     {
         return [
             ['SKU-1', 10, [GetStockItemDataInterface::QUANTITY => 8.5, GetStockItemDataInterface::IS_SALABLE => 1]],
@@ -140,6 +140,7 @@ class SourceItemIndexerTest extends TestCase
      */
     public function testReindexList(string $sku, int $stockId, $expectedData)
     {
+        $this->removeIndexData->execute([10, 20, 30]);
         $sourceItemIds = $this->getSourceItemIds->execute(
             [
                 $this->getSourceItem('SKU-1', 'eu-1'),
@@ -155,7 +156,7 @@ class SourceItemIndexerTest extends TestCase
     /**
      * @return array
      */
-    public function reindexListDataProvider(): array
+    public static function reindexListDataProvider(): array
     {
         return [
             ['SKU-1', 10, [GetStockItemDataInterface::QUANTITY => 8.5, GetStockItemDataInterface::IS_SALABLE => 1]],
@@ -189,6 +190,7 @@ class SourceItemIndexerTest extends TestCase
      */
     public function testReindexAll(string $sku, int $stockId, $expectedData)
     {
+        $this->removeIndexData->execute([10, 20, 30]);
         $this->sourceItemIndexer->executeFull();
 
         $stockItemData = $this->getStockItemData->execute($sku, $stockId);
@@ -198,7 +200,7 @@ class SourceItemIndexerTest extends TestCase
     /**
      * @return array
      */
-    public function reindexAllDataProvider(): array
+    public static function reindexAllDataProvider(): array
     {
         return [
             ['SKU-1', 10, [GetStockItemDataInterface::QUANTITY => 8.5, GetStockItemDataInterface::IS_SALABLE => 1]],

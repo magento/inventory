@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -39,6 +39,8 @@ class GetSourceItemsCollection
     }
 
     /**
+     * Builds a source item collection with selected fields and applies custom SQL modifications using a select builder.
+     *
      * @return Collection
      */
     public function execute()

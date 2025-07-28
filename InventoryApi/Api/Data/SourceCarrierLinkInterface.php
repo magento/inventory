@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -19,9 +19,9 @@ interface SourceCarrierLinkInterface extends \Magento\Framework\Api\ExtensibleDa
     /**#@+
      * Constants for keys of data array. Identical to the name of the getter in snake case
      */
-    const CARRIER_CODE = 'carrier_code';
-    const POSITION = 'position';
-    const SOURCE_CODE = 'source_code';
+    public const CARRIER_CODE = 'carrier_code';
+    public const POSITION = 'position';
+    public const SOURCE_CODE = 'source_code';
     /**#@-*/
 
     /**

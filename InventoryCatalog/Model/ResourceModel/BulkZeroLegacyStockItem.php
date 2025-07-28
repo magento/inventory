@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -39,6 +39,8 @@ class BulkZeroLegacyStockItem
     }
 
     /**
+     * Sets quantity to 0 and marks items as out of stock in the legacy stock table for the given SKUs.
+     *
      * @param array $skus
      * @return void
      * @throws \Magento\Framework\Exception\NoSuchEntityException

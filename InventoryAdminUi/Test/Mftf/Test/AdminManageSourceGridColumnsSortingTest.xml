@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -102,19 +102,20 @@
         <see userInput="$$createCustomSource1.source[return]$$" selector="{{AdminGridRow.rowByIndex('3')}}" stepKey="seeCustomSource1CodeInRow4WhenDescendSorting"/>
 
         <comment userInput="Ascend sorting for Name" stepKey="ascendSortingForNameComment"/>
+        <waitForElementClickable selector="{{AdminGridHeaders.headerByName('Name')}}" stepKey="waitForElementClickOnNameHeaderToSetAscendSorting"/>
         <click selector="{{AdminGridHeaders.headerByName('Name')}}" stepKey="clickOnNameHeaderToSetAscendSorting"/>
-        <waitForPageLoad time="10" stepKey="waitForSourceGridPageLoadAfterSettingAscendSortingForName"/>
-        <see userInput="$$createCustomSource1.source[name]$$" selector="{{AdminGridRow.rowByIndex('0')}}" stepKey="seeCustomSource1NameInRow1WhenAscendSorting"/>
-        <see userInput="$$createCustomSource2.source[name]$$" selector="{{AdminGridRow.rowByIndex('1')}}" stepKey="seeCustomSource2NameInRow2WhenAscendSorting"/>
-        <see userInput="$$createCustomSource3.source[name]$$" selector="{{AdminGridRow.rowByIndex('2')}}" stepKey="seeCustomSource3NameInRow3WhenAscendSorting"/>
-        <see userInput="$$createCustomSource4.source[name]$$" selector="{{AdminGridRow.rowByIndex('3')}}" stepKey="seeCustomSource4NameInRow4WhenAscendSorting"/>
+        <waitForPageLoad time="30" stepKey="waitForSourceGridPageLoadAfterSettingAscendSortingForName"/>
+        <waitForText userInput="$$createCustomSource1.source[name]$$" selector="{{AdminGridRow.rowByIndex('0')}}" stepKey="seeCustomSource1NameInRow1WhenAscendSorting"/>
+        <waitForText userInput="$$createCustomSource2.source[name]$$" selector="{{AdminGridRow.rowByIndex('1')}}" stepKey="seeCustomSource2NameInRow2WhenAscendSorting"/>
+        <waitForText userInput="$$createCustomSource3.source[name]$$" selector="{{AdminGridRow.rowByIndex('2')}}" stepKey="seeCustomSource3NameInRow3WhenAscendSorting"/>
+        <waitForText userInput="$$createCustomSource4.source[name]$$" selector="{{AdminGridRow.rowByIndex('3')}}" stepKey="seeCustomSource4NameInRow4WhenAscendSorting"/>
 
         <comment userInput="Descend sorting for Name" stepKey="descendSortingForNameComment"/>
         <click selector="{{AdminGridHeaders.headerByName('Name')}}" stepKey="clickOnNameHeaderToSetDescendSorting"/>
-        <waitForPageLoad time="10" stepKey="waitForSourceGridPageLoadAfterSettingDescendSortingForName"/>
-        <see userInput="$$createCustomSource4.source[name]$$" selector="{{AdminGridRow.rowByIndex('0')}}" stepKey="seeCustomSource4NameInRow1WhenDescendSorting"/>
-        <see userInput="$$createCustomSource3.source[name]$$" selector="{{AdminGridRow.rowByIndex('1')}}" stepKey="seeCustomSource3NameInRow2WhenDescendSorting"/>
-        <see userInput="$$createCustomSource2.source[name]$$" selector="{{AdminGridRow.rowByIndex('2')}}" stepKey="seeCustomSource2NameInRow3WhenDescendSorting"/>
-        <see userInput="$$createCustomSource1.source[name]$$" selector="{{AdminGridRow.rowByIndex('3')}}" stepKey="seeCustomSource1NameInRow4WhenDescendSorting"/>
+        <waitForPageLoad time="30" stepKey="waitForSourceGridPageLoadAfterSettingDescendSortingForName"/>
+        <waitForText userInput="$$createCustomSource4.source[name]$$" selector="{{AdminGridRow.rowByIndex('0')}}" stepKey="seeCustomSource4NameInRow1WhenDescendSorting"/>
+        <waitForText userInput="$$createCustomSource3.source[name]$$" selector="{{AdminGridRow.rowByIndex('1')}}" stepKey="seeCustomSource3NameInRow2WhenDescendSorting"/>
+        <waitForText userInput="$$createCustomSource2.source[name]$$" selector="{{AdminGridRow.rowByIndex('2')}}" stepKey="seeCustomSource2NameInRow3WhenDescendSorting"/>
+        <waitForText userInput="$$createCustomSource1.source[name]$$" selector="{{AdminGridRow.rowByIndex('3')}}" stepKey="seeCustomSource1NameInRow4WhenDescendSorting"/>
     </test>
 </tests>

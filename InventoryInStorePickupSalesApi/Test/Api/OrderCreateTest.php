@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -267,6 +267,7 @@ class OrderCreateTest extends OrderPlacementBase
         $actualBillingAddress = $order['billing_address'];
         unset($actualBillingAddress['entity_id']);
         unset($actualBillingAddress['parent_id']);
+        unset($actualBillingAddress['customer_address_id']);
         $this->assertEquals($expectedBillingAddress, $actualBillingAddress);
 
         //assert shipping assignment address

@@ -1,0 +1,8 @@
+_defaultSource
+_defaultStock
+SourceStatusOutOfStock
+UnassignSourceFromProductActionGroup
+AdminAssignSourceToProductAndSetSourceQuantityActionGroup
+AssignWebsiteToStockActionGroup
+DisableAllSourcesActionGroup
+AdminChangeSourceStockStatusActionGroup

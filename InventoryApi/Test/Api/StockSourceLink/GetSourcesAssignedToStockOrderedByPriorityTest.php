@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -17,9 +17,10 @@ class GetSourcesAssignedToStockOrderedByPriorityTest extends WebapiAbstract
     /**#@+
      * Service constants
      */
-    const RESOURCE_PATH_GET_ASSIGNED_SOURCES_FOR_STOCK
+    public const RESOURCE_PATH_GET_ASSIGNED_SOURCES_FOR_STOCK
         = '/V1/inventory/get-sources-assigned-to-stock-ordered-by-priority';
-    const SERVICE_NAME_GET_ASSIGNED_SOURCES_FOR_STOCK = 'inventoryApiGetSourcesAssignedToStockOrderedByPriorityV1';
+    public const SERVICE_NAME_GET_ASSIGNED_SOURCES_FOR_STOCK
+        = 'inventoryApiGetSourcesAssignedToStockOrderedByPriorityV1';
     /**#@-*/
 
     /**

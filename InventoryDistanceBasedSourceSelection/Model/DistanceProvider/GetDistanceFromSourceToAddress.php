@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -13,7 +13,8 @@ use Magento\InventoryDistanceBasedSourceSelectionApi\Api\GetDistanceInterface;
 use Magento\InventoryDistanceBasedSourceSelectionApi\Api\GetLatLngFromAddressInterface;
 
 /**
- * Class GetDistanceFromSourceToAddress
+ * Calculates the distance between a source location and a destination address by converting them into
+ * latitude and longitude coordinates and using a distance calculation service.
  */
 class GetDistanceFromSourceToAddress
 {

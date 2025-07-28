@@ -21,7 +21,7 @@ For more detailed information on contribution please read our [beginners guide](
 1. PRs which include bug fixes must be accompanied with a step-by-step description of how to reproduce the bug.
 1. PRs which include new logic or new features must be submitted along with:
    * Unit/integration test coverage
-   * Proposed [documentation](https://devdocs.magento.com) updates. Documentation contributions can be submitted via the [devdocs GitHub](https://github.com/magento/devdocs).
+   * Proposed [documentation](https://developer.adobe.com/commerce) updates. Use feedback buttons __Edit in GitHub__ and __Log an issue__ at the top of a relevant topic.
 1. For larger features or changes, please [open an issue](https://github.com/magento/inventory/issues) to discuss the proposed changes prior to development. This may prevent duplicate or unnecessary effort and allow other contributors to provide input.
 1. All automated tests must pass.
 

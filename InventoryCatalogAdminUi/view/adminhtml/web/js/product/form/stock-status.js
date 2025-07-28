@@ -1,12 +1,12 @@
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 
 define([
     'Magento_Ui/js/form/element/select'
 ], function (Select) {
-    'use strict';
+    'use strict'; //eslint-disable-line
 
     return Select.extend({
         defaults: {

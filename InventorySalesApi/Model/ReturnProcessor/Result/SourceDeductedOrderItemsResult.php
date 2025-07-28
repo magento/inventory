@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -35,6 +35,8 @@ class SourceDeductedOrderItemsResult
     }
 
     /**
+     * Returns the source code associated with the current source deduction result.
+     *
      * @return string
      */
     public function getSourceCode(): string
@@ -43,6 +45,8 @@ class SourceDeductedOrderItemsResult
     }
 
     /**
+     * Returns an array of SourceDeductedOrderItem objects associated with the current source deduction result.
+     *
      * @return SourceDeductedOrderItem[]
      */
     public function getItems(): array

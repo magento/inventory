@@ -1,110 +1,33 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Indexer\SourceItem\Strategy;
 
-use ArrayIterator;
-use Magento\Framework\App\ResourceConnection;
-use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
-use Magento\InventoryIndexer\Indexer\InventoryIndexer;
 use Magento\InventoryIndexer\Indexer\SourceItem\GetSkuListInStock;
-use Magento\InventoryIndexer\Indexer\SourceItem\IndexDataBySkuListProvider;
-use Magento\InventoryIndexer\Indexer\Stock\PrepareReservationsIndexData;
-use Magento\InventoryIndexer\Indexer\Stock\ReservationsIndexTable;
+use Magento\InventoryIndexer\Indexer\Stock\SkuListsProcessor;
 use Magento\InventoryIndexer\Indexer\Stock\StockIndexer;
-use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
-use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexHandlerInterface;
-use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
-use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexStructureInterface;
 
 /**
  * Reindex source items synchronously.
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Sync
 {
     /**
-     * @var GetSkuListInStock
-     */
-    private $getSkuListInStock;
-
-    /**
-     * @var IndexStructureInterface
-     */
-    private $indexStructure;
-
-    /**
-     * @var IndexHandlerInterface
-     */
-    private $indexHandler;
-
-    /**
-     * @var IndexDataBySkuListProvider
-     */
-    private $indexDataBySkuListProvider;
-
-    /**
-     * @var IndexNameBuilder
-     */
-    private $indexNameBuilder;
-
-    /**
-     * @var StockIndexer
-     */
-    private $stockIndexer;
-
-    /**
-     * @var DefaultStockProviderInterface
-     */
-    private $defaultStockProvider;
-
-    /**
-     * @var ReservationsIndexTable
-     */
-    private $reservationsIndexTable;
-
-    /**
-     * @var PrepareReservationsIndexData
-     */
-    private $prepareReservationsIndexData;
-
-    /**
      * $indexStructure is reserved name for construct variable (in index internal mechanism)
      *
-     * @param GetSkuListInStock $getSkuListInStockToUpdate
-     * @param IndexStructureInterface $indexStructureHandler
-     * @param IndexHandlerInterface $indexHandler
-     * @param IndexDataBySkuListProvider $indexDataBySkuListProvider
-     * @param IndexNameBuilder $indexNameBuilder
+     * @param GetSkuListInStock $getSkuListInStock
      * @param StockIndexer $stockIndexer
-     * @param DefaultStockProviderInterface $defaultStockProvider
-     * @param ReservationsIndexTable $reservationsIndexTable
-     * @param PrepareReservationsIndexData $prepareReservationsIndexData
+     * @param SkuListsProcessor $skuListsProcessor
      */
     public function __construct(
-        GetSkuListInStock $getSkuListInStockToUpdate,
-        IndexStructureInterface $indexStructureHandler,
-        IndexHandlerInterface $indexHandler,
-        IndexDataBySkuListProvider $indexDataBySkuListProvider,
-        IndexNameBuilder $indexNameBuilder,
-        StockIndexer $stockIndexer,
-        DefaultStockProviderInterface $defaultStockProvider,
-        ReservationsIndexTable $reservationsIndexTable,
-        PrepareReservationsIndexData $prepareReservationsIndexData
+        private readonly GetSkuListInStock $getSkuListInStock,
+        private readonly StockIndexer $stockIndexer,
+        private readonly SkuListsProcessor $skuListsProcessor,
     ) {
-        $this->getSkuListInStock = $getSkuListInStockToUpdate;
-        $this->indexStructure = $indexStructureHandler;
-        $this->indexHandler = $indexHandler;
-        $this->indexDataBySkuListProvider = $indexDataBySkuListProvider;
-        $this->indexNameBuilder = $indexNameBuilder;
-        $this->stockIndexer = $stockIndexer;
-        $this->defaultStockProvider = $defaultStockProvider;
-        $this->reservationsIndexTable = $reservationsIndexTable;
-        $this->prepareReservationsIndexData = $prepareReservationsIndexData;
     }
 
     /**
@@ -115,43 +38,7 @@ class Sync
     public function executeList(array $sourceItemIds) : void
     {
         $skuListInStockList = $this->getSkuListInStock->execute($sourceItemIds);
-
-        foreach ($skuListInStockList as $skuListInStock) {
-            $stockId = $skuListInStock->getStockId();
-            if ($this->defaultStockProvider->getId() === $stockId) {
-                continue;
-            }
-
-            $skuList = $skuListInStock->getSkuList();
-
-            $mainIndexName = $this->indexNameBuilder
-                ->setIndexId(InventoryIndexer::INDEXER_ID)
-                ->addDimension('stock_', (string)$stockId)
-                ->setAlias(Alias::ALIAS_MAIN)
-                ->build();
-
-            if (!$this->indexStructure->isExist($mainIndexName, ResourceConnection::DEFAULT_CONNECTION)) {
-                $this->indexStructure->create($mainIndexName, ResourceConnection::DEFAULT_CONNECTION);
-            }
-
-            $this->indexHandler->cleanIndex(
-                $mainIndexName,
-                new ArrayIterator($skuList),
-                ResourceConnection::DEFAULT_CONNECTION
-            );
-
-            $this->reservationsIndexTable->createTable($stockId);
-            $this->prepareReservationsIndexData->execute($stockId);
-
-            $indexData = $this->indexDataBySkuListProvider->execute($stockId, $skuList);
-            $this->indexHandler->saveIndex(
-                $mainIndexName,
-                $indexData,
-                ResourceConnection::DEFAULT_CONNECTION
-            );
-
-            $this->reservationsIndexTable->dropTable($stockId);
-        }
+        $this->skuListsProcessor->reindexList($skuListInStockList);
     }
 
     /**

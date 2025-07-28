@@ -10,3 +10,4 @@
 "Missing required column ""%column""","Missing required column ""%column"""
 "Source code ""%code"" does not exists","Source code ""%code"" does not exists"
 "Row Validator must implement %interface.","Row Validator must implement %interface."
+"""%column"" contains incorrect value","""%column"" contains incorrect value"

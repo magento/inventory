@@ -1,13 +1,13 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2022 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
 namespace Magento\InventoryElasticsearch\Test\Unit\Plugin\Model\Adapter\FieldMapper;
 
-use Magento\Elasticsearch\Elasticsearch5\Model\Adapter\FieldMapper\ProductFieldMapper;
+use Magento\Elasticsearch\ElasticAdapter\Model\Adapter\FieldMapper\ProductFieldMapper;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Magento\InventoryElasticsearch\Plugin\Model\Adapter\FieldMapper\AdditionalFieldMapperPlugin;
 use PHPUnit\Framework\TestCase;

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -50,7 +50,10 @@ class IndexNameResolver implements IndexNameResolverInterface
     }
 
     /**
+     * Appends the replica table suffix to the given table name and returns the modified table name.
+     *
      * TODO: move to separate configurable interface (https://github.com/magento-engcom/msi/issues/213)
+     *
      * @param string $tableName
      * @return string
      */

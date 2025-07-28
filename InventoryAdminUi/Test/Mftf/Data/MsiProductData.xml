@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -128,6 +128,7 @@
     <data key="notifyQuantity">1</data>
     <data key="attribute_set_id">4</data>
     <data key="visibility">4</data>
+    <requiredEntity type="custom_attribute_array">CustomAttributeCategoryIds</requiredEntity>
   </entity>
   <entity name="SimpleMsiProductWithSKU01234" type="product">
     <data key="name" unique="suffix">Simple MSI Product </data>
@@ -141,5 +142,6 @@
     <data key="notifyQuantity">1</data>
     <data key="attribute_set_id">4</data>
     <data key="visibility">4</data>
+    <requiredEntity type="custom_attribute_array">CustomAttributeCategoryIds</requiredEntity>
   </entity>
 </entities>

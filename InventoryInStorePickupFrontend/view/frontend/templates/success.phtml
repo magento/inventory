@@ -1,30 +1,43 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
+ */
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+
+/**
+ * @var \Magento\Framework\Escaper $escaper
  */
 
 ?>
 <div class="checkout-success">
-    <?php if ($block->getOrderId()) : ?>
-        <?php if ($block->getCanViewOrder()) : ?>
-            <p><?= $block->escapeHtml(__('Your order number is: %1.', sprintf('<a href="%s" class="order-number"><strong>%s</strong></a>', $block->escapeUrl($block->getViewOrderUrl()), $block->getOrderId())), ['a', 'strong']) ?></p>
-        <?php else : ?>
-            <p><?= $block->escapeHtml(__('Your order # is: <span>%1</span>.', $block->getOrderId()), ['span']) ?></p>
+    <?php // phpstan:ignore ?>
+    <?php if ($block->getOrderId()): ?>
+        <?php // phpstan:ignore ?>
+        <?php if ($block->getCanViewOrder()): ?>
+            <?php // phpstan:ignore ?>
+            <p><?= $escaper->escapeHtml(__('Your order number is: %1.', sprintf('<a href="%s" class="order-number"><strong>%s</strong></a>', $escaper->escapeUrl($block->getViewOrderUrl()), $block->getOrderId())), ['a', 'strong']) ?></p>
+        <?php else: ?>
+            <?php // phpstan:ignore ?>
+            <p><?= $escaper->escapeHtml(__('Your order # is: <span>%1</span>.', $block->getOrderId()), ['span']) ?></p>
         <?php endif; ?>
-        <?php if ($block->getIsOrderStorePickup()->execute()) : ?>
-            <p><?= $block->escapeHtml(__('We\'ll email you an order and pick-up confirmation with details.')) ?></p>
-        <?php else : ?>
-            <p><?= $block->escapeHtml(__('We\'ll email you an order confirmation with details and tracking info.')) ?></p>
+        <?php // phpstan:ignore ?>
+        <?php if ($block->getIsOrderStorePickup()->execute()): ?>
+            <p><?= $escaper->escapeHtml(__('We\'ll email you an order and pick-up confirmation with details.')) ?></p>
+        <?php else: ?>
+            <p><?= $escaper->escapeHtml(__('We\'ll email you an order confirmation with details and tracking info.')) ?></p>
         <?php endif; ?>
     <?php endif; ?>
 
+    <?php // phpstan:ignore ?>
     <?= $block->getAdditionalInfoHtml() ?>
 
     <div class="actions-toolbar">
         <div class="primary">
+            <?php // phpstan:ignore ?>
             <a class="action primary continue"
-               href="<?= $block->escapeUrl($block->getContinueUrl()) ?>"><span><?= $block->escapeHtml(__('Continue Shopping')) ?></span></a>
+               href="<?= $escaper->escapeUrl($block->getContinueUrl()) ?>"><span><?= $escaper->escapeHtml(__('Continue Shopping')) ?></span></a>
         </div>
     </div>
 </div>

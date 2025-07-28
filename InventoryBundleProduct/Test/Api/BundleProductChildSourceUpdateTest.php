@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2022 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -158,8 +158,11 @@ class BundleProductChildSourceUpdateTest extends WebapiAbstract
         self::assertNotNull($result);
         $this->addSourceItems($this->sourceItems);
         $actualData = $this->getSourceItems('SKU-4');
-        self::assertEquals(2, $actualData['total_count']);
-        AssertArrayContains::assert($this->sourceItems, $actualData['items']);
+        self::assertEquals(count($this->sourceItems), $actualData['total_count']);
+        self::assertCount(count($this->sourceItems), $actualData['items']);
+        foreach ($this->sourceItems as $sourceItem) {
+            self::assertContainsEquals($sourceItem, $actualData['items']);
+        }
     }
 
     #[

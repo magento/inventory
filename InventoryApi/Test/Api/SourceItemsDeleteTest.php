@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -18,9 +18,9 @@ class SourceItemsDeleteTest extends WebapiAbstract
     /**#@+
      * Service constants
      */
-    const RESOURCE_PATH = '/V1/inventory/source-items';
-    const RESOURCE_DELETE_PATH = '/V1/inventory/source-items-delete';
-    const SERVICE_NAME = 'inventoryApiSourceItemsDeleteV1';
+    public const RESOURCE_PATH = '/V1/inventory/source-items';
+    public const RESOURCE_DELETE_PATH = '/V1/inventory/source-items-delete';
+    public const SERVICE_NAME = 'inventoryApiSourceItemsDeleteV1';
     /**#@-*/
 
     /**

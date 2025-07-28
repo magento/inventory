@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2022 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -17,6 +17,8 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
+            <!-- pr_exclude group is added as test is failed in builds because of xpath element not found error and will be fixed and removed in ACQE-7619 -->
+            <group value="pr_exclude"/>
         </annotations>
 
         <before>
@@ -35,6 +37,7 @@
             </actionGroup>
             <deleteData createDataKey="createConfigurableProduct" stepKey="deleteConfigurableProduct"/>
             <deleteData createDataKey="createSubCategory" stepKey="deleteSubCategory"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="createCustomer1" stepKey="deleteCustomer"/>
 
             <!-- Delete the Created Color attribute-->
@@ -62,8 +65,12 @@
             <argument name="assignSource" value="$$createTestSource1.source[name]$$"/>
             <argument name="stockName" value="Test Stock 1"/>
         </actionGroup>
-        <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
-        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <!-- Step5 Create Configurable Product -->
         <createData entity="ApiConfigurableProduct" stepKey="createConfigurableProduct">

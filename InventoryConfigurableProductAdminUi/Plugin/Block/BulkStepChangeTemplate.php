@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -38,6 +38,8 @@ class BulkStepChangeTemplate
     }
 
     /**
+     * Changes the template to a multi-source template if the single-source mode is disabled.
+     *
      * @param Bulk $bulk
      * @param string $template
      *

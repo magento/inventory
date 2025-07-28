@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -77,7 +77,7 @@
         <!--Proceed to checkout-->
         <click selector="{{StorefrontMinicartSection.goToCheckout}}" stepKey="GoToCheckoutFromMinicartActionGroup"
                after="seeVirtualProductQty"/>
-        <waitForElementVisible selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}"
+        <waitForElementClickable selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}"
                                stepKey="waitForShippingMethodsLoad" after="GoToCheckoutFromMinicartActionGroup"/>
         <click selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="selectShippingMethod"
                after="waitForShippingMethodsLoad"/>

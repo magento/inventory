@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -15,11 +15,15 @@ namespace Magento\InventorySalesApi\Api\Data;
 interface ProductSalableResultInterface extends \Magento\Framework\Api\ExtensibleDataInterface
 {
     /**
+     * Checks if the product is salable based on its availability and conditions.
+     *
      * @return bool
      */
     public function isSalable(): bool;
 
     /**
+     * Returns a list of errors related to product salability.
+     *
      * @return \Magento\InventorySalesApi\Api\Data\ProductSalabilityErrorInterface[]
      */
     public function getErrors(): array;

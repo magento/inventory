@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -40,6 +40,8 @@ class AdaptAddStockDataToCollectionPlugin
     }
 
     /**
+     * Adds stock data to a product collection for the current website using the stock ID of the current website.
+     *
      * @param Status $stockStatus
      * @param callable $proceed
      * @param Collection $collection

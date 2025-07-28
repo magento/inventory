@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -81,7 +81,7 @@ class GetStockStatusOnDefaultStockTest extends TestCase
     /**
      * @return array
      */
-    public function getStatusDataProvider(): array
+    public static function getStatusDataProvider(): array
     {
         return [
             ['SKU-1', 1, 5.5],

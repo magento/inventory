@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -19,9 +19,9 @@ interface GetStockItemDataInterface
     /**
      * Constants for represent fields in result array
      */
-    const SKU = 'sku';
-    const QUANTITY = 'quantity';
-    const IS_SALABLE = 'is_salable';
+    public const SKU = 'sku';
+    public const QUANTITY = 'quantity';
+    public const IS_SALABLE = 'is_salable';
     /**#@-*/
 
     /**
