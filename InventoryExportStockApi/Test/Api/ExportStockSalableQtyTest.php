@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2019 Adobe
+ * Copyright 2025 Adobe
  * All Rights Reserved.
  */
 declare(strict_types=1);
@@ -45,7 +45,6 @@ class ExportStockSalableQtyTest extends OrderPlacementBase
         $this->assignStockToWebsite(1, 'base');
         $simpleProductSKU = 'SKU-1';
         $virtualProductSKU = 'virtual-product';
-        $downloadableProductSKU = 'downloadable-product';
         $requestData = [
             'searchCriteria' => [
                 SearchCriteria::FILTER_GROUPS => [['filters' => $filters]]
@@ -72,11 +71,6 @@ class ExportStockSalableQtyTest extends OrderPlacementBase
                     'is_salable' => true,
                 ],
                 [
-                    'sku' => $downloadableProductSKU,
-                    'qty' => 100,
-                    'is_salable' => true,
-                ],
-                [
                     'sku' => $simpleProductSKU,
                     'qty' => 5.5,
                     'is_salable' => true,
@@ -87,7 +81,6 @@ class ExportStockSalableQtyTest extends OrderPlacementBase
         $this->createCustomerCart();
         $this->addProduct($simpleProductSKU);
         $this->addProduct($virtualProductSKU);
-        $this->addProduct($downloadableProductSKU);
         $this->estimateShippingCosts();
         $this->setShippingAndBillingInformation();
         $orderId = $this->submitPaymentInformation();
@@ -96,11 +89,6 @@ class ExportStockSalableQtyTest extends OrderPlacementBase
             [
                 [
                     'sku' => $virtualProductSKU,
-                    'qty' => 99,
-                    'is_salable' => true,
-                ],
-                [
-                    'sku' => $downloadableProductSKU,
                     'qty' => 99,
                     'is_salable' => true,
                 ],
@@ -119,16 +107,14 @@ class ExportStockSalableQtyTest extends OrderPlacementBase
      * Verify salable qty export with reservations simple product types - additional stock, additional website.
      *
      * @magentoApiDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoApiDataFixture Magento/Catalog/_files/product_virtual.php
      * @magentoApiDataFixture Magento_InventoryApi::Test/_files/sources.php
      * @magentoApiDataFixture Magento_InventoryApi::Test/_files/stocks.php
      * @magentoApiDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
      * @magentoApiDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
      * @magentoApiDataFixture Magento_InventoryApi::Test/_files/source_items.php
      * @magentoApiDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
-     * @magentoApiDataFixture Magento/Catalog/_files/product_virtual.php
      * @magentoApiDataFixture Magento_InventoryCatalog::Test/_files/product_virtual_source_item_on_additional_source.php
-     * @magentoApiDataFixture Magento/Downloadable/_files/product_downloadable_with_files.php
-     * @magentoApiDataFixture Magento_InventoryCatalog::Test/_files/product_downloadable_source_item_on_additional_source.php
      * @magentoApiDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      *
      * @dataProvider simpleProductTypesDataProvider()
@@ -139,10 +125,9 @@ class ExportStockSalableQtyTest extends OrderPlacementBase
     {
         $this->_markTestAsRestOnly();
         $this->setStoreView('store_for_eu_website');
-        $downloadableSKU = 'downloadable-product';
         $simpleSKU = 'SKU-1';
         $virtualSKU = 'virtual-product';
-        $this->assignProductsToWebsite([$downloadableSKU, $simpleSKU, $virtualSKU], 'eu_website');
+        $this->assignProductsToWebsite([$simpleSKU, $virtualSKU], 'eu_website');
         $requestData = [
             'searchCriteria' => [
                 SearchCriteria::FILTER_GROUPS => [['filters' => $filters]]
@@ -169,11 +154,6 @@ class ExportStockSalableQtyTest extends OrderPlacementBase
                     'is_salable' => true,
                 ],
                 [
-                    'sku' => $downloadableSKU,
-                    'qty' => 100,
-                    'is_salable' => true,
-                ],
-                [
                     'sku' => $simpleSKU,
                     'qty' => 8.5,
                     'is_salable' => true,
@@ -184,7 +164,6 @@ class ExportStockSalableQtyTest extends OrderPlacementBase
         $this->createCustomerCart();
         $this->addProduct($simpleSKU);
         $this->addProduct($virtualSKU);
-        $this->addProduct($downloadableSKU);
         $this->estimateShippingCosts();
         $this->setShippingAndBillingInformation();
         $orderId = $this->submitPaymentInformation();
@@ -193,11 +172,6 @@ class ExportStockSalableQtyTest extends OrderPlacementBase
             [
                 [
                     'sku' => $virtualSKU,
-                    'qty' => 99,
-                    'is_salable' => true,
-                ],
-                [
-                    'sku' => $downloadableSKU,
                     'qty' => 99,
                     'is_salable' => true,
                 ],

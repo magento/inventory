@@ -19,13 +19,11 @@ interface CompositeProductProcessorInterface
     /**
      * Process product list with saleability changes
      *
-     * @param array $sourceItemIds
      * @param array $saleableStatusesBeforeSync
      * @param array $saleableStatusesAfterSync
      * @return void
      */
     public function process(
-        array $sourceItemIds,
         array $saleableStatusesBeforeSync,
         array $saleableStatusesAfterSync
     ): void;

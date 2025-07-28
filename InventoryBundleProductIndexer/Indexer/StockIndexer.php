@@ -7,18 +7,17 @@ declare(strict_types=1);
 
 namespace Magento\InventoryBundleProductIndexer\Indexer;
 
+use ArrayIterator;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\StateException;
-use Magento\InventoryBundleProductIndexer\Indexer\SourceItem\IndexDataBySkuListProvider;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Indexer\InventoryIndexer;
+use Magento\InventoryIndexer\Indexer\SiblingProductsProviderInterface;
 use Magento\InventoryIndexer\Indexer\Stock\GetAllStockIds;
-use Magento\InventoryIndexer\Indexer\Stock\PrepareIndexDataForClearingIndex;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexHandlerInterface;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexStructureInterface;
-use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexTableSwitcherInterface;
 
 /**
  * Index bundle products for given stocks.
@@ -46,24 +45,9 @@ class StockIndexer
     private $indexNameBuilder;
 
     /**
-     * @var IndexDataBySkuListProvider
-     */
-    private $indexDataBySkuListProvider;
-
-    /**
-     * @var IndexTableSwitcherInterface
-     */
-    private $indexTableSwitcher;
-
-    /**
      * @var DefaultStockProviderInterface
      */
     private $defaultStockProvider;
-
-    /**
-     * @var PrepareIndexDataForClearingIndex
-     */
-    private $prepareIndexDataForClearingIndex;
 
     /**
      * $indexStructure is reserved name for construct variable in index internal mechanism.
@@ -72,29 +56,22 @@ class StockIndexer
      * @param IndexStructureInterface $indexStructure
      * @param IndexHandlerInterface $indexHandler
      * @param IndexNameBuilder $indexNameBuilder
-     * @param IndexDataBySkuListProvider $indexDataBySkuListProvider
-     * @param IndexTableSwitcherInterface $indexTableSwitcher
      * @param DefaultStockProviderInterface $defaultStockProvider
-     * @param PrepareIndexDataForClearingIndex $prepareIndexDataForClearingIndex
+     * @param SiblingProductsProviderInterface $productsProvider
      */
     public function __construct(
         GetAllStockIds $getAllStockIds,
         IndexStructureInterface $indexStructure,
         IndexHandlerInterface $indexHandler,
         IndexNameBuilder $indexNameBuilder,
-        IndexDataBySkuListProvider $indexDataBySkuListProvider,
-        IndexTableSwitcherInterface $indexTableSwitcher,
         DefaultStockProviderInterface $defaultStockProvider,
-        PrepareIndexDataForClearingIndex $prepareIndexDataForClearingIndex
+        private readonly SiblingProductsProviderInterface $productsProvider,
     ) {
         $this->getAllStockIds = $getAllStockIds;
         $this->indexStructure = $indexStructure;
         $this->indexHandler = $indexHandler;
         $this->indexNameBuilder = $indexNameBuilder;
-        $this->indexDataBySkuListProvider = $indexDataBySkuListProvider;
-        $this->indexTableSwitcher = $indexTableSwitcher;
         $this->defaultStockProvider = $defaultStockProvider;
-        $this->prepareIndexDataForClearingIndex = $prepareIndexDataForClearingIndex;
     }
 
     /**
@@ -147,17 +124,16 @@ class StockIndexer
                 $this->indexStructure->create($mainIndexName, ResourceConnection::DEFAULT_CONNECTION);
             }
 
-            $indexData = $this->indexDataBySkuListProvider->execute($stockId, $skuList);
-
+            $data = $this->productsProvider->getData($mainIndexName, $skuList);
             $this->indexHandler->cleanIndex(
                 $mainIndexName,
-                $this->prepareIndexDataForClearingIndex->execute($indexData),
+                new ArrayIterator($skuList),
                 ResourceConnection::DEFAULT_CONNECTION
             );
 
             $this->indexHandler->saveIndex(
                 $mainIndexName,
-                $indexData,
+                new ArrayIterator($data),
                 ResourceConnection::DEFAULT_CONNECTION
             );
         }

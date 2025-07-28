@@ -7,36 +7,25 @@ declare(strict_types=1);
 
 namespace Magento\InventoryGroupedProductIndexer\Indexer;
 
-use Exception;
 use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
 use Magento\Framework\EntityManager\MetadataPool;
 use Magento\GroupedProduct\Model\ResourceModel\Product\Link;
-use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Indexer\IndexStructure;
-use Magento\InventoryIndexer\Indexer\InventoryIndexer;
-use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
-use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
+use Magento\InventoryIndexer\Indexer\SiblingSelectBuilderInterface;
+use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexName;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameResolverInterface;
 
 /**
  * Class to prepare select for partial reindex
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class SelectBuilder
+class SelectBuilder implements SiblingSelectBuilderInterface
 {
     /**
      * @var ResourceConnection
      */
     private $resourceConnection;
-
-    /**
-     * @var IndexNameBuilder
-     */
-    private $indexNameBuilder;
 
     /**
      * @var IndexNameResolverInterface
@@ -49,51 +38,27 @@ class SelectBuilder
     private $metadataPool;
 
     /**
-     * @var DefaultStockProviderInterface
-     */
-    private DefaultStockProviderInterface $defaultStockProvider;
-
-    /**
      * @param ResourceConnection $resourceConnection
-     * @param IndexNameBuilder $indexNameBuilder
      * @param IndexNameResolverInterface $indexNameResolver
      * @param MetadataPool $metadataPool
-     * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
         ResourceConnection $resourceConnection,
-        IndexNameBuilder $indexNameBuilder,
         IndexNameResolverInterface $indexNameResolver,
         MetadataPool $metadataPool,
-        ?DefaultStockProviderInterface $defaultStockProvider = null
     ) {
         $this->resourceConnection = $resourceConnection;
-        $this->indexNameBuilder = $indexNameBuilder;
         $this->indexNameResolver = $indexNameResolver;
         $this->metadataPool = $metadataPool;
-        $this->defaultStockProvider = $defaultStockProvider ?:
-            ObjectManager::getInstance()->get(DefaultStockProviderInterface::class);
     }
 
     /**
-     * Prepare select
-     *
-     * @param int $stockId
-     * @return Select
-     * @throws Exception
+     * @inheritdoc
      */
-    public function execute(int $stockId): Select
+    public function getSelect(IndexName $indexName, array $skuList = []): Select
     {
         $connection = $this->resourceConnection->getConnection();
-
-        $indexName = $this->indexNameBuilder
-            ->setIndexId(InventoryIndexer::INDEXER_ID)
-            ->addDimension('stock_', (string)$stockId)
-            ->setAlias(Alias::ALIAS_MAIN)
-            ->build();
-
         $indexTableName = $this->indexNameResolver->resolveName($indexName);
-
         $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
         $linkField = $metadata->getLinkField();
 
@@ -136,6 +101,10 @@ class SelectBuilder
         )->group(
             ['parent_product_entity.sku']
         );
+
+        if ($skuList) {
+            $select->where('parent_product_entity.sku IN (?)', $skuList);
+        }
 
         return $select;
     }

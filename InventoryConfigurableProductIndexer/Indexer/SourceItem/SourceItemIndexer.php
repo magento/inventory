@@ -8,9 +8,9 @@ declare(strict_types=1);
 namespace Magento\InventoryConfigurableProductIndexer\Indexer\SourceItem;
 
 use Magento\Framework\App\DeploymentConfig;
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Indexer\SaveHandler\Batch;
+use Magento\InventoryIndexer\Indexer\SiblingProductsProviderInterface;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexHandlerInterface;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
@@ -27,16 +27,6 @@ use ArrayIterator;
 class SourceItemIndexer
 {
     /**
-     * Default batch size
-     */
-    private const BATCH_SIZE = 100;
-
-    /**
-     * @var ResourceConnection
-     */
-    private $resourceConnection;
-
-    /**
      * @var IndexNameBuilder
      */
     private $indexNameBuilder;
@@ -45,11 +35,6 @@ class SourceItemIndexer
      * @var IndexHandlerInterface
      */
     private $indexHandler;
-
-    /**
-     * @var IndexDataBySkuListProvider
-     */
-    private $indexDataBySkuListProvider;
 
     /**
      * @var IndexStructureInterface
@@ -77,7 +62,7 @@ class SourceItemIndexer
     private $batch;
 
     /**
-     * @var DeploymentConfig|null
+     * @var DeploymentConfig
      */
     private $deploymentConfig;
 
@@ -89,41 +74,35 @@ class SourceItemIndexer
     private const DEPLOYMENT_CONFIG_INDEXER_BATCHES = 'indexer/batch_size/';
 
     /**
-     * @param ResourceConnection $resourceConnection
      * @param IndexNameBuilder $indexNameBuilder
      * @param IndexHandlerInterface $indexHandler
      * @param IndexStructureInterface $indexStructure
-     * @param IndexDataBySkuListProvider $indexDataBySkuListProvider
      * @param SiblingSkuListInStockProvider $siblingSkuListInStockProvider
      * @param DefaultStockProviderInterface $defaultStockProvider
-     * @param Batch|null $batch
-     * @param int|null $batchSize
-     * @param DeploymentConfig|null $deploymentConfig
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     * @param Batch $batch
+     * @param DeploymentConfig $deploymentConfig
+     * @param SiblingProductsProviderInterface $productsProvider
+     * @param int $batchSize
      */
-
     public function __construct(
-        ResourceConnection $resourceConnection,
         IndexNameBuilder $indexNameBuilder,
         IndexHandlerInterface $indexHandler,
         IndexStructureInterface $indexStructure,
-        IndexDataBySkuListProvider $indexDataBySkuListProvider,
         SiblingSkuListInStockProvider $siblingSkuListInStockProvider,
         DefaultStockProviderInterface $defaultStockProvider,
-        ?Batch $batch = null,
-        ?int $batchSize = null,
-        ?DeploymentConfig $deploymentConfig = null
+        Batch $batch,
+        DeploymentConfig $deploymentConfig,
+        private readonly SiblingProductsProviderInterface $productsProvider,
+        int $batchSize = 100,
     ) {
-        $this->resourceConnection = $resourceConnection;
         $this->indexNameBuilder = $indexNameBuilder;
         $this->indexHandler = $indexHandler;
-        $this->indexDataBySkuListProvider = $indexDataBySkuListProvider;
         $this->indexStructure = $indexStructure;
         $this->siblingSkuListInStockProvider = $siblingSkuListInStockProvider;
         $this->defaultStockProvider = $defaultStockProvider;
-        $this->batch = $batch ?: ObjectManager::getInstance()->get(Batch::class);
-        $this->batchSize = $batchSize ?? self::BATCH_SIZE;
-        $this->deploymentConfig = $deploymentConfig ?: ObjectManager::getInstance()->get(DeploymentConfig::class);
+        $this->batch = $batch;
+        $this->deploymentConfig = $deploymentConfig;
+        $this->batchSize = $batchSize;
     }
 
     /**
@@ -160,8 +139,8 @@ class SourceItemIndexer
                 $this->indexStructure->create($mainIndexName, ResourceConnection::DEFAULT_CONNECTION);
             }
 
-            $indexData = $this->indexDataBySkuListProvider->execute($stockId, $skuList);
-
+            $data = $this->productsProvider->getData($mainIndexName, $skuList);
+            $indexData = new ArrayIterator($data);
             foreach ($this->batch->getItems($indexData, $this->batchSize) as $batchData) {
                 $batchIndexData = new ArrayIterator($batchData);
                 $this->indexHandler->cleanIndex(

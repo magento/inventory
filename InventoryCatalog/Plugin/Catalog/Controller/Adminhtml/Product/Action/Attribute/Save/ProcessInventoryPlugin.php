@@ -10,7 +10,6 @@ namespace Magento\InventoryCatalog\Plugin\Catalog\Controller\Adminhtml\Product\A
 use Magento\Catalog\Controller\Adminhtml\Product\Action\Attribute\Save;
 use Magento\Catalog\Helper\Product\Edit\Action\Attribute;
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
-use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\MessageQueue\PublisherInterface;
 use Magento\Framework\Serialize\SerializerInterface;
@@ -87,10 +86,9 @@ class ProcessInventoryPlugin
      * Asynchronously process legacy stock items.
      *
      * @param Save $subject
-     * @param ResultInterface $result
-     * @return ResultInterface
+     * @return void
      */
-    public function afterExecute(Save $subject, ResultInterface $result)
+    public function beforeExecute(Save $subject): void
     {
         $request = $subject->getRequest();
         $inventoryData = $this->addConfigSettings($request->getParam('inventory', []));
@@ -109,8 +107,6 @@ class ProcessInventoryPlugin
             );
             $this->publisher->publish('inventory.mass.update', $inventoryData);
         }
-
-        return $result;
     }
 
     /**

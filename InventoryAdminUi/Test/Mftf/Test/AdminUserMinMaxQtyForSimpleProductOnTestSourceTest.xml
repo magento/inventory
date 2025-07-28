@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2022 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -78,7 +78,7 @@
         <fillField selector="{{StorefrontProductPageSection.qtyInput}}" userInput="6" stepKey="fillProductQtyGreaterThanAllowed"/>
         <click selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="addToCartGreaterThenAllowedQty"/>
         <waitForElementVisible selector="{{StorefrontProductPageSection.qtyErr}}" time="30" stepKey="witForHighQtyAdded"/>
-        <see selector="{{StorefrontProductPageSection.qtyErr}}" userInput="The fewest you may purchase is 5." stepKey="seeHighQtyErrorMessage"/>
+        <see selector="{{StorefrontProductPageSection.qtyErr}}" userInput="The maximum you may purchase is 5." stepKey="seeHighQtyErrorMessage"/>
         <!--Try to add product with proper qty to cart.-->
         <actionGroup ref="StorefrontAddSimpleProductWithQtyActionGroup" stepKey="addProductToCartWithProperQty">
             <argument name="product" value="$$product$$"/>

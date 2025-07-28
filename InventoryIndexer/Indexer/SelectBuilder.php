@@ -69,6 +69,14 @@ class SelectBuilder implements SelectBuilderInterface
      */
     public function execute(int $stockId): Select
     {
+        return $this->getSelect($stockId);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getSelect(int $stockId, array $skuList = []): Select
+    {
         $connection = $this->resourceConnection->getConnection();
         $sourceItemTable = $this->resourceConnection->getTableName(SourceItemResourceModel::TABLE_NAME_SOURCE_ITEM);
 
@@ -108,6 +116,10 @@ class SelectBuilder implements SelectBuilderInterface
         )
             ->where('source_item.' . SourceItemInterface::SOURCE_CODE . ' IN (?)', $sourceCodes)
             ->group(['source_item.' .SourceItemInterface::SKU]);
+
+        if ($skuList) {
+            $select->where('source_item.' . SourceItemInterface::SKU . ' IN (?)', $skuList);
+        }
 
         return $select;
     }

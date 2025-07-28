@@ -146,5 +146,28 @@
             <argument name="customer" value="Simple_US_Customer_NY"/>
             <argument name="address" value="US_Address_NY"/>
         </actionGroup>
+        <!--Fill shipping information with Lost Angeles address-->
+        <actionGroup ref="FillGuestCheckoutShippingAddressWithCountryAndStateActionGroup" stepKey="guestCheckoutFillingWithCAAddress">
+            <argument name="customer" value="Simple_US_Customer_CA"/>
+            <argument name="customerAddress" value="US_Address_California"/>
+        </actionGroup>
+        <!--Switch to In Pick In Store-->
+        <actionGroup ref="StorefrontPickInStoreActionGroup" stepKey="pickInStore4"/>
+        <!--Verify that store is selected-->
+        <actionGroup ref="StorefrontAssertSelectedStoreActionGroup" stepKey="verifyThatStoreIsSelectedAfterChangingShippingAddressToCA">
+            <argument name="sourceName" value="$losAngelesSource.source[name]$"/>
+        </actionGroup>
+        <!--Navigate to Payments-->
+        <actionGroup ref="StorefrontPickInStoreNavigateToPaymentActionGroup" stepKey="navigateToPaymentStep"/>
+        <!--Go to home page -->
+        <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="goToHomePage"/>
+        <!--Clear local storage to remove checkout data from browser-->
+        <executeJS function="window.localStorage.clear();" stepKey="clearLocalStorage"/>
+        <!--Navigate to checkout-->
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="goToCheckoutFromMinicart2"/>
+        <!--Verify that store is selected-->
+        <actionGroup ref="StorefrontAssertSelectedStoreActionGroup" stepKey="verifyThatStoreIsSelectedAfterVisitingHomePage">
+            <argument name="sourceName" value="$losAngelesSource.source[name]$"/>
+        </actionGroup>
     </test>
 </tests>

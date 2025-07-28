@@ -44,7 +44,7 @@
                 <requiredEntity createDataKey="stock"/>
                 <requiredEntity createDataKey="austinSource"/>
             </createData>
-            <createData entity="Simple_US_Customer_CA_NY_Addresses" stepKey="customer"/>
+            <createData entity="Msi_US_Customer_NY_CA_Addresses" stepKey="customer"/>
             <createData entity="_defaultCategory" stepKey="category"/>
             <createData entity="SimpleProduct" stepKey="product">
                 <requiredEntity createDataKey="category"/>
@@ -95,8 +95,17 @@
         </actionGroup>
         <!--Navigate to checkout-->
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="goToCheckoutFromMinicart"/>
-        <!-- Verify that selected address is Lost Angeles address -->
-        <actionGroup ref="CheckSelectedShippingAddressInCheckoutActionGroup" stepKey="assertSelectedShippingAddressIsLA">
+        <!-- Verify that selected address is NY address -->
+        <comment userInput="Comment is added to preserve the step key for backward compatibility" stepKey="assertSelectedShippingAddressIsLA"/>
+        <actionGroup ref="CheckSelectedShippingAddressInCheckoutActionGroup" stepKey="assertSelectedShippingAddressIsNYAsDefaultAddress">
+            <argument name="customerVar" value="$customer$" />
+            <argument name="customerAddressVar" value="US_Address_NY" />
+        </actionGroup>
+        <!--Select CA address-->
+        <waitForElementVisible selector="{{CheckoutShippingSection.shipHereButton(US_Address_CA.postcode)}}" stepKey="waitForShipHereVisibleCA1"/>
+        <click selector="{{CheckoutShippingSection.shipHereButton(US_Address_CA.postcode)}}" stepKey="clickShipHereCA1"/>
+        <!--Verify that selected address is CA address-->
+        <actionGroup ref="CheckSelectedShippingAddressInCheckoutActionGroup" stepKey="assertSelectedShippingAddressIsCA1">
             <argument name="customerVar" value="$customer$" />
             <argument name="customerAddressVar" value="US_Address_CA" />
         </actionGroup>
@@ -117,13 +126,18 @@
         </actionGroup>
         <!--Click 'Shipping'-->
         <actionGroup ref="StorefrontSelectShippingActionGroup" stepKey="switchToShipping"/>
-        <!--Verify that selected address is Lost Angeles address-->
+        <!--Verify that selected address is CA address-->
         <actionGroup ref="CheckSelectedShippingAddressInCheckoutActionGroup" stepKey="assertSelectedShippingAddressIsLAAfterPageRefresh">
             <argument name="customerVar" value="$customer$" />
             <argument name="customerAddressVar" value="US_Address_CA" />
         </actionGroup>
         <!--Refresh Page-->
         <actionGroup ref="ReloadPageActionGroup" stepKey="refreshPage2"/>
+        <!--Verify that selected address is CA address-->
+        <actionGroup ref="CheckSelectedShippingAddressInCheckoutActionGroup" stepKey="assertSelectedShippingAddressIsCAAfterPageRefresh2">
+            <argument name="customerVar" value="$customer$" />
+            <argument name="customerAddressVar" value="US_Address_CA" />
+        </actionGroup>
         <!--Switch to In Pick In Store-->
         <actionGroup ref="StorefrontPickInStoreActionGroup" stepKey="pickInStore2"/>
         <!--Verify that store is pre-selected-->
@@ -133,12 +147,12 @@
         <!--Click 'Shipping'-->
         <actionGroup ref="StorefrontSelectShippingActionGroup" stepKey="switchToShipping2"/>
         <!--Select NY address-->
-        <waitForElementVisible selector="{{CheckoutShippingMethodsSection.shipHereButton}}" stepKey="waitForShipHereVisible"/>
-        <click selector="{{CheckoutShippingMethodsSection.shipHereButton}}" stepKey="clickShipHere"/>
+        <waitForElementVisible selector="{{CheckoutShippingSection.shipHereButton(US_Address_NY.postcode)}}" stepKey="waitForShipHereVisible"/>
+        <click selector="{{CheckoutShippingSection.shipHereButton(US_Address_NY.postcode)}}" stepKey="clickShipHere"/>
         <!-- Verify that selected address is NY address -->
         <actionGroup ref="CheckSelectedShippingAddressInCheckoutActionGroup" stepKey="assertSelectedShippingAddressIsNY">
             <argument name="customerVar" value="$customer$" />
-            <argument name="customerAddressVar" value="US_Address_NY_Not_Default_Address" />
+            <argument name="customerAddressVar" value="US_Address_NY" />
         </actionGroup>
         <!--Switch to In Pick In Store-->
         <actionGroup ref="StorefrontPickInStoreActionGroup" stepKey="pickInStore3"/>
@@ -153,7 +167,33 @@
         <!-- Verify that selected address is NY address -->
         <actionGroup ref="CheckSelectedShippingAddressInCheckoutActionGroup" stepKey="assertSelectedShippingAddressIsNYAfterPageRefresh">
             <argument name="customerVar" value="$customer$" />
-            <argument name="customerAddressVar" value="US_Address_NY_Not_Default_Address" />
+            <argument name="customerAddressVar" value="US_Address_NY" />
+        </actionGroup>
+        <!--Select CA address-->
+        <waitForElementVisible selector="{{CheckoutShippingSection.shipHereButton(US_Address_CA.postcode)}}" stepKey="waitForShipHereVisibleCA2"/>
+        <click selector="{{CheckoutShippingSection.shipHereButton(US_Address_CA.postcode)}}" stepKey="clickShipHereCA2"/>
+        <!--Verify that selected address is CA address-->
+        <actionGroup ref="CheckSelectedShippingAddressInCheckoutActionGroup" stepKey="assertSelectedShippingAddressIsCA2">
+            <argument name="customerVar" value="$customer$" />
+            <argument name="customerAddressVar" value="US_Address_CA" />
+        </actionGroup>
+        <!--Switch to In Pick In Store-->
+        <actionGroup ref="StorefrontPickInStoreActionGroup" stepKey="pickInStore4"/>
+        <!--Verify that store is selected-->
+        <actionGroup ref="StorefrontAssertSelectedStoreActionGroup" stepKey="verifyThatStoreIsSelectedAfterChangingShippingAddressToCA">
+            <argument name="sourceName" value="$losAngelesSource.source[name]$"/>
+        </actionGroup>
+        <!--Navigate to Payments-->
+        <actionGroup ref="StorefrontPickInStoreNavigateToPaymentActionGroup" stepKey="navigateToPaymentStep"/>
+        <!--Go to home page -->
+        <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="goToHomePage"/>
+        <!--Clear local storage to remove checkout data from browser-->
+        <executeJS function="window.localStorage.clear();" stepKey="clearLocalStorage"/>
+        <!--Navigate to checkout-->
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="goToCheckoutFromMinicart2"/>
+        <!--Verify that store is selected-->
+        <actionGroup ref="StorefrontAssertSelectedStoreActionGroup" stepKey="verifyThatStoreIsSelectedAfterVisitingHomePage">
+            <argument name="sourceName" value="$losAngelesSource.source[name]$"/>
         </actionGroup>
     </test>
 </tests>

@@ -48,14 +48,11 @@ class FullTextIndexUpdateProcessor implements CompositeProductProcessorInterface
     /**
      * Perform fulltext index update for specific products after source items reindex.
      *
-     * @param array $sourceItemIds
      * @param array $saleableStatusesBeforeSync
      * @param array $saleableStatusesAfterSync
      * @return void
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function process(
-        array $sourceItemIds,
         array $saleableStatusesBeforeSync,
         array $saleableStatusesAfterSync
     ): void {
