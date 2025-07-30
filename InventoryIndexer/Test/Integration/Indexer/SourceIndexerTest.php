@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -76,7 +76,7 @@ class SourceIndexerTest extends TestCase
     /**
      * @return array
      */
-    public function reindexRowDataProvider(): array
+    public static function reindexRowDataProvider(): array
     {
         return [
             ['SKU-1', 10, [GetStockItemDataInterface::QUANTITY => 8.5, GetStockItemDataInterface::IS_SALABLE => 1]],
@@ -142,7 +142,7 @@ class SourceIndexerTest extends TestCase
     /**
      * @return array
      */
-    public function reindexListDataProvider(): array
+    public static function reindexListDataProvider(): array
     {
         return [
             ['SKU-1', 10, [GetStockItemDataInterface::QUANTITY => 8.5, GetStockItemDataInterface::IS_SALABLE => 1]],

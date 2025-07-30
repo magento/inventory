@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -34,6 +34,8 @@ class ApplyBaseJoins
     }
 
     /**
+     * Joins multiple tables to build a query for low stock notifications, grouping results by source item ID.
+     *
      * @param Select $select
      *
      * @return void

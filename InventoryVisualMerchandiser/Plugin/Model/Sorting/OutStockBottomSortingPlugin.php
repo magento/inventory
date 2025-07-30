@@ -1,34 +1,28 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2021 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
 namespace Magento\InventoryVisualMerchandiser\Plugin\Model\Sorting;
 
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
-use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Module\Manager;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\VisualMerchandiser\Model\Sorting\OutStockBottom;
+use Zend_Db_Select_Exception;
 
 /**
  * This plugin adds multi-source stock to the Visual Merchandiser out stock to bottom sorting.
  */
 class OutStockBottomSortingPlugin
 {
-    /**
-     * @var ResourceConnection
-     */
-    private $resource;
-
     /**
      * @var StoreManagerInterface
      */
@@ -49,31 +43,22 @@ class OutStockBottomSortingPlugin
      */
     private $defaultStockProvider;
 
-    /** @var Manager */
-    private $moduleManager;
-
     /**
-     * @param ResourceConnection $resource
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
      * @param StockIndexTableNameResolverInterface $stockIndexTableNameResolver
      * @param DefaultStockProviderInterface $defaultStockProvider
-     * @param Manager $moduleManager
      */
     public function __construct(
-        ResourceConnection $resource,
         StoreManagerInterface $storeManager,
         StockResolverInterface $stockResolver,
         StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
-        DefaultStockProviderInterface $defaultStockProvider,
-        Manager $moduleManager
+        DefaultStockProviderInterface $defaultStockProvider
     ) {
-        $this->resource = $resource;
         $this->storeManager = $storeManager;
         $this->stockResolver = $stockResolver;
         $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
         $this->defaultStockProvider = $defaultStockProvider;
-        $this->moduleManager = $moduleManager;
     }
 
     /**
@@ -84,6 +69,7 @@ class OutStockBottomSortingPlugin
      * @param Collection $collection
      * @return Collection
      * @throws LocalizedException
+     * @throws Zend_Db_Select_Exception
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundSort(OutStockBottom $subject, callable $proceed, Collection $collection): Collection
@@ -96,8 +82,16 @@ class OutStockBottomSortingPlugin
             return $proceed($collection);
         }
 
-        $collection->getSelect()
-            ->reset(Select::ORDER)
+        $select = $collection->getSelect();
+        if (!array_key_exists('inventory_stock', $select->getPart(Select::FROM))) {
+            $stockTable = $this->stockIndexTableNameResolver->execute((int)$stock->getStockId());
+            $select->joinLeft(
+                ['inventory_stock' => $stockTable],
+                'inventory_stock.sku = e.sku',
+                []
+            );
+        }
+        $select->reset(Select::ORDER)
             ->order('inventory_stock.is_salable ' . Select::SQL_DESC);
 
         return $collection;

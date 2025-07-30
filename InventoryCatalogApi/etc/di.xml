@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -15,4 +15,6 @@
                 type="Magento\InventoryCatalogApi\Model\BulkInventoryTransferValidatorChain" />
     <preference for="Magento\InventoryCatalogApi\Model\PartialInventoryTransferValidatorInterface"
                 type="Magento\InventoryCatalogApi\Model\PartialInventoryTransferValidatorChain"/>
+    <preference for="Magento\InventoryCatalogApi\Model\CompositeProductStockStatusProcessorInterface"
+                type="Magento\InventoryCatalogApi\Model\CompositeProductStockStatusProcessorPool"/>
 </config>

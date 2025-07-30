@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -15,7 +15,7 @@ use Magento\Framework\HTTP\ClientInterface;
 use Magento\InventoryDistanceBasedSourceSelection\Model\ResourceModel\UpdateGeoNames;
 
 /**
- * Import geonames
+ * Imports geoname data for a specified country by downloading, extracting, and processing it into the database.
  */
 class ImportGeoNames
 {
@@ -108,7 +108,9 @@ class ImportGeoNames
         $resource = $zipArchive->getStream($countryCode . '.txt');
 
         $contents = '';
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         while (!feof($resource)) {
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             $contents .= fread($resource, 1024);
         }
 

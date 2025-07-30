@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -56,7 +56,7 @@ class MinQtyConditionTest extends TestCase
     /**
      * @return array
      */
-    public function executeWithMinQtyDataProvider(): array
+    public static function executeWithMinQtyDataProvider(): array
     {
         return [
             ['SKU-1', 10, [GetStockItemDataInterface::QUANTITY => 8.5, GetStockItemDataInterface::IS_SALABLE => 1]],
@@ -100,7 +100,7 @@ class MinQtyConditionTest extends TestCase
     /**
      * @return array
      */
-    public function executeWithManageStockFalseAndMinQty(): array
+    public static function executeWithManageStockFalseAndMinQty(): array
     {
         return [
             ['SKU-1', 10, [GetStockItemDataInterface::QUANTITY => 8.5, GetStockItemDataInterface::IS_SALABLE => 1]],

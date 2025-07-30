@@ -1,13 +1,14 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2021 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
 namespace Magento\InventorySalesAdminUi\Test\Integration\Plugin\Sales\Block\Items\Renderer\DefaultRenderer;
 
 use Magento\Framework\ObjectManagerInterface;
+use Magento\Sales\Model\InvoiceOrder;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\CreditmemoFactory;
 use Magento\Sales\Block\Adminhtml\Items\Renderer\DefaultRenderer;
@@ -49,6 +50,7 @@ class ChildManageStockIsOnTest extends TestCase
         /** @var Order $order */
         $order = $this->objectManager->create(Order::class);
         $order->loadByIncrementId('100000001');
+        $this->objectManager->create(InvoiceOrder::class)->execute($order->getId());
         $creditmemo = $this->creditmemoFactory->createByOrder($order);
         $item = current($creditmemo->getItems());
         /** @var DefaultRenderer $defaultRenderer */

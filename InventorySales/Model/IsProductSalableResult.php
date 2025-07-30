@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -45,7 +45,7 @@ class IsProductSalableResult implements IsProductSalableResultInterface
         string $sku,
         int $stockId,
         bool $isSalable,
-        IsProductSalableResultExtensionInterface $extensionAttributes = null
+        ?IsProductSalableResultExtensionInterface $extensionAttributes = null
     ) {
         $this->sku = $sku;
         $this->stockId = $stockId;

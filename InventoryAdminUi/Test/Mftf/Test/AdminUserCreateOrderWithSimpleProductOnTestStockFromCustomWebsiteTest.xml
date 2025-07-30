@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
@@ -44,8 +44,8 @@
                 <argument name="customStore" value="customStore"/>
             </actionGroup>
             <!-- Assign product to custom website -->
-            <actionGroup ref="NavigateToCreatedProductEditPageActionGroup" stepKey="navigateToProductEditPage">
-                <argument name="product" value="$$product$$"/>
+            <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="navigateToProductEditPage">
+                <argument name="productId" value="$$product.id$$"/>
             </actionGroup>
             <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignTestSourceToCreatedProduct" >
                 <argument name="sourceCode" value="$$source.source[source_code]$$"/>
@@ -59,7 +59,12 @@
                 <argument name="websiteName" value="{{customWebsite.name}}"/>
             </actionGroup>
             <magentoCLI command="config:set {{StorefrontEnableAddStoreCodeToUrls.path}} {{StorefrontEnableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrl"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value="config full_page"/>
+            </actionGroup>
         </before>
         <after>
             <magentoCLI command="config:set {{StorefrontDisableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}" stepKey="removeStoreCodeFromUrl" />
@@ -71,18 +76,22 @@
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
-            <!--Delete created website.-->
-            <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite" >
-                <argument name="websiteName" value="{{customWebsite.name}}"/>
-            </actionGroup>
+            <!--Delete created website, store and store view -->
+            <actionGroup ref="AdminSystemStoreOpenPageActionGroup" stepKey="navigateToStores"/>
+            <actionGroup ref="AdminDeleteMultipleWebsitesActionGroup" stepKey="deleteWebsite" />
+
             <deleteData createDataKey="stock" stepKey="deleteStock"/>
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!--- Place order. -->
-        <actionGroup ref="NavigateToNewOrderPageNewCustomerActionGroup" stepKey="createNewOrderForCustomer">
-            <argument name="storeView" value="customStore"/>
+        <actionGroup ref="AdminNavigateToNewOrderPageNewCustomerActionGroup" stepKey="createNewOrderForCustomer"/>
+        <actionGroup ref="AdminSelectStoreDuringOrderCreationActionGroup" stepKey="selectCustomStore">
+            <argument name="storeView" value="customStore" />
         </actionGroup>
         <waitForPageLoad stepKey="waitForPageLoad"/>
         <fillField selector="{{AdminOrderFormAccountSection.email}}" userInput="{{Msi_US_Customer.email}}" stepKey="fillEmailField"/>
@@ -96,8 +105,8 @@
         </actionGroup>
         <waitForPageLoad stepKey="waitForPageLoadOrder"/>
         <actionGroup ref="OrderSelectFlatRateShippingActionGroup" stepKey="selectFlatRateShipping"/>
-        <click selector="{{AdminOrderFormActionSection.SubmitOrder}}" stepKey="clickSubmitOrder"/>
-        <waitForPageLoad stepKey="waitForOrderPlacement"/>
+        <actionGroup ref="AdminOrderClickSubmitOrderActionGroup" stepKey="clickSubmitOrder" />
+        <comment userInput="BIC workaround" stepKey="waitForOrderPlacement"/>
         <!--Verify product quantity.-->
         <actionGroup ref="NavigateToAndResetProductGridToDefaultViewActionGroup" stepKey="navigateToProductGrid"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findProduct">

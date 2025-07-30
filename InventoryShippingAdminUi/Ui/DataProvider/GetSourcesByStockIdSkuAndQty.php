@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -15,9 +15,11 @@ use Magento\InventorySourceSelectionApi\Api\GetDefaultSourceSelectionAlgorithmCo
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 
 /**
- * Class GetSourcesByStockIdSkuAndQty
- * @package Magento\InventoryShippingAdminUi\Ui\DataProvider
- * @deprecated (see \Magento\InventoryShippingAdminUi\Ui\DataProvider\GetSourcesByOrderIdStockIdSkuAndQty)
+ * Fetches source data by stock ID, SKU, and quantity, using the default source selection algorithm
+ * to determine availability and deduction details.
+ *
+ * @deprecated
+ * @see \Magento\InventoryShippingAdminUi\Ui\DataProvider\GetSourcesByOrderIdStockIdSkuAndQty
  */
 class GetSourcesByStockIdSkuAndQty
 {
@@ -76,6 +78,8 @@ class GetSourcesByStockIdSkuAndQty
     }
 
     /**
+     * Processes stock, SKU, and quantity to fetch source data using the default source selection algorithm.
+     *
      * @param int $stockId
      * @param string $sku
      * @param float $qty

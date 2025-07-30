@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -50,6 +50,8 @@ class DeleteMultiple
     }
 
     /**
+     * Builds an SQL `WHERE` clause for deleting source items by combining SKU and source code conditions with `OR`.
+     *
      * @param array $sourceItems
      * @return string
      */

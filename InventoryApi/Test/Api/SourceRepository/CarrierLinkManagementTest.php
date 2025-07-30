@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -17,8 +17,8 @@ class CarrierLinkManagementTest extends WebapiAbstract
     /**#@+
      * Service constants
      */
-    const RESOURCE_PATH = '/V1/inventory/sources';
-    const SERVICE_NAME = 'inventoryApiSourceRepositoryV1';
+    private const RESOURCE_PATH = '/V1/inventory/sources';
+    private const SERVICE_NAME = 'inventoryApiSourceRepositoryV1';
     /**#@-*/
 
     /**
@@ -54,7 +54,7 @@ class CarrierLinkManagementTest extends WebapiAbstract
     /**
      * @return array
      */
-    public function dataProviderCarrierLinks(): array
+    public static function dataProviderCarrierLinks(): array
     {
         return [
             'add_carrier_new_links' => [

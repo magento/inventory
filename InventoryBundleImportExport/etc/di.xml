@@ -1,12 +1,15 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <type name="Magento\BundleImportExport\Model\Import\Product\Type\Bundle">
         <plugin name="process_shipment_type_plugin" type="Magento\InventoryBundleImportExport\Plugin\BundleImportExport\Model\Import\Product\Type\Bundle\ProcessShipmentTypePlugin"/>
+    </type>
+    <type name="Magento\CatalogImportExport\Model\StockItemImporterInterface">
+        <plugin name="update_bundle_products_stock_item_status" disabled="true"/>
     </type>
 </config>

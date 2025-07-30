@@ -1,12 +1,12 @@
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
  */
 
 define([
     'jquery'
 ], function ($) {
-    'use strict';
+    'use strict'; //eslint-disable-line
 
     $('[data-role=toggle-editability]').on('change', function () {
         var useConfigSettings = $(this),

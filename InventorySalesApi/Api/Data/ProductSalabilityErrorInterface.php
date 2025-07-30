@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -13,11 +13,15 @@ namespace Magento\InventorySalesApi\Api\Data;
 interface ProductSalabilityErrorInterface extends \Magento\Framework\Api\ExtensibleDataInterface
 {
     /**
+     * Gets the error code related to product salability, returning it as a string value.
+     *
      * @return string
      */
     public function getCode(): string;
 
     /**
+     * Gets the error message related to product salability, returning it as a string value.
+     *
      * @return string
      */
     public function getMessage(): string;

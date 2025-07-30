@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -39,6 +39,8 @@ class GetStockSourceLinksBySourceCode
     }
 
     /**
+     * Finds and returns stock source links for a given source code.
+     *
      * @param string $sourceCode
      * @return StockSourceLinkInterface[]
      */

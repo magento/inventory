@@ -3,7 +3,7 @@
 The `InventoryCatalogFrontendUi` module adds new extension point for getting info about a product for ui usage.
 
 This module is a part of the new inventory infrastructure. The
-[Inventory Management overview](https://devdocs.magento.com/guides/v2.4/inventory/index.html)
+[Inventory Management overview](https://developer.adobe.com/commerce/webapi/rest/inventory/index.html)
 describes the MSI (Multi-Source Inventory) project in more detail.
 
 ## Installation details

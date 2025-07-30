@@ -3,12 +3,12 @@
 The `Inventory` module is part of the new inventory infrastructure,
 which replaces the legacy `CatalogInventory` module with new and expanded features and APIs for Inventory Management.  
 
-The [Inventory Management overview](https://devdocs.magento.com/guides/v2.4/inventory/index.html)
+The [Inventory Management overview](https://developer.adobe.com/commerce/webapi/rest/inventory/index.html)
 describes the MSI (Multi-Source Inventory) project in more detail.
 
 All Inventory Management modules follow the
 [Single Responsibility Principle](https://en.wikipedia.org/wiki/Single_responsibility_principle).
-[Inventory management architecture](https://devdocs.magento.com/guides/v2.4/inventory/architecture.html)
+[Inventory management architecture](https://developer.adobe.com/commerce/php/architecture/modules/inventory-management/)
 provides additional insight about the overall structure of these modules.
 
 ## Installation details

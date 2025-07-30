@@ -1,18 +1,19 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
 namespace Magento\InventoryReservations\Model\ResourceModel;
 
+use Magento\Framework\ObjectManager\ResetAfterRequestInterface;
 use Magento\InventoryReservationsApi\Model\GetReservationsQuantityInterface;
 
 /**
  * @inheritdoc
  */
-class GetReservationsQuantityCache implements GetReservationsQuantityInterface
+class GetReservationsQuantityCache implements GetReservationsQuantityInterface, ResetAfterRequestInterface
 {
     /**
      * @var GetReservationsQuantity
@@ -31,6 +32,14 @@ class GetReservationsQuantityCache implements GetReservationsQuantityInterface
         GetReservationsQuantity $getReservationsQuantity
     ) {
         $this->getReservationsQuantity = $getReservationsQuantity;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function _resetState(): void
+    {
+        $this->reservationsQuantity = [[]];
     }
 
     /**

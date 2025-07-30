@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -12,7 +12,7 @@ use Magento\Framework\Setup\Patch\SchemaPatchInterface;
 use Magento\InventoryShipping\Setup\Operation\AssignDefaultSourceToShipments;
 
 /**
- * Initialize Default Source For Shipments
+ * Represents a schema patch that initializes the default source for shipments by executing the assignment operation.
  */
 class InitializeDefaultSourceForShipments implements SchemaPatchInterface
 {

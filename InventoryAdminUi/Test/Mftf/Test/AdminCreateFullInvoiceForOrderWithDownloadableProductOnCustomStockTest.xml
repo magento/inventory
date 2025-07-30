@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
@@ -39,8 +39,8 @@
             </createData>
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminPanel"/>
             <!-- Assign source to product. -->
-            <actionGroup ref="NavigateToCreatedProductEditPageActionGroup" stepKey="navigateToProductEditPage">
-                <argument name="product" value="$$product$$"/>
+            <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="navigateToProductEditPage">
+                <argument name="productId" value="$$product.id$$"/>
             </actionGroup>
             <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignTestSourceToCreatedProduct" >
                 <argument name="sourceCode" value="$$source.source[source_code]$$"/>
@@ -60,10 +60,13 @@
             <deleteData createDataKey="stock" stepKey="deleteStock"/>
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!--- Place order and create invoice. -->
-        <actionGroup ref="NavigateToNewOrderPageNewCustomerActionGroup" stepKey="createNewOrderForCustomer"/>
+        <actionGroup ref="AdminNavigateToNewOrderPageNewCustomerActionGroup" stepKey="createNewOrderForCustomer"/>
         <waitForPageLoad stepKey="waitForPageLoad"/>
         <fillField selector="{{AdminOrderFormAccountSection.email}}" userInput="{{Msi_US_Customer.email}}" stepKey="fillEmailField"/>
         <actionGroup ref="AddSimpleProductToOrderActionGroup" stepKey="addProductToOrder">

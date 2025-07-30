@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright 2025 Adobe
+  * All Rights Reserved.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="StorefrontAssertNoStoreIsSelectedInPickInStoreActionGroup">
+        <annotations>
+            <description>Verify that no store is selected.</description>
+        </annotations>
+        <waitForElementNotVisible selector="{{StorefrontSelectStoreSection.selectedStoreName}}" stepKey="assertSelectedStoreNameIsNotPresent"/>
+        <waitForElementClickable selector="{{StorefrontSelectStoreSection.selectStoreBtn}}" stepKey="waitForSelectStoreClickable" />
+    </actionGroup>
+</actionGroups>

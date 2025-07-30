@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -91,16 +91,19 @@ class GetOrderItemsDataForOrdersInNotFinalStateTest extends TestCase
             ->willReturnArgument(0);
         $this->resourceConnection->expects($this->exactly(2))
             ->method('getConnection')
-            ->withConsecutive(
-                [$this->equalTo($salesConnectionName)],
-                [$this->equalTo($defaultConnectionName)]
-            )
-            ->willReturnMap(
-                [
-                    [$salesConnectionName, $salesConnection],
-                    [$defaultConnectionName, $defaultConnection],
-                ]
-            );
+            ->willReturnCallback(function ($arg) use (
+                $salesConnectionName,
+                $defaultConnectionName,
+                $salesConnection,
+                $defaultConnection
+) {
+                if ($arg == $salesConnectionName) {
+                    return $salesConnection;
+                } elseif ($arg == $defaultConnectionName) {
+                    return $defaultConnection;
+                }
+            });
+
         $this->assertEquals($expected, $this->model->execute(10, 1));
     }
 

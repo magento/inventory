@@ -1,15 +1,11 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework-message-queue:etc/publisher.xsd">
-    <publisher topic="inventory.reservations.update">
-        <connection name="db" exchange="magento-db" disabled="false" />
-    </publisher>
-    <publisher topic="inventory.reservations.cleanup">
-        <connection name="db" exchange="magento-db" disabled="false" />
-    </publisher>
+    <publisher topic="inventory.reservations.update"/>
+    <publisher topic="inventory.reservations.cleanup"/>
 </config>

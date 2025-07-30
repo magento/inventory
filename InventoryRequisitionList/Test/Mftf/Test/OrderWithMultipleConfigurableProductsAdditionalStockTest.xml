@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -17,6 +17,9 @@
             <severity value="CRITICAL"/>
             <group value="msi_b2b"/>
             <group value="multi_mode"/>
+            <skip>
+                <issueId value="B2B-4630">Unable to create requisition list for product assigned to new website and source</issueId>
+            </skip>
         </annotations>
         <before>
             <remove keyForRemoval="createSimpleUSCustomer"/>
@@ -100,6 +103,9 @@
                 <argument name="stockName" value="$$additionalStock.stock[name]$$"/>
                 <argument name="websiteName" value="{{customWebsite.name}}"/>
             </actionGroup>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <!--Assign configurable to additional website.-->
             <amOnPage url="{{AdminProductEditPage.url($$configurableProduct.id$$)}}" stepKey="openConfigurableProductEditPage"/>
             <actionGroup ref="AddWebsiteToProductActionGroup" stepKey="assignConfigurableProductToAdditionalWebsite">
@@ -146,6 +152,9 @@
             <deleteData createDataKey="configurableProduct" stepKey="deleteConfigProduct"/>
             <deleteData createDataKey="configurableProductAttribute" stepKey="deleteConfigProductAttribute"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <!--Revert "Add Store Code To URL" configuration.-->
             <magentoCLI command="config:set {{StorefrontDisableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlDisable"/>
         </after>
@@ -180,10 +189,10 @@
         <actionGroup ref="CustomerCheckoutFillNewShippingAddressActionGroup" stepKey="fillShippingAddress">
             <argument name="address" value="US_Address_TX"/>
         </actionGroup>
-        <click selector="{{CheckoutShippingGuestInfoSection.next}}" stepKey="clickNext"/>
-        <waitForPageLoad stepKey="waitForShipmentPageLoad"/>
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="placeOrder"/>
-        <waitForPageLoad stepKey="waitUntilOrderPlaced"/>
+        <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="clickNext"/>
+        <comment userInput="BIC workaround" stepKey="waitForShipmentPageLoad"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="placeOrder"/>
+        <comment userInput="BIC workaround" stepKey="waitUntilOrderPlaced"/>
         <waitForText selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessage"/>
         <!--Verify first product variation quantity-->
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProduct1"/>

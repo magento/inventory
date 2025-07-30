@@ -1,6 +1,6 @@
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 
 define([
@@ -107,9 +107,10 @@ define([
          * Select location for sipping.
          *
          * @param {Object} location
+         * @param {Boolean} [persist=true]
          * @returns void
          */
-        selectForShipping: function (location) {
+        selectForShipping: function (location, persist) {
             var address = $.extend(
                 {},
                 addressConverter.formAddressDataToQuoteAddress({
@@ -130,10 +131,12 @@ define([
             address = pickupAddressConverter.formatAddressToPickupAddress(address);
             this.selectedLocation(location);
             selectShippingAddressAction(address);
-            checkoutData.setSelectedShippingAddress(address.getKey());
-            checkoutData.setSelectedPickupAddress(
-                addressConverter.quoteAddressToFormAddressData(address)
-            );
+            if (persist !== false) {
+                checkoutData.setSelectedShippingAddress(address.getKey());
+                checkoutData.setSelectedPickupAddress(
+                    addressConverter.quoteAddressToFormAddressData(address)
+                );
+            }
         },
 
         /**

@@ -1,8 +1,12 @@
+/**
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
+ */
 define([
     'underscore',
     'Magento_Ui/js/form/element/select'
 ], function (_, select) {
-    'use strict';
+    'use strict'; //eslint-disable-line
 
     return select.extend({
         /**

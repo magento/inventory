@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -24,12 +24,12 @@ class StockResolverTest extends WebapiAbstract
     /**
      * Path for REST request
      */
-    const API_PATH = '/V1/inventory/stock-resolver';
+    public const API_PATH = '/V1/inventory/stock-resolver';
 
     /**
      * Path for SOAP request
      */
-    const SERVICE_NAME = 'inventorySalesApiStockResolverV1';
+    public const SERVICE_NAME = 'inventorySalesApiStockResolverV1';
 
     /**
      * @var ObjectManagerInterface

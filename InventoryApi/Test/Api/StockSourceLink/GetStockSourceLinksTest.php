@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -19,8 +19,8 @@ class GetStockSourceLinksTest extends WebapiAbstract
     /**#@+
      * Service constants
      */
-    const RESOURCE_PATH = '/V1/inventory/stock-source-links';
-    const SERVICE_NAME = 'inventoryApiGetStockSourceLinksV1';
+    public const RESOURCE_PATH = '/V1/inventory/stock-source-links';
+    public const SERVICE_NAME = 'inventoryApiGetStockSourceLinksV1';
     /**#@-*/
 
     /**

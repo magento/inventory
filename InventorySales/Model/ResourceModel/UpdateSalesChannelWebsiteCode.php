@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -32,6 +32,8 @@ class UpdateSalesChannelWebsiteCode
     }
 
     /**
+     * Updates the website code in the inventory_stock_sales_channel table while maintaining data integrity.
+     *
      * @param string $oldCode
      * @param string $newCode
      * @return void

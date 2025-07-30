@@ -1,16 +1,13 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <type name="Magento\InventoryIndexer\Indexer\Stock\Strategy\Sync">
         <plugin name="invalidate_products_cache" type="Magento\InventoryCache\Plugin\InventoryIndexer\Indexer\Stock\Strategy\Sync\CacheFlush"/>
-    </type>
-    <type name="Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync">
-        <plugin name="invalidate_products_cache" type="Magento\InventoryCache\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync\CacheFlush"/>
     </type>
     <type name="Magento\InventoryCache\Model\FlushCacheByProductIds">
         <arguments>
@@ -24,5 +21,24 @@
     </type>
     <type name="Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus">
         <plugin name="invalidate_products_cache" type="Magento\InventoryCache\Plugin\InventoryIndexer\Queue\Reservation\UpdateSalabilityStatus\CacheFlush" />
+    </type>
+    <type name="Magento\InventoryCache\Model\CacheFlushProcessor">
+        <arguments>
+            <argument name="sortOrder" xsi:type="number">30</argument>
+        </arguments>
+    </type>
+    <type name="Magento\InventoryIndexer\Indexer\Stock\SkuListsProcessor">
+        <arguments>
+            <argument name="saleabilityChangesProcessorsPool" xsi:type="array">
+                <item name="cacheFlushProcessor" xsi:type="object">Magento\InventoryCache\Model\CacheFlushProcessor</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\InventoryIndexer\Model\CompositeProductSalabilityChangeProcessor">
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="flush_cache" sortOrder="30" xsi:type="object">Magento\InventoryCache\Model\FlushCacheOnProductSalabilityChange</item>
+            </argument>
+        </arguments>
     </type>
 </config>

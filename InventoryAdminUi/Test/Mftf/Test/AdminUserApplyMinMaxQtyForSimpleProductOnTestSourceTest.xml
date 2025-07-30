@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -17,6 +17,7 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
+            <group value="pr_exclude"/>
         </annotations>
 
         <before>
@@ -49,6 +50,9 @@
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!--Assign create product to additional stock and set product qty.-->
@@ -68,8 +72,8 @@
         <amOnPage url="{{StorefrontProductPage.url($$product.custom_attributes[url_key]$$)}}" stepKey="navigateToPDP"/>
         <fillField selector="{{StorefrontProductPageSection.qtyInput}}" userInput="1" stepKey="fillProductQtyLowerThanAllowed"/>
         <click selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="addToCartLowerThenAllowedQty"/>
-        <waitForElementVisible selector="#qty-error" time="30" stepKey="witForLowQtyAdded"/>
-        <see selector="#qty-error" userInput="The fewest you may purchase is 5." stepKey="seeLowQtyErrorMessage"/>
+        <waitForElementVisible selector="{{StorefrontProductPageSection.qtyErr}}" time="30" stepKey="witForLowQtyAdded"/>
+        <see selector="{{StorefrontProductPageSection.qtyErr}}" userInput="The fewest you may purchase is 5." stepKey="seeLowQtyErrorMessage"/>
         <!--Try to add product ot cart with greater qty than allowed.-->
         <fillField selector="{{StorefrontProductPageSection.qtyInput}}" userInput="6" stepKey="fillProductQtyGreaterThanAllowed"/>
         <click selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="addToCartGreaterThenAllowedQty"/>
