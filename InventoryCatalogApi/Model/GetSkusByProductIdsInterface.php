@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -16,6 +16,8 @@ use Magento\Framework\Exception\NoSuchEntityException;
 interface GetSkusByProductIdsInterface
 {
     /**
+     * Retrieves SKUs by product IDs, returning an array where keys are product IDs and values are SKUs.
+     *
      * @param array $productIds
      * @return array
      * @throws NoSuchEntityException

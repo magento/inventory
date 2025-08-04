@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -11,7 +11,8 @@ use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\Framework\DB\Select;
 
 /**
- * Class ManageStockCondition
+ * Provides conditions for managing stock configuration in database queries,
+ * based on global and product-specific settings.
  */
 class ManageStockCondition
 {
@@ -33,6 +34,7 @@ class ManageStockCondition
      *
      * @param Select $select
      * @return string
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function execute(Select $select): string
     {

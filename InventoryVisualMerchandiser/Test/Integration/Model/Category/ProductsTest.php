@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -141,7 +141,7 @@ class ProductsTest extends TestCase
             $this->markTestSkipped('VisualMerchandiser module is absent');
         }
 
-        $expectedOrderBy = ['is_in_stock', Select::SQL_DESC];
+        $expectedOrderBy = ['stock', Select::SQL_DESC];
 
         $storeCode = 'default';
         $this->storeManager->setCurrentStore($storeCode);

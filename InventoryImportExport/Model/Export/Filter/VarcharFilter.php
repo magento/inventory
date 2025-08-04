@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -16,6 +16,8 @@ use Magento\InventoryImportExport\Model\Export\FilterProcessorInterface;
 class VarcharFilter implements FilterProcessorInterface
 {
     /**
+     * Applies a "like" filter to the given column in the collection, matching values containing the specified input.
+     *
      * @param Collection $collection
      * @param string $columnName
      * @param array|string $value

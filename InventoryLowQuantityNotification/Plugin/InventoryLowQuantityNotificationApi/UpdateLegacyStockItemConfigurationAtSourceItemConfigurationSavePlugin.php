@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -65,8 +65,10 @@ class UpdateLegacyStockItemConfigurationAtSourceItemConfigurationSavePlugin
     }
 
     /**
+     * Updates legacy stock item configurations in the database based on source item configurations and product SKUs.
+     *
      * @param SourceItemConfigurationsSaveInterface $subject
-     * @param $result
+     * @param void $result
      * @param SourceItemConfigurationInterface[] $sourceItemConfigurations
      * @return void
      *
@@ -140,6 +142,8 @@ class UpdateLegacyStockItemConfigurationAtSourceItemConfigurationSavePlugin
     }
 
     /**
+     * Builds an SQL column list by quoting identifiers for safety and concatenating them into a comma-separated string.
+     *
      * @param array $columns
      * @return string
      */
@@ -152,6 +156,8 @@ class UpdateLegacyStockItemConfigurationAtSourceItemConfigurationSavePlugin
     }
 
     /**
+     * Generates an SQL `VALUES` clause for inserting multiple source item configurations with placeholders.
+     *
      * @param array $sourceItemConfigurations
      * @return string
      */
@@ -162,6 +168,8 @@ class UpdateLegacyStockItemConfigurationAtSourceItemConfigurationSavePlugin
     }
 
     /**
+     * Generates SQL bind data for source item configurations, including stock ID, product ID, and notification settings
+     *
      * @param array $sourceItemConfigurations
      * @return array
      */
@@ -169,6 +177,7 @@ class UpdateLegacyStockItemConfigurationAtSourceItemConfigurationSavePlugin
     {
         $bind = [];
         foreach ($sourceItemConfigurations as $sourceItemConfiguration) {
+            //phpcs:ignore Magento2.Performance.ForeachArrayMerge
             $bind = array_merge($bind, [
                 $this->defaultStockProvider->getId(),
                 $sourceItemConfiguration[StockItemInterface::PRODUCT_ID],
@@ -180,6 +189,8 @@ class UpdateLegacyStockItemConfigurationAtSourceItemConfigurationSavePlugin
     }
 
     /**
+     * Builds the SQL `ON DUPLICATE KEY UPDATE` clause for specified fields, quoting identifiers for safety.
+     *
      * @param array $fields
      * @return string
      */

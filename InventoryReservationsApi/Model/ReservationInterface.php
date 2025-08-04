@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -20,11 +20,11 @@ interface ReservationInterface
     /**
      * Constants for keys of data array. Identical to the name of the getter in snake case
      */
-    const RESERVATION_ID = 'reservation_id';
-    const STOCK_ID = 'stock_id';
-    const SKU = 'sku';
-    const QUANTITY = 'quantity';
-    const METADATA = 'metadata';
+    public const RESERVATION_ID = 'reservation_id';
+    public const STOCK_ID = 'stock_id';
+    public const SKU = 'sku';
+    public const QUANTITY = 'quantity';
+    public const METADATA = 'metadata';
 
     /**
      * Get Reservation Id

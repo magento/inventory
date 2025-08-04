@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -15,6 +15,8 @@ namespace Magento\InventoryMultiDimensionalIndexerApi\Model;
 interface IndexNameResolverInterface
 {
     /**
+     * Resolve index name by IndexName object
+     *
      * @param IndexName $indexName
      * @return string
      */

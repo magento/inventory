@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2022 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -60,7 +60,7 @@ class GetLegacyStockItems implements GetLegacyStockItemsInterface
         StockItemCriteriaInterfaceFactory $legacyStockItemCriteriaFactory,
         StockItemRepositoryInterface $legacyStockItemRepository,
         GetProductIdsBySkusInterface $getProductIdsBySkus,
-        CacheStorage $cacheStorage = null
+        ?CacheStorage $cacheStorage = null
     ) {
         $this->stockItemFactory = $stockItemFactory;
         $this->legacyStockItemCriteriaFactory = $legacyStockItemCriteriaFactory;

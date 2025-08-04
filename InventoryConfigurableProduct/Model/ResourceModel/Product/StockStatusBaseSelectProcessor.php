@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -68,8 +68,8 @@ class StockStatusBaseSelectProcessor implements BaseSelectProcessorInterface
         StockConfigurationInterface $stockConfig,
         StoreManagerInterface $storeManager,
         StockResolverInterface $stockResolver,
-        ResourceConnection $resourceConnection = null,
-        DefaultStockProviderInterface $defaultStockProvider = null
+        ?ResourceConnection $resourceConnection = null,
+        ?DefaultStockProviderInterface $defaultStockProvider = null
     ) {
         $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
         $this->stockConfig = $stockConfig;
@@ -82,6 +82,8 @@ class StockStatusBaseSelectProcessor implements BaseSelectProcessorInterface
     }
 
     /**
+     * Process stock
+     *
      * @param Select $select
      * @return Select
      * @throws NoSuchEntityException

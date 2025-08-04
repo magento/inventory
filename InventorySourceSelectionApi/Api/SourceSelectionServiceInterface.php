@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -15,6 +15,8 @@ namespace Magento\InventorySourceSelectionApi\Api;
 interface SourceSelectionServiceInterface
 {
     /**
+     * Executes the source selection service using the provided inventory request and algorithm code.
+     *
      * @param \Magento\InventorySourceSelectionApi\Api\Data\InventoryRequestInterface $inventoryRequest
      * @param string $algorithmCode
      * @return \Magento\InventorySourceSelectionApi\Api\Data\SourceSelectionResultInterface

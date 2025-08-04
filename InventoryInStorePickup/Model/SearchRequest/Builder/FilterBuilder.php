@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -11,7 +11,8 @@ use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterfaceFactory;
 
 /**
- * Filter Builder.
+ * Represents a builder for creating `FilterInterface` objects,
+ * allowing the configuration of filter values and condition types.
  */
 class FilterBuilder
 {

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2021 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -76,11 +76,11 @@ class AllowNegativeMinQtyInConfigPluginTest extends TestCase
         return [
             'min_qty_positive' => [
                 'value' => '5',
-                'expected_min_qty' => '5',
+                'expectedMinQty' => '5',
             ],
             'min_qty_negative' => [
                 'value' => '-5',
-                'expected_min_qty' => '-5',
+                'expectedMinQty' => '-5',
             ],
         ];
     }

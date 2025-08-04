@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2023 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -169,8 +169,8 @@ class NotifyOrdersAreReadyForPickupTest extends TestCase
     public static function executeMethodEmailCheck(): array
     {
         return [
-            ['with_exception' => true],
-            ['without_exception' => false]
+            ['exception' => true],
+            ['exception' => false]
         ];
     }
 }

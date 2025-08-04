@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -77,6 +77,8 @@ class GetShippedItemsPerSourceByPriority implements GetSourceDeductedOrderItemsI
     }
 
     /**
+     * Processes shipped items from an order, groups them by source and SKU, and sorts them by source priority.
+     *
      * @param OrderInterface $order
      * @param array $returnToStockItems
      * @return SourceDeductedOrderItemsResult[]
@@ -107,6 +109,8 @@ class GetShippedItemsPerSourceByPriority implements GetSourceDeductedOrderItemsI
     }
 
     /**
+     * Creates results for deducted items grouped by source, including SKU and quantity for each source.
+     *
      * @param array $shippedItems
      * @return SourceDeductedOrderItemsResult[]
      */

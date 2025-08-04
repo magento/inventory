@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -11,7 +11,8 @@ use Magento\Framework\Model\AbstractModel;
 use Magento\InventoryExportStockApi\Api\Data\ProductStockIndexDataInterface;
 
 /**
- * Class ProductStockIndexData
+ * Maps product stock index data to its corresponding properties, providing methods to get and set SKU, quantity,
+ * and salable status.
  */
 class ProductStockIndexData extends AbstractModel implements ProductStockIndexDataInterface
 {
@@ -33,6 +34,7 @@ class ProductStockIndexData extends AbstractModel implements ProductStockIndexDa
 
     /**
      * @inheritDoc
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getIsSalable(): bool
     {

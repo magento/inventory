@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 namespace Magento\InventoryCatalog\Model\ResourceModel;
 
@@ -13,13 +13,13 @@ use Magento\InventoryCatalogApi\Api\Data\PartialInventoryTransferItemInterface;
 
 class TransferInventoryPartially
 {
-    /** @var ResourceConnection  */
+    /** @var ResourceConnection */
     private $resourceConnection;
 
-    /** @var DefaultSourceProviderInterface  */
+    /** @var DefaultSourceProviderInterface */
     private $defaultSourceProvider;
 
-    /** @var SetDataToLegacyStockItem  */
+    /** @var SetDataToLegacyStockItem */
     private $setDataToLegacyStockItemCommand;
 
     /**
@@ -28,9 +28,9 @@ class TransferInventoryPartially
      * @param SetDataToLegacyStockItem $setDataToLegacyCatalogInventoryCommand
      */
     public function __construct(
-        ResourceConnection $resourceConnection,
+        ResourceConnection             $resourceConnection,
         DefaultSourceProviderInterface $defaultSourceProvider,
-        SetDataToLegacyStockItem $setDataToLegacyCatalogInventoryCommand
+        SetDataToLegacyStockItem       $setDataToLegacyCatalogInventoryCommand
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->defaultSourceProvider = $defaultSourceProvider;
@@ -38,12 +38,17 @@ class TransferInventoryPartially
     }
 
     /**
+     * Transfers inventory between sources, updating quantities and legacy stock data for the given SKU and sources.
+     *
      * @param PartialInventoryTransferItemInterface $transfer
      * @param string $originSourceCode
      * @param string $destinationSourceCode
      */
-    public function execute(PartialInventoryTransferItemInterface $transfer, string $originSourceCode, string $destinationSourceCode): void
-    {
+    public function execute(
+        PartialInventoryTransferItemInterface $transfer,
+        string $originSourceCode,
+        string $destinationSourceCode
+    ): void {
         $tableName = $this->resourceConnection->getTableName(SourceItem::TABLE_NAME_SOURCE_ITEM);
         $connection = $this->resourceConnection->getConnection();
         $connection->beginTransaction();
@@ -51,11 +56,18 @@ class TransferInventoryPartially
         $originSourceItemData = $this->getSourceItemData($transfer->getSku(), $originSourceCode);
         $destSourceItemData = $this->getSourceItemData($transfer->getSku(), $destinationSourceCode);
 
-        $updatedQtyAtOrigin = $originSourceItemData === null ? 0.0 : (float) $originSourceItemData[SourceItemInterface::QUANTITY] - $transfer->getQty();
-        $updatedQtyAtDest = $destSourceItemData === null ? 0.0 : (float) $destSourceItemData[SourceItemInterface::QUANTITY] + $transfer->getQty();
+        $updatedQtyAtOrigin =
+            $originSourceItemData === null ? 0.0 :
+                (float)$originSourceItemData[SourceItemInterface::QUANTITY] - $transfer->getQty();
+        $updatedQtyAtDest =
+            $destSourceItemData === null ? 0.0 :
+                (float)$destSourceItemData[SourceItemInterface::QUANTITY] + $transfer->getQty();
 
         $originUpdate = [SourceItemInterface::QUANTITY => $updatedQtyAtOrigin];
-        $destUpdate = [SourceItemInterface::QUANTITY => $updatedQtyAtDest, SourceItemInterface::STATUS => SourceItemInterface::STATUS_IN_STOCK];
+        $destUpdate = [
+            SourceItemInterface::QUANTITY => $updatedQtyAtDest,
+            SourceItemInterface::STATUS => SourceItemInterface::STATUS_IN_STOCK
+        ];
 
         $connection->update($tableName, $originUpdate, [
             SourceItemInterface::SOURCE_CODE . '=?' => $originSourceCode,
@@ -67,14 +79,29 @@ class TransferInventoryPartially
         ]);
 
         if ($originSourceCode === $this->defaultSourceProvider->getCode()) {
-            $this->setDataToLegacyStockItemCommand->execute($transfer->getSku(), $updatedQtyAtOrigin, $originSourceItemData[SourceItemInterface::STATUS]);
+            $this->setDataToLegacyStockItemCommand->execute(
+                $transfer->getSku(),
+                $updatedQtyAtOrigin,
+                $originSourceItemData[SourceItemInterface::STATUS]
+            );
         } elseif ($destinationSourceCode === $this->defaultSourceProvider->getCode()) {
-            $this->setDataToLegacyStockItemCommand->execute($transfer->getSku(), $updatedQtyAtDest, SourceItemInterface::STATUS_IN_STOCK);
+            $this->setDataToLegacyStockItemCommand->execute(
+                $transfer->getSku(),
+                $updatedQtyAtDest,
+                SourceItemInterface::STATUS_IN_STOCK
+            );
         }
 
         $connection->commit();
     }
 
+    /**
+     * Fetches source item data by SKU and source code from the database, returning the result or null if not found.
+     *
+     * @param string $sku
+     * @param string $source
+     * @return array|null
+     */
     private function getSourceItemData(string $sku, string $source): ?array
     {
         $connection = $this->resourceConnection->getConnection();

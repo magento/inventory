@@ -1,6 +1,6 @@
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 
 define([
@@ -47,6 +47,7 @@ define([
             isVisible: false,
             isAvailable: false,
             isStorePickupSelected: false,
+            isStoreLocationAutoSelected: false,
             rate: {
                 'carrier_code': 'instore',
                 'method_code': 'pickup'
@@ -72,6 +73,34 @@ define([
             this.isStorePickupSelected.subscribe(function () {
                 this.preselectLocation();
             }, this);
+
+            pickupLocationsService.selectedLocation.subscribe(() => {
+                this.isStoreLocationAutoSelected(false);
+            });
+
+            // reset selected location when shipping address is changed
+            quote.shippingAddress.subscribe((shippingAddress) => {
+                if (this.isStoreLocationAutoSelected()
+                    && !this.isStorePickupSelected()
+                    && !this.isStorePickupAddress(shippingAddress)
+                ) {
+                    pickupLocationsService.selectedLocation(null);
+                }
+            });
+
+            // reset selected location when shipping address form is changed
+            registry.async('checkoutProvider')((checkoutProvider) => {
+                checkoutProvider.on('shippingAddress', (shippingAddressData, changes) => {
+                    if (this.isStoreLocationAutoSelected()
+                        && !this.isStorePickupSelected()
+                        && changes
+                        && changes.length > 0
+                    ) {
+                        pickupLocationsService.selectedLocation(null);
+                    }
+                });
+            });
+
             this.preselectLocation();
 
             this.syncWithShipping();
@@ -83,7 +112,7 @@ define([
          * @return {exports}
          */
         initObservable: function () {
-            this._super().observe(['isVisible']);
+            this._super().observe(['isVisible', 'isStoreLocationAutoSelected']);
 
             this.isStorePickupSelected = ko.pureComputed(function () {
                 return _.isMatch(quote.shippingMethod(), this.rate);
@@ -120,18 +149,20 @@ define([
          */
         selectShipping: function () {
             var nonPickupShippingMethod = _.find(
-                this.rates(),
-                function (rate) {
-                    return (
-                        rate['carrier_code'] !== this.rate['carrier_code'] &&
+                    this.rates(),
+                    function (rate) {
+                        return (
+                            rate['carrier_code'] !== this.rate['carrier_code'] &&
                         rate['method_code'] !== this.rate['method_code']
-                    );
-                },
-                this
-            ),
+                        );
+                    },
+                    this
+                ),
                 nonPickupShippingAddress;
 
-            checkoutData.setSelectedShippingAddress(this.lastSelectedNonPickUpShippingAddress);
+            if (this.lastSelectedNonPickUpShippingAddress) {
+                checkoutData.setSelectedShippingAddress(this.lastSelectedNonPickUpShippingAddress);
+            }
             this.selectShippingMethod(nonPickupShippingMethod);
 
             if (this.isStorePickupAddress(quote.shippingAddress())) {
@@ -157,7 +188,6 @@ define([
             );
 
             this.lastSelectedNonPickUpShippingAddress = checkoutData.getSelectedShippingAddress();
-            checkoutData.setSelectedShippingAddress(null);
             this.preselectLocation();
             this.selectShippingMethod(pickupShippingMethod);
         },
@@ -202,6 +232,7 @@ define([
                 selectedSource,
                 selectedSourceCode,
                 nearestLocation,
+                self = this,
                 productsInfo = [],
                 items = quote.getItems();
 
@@ -234,6 +265,11 @@ define([
             if (!selectedSourceCode) {
                 selectedPickupAddress = pickupLocationsService.getSelectedPickupAddress();
                 selectedSourceCode = this.getPickupLocationCodeFromAddress(selectedPickupAddress);
+            }
+
+            if (!selectedSourceCode) {
+                // Get the source code from the checkout config
+                selectedSourceCode = window.checkoutConfig.selectedPickupLocationCode;
             }
 
             if (selectedSourceCode) {
@@ -269,8 +305,10 @@ define([
 
                         if (nearestLocation) {
                             pickupLocationsService.selectForShipping(
-                                nearestLocation
+                                nearestLocation,
+                                false
                             );
+                            self.isStoreLocationAutoSelected(true);
                         }
                     });
             }

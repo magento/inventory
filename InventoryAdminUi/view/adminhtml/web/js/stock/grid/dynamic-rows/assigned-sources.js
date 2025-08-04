@@ -1,13 +1,13 @@
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2021 Adobe
+ * All Rights Reserved.
  */
 
 define([
     'underscore',
     'Magento_Ui/js/dynamic-rows/dynamic-rows-grid'
 ], function (_, dynamicRowsGrid) {
-    'use strict';
+    'use strict'; //eslint-disable-line
 
     return dynamicRowsGrid.extend({
         defaults: {

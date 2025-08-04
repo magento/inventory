@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -52,7 +52,7 @@ class Stock extends \Magento\Catalog\Block\Adminhtml\Product\Edit\Tab\Alerts\Sto
     protected function _prepareColumns()
     {
         parent::_prepareColumns();
-
+        // phpstan:ignore return.missing
         $this->addColumn('website_id', ['header' => __('Website'), 'index' => 'website_id']);
         $this->addColumn('stock_name', ['header' => __('Stock'), 'index' => 'stock_name']);
     }
@@ -63,6 +63,7 @@ class Stock extends \Magento\Catalog\Block\Adminhtml\Product\Edit\Tab\Alerts\Sto
     protected function _afterLoadCollection()
     {
         parent::_afterLoadCollection();
+        // phpstan:ignore return.missing
 
         foreach ($this->getCollection()->getItems() as $item) {
             /** @var WebsiteInterface $website */

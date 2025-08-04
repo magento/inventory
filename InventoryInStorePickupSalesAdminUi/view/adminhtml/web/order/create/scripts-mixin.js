@@ -1,6 +1,6 @@
-/*
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+/**
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 
 define(
@@ -9,7 +9,7 @@ define(
         'prototype'
     ],
     function (jQuery) {
-        'use strict';
+        'use strict'; //eslint-disable-line
 
         return function () {
             var STORE_PICKUP_METHOD = 'instore_pickup',
@@ -74,6 +74,7 @@ define(
             window.AdminOrder.prototype.setShippingMethod = function (method) {
                 var data = {},
                     areas = [
+                        'items',
                         'shipping_method',
                         'totals',
                         'billing_method',

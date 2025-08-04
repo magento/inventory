@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -22,17 +22,17 @@ interface SourceItemInterface extends ExtensibleDataInterface
     /**#@+
      * Constants for keys of data array. Identical to the name of the getter in snake case
      */
-    const SKU = 'sku';
-    const SOURCE_CODE = 'source_code';
-    const QUANTITY = 'quantity';
-    const STATUS = 'status';
+    public const SKU = 'sku';
+    public const SOURCE_CODE = 'source_code';
+    public const QUANTITY = 'quantity';
+    public const STATUS = 'status';
     /**#@-*/
 
     /**#@+
      * Source items status values
      */
-    const STATUS_OUT_OF_STOCK = 0;
-    const STATUS_IN_STOCK = 1;
+    public const STATUS_OUT_OF_STOCK = 0;
+    public const STATUS_IN_STOCK = 1;
     /**#@-*/
 
     /**
