@@ -91,7 +91,11 @@ class NotifyOrdersAreReadyForPickupEmailSender
             $orders = $this->orderRepository->getList($searchCriteria);
             foreach ($orders->getItems() as $order) {
                 if ($this->emailSender->send($order, true)) {
-                    $this->searchCriteriaBuilder->addFilter('entity_name', 'order');
+                    $this->searchCriteriaBuilder->addFilter(
+                        'entity_name',
+                        ['order', 'shipment'],
+                        'in'
+                    );
                     $this->searchCriteriaBuilder->addFilter('is_customer_notified', 0);
                     $this->searchCriteriaBuilder->addFilter('comment', 0);
                     $this->searchCriteriaBuilder->addFilter('parent_id', $order->getEntityId());

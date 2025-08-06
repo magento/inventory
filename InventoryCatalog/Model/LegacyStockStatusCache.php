@@ -65,6 +65,15 @@ class LegacyStockStatusCache
     public function execute(array $productIds): void
     {
         $scopeId = $this->stockConfiguration->getDefaultScopeId();
+        // Filter out product IDs that are already cached
+        $productIdsToLoad = array_filter($productIds, function ($productId) use ($scopeId) {
+            return $this->legacyStockStatusStorage->get((int)$productId, $scopeId) !== null;
+        });
+
+        // If all products are already cached, skip query
+        if (empty($productIdsToLoad)) {
+            return;
+        }
         /** @var StockStatusCriteriaInterface $criteria */
         $criteria = $this->stockStatusCriteriaFactory->create();
         $criteria->setProductsFilter($productIds);

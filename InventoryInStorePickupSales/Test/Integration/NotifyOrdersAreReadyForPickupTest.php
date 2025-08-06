@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickupSales\Test\Integration;
 
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\InventoryInStorePickupSalesApi\Api\NotifyOrdersAreReadyForPickupInterface;
@@ -23,6 +24,7 @@ use Magento\TestFramework\Mail\Template\TransportBuilderMock;
 
 /**
  * @inheritdoc
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class NotifyOrdersAreReadyForPickupTest extends \PHPUnit\Framework\TestCase
 {
@@ -50,6 +52,11 @@ class NotifyOrdersAreReadyForPickupTest extends \PHPUnit\Framework\TestCase
     /** @var TransportBuilderMock */
     private $transportBuilder;
 
+    /**
+     * @var ScopeConfigInterface
+     */
+    private $config;
+
     protected function setUp(): void
     {
         $this->objectManager = Bootstrap::getObjectManager();
@@ -61,6 +68,7 @@ class NotifyOrdersAreReadyForPickupTest extends \PHPUnit\Framework\TestCase
         $this->orderExtensionFactory = $this->objectManager->get(OrderExtensionFactory::class);
         $this->request = $this->objectManager->get(RequestInterface::class);
         $this->transportBuilder = $this->objectManager->get(TransportBuilderMock::class);
+        $this->config = $this->objectManager->get(ScopeConfigInterface::class);
     }
 
     /**
@@ -106,6 +114,54 @@ class NotifyOrdersAreReadyForPickupTest extends \PHPUnit\Framework\TestCase
                 $message->getSubject()
             );
         }
+    }
+
+    /**
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_items.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_addresses.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_pickup_location_attributes.php
+     * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/create_in_store_pickup_quote_on_eu_website_guest.php
+     * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/place_order.php
+     *
+     * @magentoConfigFixture store_for_eu_website_store carriers/instore/active 1
+     *
+     * @magentoDbIsolation disabled
+     * @magentoAppIsolation enabled
+     * @dataProvider dataProvider
+     *
+     * @param string $sourceId
+     * @param string|null $errorMessage
+     * @throws
+     */
+    public function testExecuteForNotReadyForPickupAsyncSending(string $sourceId, ?string $errorMessage)
+    {
+        // Set up configuration values
+        $this->config->setValue('sales_email/general/async_sending', true);
+        $createdOrder = $this->getCreatedOrder();
+        $this->setPickupLocation($createdOrder, $sourceId);
+
+        // @see \Magento\InventoryShipping\Plugin\Sales\Shipment\AssignSourceCodeToShipmentPlugin::afterCreate
+        $this->request->setParams(['sourceCode' => $sourceId]);
+
+        $orderId = (int)$createdOrder->getEntityId();
+        $result = $this->notifyOrderIsReadyForPickup->execute([$orderId]);
+
+        $this->assertFalse($result->isSuccessful());
+        $this->assertEquals(current($result->getErrors())['message'], $errorMessage);
+        if ($message = $this->transportBuilder->getSentMessage()) {
+            $this->assertNotEquals(
+                "Your store_view_eu_website order is ready for pickup",
+                $message->getSubject()
+            );
+        }
+        $this->config->setValue('sales_email/general/async_sending', false);
     }
 
     /**
