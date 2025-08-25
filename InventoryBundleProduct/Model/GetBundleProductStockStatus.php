@@ -7,16 +7,14 @@ declare(strict_types=1);
 
 namespace Magento\InventoryBundleProduct\Model;
 
+use Magento\InventoryBundleProduct\Model\GetProductSelection;
 use Magento\Bundle\Api\Data\OptionInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product;
-use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Exception\SkuIsNotAssignedToStockException;
-use Magento\InventorySalesApi\Api\AreProductsSalableForRequestedQtyInterface;
-use Magento\InventorySalesApi\Api\Data\IsProductSalableForRequestedQtyRequestInterfaceFactory;
-use Magento\InventorySalesApi\Api\Data\IsProductSalableForRequestedQtyResultInterface;
+use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
 
 /**
  * Get bundle product stock status service.
@@ -24,41 +22,22 @@ use Magento\InventorySalesApi\Api\Data\IsProductSalableForRequestedQtyResultInte
 class GetBundleProductStockStatus
 {
     /**
-     * @var GetProductSelection
+     * Cache for stock, for scenario where same product is in multiple options.
+     *
+     * @var array
      */
-    private $getProductSelection;
-
-    /**
-     * @var AreProductsSalableForRequestedQtyInterface
-     */
-    private $areProductsSalableForRequestedQty;
-
-    /**
-     * @var IsProductSalableForRequestedQtyRequestInterfaceFactory
-     */
-    private $isProductSalableForRequestedQtyRequestFactory;
-
-    /**
-     * @var GetStockItemConfigurationInterface
-     */
-    private $getStockItemConfiguration;
+    protected array $stockCache = [];
 
     /**
      * @param GetProductSelection $getProductSelection
-     * @param AreProductsSalableForRequestedQtyInterface $areProductsSalableForRequestedQty
-     * @param IsProductSalableForRequestedQtyRequestInterfaceFactory $isProductSalableForRequestedQtyRequestFactory
+     * @param IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQty
      * @param GetStockItemConfigurationInterface $getStockItemConfiguration
      */
     public function __construct(
-        GetProductSelection $getProductSelection,
-        AreProductsSalableForRequestedQtyInterface $areProductsSalableForRequestedQty,
-        IsProductSalableForRequestedQtyRequestInterfaceFactory $isProductSalableForRequestedQtyRequestFactory,
-        GetStockItemConfigurationInterface $getStockItemConfiguration
+        protected GetProductSelection $getProductSelection,
+        protected IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQty,
+        protected GetStockItemConfigurationInterface $getStockItemConfiguration
     ) {
-        $this->getProductSelection = $getProductSelection;
-        $this->areProductsSalableForRequestedQty = $areProductsSalableForRequestedQty;
-        $this->isProductSalableForRequestedQtyRequestFactory = $isProductSalableForRequestedQtyRequestFactory;
-        $this->getStockItemConfiguration = $getStockItemConfiguration;
     }
 
     /**
@@ -79,16 +58,53 @@ class GetBundleProductStockStatus
         if (!$stockItemConfiguration->getExtensionAttributes()->getIsInStock()) {
             return false;
         }
+
+        $requiredOptions = [];
+        $optionalOptions = [];
+        foreach ($bundleOptions as $option) {
+            if ($option->getRequired()) {
+                $requiredOptions[] = $option;
+            } else {
+                $optionalOptions[] = $option;
+            }
+        }
+
+        if (!empty($requiredOptions)) {
+            return $this->checkRequiredOptions($product, $requiredOptions, $stockId);
+        } else {
+            return $this->checkOptionalOptions($product, $optionalOptions, $stockId);
+        }
+    }
+
+    /**
+     * Check stock for a bundle that has required options.
+     *
+     * In this scenario, we need to ensure that all required options have at least one in-stock selection.
+     * If any required option has no in-stock selections, the bundle is not salable.
+     * We don't need to consider optional components in this case.
+     *
+     * @param ProductInterface $product
+     * @param OptionInterface[] $bundleOptions
+     * @param int $stockId
+     * @return bool
+     * @throws LocalizedException
+     * @throws SkuIsNotAssignedToStockException
+     */
+    private function checkRequiredOptions(ProductInterface $product, array $bundleOptions, int $stockId): bool
+    {
         $isSalable = false;
         foreach ($bundleOptions as $option) {
             $hasSalable = false;
-            $results = $this->getAreSalableSelections($product, $option, $stockId);
-            foreach ($results as $result) {
-                if ($result->isSalable()) {
+
+            $bundleSelections = $this->getProductSelection->execute($product, $option);
+            foreach ($bundleSelections->getItems() as $result) {
+                $qty = $this->getRequestedQty($result, $stockId);
+                if ($this->isSaleableForSkuAndQuantity((string)$result->getSku(), $stockId, $qty)) {
                     $hasSalable = true;
                     break;
                 }
             }
+
             if ($hasSalable) {
                 $isSalable = true;
             }
@@ -100,6 +116,62 @@ class GetBundleProductStockStatus
         }
 
         return $isSalable;
+    }
+
+    /**
+     * Check the stock for a bundle with no required options.
+     *
+     * In this scenario, we only need to ensure that at least one selection from any optional option is in stock.
+     * If any optional option has at least one in-stock selection, the bundle is salable.
+     *
+     * @param ProductInterface $product
+     * @param OptionInterface[] $bundleOptions
+     * @param int $stockId
+     * @return bool
+     * @throws LocalizedException
+     * @throws SkuIsNotAssignedToStockException
+     */
+    private function checkOptionalOptions(ProductInterface $product, array $bundleOptions, int $stockId): bool
+    {
+        $isSalable = false;
+        foreach ($bundleOptions as $option) {
+            $bundleSelections = $this->getProductSelection->execute($product, $option);
+            foreach ($bundleSelections->getItems() as $result) {
+                $qty = $this->getRequestedQty($result, $stockId);
+                if ($this->isSaleableForSkuAndQuantity((string)$result->getSku(), $stockId, $qty)) {
+                    $isSalable = true;
+                    break 2;
+                }
+            }
+        }
+
+        return $isSalable;
+    }
+
+    /**
+     * Check if a product is saleable for a given SKU and quantity.
+     *
+     * @param string $sku
+     * @param int $stockId
+     * @param float $qty
+     * @return bool
+     * @throws LocalizedException
+     * @throws SkuIsNotAssignedToStockException
+     */
+    private function isSaleableForSkuAndQuantity($sku, int $stockId, float $qty): bool
+    {
+        $cacheKey = implode('~', [$sku, $stockId, $qty]);
+        if (isset($this->stockCache[$cacheKey])) {
+            return $this->stockCache[$cacheKey];
+        }
+
+        $result = $this->isProductSalableForRequestedQty->execute(
+            $sku,
+            $stockId,
+            $qty
+        );
+        $this->stockCache[$cacheKey] = $result->isSalable();
+        return $result->isSalable();
     }
 
     /**
@@ -118,34 +190,6 @@ class GetBundleProductStockStatus
             return $stockItemConfiguration->getMinSaleQty();
         }
 
-        return (float)$product->getSelectionQty();
-    }
-
-    /**
-     * Get are bundle product selections salable.
-     *
-     * @param ProductInterface $product
-     * @param OptionInterface $option
-     * @param int $stockId
-     * @return IsProductSalableForRequestedQtyResultInterface[]
-     * @throws LocalizedException
-     * @throws SkuIsNotAssignedToStockException
-     */
-    private function getAreSalableSelections(ProductInterface $product, OptionInterface $option, int $stockId): array
-    {
-        $bundleSelections = $this->getProductSelection->execute($product, $option);
-        $skuRequests = [];
-        foreach ($bundleSelections->getItems() as $selection) {
-            if ((int)$selection->getStatus() === Status::STATUS_ENABLED) {
-                $skuRequests[] = $this->isProductSalableForRequestedQtyRequestFactory->create(
-                    [
-                        'sku' => (string)$selection->getSku(),
-                        'qty' => $this->getRequestedQty($selection, $stockId),
-                    ]
-                );
-            }
-        }
-
-        return $this->areProductsSalableForRequestedQty->execute($skuRequests, $stockId);
+        return (float) $product->getSelectionQty();
     }
 }
