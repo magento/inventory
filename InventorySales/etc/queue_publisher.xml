@@ -6,6 +6,6 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework-message-queue:etc/publisher.xsd">
-    <publisher topic="inventory.reservations.update"/>
-    <publisher topic="inventory.reservations.cleanup"/>
+    <publisher topic="inventory.reservations.update" queue="inventory.reservations.update"/>
+    <publisher topic="inventory.reservations.cleanup" queue="inventory.reservations.cleanup"/>
 </config>

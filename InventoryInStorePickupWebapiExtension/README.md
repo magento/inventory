@@ -11,7 +11,7 @@ The module is abandoned and will be removed as soon as fix for the described iss
 Please check links for more details:
 
 * [Original issue in Core Repository](https://github.com/magento/magento2/issues/24116)  
-* [Issue in MSI Repository](https://github.com/magento-engcom/msi/issues/2507)
+* [Issue in MSI Repository]((https://github.com/magento/inventory/issues/2507))
 
 ## Installation details
 

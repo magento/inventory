@@ -6,7 +6,7 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework-message-queue:etc/publisher.xsd">
-    <publisher topic="inventory.indexer.sourceItem"/>
-    <publisher topic="inventory.indexer.stock"/>
-    <publisher topic="inventory.reservations.updateSalabilityStatus"/>
+    <publisher topic="inventory.indexer.sourceItem" queue="inventory.indexer.sourceItem"/>
+    <publisher topic="inventory.indexer.stock" queue="inventory.indexer.stock"/>
+    <publisher topic="inventory.reservations.updateSalabilityStatus" queue="inventory.reservations.updateSalabilityStatus"/>
 </config>
