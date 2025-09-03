@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
@@ -14,10 +14,17 @@
             <argument name="sortOrder" xsi:type="number">20</argument>
         </arguments>
     </type>
-    <type name="Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync">
+    <type name="Magento\InventoryIndexer\Indexer\Stock\SkuListsProcessor">
         <arguments>
             <argument name="saleabilityChangesProcessorsPool" xsi:type="array">
                 <item name="fullTextIndexUpdateProcessor" xsi:type="object">Magento\InventoryCatalogSearch\Model\FullTextIndexUpdateProcessor</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\InventoryIndexer\Model\CompositeProductSalabilityChangeProcessor">
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="update_fulltext_index" sortOrder="20" xsi:type="object">Magento\InventoryCatalogSearch\Model\UpdateFulltextIndexOnProductSalabilityChange</item>
             </argument>
         </arguments>
     </type>

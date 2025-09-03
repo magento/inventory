@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2021 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -10,6 +10,11 @@ namespace Magento\InventoryBundleProduct\Model;
 use Magento\Bundle\Model\ResourceModel\Selection\Collection;
 use Magento\Bundle\Model\ResourceModel\Selection\CollectionFactory;
 use Magento\Bundle\Model\ResourceModel\Selection\Collection\FilterApplier;
+use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\EntityManager\MetadataPool;
+use Zend_Db_Expr;
+use Zend_Db_Select_Exception;
 
 /**
  * Retrieve bundle products selections SKUs.
@@ -34,18 +39,27 @@ class GetChidrenSkusByParentIds
     private $batchSize;
 
     /**
+     * @var MetadataPool
+     */
+    private $metadataPool;
+
+    /**
      * @param CollectionFactory $selectionCollectionFactory
      * @param FilterApplier $selectionCollectionFilterApplier
      * @param int $batchSize
+     * @param MetadataPool|null $metadataPool
      */
     public function __construct(
         CollectionFactory $selectionCollectionFactory,
         FilterApplier $selectionCollectionFilterApplier,
-        int $batchSize = self::DEFAULT_BATCH_SIZE
+        int $batchSize = self::DEFAULT_BATCH_SIZE,
+        ?MetadataPool $metadataPool = null
     ) {
         $this->selectionCollectionFactory = $selectionCollectionFactory;
         $this->selectionCollectionFilterApplier = $selectionCollectionFilterApplier;
         $this->batchSize = $batchSize;
+        $this->metadataPool = $metadataPool ?:
+            ObjectManager::getInstance()->get(MetadataPool::class);
     }
 
     /**
@@ -53,6 +67,7 @@ class GetChidrenSkusByParentIds
      *
      * @param array $parentIds
      * @return array
+     * @throws Zend_Db_Select_Exception
      */
     public function execute(array $parentIds): array
     {
@@ -60,6 +75,13 @@ class GetChidrenSkusByParentIds
         $collection = $this->selectionCollectionFactory->create();
         $collection->addFilterByRequiredOptions();
         $collection->setFlag('product_children', true);
+        $linkField = $this->metadataPool->getMetadata(ProductInterface::class)
+            ->getLinkField();
+        $collection->getSelect()->group('e.' . $linkField);
+        $collection->getSelect()->columns([
+            'parent_product_id' =>
+                new Zend_Db_Expr('GROUP_CONCAT(selection.parent_product_id)')
+        ]);
         $this->selectionCollectionFilterApplier->apply(
             $collection,
             'parent_product_id',

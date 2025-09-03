@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -60,8 +60,8 @@ class IsSalableOptionSelectBuilder
         StoreManagerInterface $storeManager,
         StockResolverInterface $stockResolver,
         StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
-        DefaultStockProviderInterface $defaultStockProvider = null,
-        StockConfigurationInterface $stockConfig = null
+        ?DefaultStockProviderInterface $defaultStockProvider = null,
+        ?StockConfigurationInterface $stockConfig = null
     ) {
         $this->storeManager = $storeManager;
         $this->stockResolver = $stockResolver;

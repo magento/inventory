@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -9,6 +9,8 @@ namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Model\Source;
 
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\CatalogInventory\Model\Source\Stock;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalog\Model\ResourceModel\AddSortByStockQtyToCollection;
 use Magento\InventoryCatalog\Model\ResourceModel\StockStatusFilter;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
@@ -46,7 +48,6 @@ class StockPlugin
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
      * @param DefaultStockProviderInterface $defaultStockProvider
-     * @param StockStatusFilter $stockStatusFilter
      * @param AddSortByStockQtyToCollection $addSortByStockQtyToCollection
      */
     public function __construct(

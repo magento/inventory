@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
@@ -81,9 +81,14 @@
         <!--Place order.-->
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
         <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="clickNextButton"/>
+        <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectCheckMoneyOrder"/>
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
         <!--Run queue consumer.-->
-        <magentoCLI command="queue:consumers:start" arguments="inventory.reservations.updateSalabilityStatus" stepKey="startSalabilityUpdate" timeout="30"/>
+        <magentoCLI command="queue:consumers:start" arguments="inventory.reservations.updateSalabilityStatus" stepKey="startSalabilityUpdate" timeout="60"/>
+        <wait time="30" stepKey="waitForSalabilityUpdate"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <!--Navigate to group product PDP.-->
         <actionGroup ref="StorefrontOpenProductEntityPageActionGroup" stepKey="navigateToGroupedProductPDPAfterOrderPlacement">
             <argument name="product" value="$groupedProduct$"/>

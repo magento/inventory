@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -75,9 +75,9 @@ class QuantityPerSource extends AbstractModifier
         $isSourceItemManagementAllowedForProductType,
         SourceRepositoryInterface $sourceRepository,
         GetSourceItemsBySkuInterface $getSourceItemsBySku,
-        SearchCriteriaBuilder $searchCriteriaBuilder = null,
-        SourceItemRepositoryInterface $sourceItemRepository = null,
-        GetAllowedProductTypesForSourceItemManagementInterface $getAllowedProductTypesForSourceItemManagement = null
+        ?SearchCriteriaBuilder $searchCriteriaBuilder = null,
+        ?SourceItemRepositoryInterface $sourceItemRepository = null,
+        ?GetAllowedProductTypesForSourceItemManagementInterface $getAllowedProductTypesForSourceItemManagement = null
     ) {
         $objectManager = ObjectManager::getInstance();
         $this->isSingleSourceMode = $isSingleSourceMode;

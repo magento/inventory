@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -17,8 +17,8 @@ class SourceItem extends AbstractDb
     /**#@+
      * Constants related to specific db layer
      */
-    const TABLE_NAME_SOURCE_ITEM = 'inventory_source_item';
-    const ID_FIELD_NAME = 'source_item_id';
+    public const TABLE_NAME_SOURCE_ITEM = 'inventory_source_item';
+    public const ID_FIELD_NAME = 'source_item_id';
     /**#@-*/
 
     /**

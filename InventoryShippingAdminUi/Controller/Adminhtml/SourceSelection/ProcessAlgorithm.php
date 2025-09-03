@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -29,7 +29,7 @@ class ProcessAlgorithm extends Action implements HttpPostActionInterface
     /**
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Magento_Sales::ship';
+    public const ADMIN_RESOURCE = 'Magento_Sales::ship';
 
     /**
      * @var SourceSelectionServiceInterface
@@ -80,7 +80,7 @@ class ProcessAlgorithm extends Action implements HttpPostActionInterface
         SourceSelectionServiceInterface $sourceSelectionService,
         GetDefaultSourceSelectionAlgorithmCodeInterface $getDefaultSourceSelectionAlgorithmCode,
         SourceRepositoryInterface $sourceRepository,
-        GetInventoryRequestFromOrder $getInventoryRequestFromOrder = null
+        ?GetInventoryRequestFromOrder $getInventoryRequestFromOrder = null
     ) {
         parent::__construct($context);
         $this->sourceSelectionService = $sourceSelectionService;
@@ -123,7 +123,7 @@ class ProcessAlgorithm extends Action implements HttpPostActionInterface
         $request = $this->getRequest();
         $postRequest = $request->getPost()->toArray();
         $orderId = (int) $postRequest['orderId'];
-
+        $result = []; // Initialize $result as an empty array
         if (!empty($postRequest['requestData'])) {
             $requestData = $postRequest['requestData'];
             $defaultCode = $this->getDefaultSourceSelectionAlgorithmCode->execute();

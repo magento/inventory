@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -23,6 +23,8 @@ class SkuListInStock
     private $skuList;
 
     /**
+     * Returns the stock ID associated with the current instance.
+     *
      * @return int
      */
     public function getStockId(): int
@@ -31,6 +33,8 @@ class SkuListInStock
     }
 
     /**
+     * Sets the stock ID for the current instance.
+     *
      * @param int $stockId
      * @return void
      */
@@ -40,6 +44,8 @@ class SkuListInStock
     }
 
     /**
+     * Retrieves the list of SKUs associated with the current instance.
+     *
      * @return array
      */
     public function getSkuList(): array
@@ -48,6 +54,8 @@ class SkuListInStock
     }
 
     /**
+     * Assigns a list of SKUs to the current instance.
+     *
      * @param array $skuList
      * @return void
      */

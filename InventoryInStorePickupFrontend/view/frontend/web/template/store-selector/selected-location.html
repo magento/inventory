@@ -1,7 +1,7 @@
 <!--
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 -->
 <if args="!isLoading() && !selectedLocation()">
@@ -14,10 +14,10 @@
         <text args="selectedLocation().name"></text>
     </p>
     <p class="location-address">
-        <text args="selectedLocation().street"></text><br/>
+        <text args="selectedLocation().street"></text><br>
         <text args="selectedLocation().city"></text>, <span text="selectedLocation().region"></span>
-        <text args="selectedLocation().postcode"></text><br/>
-        <text args="selectedLocation().country"></text><br/>
+        <text args="selectedLocation().postcode"></text><br>
+        <text args="selectedLocation().country"></text><br>
         <a if="selectedLocation().telephone"
            attr="'href': 'tel:' + selectedLocation().telephone"
            text="selectedLocation().telephone"

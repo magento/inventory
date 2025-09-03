@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -17,6 +17,9 @@
             <severity value="CRITICAL"/>
             <group value="msi_b2b"/>
             <group value="multi_mode"/>
+            <skip>
+                <issueId value="B2B-4630">Unable to create requisition list for product assigned to new website and source</issueId>
+            </skip>
         </annotations>
         <before>
             <remove keyForRemoval="createSimpleUSCustomer"/>

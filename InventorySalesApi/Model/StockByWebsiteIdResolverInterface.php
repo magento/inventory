@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -17,6 +17,8 @@ use Magento\InventoryApi\Api\Data\StockInterface;
 interface StockByWebsiteIdResolverInterface
 {
     /**
+     * Resolves and retrieves the stock information for a given website ID, returning a `StockInterface` object.
+     *
      * @param int $websiteId
      * @return StockInterface
      */

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -11,8 +11,8 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 
 class BulkOperationsConfig
 {
-    const XML_PATH_ASYNC_ENABLED = 'cataloginventory/bulk_operations/async';
-    const XML_PATH_BATCH_SIZE = 'cataloginventory/bulk_operations/batch_size';
+    public const XML_PATH_ASYNC_ENABLED = 'cataloginventory/bulk_operations/async';
+    public const XML_PATH_BATCH_SIZE = 'cataloginventory/bulk_operations/batch_size';
 
     /**
      * @var ScopeConfigInterface
@@ -28,6 +28,8 @@ class BulkOperationsConfig
     }
 
     /**
+     * Checks if asynchronous bulk operations are enabled in the configuration settings.
+     *
      * @return bool
      */
     public function isAsyncEnabled(): bool
@@ -36,6 +38,8 @@ class BulkOperationsConfig
     }
 
     /**
+     * Gets the batch size for bulk operations from configuration, ensuring it is at least 1.
+     *
      * @return int
      */
     public function getBatchSize(): int

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -39,6 +39,8 @@ class SetDataToLegacyStockItem
     }
 
     /**
+     * Updates the legacy stock item table with the given SKU, quantity, and stock status using a MySQL query.
+     *
      * @param string $sku
      * @param float $quantity
      * @param int $status

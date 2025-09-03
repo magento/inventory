@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -14,8 +14,8 @@ use Magento\TestFramework\TestCase\WebapiAbstract;
 
 class GetSourceItemConfigurationTest extends WebapiAbstract
 {
-    const RESOURCE_PATH = '/V1/inventory/low-quantity-notification';
-    const SERVICE_NAME = 'inventoryLowQuantityNotificationApiGetSourceItemConfigurationV1';
+    public const RESOURCE_PATH = '/V1/inventory/low-quantity-notification';
+    public const SERVICE_NAME = 'inventoryLowQuantityNotificationApiGetSourceItemConfigurationV1';
 
     /**
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
@@ -30,7 +30,7 @@ class GetSourceItemConfigurationTest extends WebapiAbstract
 
         $sourceItemConfiguration = $this->getSourceItemConfiguration($sourceCode, $sku);
 
-        self::assertInternalType('array', $sourceItemConfiguration);
+        self::assertIsArray($sourceItemConfiguration);
         self::assertNotEmpty($sourceItemConfiguration);
 
         self::assertEquals($sourceCode, $sourceItemConfiguration[SourceItemConfigurationInterface::SOURCE_CODE]);
@@ -52,7 +52,7 @@ class GetSourceItemConfigurationTest extends WebapiAbstract
 
         $sourceItemConfiguration = $this->getSourceItemConfiguration($sourceCode, $sku);
 
-        self::assertInternalType('array', $sourceItemConfiguration);
+        self::assertIsArray($sourceItemConfiguration);
         self::assertNotEmpty($sourceItemConfiguration);
 
         self::assertEquals($sourceCode, $sourceItemConfiguration[SourceItemConfigurationInterface::SOURCE_CODE]);
@@ -109,7 +109,7 @@ class GetSourceItemConfigurationTest extends WebapiAbstract
             ? $this->_webApiCall($serviceInfo)
             : $this->_webApiCall($serviceInfo, ['sourceCode' => $sourceCode, 'sku' => $sku]);
 
-        self::assertInternalType('array', $sourceItemConfiguration);
+        self::assertIsArray($sourceItemConfiguration);
         self::assertNotEmpty($sourceItemConfiguration);
 
         return $sourceItemConfiguration;

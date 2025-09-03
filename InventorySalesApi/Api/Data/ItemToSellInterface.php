@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -16,22 +16,30 @@ namespace Magento\InventorySalesApi\Api\Data;
 interface ItemToSellInterface extends \Magento\Framework\Api\ExtensibleDataInterface
 {
     /**
+     * Gets the SKU for the item to sell, returning it as a string value.
+     *
      * @return string
      */
     public function getSku(): string;
 
     /**
+     * Gets the quantity for the item to sell, returning it as a floating-point value.
+     *
      * @return float
      */
     public function getQuantity(): float;
 
     /**
+     * Sets the SKU for the item to sell, specifying it as a string value.
+     *
      * @param string $sku
      * @return void
      */
     public function setSku(string $sku): void;
 
     /**
+     * Sets the quantity for the item to sell, specifying the amount as a floating-point value.
+     *
      * @param float $qty
      * @return void
      */

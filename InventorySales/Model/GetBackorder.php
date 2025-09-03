@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2022 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -96,7 +96,7 @@ class GetBackorder
         StockResolverInterface $stockResolver,
         StoreManagerInterface $storeManager,
         BackOrderNotifyCustomerCondition $backOrderNotifyCustomerCondition,
-        GetBackorderQty $getBackorderQty = null
+        ?GetBackorderQty $getBackorderQty = null
     ) {
         $this->objectFactory = $objectFactory;
         $this->format = $format;

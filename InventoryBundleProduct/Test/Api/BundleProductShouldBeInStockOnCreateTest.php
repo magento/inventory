@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -15,10 +15,10 @@ use Magento\Bundle\Api\Data\LinkInterface;
 
 class BundleProductShouldBeInStockOnCreateTest extends WebapiAbstract
 {
-    const SERVICE_NAME = 'catalogProductRepositoryV1';
-    const SERVICE_VERSION = 'V1';
-    const RESOURCE_PATH = '/V1/products';
-    const BUNDLE_PRODUCT_SKU = 'SKU-1-test-product-bundle';
+    public const SERVICE_NAME = 'catalogProductRepositoryV1';
+    public const SERVICE_VERSION = 'V1';
+    public const RESOURCE_PATH = '/V1/products';
+    public const BUNDLE_PRODUCT_SKU = 'SKU-1-test-product-bundle';
 
     /**
      * Execute per test cleanup

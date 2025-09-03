@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -57,6 +57,8 @@ class InventoryRequestFromOrderFactory
     }
 
     /**
+     * Creates an inventory request from an order by gathering undelivered items and resolving stock information.
+     *
      * @param OrderInterface $order
      * @return InventoryRequestInterface
      */

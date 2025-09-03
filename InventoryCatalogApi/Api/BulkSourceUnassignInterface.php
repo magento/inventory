@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -16,6 +16,7 @@ interface BulkSourceUnassignInterface
 {
     /**
      * Run mass product to source un-assignment
+     *
      * @param string[] $skus
      * @param string[] $sourceCodes
      * @return int

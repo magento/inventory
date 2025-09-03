@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2022 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -232,7 +232,7 @@ class SourceItemImporterTest extends TestCase
      *
      * @return array[]
      */
-    public function sourceItemDataProvider(): array
+    public static function sourceItemDataProvider(): array
     {
         return [
             'non-default existing source code with 0 quantity for existing product' => [

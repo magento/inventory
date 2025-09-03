@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -56,7 +56,7 @@ class IndexHandler implements IndexHandlerInterface
      * @param IndexNameResolverInterface $indexNameResolver
      * @param Batch $batch
      * @param ResourceConnection $resourceConnection
-     * @param $batchSize
+     * @param int $batchSize
      * @param DeploymentConfig|null $deploymentConfig
      */
     public function __construct(

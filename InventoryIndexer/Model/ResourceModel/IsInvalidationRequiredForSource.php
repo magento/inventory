@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -33,6 +33,8 @@ class IsInvalidationRequiredForSource
     }
 
     /**
+     * Checks if Inventory Indexer invalidation required after Source enabling or disabling.
+     *
      * Returns 'true' only if Source 'enabled' value is changed, Source is linked to Stock and contains at least one
      * Source Item.
      *
