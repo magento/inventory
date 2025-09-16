@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -16,11 +16,14 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\GroupedProduct\Model\Product\Type\Grouped;
 use Magento\InventoryExportStock\Model\GetQtyForNotManageStock;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
-use Magento\InventorySales\Model\ResourceModel\IsStockItemSalableCondition\ManageStockCondition as NotManageStockCondition;
+use Magento\InventorySales\Model\ResourceModel\IsStockItemSalableCondition\ManageStockCondition
+    as NotManageStockCondition;
 use Psr\Log\LoggerInterface;
 
 /**
  * Class GetStockIndexDump provides sku and qty of products dumping them from stock index table
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class StockIndexDumpProcessor
 {
@@ -104,7 +107,9 @@ class StockIndexDumpProcessor
             ]);
         } catch (\Exception $e) {
             $this->logger->critical($e->getMessage(), $e->getTrace());
-            throw new LocalizedException(__('Something went wrong. Export couldn\'t be executed, See log files for error details'));
+            throw new LocalizedException(
+                __('Something went wrong. Export couldn\'t be executed, See log files for error details')
+            );
         }
 
         return $this->connection->fetchAll($select);

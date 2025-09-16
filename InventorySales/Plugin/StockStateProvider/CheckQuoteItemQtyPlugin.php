@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2022 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -52,10 +52,10 @@ class CheckQuoteItemQtyPlugin
      * @param GetBackorder|null $getBackorder
      */
     public function __construct(
-        ObjectFactory $objectFactory = null,
-        GetProductTypesBySkusInterface $getProductTypesBySkus = null,
-        GetSkusByProductIdsInterface $getSkusByProductIds = null,
-        GetBackorder $getBackorder = null
+        ?ObjectFactory $objectFactory = null,
+        ?GetProductTypesBySkusInterface $getProductTypesBySkus = null,
+        ?GetSkusByProductIdsInterface $getSkusByProductIds = null,
+        ?GetBackorder $getBackorder = null
     ) {
         $this->objectFactory = $objectFactory
             ?? ObjectManager::getInstance()->get(ObjectFactory::class);

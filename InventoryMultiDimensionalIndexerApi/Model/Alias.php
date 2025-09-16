@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -20,12 +20,12 @@ class Alias
     /**
      * Replica index alias
      */
-    const ALIAS_REPLICA = 'replica';
+    public const ALIAS_REPLICA = 'replica';
 
     /**
      * Main index alias
      */
-    const ALIAS_MAIN = 'main';
+    public const ALIAS_MAIN = 'main';
 
     /**
      * One of self::ALIAS_*
@@ -47,6 +47,8 @@ class Alias
     }
 
     /**
+     * Validates the alias value during construction, ensuring it matches predefined constants, or throws an exception.
+     *
      * @return string One of self::ALIAS_*
      */
     public function getValue(): string

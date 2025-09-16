@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -13,6 +13,8 @@ use Magento\CatalogInventory\Model\Spi\StockStateProviderInterface;
 class AdaptVerifyStockToNegativeMinQtyPlugin
 {
     /**
+     * Validates stock availability for backorders by checking if quantity is below a negative minimum quantity.
+     *
      * @param StockStateProviderInterface $subject
      * @param bool $result
      * @param StockItemInterface $stockItem

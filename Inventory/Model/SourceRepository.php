@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -69,7 +69,7 @@ class SourceRepository implements SourceRepositoryInterface
     /**
      * @inheritdoc
      */
-    public function getList(SearchCriteriaInterface $searchCriteria = null): SourceSearchResultsInterface
+    public function getList(?SearchCriteriaInterface $searchCriteria = null): SourceSearchResultsInterface
     {
         return $this->commandGetList->execute($searchCriteria);
     }

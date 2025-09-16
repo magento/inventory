@@ -1,6 +1,6 @@
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 define([
     'jquery',
@@ -8,7 +8,7 @@ define([
     'underscore',
     'mageUtils'
 ], function ($, Form, _, utils) {
-    'use strict';
+    'use strict'; //eslint-disable-line
 
     return Form.extend({
         defaults: {

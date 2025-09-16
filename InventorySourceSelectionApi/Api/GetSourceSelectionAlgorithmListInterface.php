@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -15,6 +15,8 @@ namespace Magento\InventorySourceSelectionApi\Api;
 interface GetSourceSelectionAlgorithmListInterface
 {
     /**
+     * Returns a list of registered Source Selection Algorithm (SSA) data interfaces available in the system.
+     *
      * @return \Magento\InventorySourceSelectionApi\Api\Data\SourceSelectionAlgorithmInterface[]
      */
     public function execute(): array;

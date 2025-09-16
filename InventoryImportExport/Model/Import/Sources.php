@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -72,7 +72,7 @@ class Sources extends AbstractEntity
         ImportData $importData,
         ValidatorInterface $validator,
         array $commands = [],
-        GetSourceCodesBySkusInterface $getSourceCodesBySkus = null,
+        ?GetSourceCodesBySkusInterface $getSourceCodesBySkus = null,
     ) {
         $this->jsonHelper = $jsonHelper;
         $this->errorAggregator = $errorAggregator;

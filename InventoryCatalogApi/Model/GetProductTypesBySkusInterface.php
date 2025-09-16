@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -15,6 +15,8 @@ namespace Magento\InventoryCatalogApi\Model;
 interface GetProductTypesBySkusInterface
 {
     /**
+     * Retrieves product types by SKUs, returning an array where keys are SKUs and values are product types.
+     *
      * @param array $skus
      * @return array (key: 'sku', value: 'product_type')
      */

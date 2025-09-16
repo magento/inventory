@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -45,6 +45,8 @@ class NotifyStock extends AbstractBlock implements DataProviderInterface
     }
 
     /**
+     * Sets the cache key for the RSS feed to 'rss_catalog_notifystock' and calls the parent _construct method.
+     *
      * @return void
      */
     protected function _construct()
@@ -54,7 +56,7 @@ class NotifyStock extends AbstractBlock implements DataProviderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getRssData()
     {

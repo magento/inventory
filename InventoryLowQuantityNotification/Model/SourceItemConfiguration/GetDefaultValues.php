@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -18,7 +18,7 @@ class GetDefaultValues
     /**
      * Default Notify Stock Qty config path
      */
-    const XML_PATH_NOTIFY_STOCK_QTY = 'cataloginventory/item_options/notify_stock_qty';
+    public const XML_PATH_NOTIFY_STOCK_QTY = 'cataloginventory/item_options/notify_stock_qty';
 
     /**
      * @var ScopeConfigInterface
@@ -35,6 +35,8 @@ class GetDefaultValues
     }
 
     /**
+     * Returns default source item configuration values, including source code, SKU, and notify stock quantity.
+     *
      * @param string $sourceCode
      * @param string $sku
      * @return array

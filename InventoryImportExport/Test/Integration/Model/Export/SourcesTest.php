@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -196,7 +196,7 @@ class SourcesTest extends TestCase
         );
     }
 
-    public function exportWithWebsiteFilterDataProvider()
+    public static function exportWithWebsiteFilterDataProvider()
     {
         return [
             [0, 'export_empty.csv'],

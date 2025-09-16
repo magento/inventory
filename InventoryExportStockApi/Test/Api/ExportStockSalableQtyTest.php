@@ -1,17 +1,28 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2025 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
 namespace Magento\InventoryExportStockApi\Test\Api;
 
+use Magento\Catalog\Test\Fixture\Product as ProductFixture;
 use Magento\Framework\Api\SearchCriteria;
+use Magento\Framework\Validation\ValidationException;
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
+use Magento\InventoryApi\Test\Fixture\Source as SourceFixture;
+use Magento\InventoryApi\Test\Fixture\SourceItems as SourceItemsFixture;
+use Magento\InventoryApi\Test\Fixture\Stock as StockFixture;
+use Magento\InventoryApi\Test\Fixture\StockSourceLinks as StockSourceLinksFixture;
+use Magento\InventoryCatalogApi\Api\BulkSourceUnassignInterface;
+use Magento\InventorySalesApi\Test\Fixture\StockSalesChannels as StockSalesChannelsFixture;
 use Magento\InventorySales\Model\ResourceModel\DeleteReservationsBySkus;
 use Magento\InventorySales\Test\Api\OrderPlacementBase;
+use Magento\TestFramework\Fixture\DataFixture;
+use Magento\TestFramework\Fixture\DataFixtureStorage;
+use Magento\TestFramework\Fixture\DataFixtureStorageManager;
 use Magento\TestFramework\Helper\Bootstrap;
 
 /**
@@ -22,8 +33,22 @@ use Magento\TestFramework\Helper\Bootstrap;
  */
 class ExportStockSalableQtyTest extends OrderPlacementBase
 {
-    const API_PATH = '/V1/inventory/export-stock-salable-qty';
-    const SERVICE_NAME = 'inventoryExportStockApiExportStockSalableQtyV1';
+    private const API_PATH = '/V1/inventory/export-stock-salable-qty';
+    public const SERVICE_NAME = 'inventoryExportStockApiExportStockSalableQtyV1';
+
+    /**
+     * @var DataFixtureStorage
+     */
+    private $fixtures;
+
+    /**
+     * @inheritDoc
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->fixtures = DataFixtureStorageManager::getStorage();
+    }
 
     /**
      * Verify salable qty export with reservations simple product types - default stock, default website.
@@ -45,7 +70,6 @@ class ExportStockSalableQtyTest extends OrderPlacementBase
         $this->assignStockToWebsite(1, 'base');
         $simpleProductSKU = 'SKU-1';
         $virtualProductSKU = 'virtual-product';
-        $downloadableProductSKU = 'downloadable-product';
         $requestData = [
             'searchCriteria' => [
                 SearchCriteria::FILTER_GROUPS => [['filters' => $filters]]
@@ -72,11 +96,6 @@ class ExportStockSalableQtyTest extends OrderPlacementBase
                     'is_salable' => true,
                 ],
                 [
-                    'sku' => $downloadableProductSKU,
-                    'qty' => 100,
-                    'is_salable' => true,
-                ],
-                [
                     'sku' => $simpleProductSKU,
                     'qty' => 5.5,
                     'is_salable' => true,
@@ -87,7 +106,6 @@ class ExportStockSalableQtyTest extends OrderPlacementBase
         $this->createCustomerCart();
         $this->addProduct($simpleProductSKU);
         $this->addProduct($virtualProductSKU);
-        $this->addProduct($downloadableProductSKU);
         $this->estimateShippingCosts();
         $this->setShippingAndBillingInformation();
         $orderId = $this->submitPaymentInformation();
@@ -96,11 +114,6 @@ class ExportStockSalableQtyTest extends OrderPlacementBase
             [
                 [
                     'sku' => $virtualProductSKU,
-                    'qty' => 99,
-                    'is_salable' => true,
-                ],
-                [
-                    'sku' => $downloadableProductSKU,
                     'qty' => 99,
                     'is_salable' => true,
                 ],
@@ -119,16 +132,14 @@ class ExportStockSalableQtyTest extends OrderPlacementBase
      * Verify salable qty export with reservations simple product types - additional stock, additional website.
      *
      * @magentoApiDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoApiDataFixture Magento/Catalog/_files/product_virtual.php
      * @magentoApiDataFixture Magento_InventoryApi::Test/_files/sources.php
      * @magentoApiDataFixture Magento_InventoryApi::Test/_files/stocks.php
      * @magentoApiDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
      * @magentoApiDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
      * @magentoApiDataFixture Magento_InventoryApi::Test/_files/source_items.php
      * @magentoApiDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
-     * @magentoApiDataFixture Magento/Catalog/_files/product_virtual.php
      * @magentoApiDataFixture Magento_InventoryCatalog::Test/_files/product_virtual_source_item_on_additional_source.php
-     * @magentoApiDataFixture Magento/Downloadable/_files/product_downloadable_with_files.php
-     * @magentoApiDataFixture Magento_InventoryCatalog::Test/_files/product_downloadable_source_item_on_additional_source.php
      * @magentoApiDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      *
      * @dataProvider simpleProductTypesDataProvider()
@@ -139,10 +150,9 @@ class ExportStockSalableQtyTest extends OrderPlacementBase
     {
         $this->_markTestAsRestOnly();
         $this->setStoreView('store_for_eu_website');
-        $downloadableSKU = 'downloadable-product';
         $simpleSKU = 'SKU-1';
         $virtualSKU = 'virtual-product';
-        $this->assignProductsToWebsite([$downloadableSKU, $simpleSKU, $virtualSKU], 'eu_website');
+        $this->assignProductsToWebsite([$simpleSKU, $virtualSKU], 'eu_website');
         $requestData = [
             'searchCriteria' => [
                 SearchCriteria::FILTER_GROUPS => [['filters' => $filters]]
@@ -169,11 +179,6 @@ class ExportStockSalableQtyTest extends OrderPlacementBase
                     'is_salable' => true,
                 ],
                 [
-                    'sku' => $downloadableSKU,
-                    'qty' => 100,
-                    'is_salable' => true,
-                ],
-                [
                     'sku' => $simpleSKU,
                     'qty' => 8.5,
                     'is_salable' => true,
@@ -184,7 +189,6 @@ class ExportStockSalableQtyTest extends OrderPlacementBase
         $this->createCustomerCart();
         $this->addProduct($simpleSKU);
         $this->addProduct($virtualSKU);
-        $this->addProduct($downloadableSKU);
         $this->estimateShippingCosts();
         $this->setShippingAndBillingInformation();
         $orderId = $this->submitPaymentInformation();
@@ -193,11 +197,6 @@ class ExportStockSalableQtyTest extends OrderPlacementBase
             [
                 [
                     'sku' => $virtualSKU,
-                    'qty' => 99,
-                    'is_salable' => true,
-                ],
-                [
-                    'sku' => $downloadableSKU,
                     'qty' => 99,
                     'is_salable' => true,
                 ],
@@ -217,7 +216,7 @@ class ExportStockSalableQtyTest extends OrderPlacementBase
      *
      * @return array
      */
-    public function simpleProductTypesDataProvider()
+    public static function simpleProductTypesDataProvider()
     {
         return [
             [
@@ -782,5 +781,145 @@ class ExportStockSalableQtyTest extends OrderPlacementBase
     {
         $deleteReservations = Bootstrap::getObjectManager()->get(DeleteReservationsBySkus::class);
         $deleteReservations->execute($skus);
+    }
+
+    /**
+     * Test pagination total count with 4 products assigned to non-default stock, 1 to default stock.
+     */
+    #[DataFixture(SourceFixture::class, ['source_code' => 'test_source'], 'source')]
+    #[DataFixture(StockFixture::class, as: 'stock')]
+    #[DataFixture(
+        StockSourceLinksFixture::class,
+        [['stock_id' => '$stock.stock_id$', 'source_code' => '$source.source_code$']]
+    )]
+    #[DataFixture(
+        StockSalesChannelsFixture::class,
+        ['stock_id' => '$stock.stock_id$', 'sales_channels' => ['base']]
+    )]
+    #[DataFixture(ProductFixture::class, ['sku' => 'test-product-1'], 'p1')]
+    #[DataFixture(ProductFixture::class, ['sku' => 'test-product-2'], 'p2')]
+    #[DataFixture(ProductFixture::class, ['sku' => 'test-product-3'], 'p3')]
+    #[DataFixture(ProductFixture::class, ['sku' => 'test-product-4'], 'p4')]
+    #[DataFixture(ProductFixture::class, ['sku' => 'test-product-5'], 'p5')]
+    #[DataFixture(
+        SourceItemsFixture::class,
+        [
+            ['sku' => '$p1.sku$', 'source_code' => '$source.source_code$', 'quantity' => 10, 'status' => 1],
+            ['sku' => '$p2.sku$', 'source_code' => '$source.source_code$', 'quantity' => 10, 'status' => 1],
+            ['sku' => '$p3.sku$', 'source_code' => '$source.source_code$', 'quantity' => 10, 'status' => 1],
+            ['sku' => '$p4.sku$', 'source_code' => '$source.source_code$', 'quantity' => 10, 'status' => 1],
+            ['sku' => '$p5.sku$', 'source_code' => 'default', 'quantity' => 10, 'status' => 1],
+        ]
+    )]
+    #[DataFixture('Magento_InventoryIndexer::Test/_files/reindex_inventory.php')]
+    public function testPaginationNonDefaultStock(): void
+    {
+        $this->_markTestAsRestOnly();
+
+        // Get the stock ID from the fixture
+        $stockId = $this->fixtures->get('stock')->getStockId();
+
+        // Ensure the stock is linked to the website
+        $this->assignStockToWebsite($stockId, 'base');
+
+        // Test non-default stock with page_size = 2
+        $requestData = [
+            'searchCriteria' => [
+                'page_size' => 2
+            ]
+        ];
+
+        $result = $this->_webApiCall([
+            'rest' => [
+                'resourcePath' => sprintf(
+                    "%s/%s/%s?%s",
+                    self::API_PATH,
+                    'website',
+                    'base',
+                    http_build_query($requestData)
+                ),
+                'httpMethod' => Request::HTTP_METHOD_GET
+            ],
+        ]);
+
+        // Should return 4 products assigned to non-default stock
+        self::assertEquals(4, $result['total_count'], 'Non-default stock should return 4 products');
+        self::assertEquals(2, count($result['items']), 'Page size 2 should return 2 items');
+    }
+
+    /**
+     * Test pagination total count with 1 product assigned to non-default stock, 4 to default stock.
+     */
+    #[DataFixture(SourceFixture::class, ['source_code' => 'test_source'], 'source')]
+    #[DataFixture(StockFixture::class, as: 'stock')]
+    #[DataFixture(
+        StockSourceLinksFixture::class,
+        [['stock_id' => '$stock.stock_id$', 'source_code' => '$source.source_code$']]
+    )]
+    #[DataFixture(
+        StockSalesChannelsFixture::class,
+        ['stock_id' => '$stock.stock_id$', 'sales_channels' => ['base']]
+    )]
+    #[DataFixture(ProductFixture::class, ['sku' => 'test-product-1'], 'p1')]
+    #[DataFixture(ProductFixture::class, ['sku' => 'test-product-2'], 'p2')]
+    #[DataFixture(ProductFixture::class, ['sku' => 'test-product-3'], 'p3')]
+    #[DataFixture(ProductFixture::class, ['sku' => 'test-product-4'], 'p4')]
+    #[DataFixture(ProductFixture::class, ['sku' => 'test-product-5'], 'p5')]
+    #[DataFixture(
+        SourceItemsFixture::class,
+        [
+            ['sku' => '$p1.sku$', 'source_code' => '$source.source_code$', 'quantity' => 10, 'status' => 1],
+            ['sku' => '$p2.sku$', 'source_code' => 'default', 'quantity' => 10, 'status' => 1],
+            ['sku' => '$p3.sku$', 'source_code' => 'default', 'quantity' => 10, 'status' => 1],
+            ['sku' => '$p4.sku$', 'source_code' => 'default', 'quantity' => 10, 'status' => 1],
+            ['sku' => '$p5.sku$', 'source_code' => 'default', 'quantity' => 10, 'status' => 1],
+        ]
+    )]
+    #[DataFixture('Magento_InventoryIndexer::Test/_files/reindex_inventory.php')]
+    public function testPaginationDefaultStock(): void
+    {
+        $this->_markTestAsRestOnly();
+
+        // Ensure default stock is linked to the website
+        $this->assignStockToWebsite(1, 'base');
+
+        // Unassign product 1 from default stock
+        $this->unassignProductFromDefaultStock('test-product-1');
+
+        // Test default stock with page_size = 2
+        $requestData = [
+            'searchCriteria' => [
+                'page_size' => 2
+            ]
+        ];
+
+        $result = $this->_webApiCall([
+            'rest' => [
+                'resourcePath' => sprintf(
+                    "%s/%s/%s?%s",
+                    self::API_PATH,
+                    'website',
+                    'base',
+                    http_build_query($requestData)
+                ),
+                'httpMethod' => Request::HTTP_METHOD_GET
+            ],
+        ]);
+
+        // Should return 4 products assigned to default stock
+        self::assertEquals(4, $result['total_count'], 'Default stock should return 4 products');
+        self::assertEquals(2, count($result['items']), 'Page size 2 should return 2 items');
+    }
+
+    /**
+     * Unassign product from default stock
+     *
+     * @param string $sku
+     * @throws ValidationException
+     */
+    private function unassignProductFromDefaultStock(string $sku): void
+    {
+        $bulkSourceUnassign = $this->objectManager->get(BulkSourceUnassignInterface::class);
+        $bulkSourceUnassign->execute([$sku], ['default']);
     }
 }

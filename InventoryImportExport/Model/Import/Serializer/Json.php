@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -31,7 +31,8 @@ class Json implements SerializerInterface
     /**
      * Encode the mixed $valueToEncode into the JSON format
      *
-     * @deprecated 100.2.0 @see \Magento\Framework\Serialize\Serializer\Json
+     * @deprecated 100.2.0
+     * @see \Magento\Framework\Serialize\Serializer\Json
      * @param mixed $valueToEncode
      * @return string
      * @throws \InvalidArgumentException
@@ -42,10 +43,10 @@ class Json implements SerializerInterface
     }
 
     /**
-     * Decodes the given $encodedValue string which is
-     * encoded in the JSON format
+     * Decodes the given $encodedValue string which is encoded in the JSON format.
      *
-     * @deprecated 100.2.0 @see \Magento\Framework\Serialize\Serializer\Json
+     * @deprecated 100.2.0
+     * @see \Magento\Framework\Serialize\Serializer\Json
      * @param string $encodedValue
      * @return mixed
      * @throws \InvalidArgumentException

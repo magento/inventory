@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -31,6 +31,8 @@ class SaveMultiple
     }
 
     /**
+     * Inserts or updates multiple source item configurations in the database for low stock notifications efficiently.
+     *
      * @param SourceItemConfigurationInterface[] $sourceItemConfigurations
      * @return void
      */
@@ -66,6 +68,8 @@ class SaveMultiple
     }
 
     /**
+     * Quotes column names for safe SQL execution and concatenates them into a comma-separated string.
+     *
      * @param array $columns
      * @return string
      */
@@ -78,6 +82,8 @@ class SaveMultiple
     }
 
     /**
+     * Generates a SQL `VALUES` clause for bulk inserts by repeating placeholders based on the input array size.
+     *
      * @param SourceItemConfigurationInterface[] $sourceItemConfigurations
      * @return string
      */
@@ -88,6 +94,8 @@ class SaveMultiple
     }
 
     /**
+     * Generates SQL bind data for source item configurations by merging source code, SKU, and notify stock quantity.
+     *
      * @param SourceItemConfigurationInterface[] $sourceItemConfigurations
      * @return array
      */
@@ -95,6 +103,7 @@ class SaveMultiple
     {
         $bind = [];
         foreach ($sourceItemConfigurations as $sourceItemConfiguration) {
+            //phpcs:ignore Magento2.Performance.ForeachArrayMerge
             $bind = array_merge($bind, [
                 $sourceItemConfiguration->getSourceCode(),
                 $sourceItemConfiguration->getSku(),
@@ -105,6 +114,8 @@ class SaveMultiple
     }
 
     /**
+     * Builds the SQL `ON DUPLICATE KEY UPDATE` clause for fields, quoting identifiers for safe SQL execution.
+     *
      * @param array $fields
      * @return string
      */

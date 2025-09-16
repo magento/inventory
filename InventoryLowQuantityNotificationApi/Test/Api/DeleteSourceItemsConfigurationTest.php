@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -14,10 +14,10 @@ use Magento\Framework\Webapi\Rest\Request;
 
 class DeleteSourceItemsConfigurationTest extends WebapiAbstract
 {
-    const RESOURCE_PATH = '/V1/inventory/low-quantity-notification';
-    const RESOURCE_DELETE_PATH = '/V1/inventory/low-quantity-notifications-delete';
-    const SERVICE_NAME_DELETE = 'inventoryLowQuantityNotificationApiDeleteSourceItemsConfigurationV1';
-    const SERVICE_NAME_GET = 'inventoryLowQuantityNotificationApiGetSourceItemConfigurationV1';
+    public const RESOURCE_PATH = '/V1/inventory/low-quantity-notification';
+    public const RESOURCE_DELETE_PATH = '/V1/inventory/low-quantity-notifications-delete';
+    public const SERVICE_NAME_DELETE = 'inventoryLowQuantityNotificationApiDeleteSourceItemsConfigurationV1';
+    public const SERVICE_NAME_GET = 'inventoryLowQuantityNotificationApiGetSourceItemConfigurationV1';
 
     /**
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
@@ -87,7 +87,7 @@ class DeleteSourceItemsConfigurationTest extends WebapiAbstract
             ? $this->_webApiCall($serviceInfo)
             : $this->_webApiCall($serviceInfo, ['sourceCode' => $sourceCode, 'sku' => $sku]);
 
-        self::assertInternalType('array', $sourceItemConfiguration);
+        self::assertIsArray($sourceItemConfiguration);
         self::assertNotEmpty($sourceItemConfiguration);
 
         return $sourceItemConfiguration;

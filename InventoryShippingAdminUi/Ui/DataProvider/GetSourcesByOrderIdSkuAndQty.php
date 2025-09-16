@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -15,7 +15,8 @@ use Magento\InventorySourceSelectionApi\Api\GetDefaultSourceSelectionAlgorithmCo
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 
 /**
- * Class GetSourcesByOrderIdSkuAndQty
+ * Handles source data retrieval by order ID, SKU, and quantity, leveraging the default source selection algorithm
+ * to determine availability and deduction details.
  */
 class GetSourcesByOrderIdSkuAndQty
 {

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -64,7 +64,7 @@ class GetProductSalableQuantityTest extends WebapiAbstract
     /**
      * @return array
      */
-    public function getSalableQuantityDataProvider(): array
+    public static function getSalableQuantityDataProvider(): array
     {
         return [
             ['SKU-1', 10, 8.5],

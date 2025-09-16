@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -106,7 +106,7 @@ class GetStockStatusBySkuTest extends TestCase
     /**
      * @return array
      */
-    public function getStatusDataProvider(): array
+    public static function getStatusDataProvider(): array
     {
         return [
             ['store_for_eu_website', 0, 0],     // Qty not supported for complex products

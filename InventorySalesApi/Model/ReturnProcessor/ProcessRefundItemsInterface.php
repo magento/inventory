@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -18,6 +18,8 @@ use Magento\InventorySalesApi\Model\ReturnProcessor\Request\ItemsToRefundInterfa
 interface ProcessRefundItemsInterface
 {
     /**
+     * Executes the refund process for order items, handling quantities and return-to-stock items.
+     *
      * @param OrderInterface $order
      * @param ItemsToRefundInterface[] $itemsToRefund
      * @param array $returnToStockItems

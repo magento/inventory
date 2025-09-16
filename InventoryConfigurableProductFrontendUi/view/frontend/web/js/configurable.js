@@ -1,13 +1,13 @@
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
  */
 define([
     'jquery',
     'configurableVariationQty',
     'jquery-ui-modules/widget'
 ], function ($, configurableVariationQty) {
-    'use strict';
+    'use strict'; //eslint-disable-line
 
     return function (configurable) {
         $.widget('mage.configurable', configurable, {

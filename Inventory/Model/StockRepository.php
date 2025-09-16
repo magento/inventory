@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -86,7 +86,7 @@ class StockRepository implements StockRepositoryInterface
     /**
      * @inheritdoc
      */
-    public function getList(SearchCriteriaInterface $searchCriteria = null): StockSearchResultsInterface
+    public function getList(?SearchCriteriaInterface $searchCriteria = null): StockSearchResultsInterface
     {
         return $this->commandGetList->execute($searchCriteria);
     }

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2021 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -65,7 +65,7 @@ class SourceItemConvertTest extends TestCase
      *
      * @return array
      */
-    public function dataProviderConvert(): array
+    public static function dataProviderConvert(): array
     {
         return [
             [

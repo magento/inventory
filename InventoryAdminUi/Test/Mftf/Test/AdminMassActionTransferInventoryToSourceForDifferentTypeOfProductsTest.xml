@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -108,6 +108,10 @@
         </before>
         <after>
             <magentoCLI stepKey="removeDownloadableDomain" command="downloadable:domains:remove static.magento.com example.com"/>
+            <!-- Delete products created via API -->
+            <deleteData createDataKey="createSimpleProduct" stepKey="deleteSimpleProduct"/>
+            <deleteData createDataKey="createVirtualProduct" stepKey="deleteVirtualProduct"/>
+            <deleteData createDataKey="createDownloadableProduct" stepKey="deleteDownloadableProduct"/>
             <comment userInput="Delete all products after test" stepKey="deleteAllProductsViaGridAfterTestComment"/>
             <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="goToProductsGridForDeleteAllProductsComment"/>
             <waitForPageLoad stepKey="waitForGridLoadForDeleteAllProducts"/>

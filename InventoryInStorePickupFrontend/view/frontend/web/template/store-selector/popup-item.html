@@ -1,7 +1,7 @@
 <!--
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 -->
 <tr class="row location">
@@ -10,9 +10,9 @@
             <text args="location.name"></text>
         </p>
         <p class="location-address">
-            <text args="location.street"></text><br/>
-            <text args="location.city"></text>, <span text="location.region"></span> <text args="location.postcode"></text><br/>
-            <text args="location.country"></text><br/>
+            <text args="location.street"></text><br>
+            <text args="location.city"></text>, <span text="location.region"></span> <text args="location.postcode"></text><br>
+            <text args="location.country"></text><br>
             <a if="location.telephone" attr="'href': 'tel:' + location.telephone" text="location.telephone"></a>
         </p>
         <!-- ko if: location.description -->

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -10,7 +10,7 @@ namespace Magento\InventoryExportStock\Model;
 use Magento\InventoryExportStockApi\Api\Data\ProductStockIndexDataInterface;
 
 /**
- * Class ProductStockIndexDataMapper
+ * Maps product stock index data from an input array to a `ProductStockIndexDataInterface` object using a factory.
  */
 class ProductStockIndexDataMapper
 {

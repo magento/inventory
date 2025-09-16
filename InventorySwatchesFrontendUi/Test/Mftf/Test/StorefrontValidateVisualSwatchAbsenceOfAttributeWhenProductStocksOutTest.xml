@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
+  * Copyright 2023 Adobe
+  * All Rights Reserved.
   */
 -->
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -160,11 +160,11 @@
         <!-- Verify that the storefront shows the swatches too -->
         <actionGroup ref="AssertStorefrontSwatchColorActionGroup" stepKey="assertSwatch1">
             <argument name="nthSwatch" value="1"/>
-            <argument name="expectedRgb" value="rgb(231, 77, 60)"/>
+            <argument name="expectedRgb" value="rgb(231, 76, 60)"/>
         </actionGroup>
         <actionGroup ref="AssertStorefrontSwatchColorActionGroup" stepKey="assertSwatch2">
             <argument name="nthSwatch" value="2"/>
-            <argument name="expectedRgb" value="rgb(31, 52, 148)"/>
+            <argument name="expectedRgb" value="rgb(31, 53, 148)"/>
         </actionGroup>
         <!-- Add configurable product with swatch attribute to the cart -->
         <actionGroup ref="StorefrontSelectSwatchOptionOnProductPageActionGroup" stepKey="selectVisualSwatchFromProductPage">

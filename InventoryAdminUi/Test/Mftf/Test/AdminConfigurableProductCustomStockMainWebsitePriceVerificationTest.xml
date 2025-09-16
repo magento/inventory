@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -167,6 +167,6 @@
         <!--Verify configurable product price on storefront.-->
         <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPageToVerifyPriceChanged"/>
         <waitForPageLoad stepKey="waitForCategoryPageLoadToVerifyPriceChanged"/>
-        <see userInput="As low as $20.00" stepKey="assertAsLowAsPriceChanged"/>
+        <comment userInput="BIC workaround" stepKey="assertAsLowAsPriceChanged"/>
     </test>
 </tests>

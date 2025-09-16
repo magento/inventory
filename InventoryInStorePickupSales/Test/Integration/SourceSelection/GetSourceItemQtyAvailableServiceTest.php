@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 
 declare(strict_types=1);
@@ -166,7 +166,7 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
     /**
      * @return array
      */
-    public function singleStorePickupOrderProvider(): array
+    public static function singleStorePickupOrderProvider(): array
     {
         return [
             ['eu-1', 'SKU-1', 2.0], //3.5 reserved
@@ -182,7 +182,7 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
     /**
      * @return array
      */
-    public function multipleStorePickupOrdersProvider(): array
+    public static function multipleStorePickupOrdersProvider(): array
     {
         return [
             ['eu-1', 'SKU-1', 1.0], //3.5 + 1.0 reserved

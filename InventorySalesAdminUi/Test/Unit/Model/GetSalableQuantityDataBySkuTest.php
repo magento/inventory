@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2022 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -97,8 +97,13 @@ class GetSalableQuantityDataBySkuTest extends TestCase
             ->willReturn([2 => 'Stock 2', 3 => 'Stock 3']);
         $this->getProductSalableQtyMock->expects(self::exactly(2))
             ->method('execute')
-            ->withConsecutive([$sku, 2], [$sku, 3])
-            ->willReturnOnConsecutiveCalls(200, 300);
+            ->willReturnCallback(function ($arg1, $arg2) use ($sku) {
+                if ($arg1 == $sku && $arg2 == 2) {
+                    return 200;
+                } elseif ($arg1 == $sku && $arg2 == 3) {
+                    return 300;
+                }
+            });
 
         $data = $this->getSalableQuantityDataBySku->execute($sku);
         $expectedData = [

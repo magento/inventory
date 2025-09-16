@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -18,6 +18,8 @@ use Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface;
  *
  * Using StockRegistryStorage as local cache for getting stock items leads to not adding stock items to DB
  * in case of multiple test cases running in a row with the same products.
+ *
+ * phpcs:disable Generic.Classes.DuplicateClassName
  */
 class GetNonCachedStockItemPlugin
 {

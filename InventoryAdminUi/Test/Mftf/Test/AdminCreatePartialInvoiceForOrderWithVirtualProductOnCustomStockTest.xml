@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -48,13 +48,6 @@
             <comment userInput="BIC workaround" stepKey="saveCustomStock"/>
             <comment userInput="BIC workaround" stepKey="reindexCacheFlushAfterAssignDefaultStockToMainWebsite"/>
 
-            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
-                <argument name="indices" value=""/>
-            </actionGroup>
-            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
-                <argument name="tags" value="full_page"/>
-            </actionGroup>
-
             <createData entity="VirtualProduct" stepKey="virtualProduct">
                 <requiredEntity createDataKey="category"/>
             </createData>
@@ -69,6 +62,12 @@
             </actionGroup>
             <fillField selector="{{AdminProductSourcesGrid.rowQty('2')}}" userInput="100" stepKey="setCustomSourceQuantity2"/>
             <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveEditedVirtualProduct"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value="full_page"/>
+            </actionGroup>
         </before>
 
         <after>
@@ -146,8 +145,8 @@
             <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
             <argument name="value" value="$$virtualProduct.sku$$"/>
         </actionGroup>
-        <see selector="{{AdminProductGridSection.productQtyPerSource('1',$$customSource.source[name]$$)}}" userInput="99" stepKey="checkProductSourceQtyAfterInvoiceCreated"/>
-        <see selector="{{AdminProductGridSection.productQtyPerSource('1',$$customSource2.source[name]$$)}}" userInput="100" stepKey="checkProductSource2QtyAfterInvoiceCreated"/>
-        <see selector="{{AdminProductGridSection.productSalableQty('1',$$customStock.stock[name]$$)}}" userInput="197" stepKey="checkSalableQtyAfterInvoiceCreated"/>
+        <waitForText selector="{{AdminProductGridSection.productQtyPerSource('1',$$customSource.source[name]$$)}}" userInput="99" stepKey="checkProductSourceQtyAfterInvoiceCreated"/>
+        <waitForText selector="{{AdminProductGridSection.productQtyPerSource('1',$$customSource2.source[name]$$)}}" userInput="100" stepKey="checkProductSource2QtyAfterInvoiceCreated"/>
+        <waitForText selector="{{AdminProductGridSection.productSalableQty('1',$$customStock.stock[name]$$)}}" userInput="197" stepKey="checkSalableQtyAfterInvoiceCreated"/>
     </test>
 </tests>

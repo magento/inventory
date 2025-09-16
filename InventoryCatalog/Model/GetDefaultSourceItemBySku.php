@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -48,6 +48,8 @@ class GetDefaultSourceItemBySku
     }
 
     /**
+     * Fetches the default source item by SKU and source code, returning the first match or null if none exist.
+     *
      * @param string $productSku
      * @return SourceItemInterface|null
      */

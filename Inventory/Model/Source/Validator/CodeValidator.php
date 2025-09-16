@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -69,6 +69,8 @@ class CodeValidator implements SourceValidatorInterface
             $this->noWhitespaceInString->execute(SourceInterface::SOURCE_CODE, $value),
             $this->noSpecialCharsInString->execute($value)
         ];
+
+        // @phpstan-ignore-next-line
         $errors = !empty($errors) ? array_merge(...$errors) : $errors;
 
         return $this->validationResultFactory->create(['errors' => $errors]);

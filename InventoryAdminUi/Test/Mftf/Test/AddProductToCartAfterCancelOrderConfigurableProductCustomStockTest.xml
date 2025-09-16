@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -83,6 +83,7 @@
             <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
                 <argument name="indices" value=""/>
             </actionGroup>
+            <deleteData createDataKey="category" stepKey="deletecategory"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
         </after>
 
@@ -99,6 +100,7 @@
         <!--Place order.-->
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
         <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="clickOnNextButton"/>
+        <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectCheckMoneyOrder"/>
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
         <actionGroup ref="StorefrontClickOrderLinkFromCheckoutSuccessPageActionGroup" stepKey="clickOrderLink"/>
         <comment userInput="BIC workaround" stepKey="orderNumber"/>
@@ -114,7 +116,7 @@
         <fillField selector="{{StorefrontProductPageSection.qtyInput}}" userInput="{{101ProductQty.value}}" stepKey="fillQuantity"/>
         <click selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="addToCart"/>
         <waitForElementVisible selector="{{StorefrontProductPageSection.errorMsg}}" stepKey="waitForErrorMessage"/>
-        <see selector="{{StorefrontProductPageSection.errorMsg}}" userInput="The requested qty is not available" stepKey="verifyErrorMessage"/>
+        <see selector="{{StorefrontProductPageSection.errorMsg}}" userInput="Not enough items for sale" stepKey="verifyErrorMessage"/>
         <!--Add configurable to cart with proper quantity-->
         <actionGroup ref="StorefrontAddConfigurableProductToTheCartActionGroup" stepKey="addConfigurableProductToCartWithProperQty">
             <argument name="urlKey" value="$configurableProduct.custom_attributes[url_key]$" />

@@ -2,7 +2,7 @@
     "name": "magento/module-inventory-export-stock",
     "description": "N/A",
     "require": {
-        "php": "~8.1.0||~8.2.0",
+        "php": "~8.2.0||~8.3.0||~8.4.0",
         "magento/framework": "*",
         "magento/module-inventory-api": "*",
         "magento/module-inventory-export-stock-api": "*",
@@ -14,7 +14,8 @@
         "magento/module-inventory-configuration": "*",
         "magento/module-inventory-configuration-api": "*",
         "magento/module-configurable-product": "*",
-        "magento/module-grouped-product": "*"
+        "magento/module-grouped-product": "*",
+        "magento/module-eav": "*"
     },
     "type": "magento2-module",
     "license": [

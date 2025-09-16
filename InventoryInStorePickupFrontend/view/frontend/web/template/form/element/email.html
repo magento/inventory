@@ -1,7 +1,7 @@
 <!--
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 -->
 <ifnot args="isCustomerLoggedIn()">
@@ -25,7 +25,7 @@
                                 mageInit: {'mage/trim-input':{}}"
                            name="username"
                            data-validate="{required:true, 'validate-email':true}"
-                           id="store-pickup-checkout-customer-email" />
+                           id="store-pickup-checkout-customer-email">
                     <!-- ko template: 'ui/form/element/helper/tooltip' --><!-- /ko -->
                     <span class="note" data-bind="fadeVisible: isPasswordVisible() == false">
                         <translate args="'You can create an account after checkout.'"></translate>
@@ -49,7 +49,7 @@
                                name="password"
                                id="store-pickup-customer-password"
                                data-validate="{required:true}"
-                               autocomplete="off"/>
+                               autocomplete="off">
                         <span class="note"
                               translate="'You already have an account with us. Sign in or continue as guest.'"></span>
                     </div>
@@ -59,7 +59,7 @@
                     <div template=" {name: getTemplate()}"></div>
                 </each>
                 <div class="actions-toolbar">
-                    <input name="context" type="hidden" value="checkout" />
+                    <input name="context" type="hidden" value="checkout">
                     <div class="primary">
                         <button type="submit" class="action login primary" data-action="checkout-method-login">
                             <translate args="'Login'"></translate>

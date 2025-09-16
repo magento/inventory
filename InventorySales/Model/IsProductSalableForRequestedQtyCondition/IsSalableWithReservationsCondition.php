@@ -1,20 +1,20 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
 namespace Magento\InventorySales\Model\IsProductSalableForRequestedQtyCondition;
 
-use Magento\InventoryReservationsApi\Model\GetReservationsQuantityInterface;
+use Magento\CatalogInventory\Model\Config\Source\NotAvailableMessage;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\InventorySalesApi\Model\GetSalableQtyInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
 use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 use Magento\InventorySalesApi\Api\Data\ProductSalableResultInterface;
 use Magento\InventorySalesApi\Api\Data\ProductSalableResultInterfaceFactory;
 use Magento\InventorySalesApi\Api\Data\ProductSalabilityErrorInterfaceFactory;
-use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 
 /**
  * @inheritdoc
@@ -22,57 +22,19 @@ use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 class IsSalableWithReservationsCondition implements IsProductSalableForRequestedQtyInterface
 {
     /**
-     * @var GetStockItemDataInterface
-     */
-    private $getStockItemData;
-
-    /**
-     * @var GetReservationsQuantityInterface
-     */
-    private $getReservationsQuantity;
-
-    /**
-     * @var GetStockItemConfigurationInterface
-     */
-    private $getStockItemConfiguration;
-
-    /**
-     * @var ProductSalabilityErrorInterfaceFactory
-     */
-    private $productSalabilityErrorFactory;
-
-    /**
-     * @var ProductSalableResultInterfaceFactory
-     */
-    private $productSalableResultFactory;
-
-    /**
-     * @var GetSalableQtyInterface
-     */
-    private $getProductQtyInStock;
-
-    /**
      * @param GetStockItemDataInterface $getStockItemData
-     * @param GetReservationsQuantityInterface $getReservationsQuantity
-     * @param GetStockItemConfigurationInterface $getStockItemConfiguration
      * @param ProductSalabilityErrorInterfaceFactory $productSalabilityErrorFactory
      * @param ProductSalableResultInterfaceFactory $productSalableResultFactory
      * @param GetSalableQtyInterface $getProductQtyInStock
+     * @param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
-        GetStockItemDataInterface $getStockItemData,
-        GetReservationsQuantityInterface $getReservationsQuantity,
-        GetStockItemConfigurationInterface $getStockItemConfiguration,
-        ProductSalabilityErrorInterfaceFactory $productSalabilityErrorFactory,
-        ProductSalableResultInterfaceFactory $productSalableResultFactory,
-        GetSalableQtyInterface $getProductQtyInStock
+        private readonly GetStockItemDataInterface $getStockItemData,
+        private readonly ProductSalabilityErrorInterfaceFactory $productSalabilityErrorFactory,
+        private readonly ProductSalableResultInterfaceFactory $productSalableResultFactory,
+        private readonly GetSalableQtyInterface $getProductQtyInStock,
+        private readonly ScopeConfigInterface $scopeConfig,
     ) {
-        $this->getStockItemData = $getStockItemData;
-        $this->getReservationsQuantity = $getReservationsQuantity;
-        $this->getStockItemConfiguration = $getStockItemConfiguration;
-        $this->productSalabilityErrorFactory = $productSalabilityErrorFactory;
-        $this->productSalableResultFactory = $productSalableResultFactory;
-        $this->getProductQtyInStock = $getProductQtyInStock;
     }
 
     /**
@@ -96,10 +58,16 @@ class IsSalableWithReservationsCondition implements IsProductSalableForRequested
         $isEnoughQty = bccomp((string)$qtyLeftInStock, (string)$requestedQty, 4) >= 0;
 
         if (!$isEnoughQty) {
+            $message = __('Not enough items for sale');
+            if ((int)$this->scopeConfig->getValue(
+                'cataloginventory/options/not_available_message'
+            ) === NotAvailableMessage::VALUE_ONLY_X_OF_Y) {
+                $message = __('Only %1 of %2 available', $qtyLeftInStock, $requestedQty);
+            }
             $errors = [
                 $this->productSalabilityErrorFactory->create([
                     'code' => 'is_salable_with_reservations-not_enough_qty',
-                    'message' => __('The requested qty is not available')
+                    'message' => $message
                 ])
             ];
             return $this->productSalableResultFactory->create(['errors' => $errors]);

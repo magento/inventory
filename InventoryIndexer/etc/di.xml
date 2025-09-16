@@ -1,13 +1,14 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Magento\InventoryMultiDimensionalIndexerApi\Model\IndexHandlerInterface" type="Magento\InventoryIndexer\Indexer\IndexHandler"/>
     <preference for="Magento\InventoryMultiDimensionalIndexerApi\Model\IndexStructureInterface" type="Magento\InventoryIndexer\Indexer\IndexStructure"/>
+    <preference for="Magento\InventoryIndexer\Model\ProductSalabilityChangeProcessorInterface" type="Magento\InventoryIndexer\Model\CompositeProductSalabilityChangeProcessor"/>
     <type name="Magento\InventoryIndexer\Indexer\SourceItem\SourceItemReindexStrategy">
         <arguments>
             <argument name="strategies" xsi:type="array">
@@ -21,13 +22,6 @@
             <argument name="strategies" xsi:type="array">
                 <item name="async" xsi:type="string">Magento\InventoryIndexer\Indexer\Stock\Strategy\Async</item>
                 <item name="sync" xsi:type="string">Magento\InventoryIndexer\Indexer\Stock\Strategy\Sync</item>
-            </argument>
-        </arguments>
-    </type>
-    <type name="Magento\InventoryIndexer\Indexer\Stock\IndexDataProviderByStockId">
-        <arguments>
-            <argument name="selectBuilders" xsi:type="array">
-                <item name="default" xsi:type="object">Magento\InventoryIndexer\Indexer\SelectBuilder</item>
             </argument>
         </arguments>
     </type>
@@ -81,6 +75,7 @@
     </type>
     <!-- Stock Item -->
     <preference for="Magento\InventorySalesApi\Model\GetStockItemDataInterface" type="Magento\InventoryIndexer\Model\ResourceModel\GetStockItemData"/>
+    <preference for="Magento\InventorySalesApi\Model\GetStockItemsDataInterface" type="Magento\InventoryIndexer\Model\ResourceModel\GetStockItemsData"/>
     <preference for="Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface" type="Magento\InventoryIndexer\Model\StockIndexTableNameResolver"/>
     <type name="Magento\InventoryIndexer\Model\StockIndexTableNameResolver">
         <arguments>
@@ -100,7 +95,7 @@
             <argument name="isProductSalable" xsi:type="object">Magento\InventoryIndexer\Model\IsProductSalable</argument>
         </arguments>
     </virtualType>
-    <type name="Magento\InventoryIndexer\Indexer\SourceItem\GetSalableStatuses">
+    <type name="Magento\InventoryIndexer\Indexer\Stock\GetSalableStatuses">
         <arguments>
             <argument name="areProductsSalable" xsi:type="object">Magento\InventoryIndexer\Model\AreProductsSalable</argument>
         </arguments>

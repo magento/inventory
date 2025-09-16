@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -41,7 +41,7 @@ class GetApiKey
      */
     public function execute(): string
     {
-        $apiKey = trim((string) $this->scopeConfig->getValue(self::XML_PATH_API_KEY));
+        $apiKey = trim((string) $this->scopeConfig->getValue(self::XML_PATH_API_KEY) ?? '');
         if (!$apiKey) {
             throw new LocalizedException(__('Google API key is not defined'));
         }
