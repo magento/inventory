@@ -69,7 +69,7 @@ class GetReservationFromCompensationArgument
      */
     private function parseArgument(string $argument): array
     {
-        $pattern = '/(?P<increment_id>\d*):(?P<sku>.*):(?P<quantity>.*):(?P<stock_id>.*)/';
+        $pattern = '/(?P<increment_id>[^:]+):(?P<sku>.*):(?P<quantity>.*):(?P<stock_id>.*)/';
         if (preg_match($pattern, $argument, $match)) {
             return $match;
         }
@@ -92,6 +92,12 @@ class GetReservationFromCompensationArgument
             $this->searchCriteriaBuilder->addFilter('increment_id', $argumentParts['increment_id'], 'eq')->create()
         );
         $order = current($results->getItems());
+        
+        if (!$order) {
+            throw new InvalidArgumentException(
+                sprintf('Order with increment_id "%s" not found', $argumentParts['increment_id'])
+            );
+        }
 
         return $this->reservationBuilder
             ->setSku((string)$argumentParts['sku'])
