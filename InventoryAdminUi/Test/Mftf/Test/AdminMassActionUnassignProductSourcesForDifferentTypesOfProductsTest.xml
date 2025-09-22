@@ -138,16 +138,8 @@
         </before>
         <after>
             <magentoCLI stepKey="removeDownloadableDomain" command="downloadable:domains:remove static.magento.com example.com"/>
-            <comment userInput="Delete all products after test" stepKey="deleteAllProductsViaGridAfterTestComment"/>
-            <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnTheProductGridPageForDeleteDownloadableProduct"/>
-            <waitForPageLoad time="30" stepKey="waitForProductsGridLoadForDeleteDownloadableProduct"/>
-            <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clearAllFiltersForForFoundDownloadableProduct"/>
-            <conditionalClick selector="{{AdminGridSelectRows.multicheckDropdown}}" dependentSelector=".data-grid-tr-no-data" visible="false" stepKey="openMulticheckDropdownForGrid"/>
-            <conditionalClick selector="{{AdminGridSelectRows.multicheckOption('Select All')}}" dependentSelector=".data-grid-tr-no-data" visible="false" stepKey="selectDownloadableProductInFilteredGrid"/>
-            <conditionalClick selector="{{AdminGridSelectRows.bulkActionDropdown}}" dependentSelector=".data-grid-tr-no-data" visible="false" stepKey="clickActionDropdownForClickDelete"/>
-            <conditionalClick selector="{{AdminGridSelectRows.bulkActionOption('Delete')}}" dependentSelector=".data-grid-tr-no-data" visible="false" stepKey="clickDeleteActionForDeleteDownloadableProduct"/>
-            <wait time="5" stepKey="waitModalForDeleteDownloadableProductOpen"/>
-            <conditionalClick selector="{{AdminGridConfirmActionSection.ok}}" dependentSelector="{{AdminGridConfirmActionSection.title}}" visible="true" stepKey="confirmDownloadableProductDelete"/>
+            <!-- Delete all products via API using ProductApiHelper -->
+            <helper class="Magento\Catalog\Test\Mftf\Helper\ProductApiHelper" method="deleteAllProductsApi" stepKey="deleteAllProductsViaApi"/>
 
             <comment userInput="Disable created sources." stepKey="disableCreatedSourcesComment"/>
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableFirstCreatedSource">

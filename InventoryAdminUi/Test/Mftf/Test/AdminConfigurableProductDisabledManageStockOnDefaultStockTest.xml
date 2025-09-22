@@ -24,6 +24,8 @@
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
         </before>
         <after>
+            <!-- Delete configurable product and variants created via UI -->
+            <helper class="Magento\Catalog\Test\Mftf\Helper\ProductApiHelper" method="deleteAllProductsApi" stepKey="deleteAllProductsViaApi"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
 
             <comment userInput="Enable 'Manage Stock' configuration." stepKey="revertManageStockConfigurationComment"/>

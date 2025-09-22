@@ -74,21 +74,12 @@ class ProcessSourceItemsObserver implements ObserverInterface
             $assignedSources =
                 isset($sources['assigned_sources'])
                 && is_array($sources['assigned_sources'])
-                    ? $this->prepareAssignedSources($sources['assigned_sources'])
+                    ? $this->prepareAssignedSources($product, $sources['assigned_sources'])
                     : [];
             $this->sourceItemsProcessor->execute((string)$productData['sku'], $assignedSources);
         } else {
-            /** @var StockItemInterface $stockItem */
-            $stockItem = $product->getExtensionAttributes()?->getStockItem()
-                ?? $this->stockRegistry->getStockItem($product->getId());
-            $defaultSourceData = [
-                SourceItemInterface::SKU => $product->getSku(),
-                SourceItemInterface::SOURCE_CODE => $this->defaultSourceProvider->getCode(),
-                SourceItemInterface::QUANTITY => $stockItem->getQty(),
-                SourceItemInterface::STATUS => $stockItem->getIsInStock(),
-            ];
             $sourceItems = $this->getSourceItemsWithoutDefault($product->getSku());
-            $sourceItems[] = $defaultSourceData;
+            $sourceItems[] = $this->getDefaultSourceData($product);
             $this->sourceItemsProcessor->execute((string)$product->getSku(), $sourceItems);
         }
     }
@@ -126,10 +117,11 @@ class ProcessSourceItemsObserver implements ObserverInterface
     /**
      * Convert built-in UI component property qty into quantity and source_status into status
      *
+     * @param ProductInterface $product
      * @param array $assignedSources
      * @return array
      */
-    private function prepareAssignedSources(array $assignedSources): array
+    private function prepareAssignedSources(ProductInterface $product, array $assignedSources): array
     {
         foreach ($assignedSources as $key => $source) {
             if (!key_exists('quantity', $source) && isset($source['qty'])) {
@@ -140,7 +132,34 @@ class ProcessSourceItemsObserver implements ObserverInterface
                 $source['status'] = (int) $source['source_status'];
                 $assignedSources[$key] = $source;
             }
+            if (isset($source['source_code']) && $source['source_code'] === $this->defaultSourceProvider->getCode()) {
+                $assignedSources[$key] = $this->getDefaultSourceData($product) + $source;
+            }
         }
         return $assignedSources;
+    }
+
+    /**
+     * Get default source data from stock item
+     *
+     * This is important because default stock item status can change depending on stock configurations
+     * such as qty, backorders, min qty etc., and we need to reflect that in default source item data.
+     * In multi-source mode, the default source quantity will override the stock item qty in the plugin below
+     *
+     * @see \Magento\InventoryCatalogAdminUi\Plugin\CatalogInventory\Api\StockRegistry\SetQtyToLegacyStock
+     * @param ProductInterface $product
+     * @return array
+     */
+    private function getDefaultSourceData(ProductInterface $product): array
+    {
+        /** @var StockItemInterface $stockItem */
+        $stockItem = $product->getExtensionAttributes()?->getStockItem()
+            ?? $this->stockRegistry->getStockItem($product->getId());
+        return [
+            SourceItemInterface::SKU => $product->getSku(),
+            SourceItemInterface::SOURCE_CODE => $this->defaultSourceProvider->getCode(),
+            SourceItemInterface::QUANTITY => $stockItem->getQty(),
+            SourceItemInterface::STATUS => $stockItem->getIsInStock(),
+        ];
     }
 }

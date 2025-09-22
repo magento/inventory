@@ -47,11 +47,9 @@ class StockStatusProvider implements ResolverInterface
 
         $product = $value['model'];
 
-        if ($product->getTypeId() === Type::TYPE_CODE) {
+        // Check if the product can be bought only if it's intended to be bought but not returned as search result.
+        if ($product->getTypeId() === Type::TYPE_CODE && $product->getCustomOption('info_buyRequest')) {
             try {
-                if (!$product->getCustomOption('bundle_selection_ids')) {
-                    return self::OUT_OF_STOCK;
-                }
                 $this->bundleType->checkProductBuyState($product);
             } catch (LocalizedException $e) {
                 return self::OUT_OF_STOCK;

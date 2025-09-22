@@ -15,5 +15,6 @@
         <element name="buttonAssignSources" type="button" selector="//button[@title='Assign sources']"/>
         <element name="buttonUnAssignSources" type="button" selector="//button[@title='Unassign sources']"/>
         <element name="msgBulkAssignmentSuccessful" type="text" selector="//div[@class='message message-success success']//div[contains(text(),'{{var1}}')]" parameterized="true"/>
+        <element name="successMessageContainer" type="text" selector="//div[@class='message message-success success']//div"/>
     </section>
 </sections>

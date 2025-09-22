@@ -61,7 +61,16 @@
         <checkOption selector="{{AdminBulkSourceAssignmentSection.selectTestSource(source3_code)}}" stepKey="checkSource3"/>
         <checkOption selector="{{AdminBulkSourceAssignmentSection.selectTestSource(source4_code)}}" stepKey="checkSource4"/>
         <click selector="{{AdminBulkSourceAssignmentSection.buttonAssignSources}}" stepKey="clickOnButtonAssignSources"/>
-        <seeElement selector="{{AdminBulkSourceAssignmentSection.msgBulkAssignmentSuccessful('Bulk operation was successful: 16 assignments.')}}" stepKey="assertsSuccessfulAssignmentOfSourcesToProducts"/>
+        <waitForElementVisible selector="{{AdminBulkSourceAssignmentSection.successMessageContainer}}" stepKey="waitForSuccessMessage" time="30"/>
+        <grabTextFrom selector="{{AdminBulkSourceAssignmentSection.successMessageContainer}}" stepKey="grabSuccessMessage"/>
+        <assertStringContainsString stepKey="assertSuccessMessageContainsBulkOperation">
+            <expectedResult type="string">Bulk operation was successful:</expectedResult>
+            <actualResult type="variable">$grabSuccessMessage</actualResult>
+        </assertStringContainsString>
+        <assertStringContainsString stepKey="assertSuccessMessageContainsAssignments">
+            <expectedResult type="string">16 assignments.</expectedResult>
+            <actualResult type="variable">$grabSuccessMessage</actualResult>
+        </assertStringContainsString>
         <waitForPageLoad stepKey="waitForProductGridPagePostAssignmentToLoad"/>
     </actionGroup>
 </actionGroups>

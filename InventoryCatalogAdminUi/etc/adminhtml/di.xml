@@ -58,4 +58,7 @@
     <type name="Magento\Ui\Component\Bookmark">
         <plugin name="initialize_quantity_per_source_bookmark_configuration" type="Magento\InventoryCatalogAdminUi\Plugin\Ui\Component\InitializeQuantityPerSourceBookmarkConfiguration"/>
     </type>
+    <type name="Magento\CatalogInventory\Api\StockRegistryInterface">
+        <plugin name="inventory_catalog_admin_ui_add_qty_to_legacy_stock" type="Magento\InventoryCatalogAdminUi\Plugin\CatalogInventory\Api\StockRegistry\SetQtyToLegacyStock"/>
+    </type>
 </config>

@@ -30,6 +30,10 @@
         </before>
         <after>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
+            
+            <!-- Delete all products via API using ProductApiHelper -->
+            <helper class="Magento\Catalog\Test\Mftf\Helper\ProductApiHelper" method="deleteAllProductsApi" stepKey="deleteAllProductsViaApi"/>
+            
             <amOnPage url="{{AdminManageSourcePage.url}}" stepKey="navigateToSourceList"/>
             <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}"
                               dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true"

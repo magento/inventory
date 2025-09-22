@@ -74,6 +74,8 @@
             <comment userInput="Set 'Notify for Quantity Below' to '1' by default" stepKey="revertNotifyQtyBelowComment1"/>
             <magentoCLI command="config:set cataloginventory/item_options/notify_stock_qty 1" stepKey="setNotifyForQuantityBelowToOne1"/>
 
+            <!-- Delete virtual product created via UI -->
+            <helper class="Magento\Catalog\Test\Mftf\Helper\ProductApiHelper" method="deleteAllProductsApi" stepKey="deleteAllProductsViaApi"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logOutFromAdminArea1"/>
 
             <deleteData createDataKey="createCategory1" stepKey="deleteCategory1"/>

@@ -8,14 +8,12 @@ declare(strict_types=1);
 namespace Magento\InventoryExportStock\Model;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Api\SearchResultsInterface;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryExportStockApi\Api\Data\ExportStockSalableQtySearchResultInterface;
 use Magento\InventoryExportStockApi\Api\Data\ExportStockSalableQtySearchResultInterfaceFactory;
 use Magento\InventoryExportStockApi\Api\ExportStockSalableQtyBySalesChannelInterface;
-use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
-use Magento\InventorySalesApi\Api\Data\SalesChannelInterfaceFactory;
 use Magento\InventorySalesApi\Api\GetStockBySalesChannelInterface;
 
 /**
@@ -44,29 +42,29 @@ class ExportStockSalableQtyBySalesChannel implements ExportStockSalableQtyBySale
     private $getStockBySalesChannel;
 
     /**
-     * @var SalesChannelInterfaceFactory
+     * @var SearchCriteriaBuilder
      */
-    private $salesChannelInterfaceFactory;
+    private $searchCriteriaBuilder;
 
     /**
      * @param ProductRepositoryInterface $productRepository
      * @param ExportStockSalableQtySearchResultInterfaceFactory $exportStockSalableQtySearchResultFactory
      * @param PreciseExportStockProcessor $preciseExportStockProcessor
      * @param GetStockBySalesChannelInterface $getStockBySalesChannel
-     * @param SalesChannelInterfaceFactory $salesChannelInterfaceFactory
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
      */
     public function __construct(
         ProductRepositoryInterface $productRepository,
         ExportStockSalableQtySearchResultInterfaceFactory $exportStockSalableQtySearchResultFactory,
         PreciseExportStockProcessor $preciseExportStockProcessor,
         GetStockBySalesChannelInterface $getStockBySalesChannel,
-        SalesChannelInterfaceFactory $salesChannelInterfaceFactory
+        SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
         $this->productRepository = $productRepository;
         $this->exportStockSalableQtySearchResultFactory = $exportStockSalableQtySearchResultFactory;
         $this->preciseExportStockProcessor = $preciseExportStockProcessor;
         $this->getStockBySalesChannel = $getStockBySalesChannel;
-        $this->salesChannelInterfaceFactory = $salesChannelInterfaceFactory;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
     }
 
     /**
@@ -79,13 +77,29 @@ class ExportStockSalableQtyBySalesChannel implements ExportStockSalableQtyBySale
         \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
     ): ExportStockSalableQtySearchResultInterface {
         $stock = $this->getStockBySalesChannel->execute($salesChannel);
-        $productSearchResult = $this->getProducts($searchCriteria);
+        // Build a fresh SearchCriteria with original filters + our inventory filter
+        $builder = $this->searchCriteriaBuilder;
+        $builder->setCurrentPage($searchCriteria->getCurrentPage());
+        $builder->setPageSize($searchCriteria->getPageSize());
+        foreach ($searchCriteria->getFilterGroups() as $filterGroup) {
+            $builder->addFilters($filterGroup->getFilters());
+        }
+        foreach ($searchCriteria->getSortOrders() ?: [] as $sortOrder) {
+            $builder->addSortOrder($sortOrder);
+        }
+        // Add stock filter that our custom processor intercepts
+        $builder->addFilter('inventory_stock_id', $stock->getStockId(), 'eq');
+        $searchCriteriaWithInventory = $builder->create();
+
+        $productSearchResult = $this->getProducts($searchCriteriaWithInventory);
         $items = $this->preciseExportStockProcessor->execute($productSearchResult->getItems(), $stock->getStockId());
+
         /** @var ExportStockSalableQtySearchResultInterface $searchResult */
         $searchResult = $this->exportStockSalableQtySearchResultFactory->create();
-        $searchResult->setSearchCriteria($productSearchResult->getSearchCriteria());
+        $searchResult->setSearchCriteria($searchCriteria);
         $searchResult->setItems($items);
-        $searchResult->setTotalCount(count($items));
+        // Single-pass: total count comes from filtered collection getSize()
+        $searchResult->setTotalCount($productSearchResult->getTotalCount());
 
         return $searchResult;
     }

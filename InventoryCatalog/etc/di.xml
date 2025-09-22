@@ -104,7 +104,6 @@
         <plugin name="adapt_get_stock_status_by_sku" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Api\StockRegistry\AdaptGetStockStatusBySkuPlugin"/>
         <plugin name="adapt_get_product_stock_status" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Api\StockRegistry\AdaptGetProductStockStatusPlugin"/>
         <plugin name="adapt_get_product_stock_status_by_sku" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Api\StockRegistry\AdaptGetProductStockStatusBySkuPlugin"/>
-        <plugin name="inventory_catalog_add_qty_to_legacy_stock" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Api\StockRegistry\SetQtyToLegacyStock"/>
     </type>
     <!-- Mass Source Assignment -->
     <preference for="Magento\InventoryCatalogApi\Api\BulkSourceAssignInterface"

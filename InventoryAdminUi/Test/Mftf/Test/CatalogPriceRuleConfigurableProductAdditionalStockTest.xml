@@ -76,8 +76,8 @@
 
         <!--Verify configurable product prices.-->
         <remove keyForRemoval="seeDiscountedPrice1"/>
-        <see selector="{{StorefrontCategoryProductSection.ProductInfoByNumber('1')}}" userInput="As low as $90.00" stepKey="seeDiscountedPrice1" after="seeProduct1"/>
+        <see selector="{{StorefrontCategoryProductSection.ProductInfoByNumber('1')}}" userInput="$90.00" stepKey="seeDiscountedPrice1" after="seeProduct1"/>
         <remove keyForRemoval="seeDiscountedPrice2"/>
-        <see selector="{{StorefrontCategoryProductSection.ProductInfoByNumber('1')}}" userInput="As low as $100.00" stepKey="seeDiscountedPrice2" after="seeProduct2"/>
+        <see selector="{{StorefrontCategoryProductSection.ProductInfoByNumber('1')}}" userInput="$100.00" stepKey="seeDiscountedPrice2" after="seeProduct2"/>
     </test>
 </tests>

@@ -20,6 +20,11 @@
             <group value="cloud"/>
         </annotations>
         <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+        <after>
+            <!-- Delete all products via API using ProductApiHelper -->
+            <helper class="Magento\Catalog\Test\Mftf\Helper\ProductApiHelper" method="deleteAllProductsApi" stepKey="deleteAllProductsViaApi"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="adminLogout"/>
+        </after>
         <comment userInput="Create Configurable product with qty 0" stepKey="CreateConfigurableProductComment"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToAdminProductGrid"/>
         <waitForPageLoad time="30" stepKey="waitForProductGridLoad"/>

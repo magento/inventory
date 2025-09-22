@@ -30,6 +30,8 @@
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin1"/>
         </before>
         <after>
+            <deleteData createDataKey="createCategory1" stepKey="deletecreateCategory1"/>
+            <deleteData createDataKey="virtualProduct1" stepKey="deleteVirtualProduct"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
         </after>
 

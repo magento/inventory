@@ -5,25 +5,23 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Api\StockRegistry;
+namespace Magento\InventoryCatalogAdminUi\Plugin\CatalogInventory\Api\StockRegistry;
 
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\Framework\App\RequestInterface;
+use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 
 class SetQtyToLegacyStock
 {
     /**
-     * @var RequestInterface
-     */
-    private $request;
-
-    /**
      * @param RequestInterface $request
+     * @param DefaultSourceProviderInterface $defaultSourceProvider
      */
-    public function __construct(RequestInterface $request)
-    {
-        $this->request = $request;
+    public function __construct(
+        private readonly RequestInterface $request,
+        private readonly DefaultSourceProviderInterface $defaultSourceProvider
+    ) {
     }
 
     /**
@@ -42,9 +40,15 @@ class SetQtyToLegacyStock
     ): array {
         $sources = $this->request->getParam('sources', []);
         if (isset($sources['assigned_sources']) && is_array($sources['assigned_sources'])) {
+            $defaultSourceCode = $this->defaultSourceProvider->getCode();
             foreach ($sources['assigned_sources'] as $source) {
-                if ($source['name'] === 'Default Source') {
-                    $stockItem->setQty($source['quantity']);
+                if ($source['source_code'] === $defaultSourceCode) {
+                    if (isset($source['quantity']) || isset($source['qty'])) {
+                        $stockItem->setQty($source['quantity'] ?? $source['qty']);
+                    }
+                    if (isset($source['status']) || isset($source['source_status'])) {
+                        $stockItem->setIsInStock($source['status'] ?? $source['source_status']);
+                    }
                     break;
                 }
             }

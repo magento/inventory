@@ -44,6 +44,8 @@
             <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveCustomStock"/>
         </before>
         <after>
+            <!-- Delete configurable product and variants created via UI -->
+            <helper class="Magento\Catalog\Test\Mftf\Helper\ProductApiHelper" method="deleteAllProductsApi" stepKey="deleteAllProductsViaApi"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
 
             <comment userInput="Disable source, as it can brake single source mode tests." stepKey="disableCustomSourceComment"/>

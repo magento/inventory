@@ -48,6 +48,8 @@
         </before>
         <after>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <!-- Delete product via API using ProductApiHelper -->
+            <helper class="Magento\Catalog\Test\Mftf\Helper\ProductApiHelper" method="deleteAllProductsApi" stepKey="deleteAllProductsViaApi"/>
 
             <comment userInput=" Disable source, as it can brake single source mode tests." stepKey="disableCustomSourceComment"/>
             <amOnPage url="{{AdminManageSourcePage.url}}" stepKey="navigateToSourceGridPage"/>

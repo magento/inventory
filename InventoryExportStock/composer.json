@@ -14,7 +14,8 @@
         "magento/module-inventory-configuration": "*",
         "magento/module-inventory-configuration-api": "*",
         "magento/module-configurable-product": "*",
-        "magento/module-grouped-product": "*"
+        "magento/module-grouped-product": "*",
+        "magento/module-eav": "*"
     },
     "type": "magento2-module",
     "license": [

@@ -60,6 +60,7 @@
             <deleteData createDataKey="customStock" stepKey="deleteCustomStock"/>
             <deleteData createDataKey="simpleProduct" stepKey="deleteSimpleProduct"/>
             <deleteData createDataKey="virtualProduct" stepKey="deleteVirtualProduct"/>
+            <deleteData createDataKey="groupedProduct" stepKey="deleteGroupedProduct"/>
         </after>
 
         <comment userInput="Assign category to created virtual product." stepKey="assignCategoryToVirtualProductComment"/>

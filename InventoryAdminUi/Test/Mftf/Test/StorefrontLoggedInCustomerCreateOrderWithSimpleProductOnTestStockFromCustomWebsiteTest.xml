@@ -66,6 +66,8 @@
             </actionGroup>
         </before>
         <after>
+            <!--Delete product created via API-->
+            <deleteData createDataKey="simpleProduct" stepKey="deleteSimpleProduct"/>
             <!--Delete category-->
             <deleteData createDataKey="simpleCategory" stepKey="deleteCategory"/>
             <!--Assign Default Stock to Default Website.-->

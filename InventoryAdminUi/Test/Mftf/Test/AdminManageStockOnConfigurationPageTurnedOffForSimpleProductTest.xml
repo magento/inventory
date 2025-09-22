@@ -34,6 +34,9 @@
         </before>
         <after>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            
+            <!-- Delete all products via API using ProductApiHelper -->
+            <helper class="Magento\Catalog\Test\Mftf\Helper\ProductApiHelper" method="deleteAllProductsApi" stepKey="deleteAllProductsViaApi"/>
 
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <comment userInput="BIC workaround" stepKey="disableCustomSourceComment"/>

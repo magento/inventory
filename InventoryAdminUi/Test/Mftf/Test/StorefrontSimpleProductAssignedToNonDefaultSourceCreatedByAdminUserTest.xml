@@ -37,6 +37,8 @@
         </before>
         <after>
             <deleteData createDataKey="createSimpleSubCategory" stepKey="deleteSimpleSubCategory"/>
+            <!-- Delete product via API using ProductApiHelper -->
+            <helper class="Magento\Catalog\Test\Mftf\Helper\ProductApiHelper" method="deleteAllProductsApi" stepKey="deleteAllProductsViaApi"/>
             <!--Assign Default Stock to Default Website.-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>

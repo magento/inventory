@@ -1,0 +1,25 @@
+{
+  "templateVersion":"0.1",
+  "product":{
+    "name":"Inventory",
+    "description":"Provides inventory related features."
+  },
+  "contacts":{
+    "team":{
+      "name":"Inventory",
+      "DL":"Grp-RQ-SPARTANS",
+      "slackChannel":"adobe-commerce-inventory"
+    }
+  },
+  "ticketTracker":{
+    "functionalJiraQueue":{
+      "projectKey":"AC",
+      "component":""
+    },
+    "securityJiraQueue":{
+      "projectKey":"AC",
+      "component":""
+    }
+  },
+  "productionCodeBranches":["develop"]
+}

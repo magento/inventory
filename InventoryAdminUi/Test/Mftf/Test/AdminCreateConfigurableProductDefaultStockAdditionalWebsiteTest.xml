@@ -51,15 +51,8 @@
             </actionGroup>
         </before>
         <after>
-            <!--Delete configurable product.-->
-            <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToAdminProductGridToDeleteProducts"/>
-            <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findConfigurableProduct">
-                <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
-                <argument name="value" value="{{ConfigurableMsiProduct.sku}}"/>
-            </actionGroup>
-            <actionGroup ref="DeleteProductActionGroup" stepKey="deleteConfigurableProduct">
-                <argument name="productName" value="ConfigurableMsiProduct.name"/>
-            </actionGroup>
+            <!-- Delete configurable product and its variations -->
+            <helper class="Magento\Catalog\Test\Mftf\Helper\ProductApiHelper" method="deleteAllProductsApi" stepKey="deleteAllProductsViaApi"/>
             <!--Delete created website.-->
             <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite">
                 <argument name="websiteName" value="{{customWebsite.name}}"/>

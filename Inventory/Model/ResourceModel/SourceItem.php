@@ -7,7 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\Inventory\Model\ResourceModel;
 
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
+use Magento\InventoryApi\Api\Data\SourceItemInterface;
 
 /**
  * Implementation of basic operations for Source Item entity for specific db layer
@@ -27,5 +29,28 @@ class SourceItem extends AbstractDb
     protected function _construct()
     {
         $this->_init(self::TABLE_NAME_SOURCE_ITEM, self::ID_FIELD_NAME);
+    }
+
+    /**
+     * Retrieve all source items by given SKUs
+     *
+     * @param array $skus
+     * @param array $columns
+     * @return array
+     * @throws LocalizedException
+     */
+    public function findAllBySkus(array $skus, array $columns = []): array
+    {
+        $connection = $this->getConnection();
+        $select = $connection->select()
+            ->from(
+                $this->getMainTable(),
+                $columns ?: '*'
+            )->where(
+                SourceItemInterface::SKU . ' IN (?)',
+                $skus
+            );
+
+        return $connection->fetchAll($select);
     }
 }

@@ -17,6 +17,9 @@
             <severity value="MAJOR"/>
             <group value="msi"/>
             <group value="store_pickup"/>
+            <skip>
+                <issueId value="AC-15491">Skipped because of AC bug</issueId>
+            </skip>
         </annotations>
 
         <before>

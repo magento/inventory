@@ -33,7 +33,8 @@
             <actionGroup ref="AdminGoToConfigurationPageEnableDisableManageStock" stepKey="enableManageStockBackToYes">
                 <argument name="manageStockValue" value="Yes"/>
             </actionGroup>
-            <deleteData createDataKey="createConfigurableProduct" stepKey="deleteBundleProduct"/>
+            <!-- Delete configurable product and its variations via API using ProductApiHelper -->
+            <helper class="Magento\Catalog\Test\Mftf\Helper\ProductApiHelper" method="deleteAllProductsApi" stepKey="deleteAllProductsViaApi"/>
             <deleteData createDataKey="createSubCategory" stepKey="deleteSubCategory"/>
 
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource">

@@ -67,11 +67,8 @@
             </actionGroup>
         </before>
         <after>
-            <!--Delete configurable product.-->
-            <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToAdminProductGridToDeleteProducts"/>
-            <actionGroup ref="DeleteProductActionGroup" stepKey="deleteConfigurableProduct">
-                <argument name="productName" value="ConfigurableMsiProduct.name"/>
-            </actionGroup>
+            <!-- Delete configurable product and variants via API using ProductApiHelper -->
+            <helper class="Magento\Catalog\Test\Mftf\Helper\ProductApiHelper" method="deleteAllProductsApi" stepKey="deleteAllProductsViaApi"/>
             <!--Assign Default Stock to Main Website.-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>

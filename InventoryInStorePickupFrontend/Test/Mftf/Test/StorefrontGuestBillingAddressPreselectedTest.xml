@@ -19,6 +19,9 @@
             <group value="msi"/>
             <group value="store_pickup"/>
             <group value="pr_exclude"/>
+            <skip>
+                <issueId value="AC-15491">Skipped because of AC bug</issueId>
+            </skip>
         </annotations>
         <before>
             <!--Set Distance Provider for Distance Based SSA to offline-->

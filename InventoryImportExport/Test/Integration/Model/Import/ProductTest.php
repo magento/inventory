@@ -8,8 +8,10 @@ declare(strict_types=1);
 namespace Magento\InventoryImportExport\Test\Integration\Model\Import;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Catalog\Test\Fixture\Product as ProductFixture;
 use Magento\CatalogImportExport\Model\Import\Product;
 use Magento\CatalogImportExport\Model\Import\ProductFactory;
+use Magento\CatalogInventory\Model\Stock;
 use Magento\Framework\Api\SearchCriteria;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
@@ -23,12 +25,30 @@ use Magento\ImportExport\Model\Import;
 use Magento\ImportExport\Model\Import\Source\Csv;
 use Magento\ImportExport\Model\Import\Source\CsvFactory;
 use Magento\ImportExport\Model\ResourceModel\Import\Data;
+use Magento\ImportExport\Test\Fixture\CsvFile as CsvFileFixture;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\Data\SourceItemSearchResultsInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
+use Magento\InventoryApi\Test\Fixture\Source as SourceFixture;
+use Magento\InventoryApi\Test\Fixture\SourceItems as SourceItemsFixture;
+use Magento\InventoryApi\Test\Fixture\Stock as StockFixture;
+use Magento\InventoryApi\Test\Fixture\StockSourceLinks as StockSourceLinksFixture;
 use Magento\InventoryCatalog\Model\DeleteSourceItemsBySkus;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
+use Magento\InventoryConfiguration\Model\GetLegacyStockItemsCache;
+use Magento\InventoryConfiguration\Model\GetLegacyStockItemsInterface;
+use Magento\InventoryIndexer\Model\ResourceModel\GetStockItemData;
 use Magento\InventoryLowQuantityNotification\Model\ResourceModel\SourceItemConfiguration\GetBySku;
+use Magento\InventorySales\Model\GetProductSalableQty;
+use Magento\InventorySalesApi\Test\Fixture\StockSalesChannels as StockSalesChannelsFixture;
+use Magento\Store\Test\Fixture\Group as StoreGroupFixture;
+use Magento\Store\Test\Fixture\Store as StoreFixture;
+use Magento\Store\Test\Fixture\Website as WebsiteFixture;
+use Magento\TestFramework\Fixture\AppArea;
+use Magento\TestFramework\Fixture\AppIsolation;
+use Magento\TestFramework\Fixture\DataFixture;
+use Magento\TestFramework\Fixture\DataFixtureStorageManager;
+use Magento\TestFramework\Fixture\DbIsolation;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\MessageQueue\ClearQueueProcessor;
 use PHPUnit\Framework\TestCase;
@@ -205,6 +225,228 @@ class ProductTest extends TestCase
         $this->assertEmpty($this->getBySku->execute($productSku));
     }
 
+    #[
+        AppArea(\Magento\Framework\App\Area::AREA_ADMINHTML),
+        AppIsolation(true), // needed for object manager config changes.
+        DbIsolation(false),
+        DataFixture(WebsiteFixture::class, as: 'website2'),
+        DataFixture(StoreGroupFixture::class, ['website_id' => '$website2.id$'], 'group2'),
+        DataFixture(StoreFixture::class, ['store_group_id' => '$group2.id$'], 'store2'),
+        DataFixture(SourceFixture::class, as: 'source2'),
+        DataFixture(SourceFixture::class, as: 'source3'),
+        DataFixture(StockFixture::class, as: 'stock2'),
+        DataFixture(
+            StockSourceLinksFixture::class,
+            [
+                ['stock_id' => '$stock2.stock_id$', 'source_code' => '$source2.source_code$'],
+                ['stock_id' => '$stock2.stock_id$', 'source_code' => '$source3.source_code$'],
+            ]
+        ),
+        DataFixture(
+            StockSalesChannelsFixture::class,
+            ['stock_id' => '$stock2.stock_id$', 'sales_channels' => ['$website2.code$']]
+        ),
+        DataFixture(
+            ProductFixture::class,
+            [
+                'website_ids' => ['1', '$website2.id$'],
+                'extension_attributes' => [
+                    'stock_item' => [
+                        'qty' => 3,
+                        'is_in_stock' => true,
+                        'min_qty' => 5,
+                        'use_config_min_qty' => false,
+                    ],
+                ],
+            ],
+            'product'
+        ),
+        DataFixture(
+            SourceItemsFixture::class,
+            [
+                ['sku' => '$product.sku$', 'source_code' => '$source2.source_code$', 'quantity' => 4],
+                ['sku' => '$product.sku$', 'source_code' => '$source3.source_code$', 'quantity' => 1],
+            ]
+        ),
+        DataFixture(
+            CsvFileFixture::class,
+            [
+                'rows' => [
+                    ['sku', 'store_view_code', 'out_of_stock_qty'],
+                    ['$product.sku$', '', '5'],
+                ]
+            ],
+            'out_of_stock_qty_5_import_file'
+        ),
+        DataFixture(
+            CsvFileFixture::class,
+            [
+                'rows' => [
+                    ['sku', 'store_view_code', 'out_of_stock_qty'],
+                    ['$product.sku$', '', '2'],
+                ]
+            ],
+            'out_of_stock_qty_2_import_file'
+        ),
+    ]
+    public function testShouldReindexCustomStockWhenOutOfStockThresholdConfigChanges(): void
+    {
+        // Important: GetLegacyStockItemsCache must be used to emulate legacy stock item loading from cache as
+        // it is done outside test environment.
+        $this->objectManager->configure([
+            'preferences' => [
+                GetLegacyStockItemsInterface::class => GetLegacyStockItemsCache::class,
+            ]
+        ]);
+
+        $fixtures = DataFixtureStorageManager::getStorage();
+        $getStockItemData = Bootstrap::getObjectManager()->get(GetStockItemData::class);
+        $getProductSalableQty = Bootstrap::getObjectManager()->get(GetProductSalableQty::class);
+        $sku = $fixtures->get('product')->getSku();
+        $stock1 = Stock::DEFAULT_STOCK_ID;
+        $stock2 = (int) $fixtures->get('stock2')->getId();
+
+        // Current stock status when out_of_stock_qty = 5
+        $this->assertFalse((bool) $getStockItemData->execute($sku, $stock1)[GetStockItemData::IS_SALABLE]);
+        $this->assertEquals(0, $getProductSalableQty->execute($sku, $stock1));
+        $this->assertFalse((bool) $getStockItemData->execute($sku, $stock2)[GetStockItemData::IS_SALABLE]);
+        $this->assertEquals(0, $getProductSalableQty->execute($sku, $stock2));
+
+        // Import out_of_stock_qty = 2
+        $pathToFile = $fixtures->get('out_of_stock_qty_2_import_file')->getAbsolutePath();
+        $productImporterModel = $this->getProductImporterModel($pathToFile);
+        $errors = $productImporterModel->validateData();
+        $this->assertTrue($errors->getErrorsCount() == 0);
+        $productImporterModel->importData();
+
+        $this->assertTrue((bool) $getStockItemData->execute($sku, $stock1)[GetStockItemData::IS_SALABLE]);
+        $this->assertEquals(1, $getProductSalableQty->execute($sku, $stock1));
+        $this->assertTrue((bool) $getStockItemData->execute($sku, $stock2)[GetStockItemData::IS_SALABLE]);
+        $this->assertEquals(3, $getProductSalableQty->execute($sku, $stock2));
+
+        // Import out_of_stock_qty = 5
+        $pathToFile = $fixtures->get('out_of_stock_qty_5_import_file')->getAbsolutePath();
+        $productImporterModel = $this->getProductImporterModel($pathToFile);
+        $errors = $productImporterModel->validateData();
+        $this->assertTrue($errors->getErrorsCount() == 0);
+        $productImporterModel->importData();
+
+        $this->assertFalse((bool) $getStockItemData->execute($sku, $stock1)[GetStockItemData::IS_SALABLE]);
+        $this->assertEquals(0, $getProductSalableQty->execute($sku, $stock1));
+        $this->assertFalse((bool) $getStockItemData->execute($sku, $stock2)[GetStockItemData::IS_SALABLE]);
+        $this->assertEquals(0, $getProductSalableQty->execute($sku, $stock2));
+    }
+
+    #[
+        AppArea(\Magento\Framework\App\Area::AREA_ADMINHTML),
+        AppIsolation(true), // needed for object manager config changes.
+        DbIsolation(false),
+        DataFixture(WebsiteFixture::class, as: 'website2'),
+        DataFixture(StoreGroupFixture::class, ['website_id' => '$website2.id$'], 'group2'),
+        DataFixture(StoreFixture::class, ['store_group_id' => '$group2.id$'], 'store2'),
+        DataFixture(SourceFixture::class, as: 'source2'),
+        DataFixture(SourceFixture::class, as: 'source3'),
+        DataFixture(StockFixture::class, as: 'stock2'),
+        DataFixture(
+            StockSourceLinksFixture::class,
+            [
+                ['stock_id' => '$stock2.stock_id$', 'source_code' => '$source2.source_code$'],
+                ['stock_id' => '$stock2.stock_id$', 'source_code' => '$source3.source_code$'],
+            ]
+        ),
+        DataFixture(
+            StockSalesChannelsFixture::class,
+            ['stock_id' => '$stock2.stock_id$', 'sales_channels' => ['$website2.code$']]
+        ),
+        DataFixture(
+            ProductFixture::class,
+            [
+                'website_ids' => ['1', '$website2.id$'],
+                'extension_attributes' => [
+                    'stock_item' => [
+                        'qty' => 0,
+                        'is_in_stock' => true,
+                    ],
+                ],
+            ],
+            'product'
+        ),
+        DataFixture(
+            SourceItemsFixture::class,
+            [
+                ['sku' => '$product.sku$', 'source_code' => 'default', 'quantity' => 0],
+                ['sku' => '$product.sku$', 'source_code' => '$source2.source_code$', 'quantity' => 0],
+                ['sku' => '$product.sku$', 'source_code' => '$source3.source_code$', 'quantity' => 0],
+            ]
+        ),
+        DataFixture(
+            CsvFileFixture::class,
+            [
+                'rows' => [
+                    ['sku', 'store_view_code', 'allow_backorders'],
+                    ['$product.sku$', '', '1'],
+                ]
+            ],
+            'backorder_enabled_import_file'
+        ),
+        DataFixture(
+            CsvFileFixture::class,
+            [
+                'rows' => [
+                    ['sku', 'store_view_code', 'allow_backorders'],
+                    ['$product.sku$', '', '0'],
+                ]
+            ],
+            'backorder_disabled_import_file'
+        ),
+    ]
+    public function testShouldReindexCustomStockWhenBackordersConfigChanges(): void
+    {
+        // Important: GetLegacyStockItemsCache must be used to emulate legacy stock item loading from cache as
+        // it is done outside test environment.
+        $this->objectManager->configure([
+            'preferences' => [
+                GetLegacyStockItemsInterface::class => GetLegacyStockItemsCache::class,
+            ]
+        ]);
+        $fixtures = DataFixtureStorageManager::getStorage();
+        $getStockItemData = Bootstrap::getObjectManager()->get(GetStockItemData::class);
+        $getProductSalableQty = Bootstrap::getObjectManager()->get(GetProductSalableQty::class);
+        $sku = $fixtures->get('product')->getSku();
+        $stock1 = Stock::DEFAULT_STOCK_ID;
+        $stock2 = (int) $fixtures->get('stock2')->getId();
+
+        // Current stock status when backorders = 0
+        $this->assertFalse((bool) $getStockItemData->execute($sku, $stock1)[GetStockItemData::IS_SALABLE]);
+        $this->assertEquals(0, $getProductSalableQty->execute($sku, $stock1));
+        $this->assertFalse((bool) $getStockItemData->execute($sku, $stock2)[GetStockItemData::IS_SALABLE]);
+        $this->assertEquals(0, $getProductSalableQty->execute($sku, $stock2));
+
+        // Import backorders = 1
+        $pathToFile = $fixtures->get('backorder_enabled_import_file')->getAbsolutePath();
+        $productImporterModel = $this->getProductImporterModel($pathToFile);
+        $errors = $productImporterModel->validateData();
+        $this->assertTrue($errors->getErrorsCount() == 0);
+        $productImporterModel->importData();
+
+        $this->assertTrue((bool) $getStockItemData->execute($sku, $stock1)[GetStockItemData::IS_SALABLE]);
+        $this->assertEquals(0, $getProductSalableQty->execute($sku, $stock1));
+        $this->assertTrue((bool) $getStockItemData->execute($sku, $stock2)[GetStockItemData::IS_SALABLE]);
+        $this->assertEquals(0, $getProductSalableQty->execute($sku, $stock2));
+
+        // Import backorders = 0
+        $pathToFile = $fixtures->get('backorder_disabled_import_file')->getAbsolutePath();
+        $productImporterModel = $this->getProductImporterModel($pathToFile);
+        $errors = $productImporterModel->validateData();
+        $this->assertTrue($errors->getErrorsCount() == 0);
+        $productImporterModel->importData();
+
+        $this->assertFalse((bool) $getStockItemData->execute($sku, $stock1)[GetStockItemData::IS_SALABLE]);
+        $this->assertEquals(0, $getProductSalableQty->execute($sku, $stock1));
+        $this->assertFalse((bool) $getStockItemData->execute($sku, $stock2)[GetStockItemData::IS_SALABLE]);
+        $this->assertEquals(0, $getProductSalableQty->execute($sku, $stock2));
+    }
+
     /**
      * Process messages
      *
@@ -301,8 +543,8 @@ class ProductTest extends TestCase
      */
     protected function tearDown(): void
     {
+        $objectManager = Bootstrap::getObjectManager();
         if (!empty($this->importedProducts)) {
-            $objectManager = Bootstrap::getObjectManager();
             /** @var ProductRepositoryInterface $productRepository */
             $productRepository = $objectManager->create(ProductRepositoryInterface::class);
             $registry = $objectManager->get(\Magento\Framework\Registry::class);
@@ -318,12 +560,11 @@ class ProductTest extends TestCase
                 }
             }
 
-            /** @var Data $dataSourceModel */
-            $dataSourceModel = $objectManager->create(Data::class);
-            $dataSourceModel->cleanBunches();
-
             $registry->unregister('isSecureArea');
             $registry->register('isSecureArea', false);
         }
+        /** @var Data $dataSourceModel */
+        $dataSourceModel = $objectManager->create(Data::class);
+        $dataSourceModel->cleanBunches();
     }
 }

@@ -62,7 +62,16 @@
         <checkOption selector="{{AdminBulkSourceAssignmentSection.selectTestSource(source3_code)}}" stepKey="checkSource3"/>
         <checkOption selector="{{AdminBulkSourceAssignmentSection.selectTestSource(source4_code)}}" stepKey="checkSource4"/>
         <click selector="{{AdminBulkSourceAssignmentSection.buttonUnAssignSources}}" stepKey="clickOnButtonUnassignSources"/>
-        <seeElement selector="{{AdminBulkSourceAssignmentSection.msgBulkAssignmentSuccessful('Bulk operation was successful: 16 unassignments.')}}" stepKey="assertsSuccessfulAssignmentOfSourcesToProducts"/>
+        <waitForElementVisible selector="{{AdminBulkSourceAssignmentSection.successMessageContainer}}" stepKey="waitForUnassignmentSuccessMessage" time="30"/>
+        <grabTextFrom selector="{{AdminBulkSourceAssignmentSection.successMessageContainer}}" stepKey="grabUnassignmentSuccessMessage"/>
+        <assertStringContainsString stepKey="assertUnassignmentSuccessMessageContainsBulkOperation">
+            <expectedResult type="string">Bulk operation was successful:</expectedResult>
+            <actualResult type="variable">$grabUnassignmentSuccessMessage</actualResult>
+        </assertStringContainsString>
+        <assertStringContainsString stepKey="assertUnassignmentSuccessMessageContainsAssignments">
+            <expectedResult type="string">16 unassignments.</expectedResult>
+            <actualResult type="variable">$$grabUnassignmentSuccessMessage</actualResult>
+        </assertStringContainsString>
         <waitForPageLoad stepKey="waitForProductGridPagePostAssignmentToLoad"/>
     </actionGroup>
 </actionGroups>

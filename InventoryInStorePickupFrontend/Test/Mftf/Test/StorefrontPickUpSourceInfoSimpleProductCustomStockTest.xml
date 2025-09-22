@@ -16,7 +16,6 @@
             <severity value="MAJOR"/>
             <group value="msi"/>
             <group value="store_pickup"/>
-            <group value="pr_exclude"/>
         </annotations>
 
         <before>

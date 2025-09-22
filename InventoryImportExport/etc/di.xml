@@ -31,7 +31,8 @@
         <plugin name="update_grouped_product_stock_status_plugin" disabled="true"/>
     </type>
     <type name="Magento\CatalogImportExport\Model\StockItemProcessorInterface">
-        <plugin name="importStockItemDataForSourceItem" type="Magento\InventoryImportExport\Plugin\Import\SourceItemImporter"/>
+        <plugin name="inventory_import_export_purge_stock_item_cache" type="Magento\InventoryImportExport\Plugin\Import\PurgeLegacyStockItemCacheStorage" sortOrder="100"/>
+        <plugin name="importStockItemDataForSourceItem" type="Magento\InventoryImportExport\Plugin\Import\SourceItemImporter" sortOrder="200"/>
     </type>
     <type name="Magento\ImportExport\Model\Import\EntityInterface">
         <plugin name="SourceNeedToLogin" type="Magento\InventoryImportExport\Plugin\Import\EntityHistoryLoginFlag"/>

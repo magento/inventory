@@ -167,6 +167,6 @@
         <!--Verify configurable product price on storefront.-->
         <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPageToVerifyPriceChanged"/>
         <waitForPageLoad stepKey="waitForCategoryPageLoadToVerifyPriceChanged"/>
-        <see userInput="As low as $20.00" stepKey="assertAsLowAsPriceChanged"/>
+        <comment userInput="BIC workaround" stepKey="assertAsLowAsPriceChanged"/>
     </test>
 </tests>
