@@ -213,8 +213,7 @@ class AppendReservationsTest extends TestCase
                 
             } catch (\Exception $e) {
                 $this->fail(
-                    "Failed to process argument with special character SKU for test case '{$testName}': " . 
-                    $e->getMessage() . " | Argument: {$argument}"
+                    "Failed to process argument with special character SKU for test case '{$testName}': " . $e->getMessage() . " | Argument: {$argument}"
                 );
             }
         }
