@@ -212,9 +212,9 @@ class AppendReservationsTest extends TestCase
                 );
                 
             } catch (\Exception $e) {
-                $this->fail(
-                    "Failed to process argument with special character SKU for test case '{$testName}': " . $e->getMessage() . " | Argument: {$argument}"
-                );
+                $errorMessage = "Failed to process argument with special character SKU for test case '{$testName}': ";
+                $fullMessage = $errorMessage . $e->getMessage() . " | Argument: {$argument}";
+                $this->fail($fullMessage);
             }
         }
     }
