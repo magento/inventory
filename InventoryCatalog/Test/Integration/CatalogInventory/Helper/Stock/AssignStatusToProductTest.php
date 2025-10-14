@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -66,10 +66,10 @@ class AssignStatusToProductTest extends TestCase
      */
     public function testAssignStatusToProductIfStatusParameterIsNotPassed(string $storeCode, array $productsData)
     {
-        $this->storeManager->setCurrentStore($storeCode);
+        $storeId = $this->storeManager->getStore($storeCode)->getId();
 
         foreach ($productsData as $sku => $expectedStatus) {
-            $product = $this->productRepository->get($sku);
+            $product = $this->productRepository->get($sku, false, $storeId, forceReload: true);
             /** @var Product $product */
             $this->stockHelper->assignStatusToProduct($product);
 
@@ -95,10 +95,10 @@ class AssignStatusToProductTest extends TestCase
     public function testAssignStatusToProductIfStatusParameterIsPassed(string $storeCode, array $productsData)
     {
         $expectedStatus = 1;
-        $this->storeManager->setCurrentStore($storeCode);
+        $storeId = $this->storeManager->getStore($storeCode)->getId();
 
         foreach (array_keys($productsData) as $sku) {
-            $product = $this->productRepository->get($sku);
+            $product = $this->productRepository->get($sku, false, $storeId, forceReload: true);
             /** @var Product $product */
             $this->stockHelper->assignStatusToProduct($product, $expectedStatus);
 
@@ -109,7 +109,7 @@ class AssignStatusToProductTest extends TestCase
     /**
      * @return array
      */
-    public function assignStatusToProductDataProvider(): array
+    public static function assignStatusToProductDataProvider(): array
     {
         return [
             'eu_website' => [

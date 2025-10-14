@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -49,6 +49,9 @@
                 <argument name="StoreGroup" value="customStoreGroup"/>
                 <argument name="customStore" value="customStore"/>
             </actionGroup>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </before>
         <after>
             <!--Delete created website.-->
@@ -59,12 +62,19 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource">
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
             </actionGroup>
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <!--Delete category, product and stock. Revert configuration.-->
             <magentoCLI command="config:set {{StorefrontDisableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlDisable"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!--Assign Stock to Website.-->
@@ -82,7 +92,7 @@
             <argument name="website" value="{{customWebsite.name}}"/>
         </actionGroup>
         <!--Verify product on storefront.-->
-        <amOnPage url="{{StorefrontHomePage.url}}/{{customStore.code}}/$$category.name$$.html" stepKey="navigateToCategoryPage"/>
+        <amOnPage url="{{StorefrontHomePage.url}}/{{customStore.code}}/$$category.custom_attributes[url_key]$$.html" stepKey="navigateToCategoryPage"/>
         <waitForPageLoad stepKey="waitForCategoryPageLoad"/>
         <see userInput="$$simpleProduct.name$$" stepKey="assertProductPresent"/>
         <see userInput="$$simpleProduct.price$$" stepKey="assertProductPricePresent"/>

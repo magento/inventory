@@ -1,27 +1,29 @@
 <!--
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 -->
 <if args="!isLoading() && !selectedLocation()">
     <p class="no-selected-location">
-        <translate args="'We could not preselect pickup location based on available information, please select it manually.'"/>
+        <translate args="'We could not preselect pickup location based on available information, please select it manually.'"></translate>
     </p>
 </if>
 <div class="selected-location-details location-details" if="selectedLocation">
     <p class="location-name">
-        <text args="selectedLocation().name"/>
+        <text args="selectedLocation().name"></text>
     </p>
     <p class="location-address">
-        <text args="selectedLocation().street"/><br/>
-        <text args="selectedLocation().city"/>, <span text="selectedLocation().region"></span>
-        <text args="selectedLocation().postcode"/><br/>
-        <text args="selectedLocation().country"/><br/>
+        <text args="selectedLocation().street"></text><br>
+        <text args="selectedLocation().city"></text>, <span text="selectedLocation().region"></span>
+        <text args="selectedLocation().postcode"></text><br>
+        <text args="selectedLocation().country"></text><br>
         <a if="selectedLocation().telephone"
            attr="'href': 'tel:' + selectedLocation().telephone"
            text="selectedLocation().telephone"
         ></a>
     </p>
-    <p class="location-description" html="selectedLocation().description"></p>
+    <!-- ko with: {locationDescriptionUnsanitizedHtml: selectedLocation().description} -->
+    <p class="location-description" html="locationDescriptionUnsanitizedHtml"></p>
+    <!-- /ko -->
 </div>

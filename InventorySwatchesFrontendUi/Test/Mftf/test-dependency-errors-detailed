@@ -1,0 +1,59 @@
+
+File "/var/www/html/app/code/Magento/InventorySwatchesFrontendUi/Test/Mftf/Test/StorefrontDisplayCorrectMessageWhenChildProductSelectedForConfigProductWithTextSwatchAttributeTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AddUniqueQuantityToConfigurableProductOptionActionGroup from module(s): magento/module-configurable-product
+	 StorefrontSelectSwatchOptionOnProductPageActionGroup from module(s): magento/module-swatches
+	 StorefrontDisplayCorrectMessageWhenChildProductSelectedForConfigProductWithDropDownAttributeTest from module(s): magento/module-inventory-configurable-product-frontend-ui
+
+File "/var/www/html/app/code/Magento/InventorySwatchesFrontendUi/Test/Mftf/Test/StorefrontDisplayCorrectMessageWhenChildProductSelectedForConfigProductWithVisualSwatchAttributeTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AddUniqueQuantityToConfigurableProductOptionActionGroup from module(s): magento/module-configurable-product
+	 StorefrontSelectSwatchOptionOnProductPageActionGroup from module(s): magento/module-swatches
+	 StorefrontDisplayCorrectMessageWhenChildProductSelectedForConfigProductWithDropDownAttributeTest from module(s): magento/module-inventory-configurable-product-frontend-ui
+
+File "/var/www/html/app/code/Magento/InventorySwatchesFrontendUi/Test/Mftf/Test/StorefrontValidateVisualSwatchAbsenceOfAttributeWhenProductStocksOutTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 BasicMsiStock1 from module(s): magento/module-inventory-admin-ui
+	 ApiConfigurableProduct from module(s): magento/module-configurable-product
+	 visualSwatchAttribute from module(s): magento/module-inventory-admin-ui, magento/module-swatches
+	 AdminProductFormSection from module(s): magento/module-catalog, magento/module-catalog-inventory, magento/module-catalog-staging, magento/module-gift-card
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminNewAttributePanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui, magento/module-swatches
+	 visualSwatchProductAttribute from module(s): magento/module-catalog
+	 multiselectProductAttribute from module(s): magento/module-catalog
+	 AdminManageSwatchSection from module(s): magento/module-swatches
+	 AdminDataGridHeaderSection from module(s): magento/module-checkout, magento/module-ui
+	 AdminDataGridTableSection from module(s): magento/module-staging, magento/module-ui
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 AdminGridRow from module(s): magento/module-ui
+	 AdminProductFormActionSection from module(s): magento/module-catalog
+	 AdminChooseAffectedAttributeSetPopup from module(s): magento/module-configurable-product
+	 AdminMessagesSection from module(s): magento/module-backend, magento/module-inventory-admin-ui
+	 StorefrontProductInfoMainSection from module(s): magento/module-bundle, magento/module-catalog, magento/module-checkout, magento/module-configurable-product, magento/module-gift-card, magento/module-grouped-product, magento/module-inventory-bundle-product, magento/module-inventory-configurable-product-frontend-ui, magento/module-product-video, magento/module-swatches, magento/module-wishlist
+	 AdminLoginActionGroup from module(s): magento/module-admin-analytics, magento/module-backend, magento/module-two-factor-auth
+	 AdminCreateNewStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 AdminDeleteConfigProductActionGroup from module(s): magento/module-inventory-admin-ui
+	 AdminDeleteProductAttributeByLabelActionGroup from module(s): magento/module-catalog
+	 StorefrontCustomerLogoutActionGroup from module(s): magento/module-customer
+	 AdminDeleteStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 DisableSourceActionGroup from module(s): magento/module-inventory-admin-ui
+	 DeleteCategoryActionGroup from module(s): magento/module-catalog
+	 AdminLogoutActionGroup from module(s): magento/module-backend
+	 AdminOpenProductIndexPageActionGroup from module(s): magento/module-catalog
+	 GoToCreateProductPageActionGroup from module(s): magento/module-catalog
+	 OpenSwatchMenuByIndexActionGroup from module(s): magento/module-swatches
+	 SetColorPickerByHexActionGroup from module(s): magento/module-swatches
+	 SearchAdminDataGridByKeywordActionGroup from module(s): magento/module-ui
+	 CliIndexerReindexActionGroup from module(s): magento/module-indexer
+	 CliCacheFlushActionGroup from module(s): magento/module-backend
+	 LoginToStorefrontActionGroup from module(s): magento/module-customer
+	 AssertStorefrontSwatchColorActionGroup from module(s): magento/module-swatches
+	 StorefrontSelectSwatchOptionOnProductPageActionGroup from module(s): magento/module-swatches
+	 StorefrontAddProductToCartWithQtyActionGroup from module(s): magento/module-catalog
+	 StorefrontOpenCartFromMinicartActionGroup from module(s): magento/module-checkout
+	 StorefrontClickProceedToCheckoutActionGroup from module(s): magento/module-checkout
+	 ClickPlaceOrderActionGroup from module(s): magento/module-checkout

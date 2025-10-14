@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -48,11 +48,15 @@
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
             <!--Delete test data.-->
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="groupedProduct" stepKey="deleteGroupedProduct"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
             <!--Disable backorders in configuration.-->
             <magentoCLI command="config:set cataloginventory/item_options/backorders 0" stepKey="disableBackorders" after="deleteStock"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!--Assign virtual product to additional source.-->
@@ -83,20 +87,23 @@
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
         <!--Add product to cart.-->
-        <amOnPage url="{{StorefrontProductPage.url($$groupedProduct.name$$)}}" stepKey="navigateToGroupedPDP"/>
+        <amOnPage url="{{StorefrontProductPage.url($$groupedProduct.custom_attributes[url_key]$$)}}" stepKey="navigateToGroupedPDP"/>
         <fillField selector="{{StorefrontProductPageSection.qtyInputWithProduct($$product.name$$)}}" userInput="101" stepKey="fillQuantity"/>
         <click selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="addToCart"/>
         <!--Place order.-->
         <conditionalClick selector="{{StorefrontMinicartSection.showCart}}" dependentSelector="{{StorefrontMinicartSection.miniCartOpened}}" visible="false" stepKey="openMiniCart"/>
         <click selector="{{StorefrontMinicartSection.goToCheckout}}" stepKey="goToCheckout"/>
         <waitForPageLoad time="30" stepKey="waitForCheckoutPage"/>
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="placeOrder"/>
-        <waitForPageLoad time="30" stepKey="waitForOrderPlacement"/>
-        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="grabOrderNumber"/>
-        <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessage"/>
-        <!--Verify order.-->
-        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
-            <argument name="orderId" value="{$grabOrderNumber}"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="placeOrder"/>
+        <comment userInput="BIC workaround" stepKey="waitForOrderPlacement"/>
+        <actionGroup ref="StorefrontClickOrderLinkFromCheckoutSuccessPageActionGroup" stepKey="clickOrderLink"/>
+        <comment userInput="BIC workaround" stepKey="grabOrderNumber"/>
+        <grabFromCurrentUrl regex="~/order_id/(\d+)/~" stepKey="orderId"/>
+        <comment userInput="BIC workaround" stepKey="checkOrderPlaceSuccessMessage"/>
+
+        <!-- Verify order -->
+        <actionGroup ref="AdminOpenOrderByEntityIdActionGroup" stepKey="openOrder">
+            <argument name="entityId" value="{$orderId}"/>
         </actionGroup>
         <waitForElementVisible selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" stepKey="waitForViewOrderedQuantity"/>
         <see selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" userInput="Ordered 101" stepKey="orderedQuantity"/>

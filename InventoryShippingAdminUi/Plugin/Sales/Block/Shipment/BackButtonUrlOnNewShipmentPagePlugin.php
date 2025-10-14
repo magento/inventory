@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -42,12 +42,13 @@ class BackButtonUrlOnNewShipmentPagePlugin
      * Returns URL to Source Selection if source for order is manageable
      *
      * @param Create $subject
-     * @param $result
+     * @param string $result
      * @return string
      */
     public function afterGetBackUrl(Create $subject, $result)
     {
         $shipment = $subject->getShipment();
+        // @phpstan-ignore-next-line
         if (empty($shipment) || !$this->isOrderSourceManageable->execute($shipment->getOrder())) {
             return $result;
         }

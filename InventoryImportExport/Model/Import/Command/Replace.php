@@ -1,12 +1,15 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
 namespace Magento\InventoryImportExport\Model\Import\Command;
 
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Validation\ValidationException;
 use Magento\InventoryApi\Api\SourceItemsDeleteInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 use Magento\InventoryImportExport\Model\Import\SourceItemConvert;
@@ -47,10 +50,12 @@ class Replace implements CommandInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      *
      * If an SKU and SOURCE_CODE in the import data matches the SKU and SOURCE_CODE of an existing entity,
      * all fields are deleted and new a record is created.
+     *
+     * @param array $bunch
      */
     public function execute(array $bunch)
     {

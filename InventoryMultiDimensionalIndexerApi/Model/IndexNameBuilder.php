@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -20,6 +20,7 @@ class IndexNameBuilder
      * Index id parameter name. Used internally in this object
      *
      * Can not replace on private constant (feature of PHP 7.1) because we need to support PHP 7.0
+     * @var string
      */
     private static $indexId = 'indexId';
 
@@ -27,6 +28,8 @@ class IndexNameBuilder
      * Dimensions parameter name. Used internally in this object
      *
      * Can not replace on private constant (feature of PHP 7.1) because we need to support PHP 7.0
+     *
+     * @var string
      */
     private static $dimensions = 'dimensions';
 
@@ -34,6 +37,8 @@ class IndexNameBuilder
      * Alias parameter name. Used internally in this object
      *
      * Can not replace on private constant (feature of PHP 7.1) because we need to support PHP 7.0
+     *
+     * @var string
      */
     private static $alias = 'alias';
 
@@ -73,6 +78,8 @@ class IndexNameBuilder
     }
 
     /**
+     * Sets the index ID for the builder, storing it in the internal data array for use in building the IndexName object
+     *
      * @param string $indexId
      * @return self
      */
@@ -83,6 +90,8 @@ class IndexNameBuilder
     }
 
     /**
+     * Adds a dimension to the builder, creating a new Dimension object using the provided name and value
+     *
      * @param string $name
      * @param string $value
      * @return self
@@ -97,6 +106,8 @@ class IndexNameBuilder
     }
 
     /**
+     * Sets the alias for the builder by creating an Alias object and storing it in the internal data array.
+     *
      * @param string $alias
      * @return self
      */
@@ -107,6 +118,8 @@ class IndexNameBuilder
     }
 
     /**
+     * Builds an `IndexName` object using stored data, resets the internal data array, and returns the created object.
+     *
      * @return IndexName
      */
     public function build(): IndexName

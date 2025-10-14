@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -29,7 +29,7 @@ class NotifyPickup extends Action implements HttpGetActionInterface
      *
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Magento_Sales::emails';
+    public const ADMIN_RESOURCE = 'Magento_Sales::emails';
 
     /**
      * @var NotifyOrdersAreReadyForPickupInterface

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -67,6 +67,7 @@
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
+            <deleteData createDataKey="simpleCategory1" stepKey="deletesimpleCategory1"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
         </after>
 
@@ -93,7 +94,7 @@
         <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="clickOnSaveButton1"/>
         <seeElement selector="{{AdminProductMessagesSection.successMessage}}" stepKey="seeSaveProductMessage1"/>
 
-        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory1.name$$)}}" stepKey="navigateToCategoryPageOnStorefrontToNotSeeTheProduct"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory1.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPageOnStorefrontToNotSeeTheProduct"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad1"/>
         <dontSee userInput="{{SimpleMsiProduct.name}}" stepKey="assertProductNotPresentOnCategoryPageOnStorefront"/>
         <dontSee userInput="{{SimpleMsiProduct.price}}" stepKey="assertProductPriceNotPresentOnCategoryPageOnStorefront"/>

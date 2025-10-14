@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
@@ -18,6 +18,7 @@
     <preference for="Magento\Inventory\Model\Source\Command\GetInterface" type="Magento\Inventory\Model\Source\Command\Get"/>
     <preference for="Magento\Inventory\Model\Source\Command\GetListInterface" type="Magento\Inventory\Model\Source\Command\GetList"/>
     <preference for="Magento\Inventory\Model\Source\Command\SaveInterface" type="Magento\Inventory\Model\Source\Command\Save"/>
+    <preference for="Magento\InventoryApi\Model\GetStockIdsBySkusInterface" type="Magento\Inventory\Model\GetStockIdsBySkus"/>
     <type name="Magento\InventoryApi\Model\SourceValidatorChain">
         <arguments>
             <argument name="validators" xsi:type="array">
@@ -92,5 +93,12 @@
     <preference for="Magento\InventoryApi\Model\IsProductAssignedToStockInterface" type="Magento\Inventory\Model\ResourceModel\IsProductAssignedToStock"/>
     <type name="Magento\Inventory\Model\ResourceModel\IsProductAssignedToStock">
         <plugin name="cache_product_stock_assignment_check" type="Magento\Inventory\Plugin\Inventory\Model\ResourceModel\IsProductAssignedToStockCache"/>
+    </type>
+    <type name="Magento\Setup\Fixtures\FixtureRegistry">
+        <arguments>
+            <argument name="fixtures" xsi:type="array">
+                <item name="stocks" xsi:type="string">Magento\Inventory\Test\Performance\Fixtures\Stocks</item>
+            </argument>
+        </arguments>
     </type>
 </config>

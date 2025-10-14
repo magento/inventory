@@ -1,18 +1,19 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
 namespace Magento\InventorySales\Model\ResourceModel;
 
+use Magento\Framework\ObjectManager\ResetAfterRequestInterface;
 use Magento\InventorySalesApi\Model\GetAssignedStockIdForWebsiteInterface;
 
 /**
  * @inheritdoc
  */
-class GetAssignedStockIdForWebsiteCache implements GetAssignedStockIdForWebsiteInterface
+class GetAssignedStockIdForWebsiteCache implements GetAssignedStockIdForWebsiteInterface, ResetAfterRequestInterface
 {
     /**
      * @var GetAssignedStockIdForWebsite
@@ -31,6 +32,14 @@ class GetAssignedStockIdForWebsiteCache implements GetAssignedStockIdForWebsiteI
         GetAssignedStockIdForWebsite $getAssignedStockIdForWebsite
     ) {
         $this->getAssignedStockIdForWebsite = $getAssignedStockIdForWebsite;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function _resetState(): void
+    {
+        $this->stockIds = [];
     }
 
     /**

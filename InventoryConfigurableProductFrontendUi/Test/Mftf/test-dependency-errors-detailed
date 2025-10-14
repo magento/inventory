@@ -1,0 +1,36 @@
+
+File "/var/www/html/app/code/Magento/InventoryConfigurableProductFrontendUi/Test/Mftf/Test/CorrectWorkForChildProductsOfConfigurableProductOnTestStockWithDisplayOutOfStockProductsEnabledTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 VisualSwatchProductAttribute from module(s): magento/module-swatches
+	 AdminManageSwatchSection from module(s): magento/module-swatches
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 AdminProductSourcesGrid from module(s): magento/module-inventory-admin-ui
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 DisableAllSourcesActionGroup from module(s): magento/module-inventory-admin-ui
+	 OpenSwatchMenuByIndexActionGroup from module(s): magento/module-swatches
+	 SetColorPickerByHexActionGroup from module(s): magento/module-swatches
+
+File "/var/www/html/app/code/Magento/InventoryConfigurableProductFrontendUi/Test/Mftf/Test/StorefrontConfigurableProductOnly0LeftMessageNotDisplayedTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontInventoryCatalogStockThresholdQtyDefaultConfigData from module(s): magento/module-inventory-catalog
+	 ProductQtyLeft from module(s): magento/module-inventory-catalog
+
+File "/var/www/html/app/code/Magento/InventoryConfigurableProductFrontendUi/Test/Mftf/Test/StorefrontDisplayCorrectMessageWhenChildProductSelectedForConfigProductWithDropDownAttributeTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontInventoryCatalogStockThresholdQtyConfigData from module(s): magento/module-inventory-catalog
+	 StorefrontInventoryCatalogStockThresholdQtyDefaultConfigData from module(s): magento/module-inventory-catalog
+	 ProductQtyLeft from module(s): magento/module-inventory-catalog
+
+File "/var/www/html/app/code/Magento/InventoryConfigurableProductFrontendUi/Test/Mftf/ActionGroup/AssertStorefrontConfigurableProductOptionQtyMessageActionGroup.xml"
+contains entity references that violate dependency constraints:
+		
+	 ProductQtyLeft from module(s): magento/module-inventory-catalog
+
+File "/var/www/html/app/code/Magento/InventoryConfigurableProductFrontendUi/Test/Mftf/ActionGroup/AssertStorefrontConfigurableProductOptionQtyMessageNotVisibleActionGroup.xml"
+contains entity references that violate dependency constraints:
+		
+	 ProductQtyLeft from module(s): magento/module-inventory-catalog

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -15,11 +15,15 @@ namespace Magento\InventorySourceSelectionApi\Api\Data;
 interface SourceSelectionResultInterface extends \Magento\Framework\Api\ExtensibleDataInterface
 {
     /**
+     * Gets the list of source selection items representing how product quantities are deducted from sources.
+     *
      * @return \Magento\InventorySourceSelectionApi\Api\Data\SourceSelectionItemInterface[]
      */
     public function getSourceSelectionItems(): array;
 
     /**
+     * Checks if the source selection result is eligible for shipping.
+     *
      * @return bool
      */
     public function isShippable(): bool;

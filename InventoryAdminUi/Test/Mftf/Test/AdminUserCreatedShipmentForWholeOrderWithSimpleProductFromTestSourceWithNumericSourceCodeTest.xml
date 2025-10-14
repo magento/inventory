@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -46,7 +46,9 @@
             </actionGroup>
             <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="clickOnSaveAndContinue"/>
             <seeElement selector=".success" stepKey="seeSuccessMessage"/>
-            <magentoCLI command="indexer:reindex" stepKey="doReindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="doReindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </before>
         <after>
             <!--Assign Default Stock to Default Website.-->
@@ -56,6 +58,7 @@
             </actionGroup>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="createSimpleProduct" stepKey="deleteProduct"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
         </after>
         <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="goToProduct1">
@@ -83,7 +86,7 @@
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
         <!-- Open the Product Page and add the product to shopping cart-->
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToCategoryPage"
+        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPage"
                   after="loginToStorefrontAccount"/>
         <waitForPageLoad stepKey="waitForStoreFrontCategoryPageLoad"/>
 
@@ -94,14 +97,14 @@
         <waitForElement selector="{{StorefrontMessagesSection.messageProductAddedToCart($$createSimpleProduct.name$$)}}"
                         time="30" stepKey="assertMessage" after="clickAddToCart"/>
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="GoToCheckoutFromMinicartActionGroup"/>
-        <conditionalClick selector="{{CheckoutPaymentSection.cartItemsArea}}"
-                          dependentSelector="{{CheckoutPaymentSection.cartItemsArea}}" visible="true"
-                          stepKey="exposeMiniCart"/>
-        <waitForLoadingMaskToDisappear stepKey="waitForLoadingMaskForCartItem"/>
-        <click selector="{{CheckoutShippingSection.next}}" stepKey="clickNext"/>
+        <waitForElementClickable selector="{{CheckoutPaymentSection.cartItemsArea}}" stepKey="waitForCartItemsClickable"/>
+        <waitForElementNotVisible selector="{{CheckoutPaymentSection.cartItemsAreaActive}}" stepKey="waitForCartItemsActive"/>
+        <click selector="{{CheckoutPaymentSection.cartItemsArea}}" stepKey="exposeMiniCart"/>
+        <waitForPageLoad stepKey="waitForLoadingMaskForCartItem"/>
+        <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="clickNext"/>
         <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="checkMoneyOrderPayment"/>
-        <waitForElement selector="{{CheckoutPaymentSection.placeOrder}}" time="30" stepKey="waitForPlaceOrderButton"/>
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="clickPlaceOrder"/>
+        <comment userInput="BIC workaround" stepKey="waitForPlaceOrderButton"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickPlaceOrder"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="grabOrderNumber"/>
         <!-- Source Selection -->
         <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -17,6 +17,7 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
+            <group value="pr_exclude"/>
         </annotations>
 
         <before>
@@ -61,6 +62,7 @@
         </before>
         <after>
             <!--Delete test data.-->
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="product1" stepKey="deleteProduct1"/>
             <deleteData createDataKey="product2" stepKey="deleteProduct2"/>
@@ -71,6 +73,9 @@
                 <argument name="sourceCode" value="$source.source[source_code]$"/>
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!--Login to storefront.-->
@@ -85,18 +90,21 @@
         </actionGroup>
         <!--Place order.-->
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckout"/>
-        <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="clickNext"/>
+        <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="clickNext"/>
+        <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectCheckMoneyOrder"/>
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
+        <actionGroup ref="StorefrontClickOrderLinkFromCheckoutSuccessPageActionGroup" stepKey="clickOrderLink"/>
+        <grabFromCurrentUrl regex="~/order_id/(\d+)/~" stepKey="orderId"/>
         <!--Process full invoice and shipment.-->
-        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
-            <argument name="orderId" value="{$orderNumber}"/>
+        <actionGroup ref="AdminOpenOrderByEntityIdActionGroup" stepKey="openOrder">
+            <argument name="entityId" value="{$orderId}"/>
         </actionGroup>
         <actionGroup ref="AdminShipThePendingOrderActionGroup" stepKey="createShipment"/>
         <actionGroup ref="AdminCreateInvoiceActionGroup" stepKey="createInvoice"/>
         <!--Process credit memo partial refund.-->
         <actionGroup ref="StartToCreateCreditMemoActionGroup" stepKey="startToCreateCreditMemo">
-            <argument name="orderId" value="{$orderNumber}"/>
+            <argument name="orderId" value="{$orderId}"/>
         </actionGroup>
         <fillField selector="{{AdminCreditMemoItemsSection.itemQtyToRefund('1')}}" userInput="{{fivePiecesAddToCart.value}}" stepKey="partialRefund"/>
         <click selector="{{AdminCreditMemoItemsSection.updateQty}}" stepKey="updateQuantityToRefund"/>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -24,14 +24,20 @@
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
         </before>
         <after>
+            <!-- Delete configurable product and variants created via UI -->
+            <helper class="Magento\Catalog\Test\Mftf\Helper\ProductApiHelper" method="deleteAllProductsApi" stepKey="deleteAllProductsViaApi"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
 
             <comment userInput="Enable 'Manage Stock' configuration." stepKey="revertManageStockConfigurationComment"/>
             <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableMangeStock"/>
 
             <comment userInput="Perform reindex and cache flush after save stock related config." stepKey="reindexCacheFlushComment"/>
-            <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
         </after>
 
@@ -120,7 +126,7 @@
 
         <comment userInput="Check, configurable product is absent on category page and has 'Out of Stock' status" stepKey="checkConfigurableProductIsAbsentOnCategoryPageAndHasOutOfStockStatusOnViewPageComment"/>
 
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateBackToConfigurableCategoryPage"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateBackToConfigurableCategoryPage"/>
         <waitForPageLoad stepKey="waitForPageLoad7"/>
         <dontSee userInput="{{ConfigurableMsiProduct.name}}" stepKey="checkConfigurableProductIsAbsentOnCategoryPage"/>
 
@@ -133,8 +139,12 @@
         <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOffManageStockConfig.value}}" stepKey="disableMangeStock"/>
 
         <comment userInput="Perform reindex and cache flush after disable 'Mange Stock' configuration config." stepKey="reindexCacheFlushAfterDisableManageStockComment"/>
-        <magentoCLI command="indexer:reindex" stepKey="performReindexAfterDisableManageStock"/>
-        <magentoCLI command="cache:flush" stepKey="cleanCacheAfterDisableManageStock"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterDisableManageStock">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterDisableManageStock">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <comment userInput="Check, configurable product back to category page and has 'In Stock' status on product view page." stepKey="checkConfigurableProductBackOnStorefront"/>
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="checkConfigurableIsBackToCategoryPage">

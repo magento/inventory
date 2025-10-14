@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -16,6 +16,7 @@
             <severity value="MAJOR"/>
             <group value="msi"/>
             <group value="multi_mode"/>
+            <group value="pr_exclude"/>
         </annotations>
         <before>
             <createData entity="SimpleMsiProduct" stepKey="product"/>
@@ -36,6 +37,7 @@
         </before>
         <after>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <!--Assign Default Stock to Default Website.-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
@@ -46,6 +48,9 @@
             <!--Disable all sources.-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="deleteSource"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!-- Login as customer -->

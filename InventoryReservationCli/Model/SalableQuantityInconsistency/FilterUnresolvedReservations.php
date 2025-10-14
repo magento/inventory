@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -23,16 +23,8 @@ class FilterUnresolvedReservations
     public function execute(array $inconsistencies): array
     {
         foreach ($inconsistencies as $inconsistency) {
-            $inconsistency->setItems(
-                array_filter(
-                    $inconsistency->getItems(),
-                    function ($qty) {
-                        return $qty > 0;
-                    }
-                )
-            );
+            $inconsistency->setItems(array_filter($inconsistency->getItems()));
         }
-
         return array_filter(
             $inconsistencies,
             function (SalableQuantityInconsistency $inconsistency) {

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -37,13 +37,15 @@ class PreventDisablingDefaultSourcePlugin
     }
 
     /**
+     * Modifies the meta configuration to disable the "enabled" field if the source is the default source.
+     *
      * @param SourceDataProvider $subject
-     * @param $meta
+     * @param array $meta
      * @return array
      */
     public function afterGetMeta(
         SourceDataProvider $subject,
-        $meta
+        array $meta
     ): array {
         $isFormComponent = SourceDataProvider::SOURCE_FORM_NAME === $subject->getName();
         if (!$isFormComponent || !$this->isDefaultSource()) {
@@ -68,6 +70,8 @@ class PreventDisablingDefaultSourcePlugin
     }
 
     /**
+     * Checks if the current source code matches the default source code provided by the default source provider.
+     *
      * @return bool
      */
     private function isDefaultSource(): bool

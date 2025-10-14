@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
+ */
 -->
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
@@ -18,6 +18,8 @@
             <severity value="MAJOR"/>
             <group value="catalog"/>
             <group value="configurableProduct"/>
+            <group value="msi"/>
+            <group value="single_mode"/>
         </annotations>
 
         <before>
@@ -36,7 +38,12 @@
             </createData>
             <magentoCLI command="config:set {{StorefrontInventoryCatalogStockThresholdQtyConfigData.path}} {{StorefrontInventoryCatalogStockThresholdQtyConfigData.value}}" stepKey="setThresholdQty"/>
             <!-- Reindex invalidated indices after product attribute has been created -->
-            <magentoCron groups="index" stepKey="reindexInvalidatedIndicesAftercreateProductAttributes"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexInvalidatedIndicesAftercreateProductAttributes">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanInvalidatedCaches">
+                <argument name="tags" value="config full_page"/>
+            </actionGroup>
 
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
 
@@ -77,9 +84,14 @@
             <actionGroup ref="DeleteProductUsingProductGridActionGroup" stepKey="deleteConfigurableProductOptions">
                 <argument name="product" value="ApiConfigurableProductWithDescription"/>
             </actionGroup>
-            <actionGroup ref="ResetProductGridToDefaultViewActionGroup" stepKey="resetProductGridFilters"/>
+            <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="resetProductGridFilters"/>
             <!-- Reindex invalidated indices after product attribute has been deleted -->
-            <magentoCron groups="index" stepKey="reindexInvalidatedIndicesAfterDeleteAttributes"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexInvalidatedIndicesAfterDeleteAttributes">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanInvalidatedCaches">
+                <argument name="tags" value="config full_page"/>
+            </actionGroup>
 
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdmin"/>
         </after>
@@ -108,8 +120,10 @@
             <argument name="customerAddressVar" value="CustomerAddressSimple"/>
             <argument name="paymentMethod" value="Check / Money order"/>
         </actionGroup>
+        <waitForPageLoad stepKey="waitForUpdate"/>
+        <waitForElementClickable selector="{{CheckoutPaymentSection.update}}" stepKey="waitForUpdateButton"/>
         <click selector="{{CheckoutPaymentSection.update}}" stepKey="clickUpdateButton"/>
-        <waitForLoadingMaskToDisappear stepKey="waitForBillingAddressUpdate"/>
+        <waitForPageLoad stepKey="waitForBillingAddressUpdate"/>
         <actionGroup ref="CheckoutPlaceOrderActionGroup" stepKey="placeOrder">
             <argument name="orderNumberMessage" value="CONST.successGuestCheckoutOrderNumberMessage"/>
             <argument name="emailYouMessage" value="CONST.successCheckoutEmailYouMessage"/>

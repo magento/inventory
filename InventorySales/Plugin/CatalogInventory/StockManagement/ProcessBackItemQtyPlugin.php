@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -96,6 +96,8 @@ class ProcessBackItemQtyPlugin
     }
 
     /**
+     * Handles returning item quantities to stock by validating product types and placing reservations for events.
+     *
      * @param StockManagement $subject
      * @param callable $proceed
      * @param int $productId

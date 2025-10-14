@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -18,6 +18,7 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
+            <group value="pr_exclude"/>
         </annotations>
         <before>
             <remove keyForRemoval="navigateToStockListPage"/>
@@ -51,7 +52,7 @@
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
         <!-- Open the Product Page and add the product to shopping cart-->
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToCategoryPage"
+        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPage"
                   after="loginToStorefrontAccount"/>
         <waitForPageLoad stepKey="waitForStoreFrontCategoryPageLoad"/>
 
@@ -76,23 +77,19 @@
         <!--Proceed to checkout-->
         <click selector="{{StorefrontMinicartSection.goToCheckout}}" stepKey="GoToCheckoutFromMinicartActionGroup"
                after="seeVirtualProductQty"/>
-        <waitForElementVisible selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}"
+        <waitForElementClickable selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}"
                                stepKey="waitForShippingMethodsLoad" after="GoToCheckoutFromMinicartActionGroup"/>
         <click selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="selectShippingMethod"
                after="waitForShippingMethodsLoad"/>
-        <waitForElement selector="{{CheckoutShippingMethodsSection.next}}" time="30"
-                        stepKey="waitForNextButtonVisible" after="selectShippingMethod"/>
-        <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="navigateToSecondCheckoutStep"
-               after="waitForNextButtonVisible"/>
-        <waitForPageLoad stepKey="waitFroPaymentSelectionPageLoad" after="navigateToSecondCheckoutStep"/>
-        <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectCheckMoneyOrderPayment"
-                     after="waitFroPaymentSelectionPageLoad"/>
-        <waitForElement selector="{{CheckoutPaymentSection.placeOrder}}" time="30"
-                        stepKey="waitForPlaceOrderButtonVisible" after="selectCheckMoneyOrderPayment"/>
+        <comment userInput="BIC workaround" stepKey="waitForNextButtonVisible" after="selectShippingMethod"/>
+        <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="navigateToSecondCheckoutStep" after="waitForNextButtonVisible"/>
+        <comment userInput="BIC workaround" stepKey="waitFroPaymentSelectionPageLoad" after="navigateToSecondCheckoutStep"/>
+        <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectCheckMoneyOrderPayment" after="waitFroPaymentSelectionPageLoad"/>
+        <comment userInput="BIC workaround" stepKey="waitForPlaceOrderButtonVisible" after="selectCheckMoneyOrderPayment"/>
         <see selector="{{CheckoutPaymentSection.billingAddress}}" userInput="{{US_Address_TX.street[0]}}"
              stepKey="chooseBillingAddress" after="waitForPlaceOrderButtonVisible"/>
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="placeOrder" after="chooseBillingAddress"/>
-        <waitForPageLoad stepKey="waitUntilOrderPlaced" after="placeOrder"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="placeOrder" after="chooseBillingAddress"/>
+        <comment userInput="BIC workaround" stepKey="waitUntilOrderPlaced" after="placeOrder"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="grabOrderNumber"
                       after="placeOrder"/>
         <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:"

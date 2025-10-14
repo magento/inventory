@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -40,7 +40,8 @@ interface SourceRepositoryInterface
 
     /**
      * Get Source data by given code. If you want to create plugin on get method, also you need to create separate
-     * plugin on getList method, because entity loading way is different for these methods
+     *
+     * Plugin on getList method, because entity loading way is different for these methods
      *
      * @param string $sourceCode
      * @return \Magento\InventoryApi\Api\Data\SourceInterface
@@ -50,12 +51,13 @@ interface SourceRepositoryInterface
 
     /**
      * Find Sources by SearchCriteria
+     *
      * SearchCriteria is not required because load all stocks is useful case
      *
      * @param \Magento\Framework\Api\SearchCriteriaInterface|null $searchCriteria
      * @return \Magento\InventoryApi\Api\Data\SourceSearchResultsInterface
      */
     public function getList(
-        \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria = null
+        ?\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria = null
     ): \Magento\InventoryApi\Api\Data\SourceSearchResultsInterface;
 }

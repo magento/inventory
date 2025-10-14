@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -17,6 +17,7 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
+            <group value="cloud"/>
         </annotations>
 
         <before>
@@ -32,6 +33,8 @@
             </actionGroup>
         </before>
         <after>
+            <!-- Delete configurable product created via UI -->
+            <helper class="Magento\Catalog\Test\Mftf\Helper\ProductApiHelper" method="deleteAllProductsApi" stepKey="deleteAllProductsViaApi"/>
             <!--Disable additional source.-->
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableAdditionalSource">
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
@@ -39,6 +42,9 @@
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <!--Delete category.-->
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!--Start creating configurable product.-->

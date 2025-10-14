@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -66,10 +66,6 @@ class GetProductTypesBySkus implements GetProductTypesBySkusInterface
      */
     private function getResultKey(string $sku, array $productSkuList): string
     {
-        $key = array_search(strtolower($sku), array_map('strtolower', $productSkuList));
-        if ($key !== false) {
-            $sku = (string)$productSkuList[$key];
-        }
-        return $sku;
+        return in_array(strtolower($sku), array_map('strtolower', $productSkuList)) ? $sku : '';
     }
 }

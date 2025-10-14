@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -16,8 +16,8 @@
             <argument name="quantity" type="string" defaultValue="{{defaultProductQty.value}}"/>
             <argument name="stockName" type="string" defaultValue="{{_defaultStock.name}}"/>
         </arguments>
-        <see selector="{{AdminProductGridSection.quantity('1')}}" userInput="{{quantity}}" stepKey="checkProductQty"/>
-        <see selector="{{AdminProductGridSection.singleStockSalableQuantity('1', stockName)}}" userInput="{{quantity}}" stepKey="checkSalableQty"/>
+        <waitForText selector="{{AdminProductGridSection.quantity('1')}}" userInput="{{quantity}}" stepKey="checkProductQty"/>
+        <waitForText selector="{{AdminProductGridSection.singleStockSalableQuantity('1', stockName)}}" userInput="{{quantity}}" stepKey="checkSalableQty"/>
     </actionGroup>
 </actionGroups>
 

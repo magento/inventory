@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -75,6 +75,7 @@ class Sources extends AbstractEntity
 
     /**
      * @inheritdoc
+     *
      * @throws Exception
      */
     public function export()
@@ -98,6 +99,7 @@ class Sources extends AbstractEntity
 
     /**
      * @inheritdoc
+     *
      * @throws Exception
      */
     protected function _getHeaderColumns()
@@ -109,10 +111,13 @@ class Sources extends AbstractEntity
      * @inheritdoc
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
+    // phpcs:disable
     public function exportItem($item)
     {
+        // @phpstan-ignore-next-line
         // will not implement this method as it is legacy interface
     }
+    // phpcs:enable
 
     /**
      * @inheritdoc
@@ -125,8 +130,11 @@ class Sources extends AbstractEntity
     /**
      * @inheritdoc
      */
+    // phpcs:disable
     protected function _getEntityCollection()
     {
+        // @phpstan-ignore-next-line
         // will not implement this method as it is legacy interface
     }
+    // phpcs:enable
 }

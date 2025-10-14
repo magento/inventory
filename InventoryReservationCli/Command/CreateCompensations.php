@@ -1,12 +1,14 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
 namespace Magento\InventoryReservationCli\Command;
 
+use Magento\Framework\App\Area;
+use Magento\Framework\App\State;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Validation\ValidationException;
@@ -25,6 +27,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * This command may be used to simplify migrations from Magento versions without new Inventory or to track down
  * incorrect behavior of customizations.
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class CreateCompensations extends Command
 {
@@ -44,19 +47,27 @@ class CreateCompensations extends Command
     private $appendReservations;
 
     /**
+     * @var State
+     */
+    private $appState;
+
+    /**
      * @param GetCommandlineStandardInput $getCommandlineStandardInput
      * @param GetReservationFromCompensationArgument $getReservationFromCompensationArgument
      * @param AppendReservationsInterface $appendReservations
+     * @param State $appState
      */
     public function __construct(
         GetCommandlineStandardInput $getCommandlineStandardInput,
         GetReservationFromCompensationArgument $getReservationFromCompensationArgument,
-        AppendReservationsInterface $appendReservations
+        AppendReservationsInterface $appendReservations,
+        State $appState
     ) {
         parent::__construct();
         $this->getCommandlineStandardInput = $getCommandlineStandardInput;
         $this->getReservationFromCompensationArgument = $getReservationFromCompensationArgument;
         $this->appendReservations = $appendReservations;
+        $this->appState = $appState;
     }
 
     /**
@@ -115,6 +126,8 @@ class CreateCompensations extends Command
      */
     public function execute(InputInterface $input, OutputInterface $output): int
     {
+        $this->appState->setAreaCode(Area::AREA_GLOBAL);
+
         $output->writeln('<info>Following reservations were created:</info>');
 
         $hasErrors = false;

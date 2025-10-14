@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -23,7 +23,7 @@
             <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="setAutoReturnOn"/>
         </before>
         <after>
-            <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOffManageStockConfig.value}}" stepKey="setAutoReturnOff"/>
+            <comment userInput="BIC workaround" stepKey="setAutoReturnOff"/>
         </after>
         <remove keyForRemoval="navigateToCategoryPage"/>
         <remove keyForRemoval="waitForCategoryPageLoad"/>
@@ -37,11 +37,13 @@
         </actionGroup>
 
         <!--- Place order via Admin -->
-        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer" after="assignProductToAdditionalWebsite">
+        <actionGroup ref="AdminNavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer" after="assignProductToAdditionalWebsite">
             <argument name="customer" value="MsiCustomer1"/>
+        </actionGroup>
+        <actionGroup ref="AdminSelectStoreDuringOrderCreationActionGroup" stepKey="selectCustomStore" after="createNewOrderForCustomer">
             <argument name="storeView" value="customStore"/>
         </actionGroup>
-        <waitForPageLoad time="20" stepKey="waitForPageLoad" after="createNewOrderForCustomer"/>
+        <waitForPageLoad time="20" stepKey="waitForPageLoad" after="selectCustomStore"/>
         <actionGroup ref="AddSimpleProductToOrderActionGroup" stepKey="addSimpleProductToOrder" after="waitForPageLoad">
             <argument name="product" value="$$simpleProduct$$"/>
             <argument name="productQty" value="5"/>

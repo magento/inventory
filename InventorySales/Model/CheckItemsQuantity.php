@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -37,8 +37,8 @@ class CheckItemsQuantity
      */
     public function __construct(
         IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQty,
-        IsProductSalableForRequestedQtyRequestInterfaceFactory $isProductSalableForRequestedQtyRequestFactory = null,
-        AreProductsSalableForRequestedQtyInterface $areProductsSalableForRequestedQty = null
+        ?IsProductSalableForRequestedQtyRequestInterfaceFactory $isProductSalableForRequestedQtyRequestFactory = null,
+        ?AreProductsSalableForRequestedQtyInterface $areProductsSalableForRequestedQty = null
     ) {
         $this->areProductsSalableForRequestedQty = $areProductsSalableForRequestedQty ?: ObjectManager::getInstance()
             ->get(AreProductsSalableForRequestedQtyInterface::class);

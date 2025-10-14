@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -46,6 +46,9 @@
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{customWebsite.name}}"/>
             </actionGroup>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </before>
         <after>
             <!--Delete created website.-->
@@ -62,6 +65,9 @@
             <!--Clean up created data.-->
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!--Set product qty..-->
@@ -71,7 +77,7 @@
             <argument name="website" value="{{customWebsite.name}}"/>
         </actionGroup>
         <!--Add product to cart.-->
-        <amOnPage url="{{StorefrontHomePage.url}}/{{customStore.code}}/$$product.name$$.html" stepKey="navigateToPDP"/>
+        <amOnPage url="{{StorefrontHomePage.url}}/{{customStore.code}}/$$product.custom_attributes[url_key]$$.html" stepKey="navigateToPDP"/>
         <waitForPageLoad stepKey="waitForProductPage"/>
         <click selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="addToCart"/>
         <waitForPageLoad stepKey="waitForPageLoad"/>
@@ -84,9 +90,9 @@
         </actionGroup>
         <click selector="{{CheckoutPaymentSection.update}}" stepKey="updateCustomerBillingAddress"/>
         <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectCheckMoneyOrderPayment"/>
-        <waitForElement selector="{{CheckoutPaymentSection.placeOrder}}" time="30" stepKey="waitForPlaceOrderButtonVisible"/>
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="placeOrder"/>
-        <waitForPageLoad stepKey="waitUntilOrderPlaced"/>
+        <comment userInput="BIC workaround" stepKey="waitForPlaceOrderButtonVisible"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="placeOrder"/>
+        <comment userInput="BIC workaround" stepKey="waitUntilOrderPlaced"/>
         <!--Verify product quantity.-->
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductGrid"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findProduct">

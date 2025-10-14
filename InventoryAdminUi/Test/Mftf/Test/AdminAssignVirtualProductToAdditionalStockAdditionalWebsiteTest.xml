@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -47,8 +47,15 @@
                 <argument name="StoreGroup" value="customStoreGroup"/>
                 <argument name="customStore" value="customStore"/>
             </actionGroup>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </before>
         <after>
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
             <!--Delete created website.-->
             <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite">
                 <argument name="websiteName" value="{{customWebsite.name}}"/>
@@ -63,6 +70,9 @@
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="virtualProduct" stepKey="deleteProduct"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!--Assign Stock to Website.-->
@@ -83,7 +93,7 @@
             <argument name="categoryName" value="$$category.name$$"/>
         </actionGroup>
         <!--Verify product on storefront.-->
-        <amOnPage url="{{StorefrontHomePage.url}}/{{customStore.code}}/$$category.name$$.html" stepKey="navigateToCategoryPage"/>
+        <amOnPage url="{{StorefrontHomePage.url}}/{{customStore.code}}/$$category.custom_attributes[url_key]$$.html" stepKey="navigateToCategoryPage"/>
         <waitForPageLoad stepKey="waitForCategoryPageLoad"/>
         <see userInput="$$virtualProduct.name$$" stepKey="assertProductPresent"/>
         <see userInput="$$virtualProduct.price$$" stepKey="assertProductPricePresent"/>

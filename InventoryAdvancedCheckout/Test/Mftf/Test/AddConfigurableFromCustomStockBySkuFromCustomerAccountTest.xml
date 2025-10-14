@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 -->
 
@@ -16,6 +16,7 @@
             <severity value="MAJOR"/>
             <group value="msi_ee"/>
             <group value="multi_mode"/>
+            <group value="cloud"/>
         </annotations>
 
         <before>
