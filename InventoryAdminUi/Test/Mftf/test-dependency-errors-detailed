@@ -1,0 +1,1181 @@
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AddProductToCartAfterCancelOrderConfigurableProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontAddConfigurableProductToTheCartActionGroup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminAddConfigurableProductWithDropDownAttributeAndCustomSourceTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminConfigurableProductFormSection from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 colorProductAttribute1 from module(s): magento/module-configurable-product
+	 colorProductAttribute2 from module(s): magento/module-configurable-product
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 AdminChooseAffectedAttributeSetPopup from module(s): magento/module-configurable-product
+	 StorefrontConfigurableProductPage from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminAddConfigurableProductWithDropDownAttributeWithDefaultSourceTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminConfigurableProductFormSection from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminConfigurableProductSelectAttributesSlideOut from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 colorProductAttribute1 from module(s): magento/module-configurable-product
+	 colorProductAttribute2 from module(s): magento/module-configurable-product
+	 colorProductAttribute3 from module(s): magento/module-configurable-product
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 AdminChooseAffectedAttributeSetPopup from module(s): magento/module-configurable-product
+	 StorefrontConfigurableProductPage from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminAddConfigurableProductWithDropDownAttributeWithNewSourceTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminConfigurableProductFormSection from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminConfigurableProductSelectAttributesSlideOut from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 colorProductAttribute1 from module(s): magento/module-configurable-product
+	 colorProductAttribute2 from module(s): magento/module-configurable-product
+	 colorProductAttribute3 from module(s): magento/module-configurable-product
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 StorefrontConfigurableProductPage from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminAddSimpleProductToConfigurableProductCustomSourceTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 colorProductAttribute1 from module(s): magento/module-configurable-product
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 AdminChooseAffectedAttributeSetPopup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminBackordersEnabledOnProductPageAndAppliedToSimpleProductOnDefaultSourceTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminAdvancedInventorySection from module(s): magento/module-inventory-catalog-admin-ui
+	 AdminAdvancedInventoryControlsSection from module(s): magento/module-inventory-catalog-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminBackordersEnabledOnProductPageAndAppliedToSimpleProductOnSingleStockModeTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminAdvancedInventorySection from module(s): magento/module-inventory-catalog-admin-ui
+	 AdminAdvancedInventoryControlsSection from module(s): magento/module-inventory-catalog-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminBackordersEnablesOnConfigurationPageAndAppliedToGroupedProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCacheValidationConfigurableProductSoldOutCustomStocksTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminConfigurableProductSelectAttributesSlideOut from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 colorProductAttribute1 from module(s): magento/module-configurable-product
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 AdminChooseAffectedAttributeSetPopup from module(s): magento/module-configurable-product
+	 StorefrontConfigurableProductPage from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCacheValidationGroupedProductSoldOutCustomStocksTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 GroupedProduct from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCacheValidationWhenGroupedProductIsSoldOutOnSingleStockModeTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 GroupedProduct from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+	 addGroupedProductOptionToOrderMsi from module(s): magento/module-inventory-grouped-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCancelOrderConfigurableProductTextSwatchAttributeCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AddTextSwatchToProductActionGroup from module(s): magento/module-swatches
+	 SaveConfigurableProductActionGroup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCancelOrderConfigurableProductWithDropDownAttributeAndCustomSourceTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontAddConfigurableProductToTheCartActionGroup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCancelOrderWithGroupedProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+	 addGroupedProductOptionToOrderMsi from module(s): magento/module-inventory-grouped-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCancelOrderWithGroupedProductDefaultStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+	 addGroupedProductOptionToOrderMsi from module(s): magento/module-inventory-grouped-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCatalogQuickSearchForBundleProductInSingleStockModeTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontQuickSearchSection from module(s): magento/module-search
+	 StorefrontCatalogSearchPage from module(s): magento/module-catalog-search
+	 StorefrontCatalogSearchMainSection from module(s): magento/module-catalog-search
+	 CatalogSearchResultSection from module(s): magento/module-inventory-catalog-search
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCatalogQuickSearchForConfigurableProductOnTestStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminConfigurableProductFormSection from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 colorProductAttribute1 from module(s): magento/module-configurable-product
+	 colorProductAttribute2 from module(s): magento/module-configurable-product
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 AdminChooseAffectedAttributeSetPopup from module(s): magento/module-configurable-product
+	 StorefrontQuickSearchSection from module(s): magento/module-search
+	 StorefrontCatalogSearchPage from module(s): magento/module-catalog-search
+	 StorefrontCatalogSearchMainSection from module(s): magento/module-catalog-search
+	 CatalogSearchResultSection from module(s): magento/module-inventory-catalog-search
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCatalogQuickSearchForDownloadableProductInSingleStockModeTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontQuickSearchSection from module(s): magento/module-search
+	 StorefrontCatalogSearchPage from module(s): magento/module-catalog-search
+	 StorefrontCatalogSearchMainSection from module(s): magento/module-catalog-search
+	 CatalogSearchResultSection from module(s): magento/module-inventory-catalog-search
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCatalogQuickSearchForDownloadableProductOnTestStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontCheckQuickSearchStringActionGroup from module(s): magento/module-catalog-search
+	 StorefrontQuickSearchCheckProductNameInGridActionGroup from module(s): magento/module-catalog-search
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCatalogQuickSearchForGroupedProductInSingleStockModeTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 GroupedProduct from module(s): magento/module-grouped-product
+	 StorefrontQuickSearchSection from module(s): magento/module-search
+	 StorefrontCatalogSearchPage from module(s): magento/module-catalog-search
+	 StorefrontCatalogSearchMainSection from module(s): magento/module-catalog-search
+	 CatalogSearchResultSection from module(s): magento/module-inventory-catalog-search
+	 FillGroupedProductFormActionGroup from module(s): magento/module-grouped-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCatalogQuickSearchForSimpleProductOnTestStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontQuickSearchSection from module(s): magento/module-search
+	 StorefrontCatalogSearchPage from module(s): magento/module-catalog-search
+	 StorefrontCatalogSearchMainSection from module(s): magento/module-catalog-search
+	 CatalogSearchResultSection from module(s): magento/module-inventory-catalog-search
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCatalogQuickSearchForVirtualProductInSingleStockModeTestst.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontQuickSearchSection from module(s): magento/module-search
+	 StorefrontCatalogSearchPage from module(s): magento/module-catalog-search
+	 StorefrontCatalogSearchMainSection from module(s): magento/module-catalog-search
+	 CatalogSearchResultSection from module(s): magento/module-inventory-catalog-search
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCatalogQuickSearchForVirtualProductOnTestStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontQuickSearchSection from module(s): magento/module-search
+	 StorefrontCatalogSearchPage from module(s): magento/module-catalog-search
+	 StorefrontCatalogSearchMainSection from module(s): magento/module-catalog-search
+	 CatalogSearchResultSection from module(s): magento/module-inventory-catalog-search
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminConfigurableProductCustomStockMainWebsitePriceVerificationTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminConfigurableProductFormSection from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminConfigurableProductSelectAttributesSlideOut from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminNewAttributePanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui, magento/module-swatches
+	 AdminChooseAffectedAttributeSetPopup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminConfigurableProductDisabledManageStockOnCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 MediaGalleryConfigDataEnabled from module(s): magento/module-media-gallery-ui
+	 AdminConfigurableProductFormSection from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminConfigurableProductSelectAttributesSlideOut from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 colorProductAttribute1 from module(s): magento/module-configurable-product
+	 colorProductAttribute2 from module(s): magento/module-configurable-product
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 AdminChooseAffectedAttributeSetPopup from module(s): magento/module-configurable-product
+	 StorefrontConfigurableProductPage from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminConfigurableProductDisabledManageStockOnDefaultStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminConfigurableProductFormSection from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminConfigurableProductSelectAttributesSlideOut from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 colorProductAttribute1 from module(s): magento/module-configurable-product
+	 colorProductAttribute2 from module(s): magento/module-configurable-product
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 AdminChooseAffectedAttributeSetPopup from module(s): magento/module-configurable-product
+	 StorefrontConfigurableProductPage from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminConfigurableProductDisabledManageStockOnProductPageCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminConfigurableProductFormSection from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminConfigurableProductSelectAttributesSlideOut from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 colorProductAttribute1 from module(s): magento/module-configurable-product
+	 colorProductAttribute2 from module(s): magento/module-configurable-product
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 AdminChooseAffectedAttributeSetPopup from module(s): magento/module-configurable-product
+	 StorefrontConfigurableProductPage from module(s): magento/module-configurable-product
+	 AdminAdvancedInventorySection from module(s): magento/module-inventory-catalog-admin-ui
+	 AdminAdvancedInventoryControlsSection from module(s): magento/module-inventory-catalog-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminConfigurableProductDisabledManageStockOnProductPageForCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminConfigurableProductSelectAttributesSlideOut from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 colorProductAttribute3 from module(s): magento/module-configurable-product
+	 colorProductAttribute2 from module(s): magento/module-configurable-product
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 AdminChooseAffectedAttributeSetPopup from module(s): magento/module-configurable-product
+	 AdminConfigurableProductFormSection from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminAdvancedInventorySection from module(s): magento/module-inventory-catalog-admin-ui
+	 AdminAdvancedInventoryControlsSection from module(s): magento/module-inventory-catalog-admin-ui
+	 StorefrontConfigurableProductPage from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminConfigurableProductWithDisabledAndOutOfStockChildrenOnAdditionalStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminConfigurableProductFormSection from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminConfigurableProductSelectAttributesSlideOut from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 colorProductAttribute2 from module(s): magento/module-configurable-product
+	 colorProductAttribute1 from module(s): magento/module-configurable-product
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 AdminChooseAffectedAttributeSetPopup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminConfigurableProductWithDisabledChildrenOnAdditionalStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminConfigurableProductFormSection from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminConfigurableProductSelectAttributesSlideOut from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 colorProductAttribute1 from module(s): magento/module-configurable-product
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 AdminChooseAffectedAttributeSetPopup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminConfigurableProductWithDisabledChildrenOnDefaultStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminConfigurableProductFormSection from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminConfigurableProductSelectAttributesSlideOut from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 colorProductAttribute1 from module(s): magento/module-configurable-product
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 AdminChooseAffectedAttributeSetPopup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminConfigurableProductWithOutOfStockChildrenOnAdditionalStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminConfigurableProductFormSection from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminConfigurableProductSelectAttributesSlideOut from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 colorProductAttribute1 from module(s): magento/module-configurable-product
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 AdminChooseAffectedAttributeSetPopup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminConfigurableProductWithOutOfStockChildrenOnDefaultStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminConfigurableProductFormSection from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminConfigurableProductSelectAttributesSlideOut from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 colorProductAttribute1 from module(s): magento/module-configurable-product
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 AdminChooseAffectedAttributeSetPopup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateConfigurableProductDefaultStockAdditionalWebsiteTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminConfigurableProductFormSection from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 colorProductAttribute1 from module(s): magento/module-configurable-product
+	 colorProductAttribute2 from module(s): magento/module-configurable-product
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 AdminChooseAffectedAttributeSetPopup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateConfigurableProductTextSwatchAttributeCustomStockMainWebsiteTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminConfigurableProductFormSection from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminConfigurableProductSelectAttributesSlideOut from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminNewAttributePanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui, magento/module-swatches
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 AdminChooseAffectedAttributeSetPopup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateConfigurableProductVisualSwatchAttributeCustomStockCustomWebsiteTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminConfigurableProductFormSection from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminConfigurableProductSelectAttributesSlideOut from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminNewAttributePanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui, magento/module-swatches
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 AdminChooseAffectedAttributeSetPopup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateConfigurableProductWithSwatchAttributeDefaultStocksTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminConfigurableProductFormSection from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminConfigurableProductSelectAttributesSlideOut from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminNewAttributePanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui, magento/module-swatches
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 AdminChooseAffectedAttributeSetPopup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateConfigurableProductWithSwatchAttributeMultipleStocksTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminConfigurableProductSelectAttributesSlideOut from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminNewAttributePanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui, magento/module-swatches
+	 AdminChooseAffectedAttributeSetPopup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateCreditMemoPartialRefundFullInvoicePartialShipmentGroupedProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateCreditMemoSimpleProductWithChangedSkuCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 CliConsumerStartActionGroup from module(s): magento/module-message-queue
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateCreditMemoSimpleProductWithChangedSkuDefaultStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 CliConsumerStartActionGroup from module(s): magento/module-message-queue
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateCreditMemoTotalRefundFullInvoiceFullShipmentGroupedProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateCreditMemoTotalRefundFullInvoiceFullShipmentGroupedProductDefaultStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateCreditMemoTotalRefundFullInvoiceGroupedProductDefaultStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateCreditMemoWholeOrderWithConfigurableProductFromCustomSourceTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontAddConfigurableProductToTheCartActionGroup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateFullInvoiceForOrderWithGroupedProductInSingleStockModeTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+	 addGroupedProductOptionToOrderMsi from module(s): magento/module-inventory-grouped-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateGroupedProductAdditionalStockAdditionalWebsiteTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateGroupedProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateGroupedProductDefaultStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateOrderWithBundleProductDefaultStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 addBundleProductToOrder from module(s): magento/module-inventory-bundle-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateOrderWithGroupedProductDefaultStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+	 addGroupedProductOptionToOrderMsi from module(s): magento/module-inventory-grouped-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateOrderWithGroupedProductSingleStockModeTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+	 addGroupedProductOptionToOrderMsi from module(s): magento/module-inventory-grouped-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreatePartialCreditMemoFullInvoiceConfigurableProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 colorProductAttribute1 from module(s): magento/module-configurable-product
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 AdminChooseAffectedAttributeSetPopup from module(s): magento/module-configurable-product
+	 StorefrontConfigurableProductPage from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreatePartialCreditMemoPartialShipmentPartialInvoiceConfigurableProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 colorProductAttribute1 from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreatePartialInvoiceGroupedProductDefaultStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreatePartialShipmentForOrderWithConfigurableProductFromCustomSourceTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminConfigurableProductFormSection from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminConfigurableProductSelectAttributesSlideOut from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 colorProductAttribute1 from module(s): magento/module-configurable-product
+	 colorProductAttribute2 from module(s): magento/module-configurable-product
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 AdminChooseAffectedAttributeSetPopup from module(s): magento/module-configurable-product
+	 StorefrontConfigurableProductPage from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreatePartialShipmentGroupedProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateScheduledPermanentUpdateBundleProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminCreateScheduledPermanentUpdateProductTest from module(s): magento/module-catalog-staging
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateScheduledPermanentUpdateBundleProductDefaultStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminCreateScheduledPermanentUpdateProductTest from module(s): magento/module-catalog-staging
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateScheduledPermanentUpdateConfigurableProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminCreateScheduledPermanentUpdateProductTest from module(s): magento/module-catalog-staging
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateScheduledPermanentUpdateConfigurableProductDefaultStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminCreateScheduledPermanentUpdateProductTest from module(s): magento/module-catalog-staging
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateScheduledPermanentUpdateDownloadableProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminCreateScheduledPermanentUpdateProductTest from module(s): magento/module-catalog-staging
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateScheduledPermanentUpdateDownloadableProductDefaultStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminCreateScheduledPermanentUpdateProductTest from module(s): magento/module-catalog-staging
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateScheduledPermanentUpdateGroupedProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+	 AdminCreateScheduledPermanentUpdateProductTest from module(s): magento/module-catalog-staging
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateScheduledPermanentUpdateGroupedProductDefaultStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+	 AdminCreateScheduledPermanentUpdateProductTest from module(s): magento/module-catalog-staging
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateScheduledPermanentUpdateSimpleProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminCreateScheduledPermanentUpdateProductTest from module(s): magento/module-catalog-staging
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateScheduledPermanentUpdateSimpleProductDefaultStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminCreateScheduledPermanentUpdateProductTest from module(s): magento/module-catalog-staging
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateScheduledPermanentUpdateVirtualProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminCreateScheduledPermanentUpdateProductTest from module(s): magento/module-catalog-staging
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateScheduledPermanentUpdateVirtualProductDefaultStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminCreateScheduledPermanentUpdateProductTest from module(s): magento/module-catalog-staging
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateShipmentForWholeOrderGroupedProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateShipmentForWholeOrderWithConfigurableProductFromCustomSourceTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontAddConfigurableProductToTheCartActionGroup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateShipmentForWholeOrderWithConfigurableProductFromDefaultSourceTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontAddConfigurableProductToTheCartActionGroup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateShipmentWithChangedSimpleProductIntoConfigurableCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 CliConsumerStartActionGroup from module(s): magento/module-message-queue
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateShipmentWithChangedSimpleProductIntoConfigurableDefaultStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 CliConsumerStartActionGroup from module(s): magento/module-message-queue
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateShipmentWithDeletedSimpleProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 CliConsumerStartActionGroup from module(s): magento/module-message-queue
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreateShipmentWithDeletedSimpleProductDefaultStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 CliConsumerStartActionGroup from module(s): magento/module-message-queue
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminCreditMemoCreatedWithFullRefundForOrderWithGroupedProductOnSingleStockModeAfterFullInvoiceTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+	 addGroupedProductOptionToOrderMsi from module(s): magento/module-inventory-grouped-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminDisableManageStockInConfigurationGroupedProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminFilterStocksInGridTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminGroupedProductAdditionalStockDisableMangeStockOnProductPageTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminInvoiceCreatedForWholeOrderWithGroupedProductWithChildsProductOnNonDefaultStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminAssignProductToGroupActionGroup from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminLowStockReportForSimpleProductWithDefaultStockAndZeroQuantityTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminSearchLowStockReportByProductSkuAndSourceCodeActionGroup from module(s): magento/module-inventory-low-quantity-notification-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminLowStockReportForSimpleProductWithStatusCheckAndDefaultStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminSearchLowStockReportByProductSkuAndSourceCodeActionGroup from module(s): magento/module-inventory-low-quantity-notification-admin-ui
+	 AdminVerifyLowStockProductReportActionGroup from module(s): magento/module-inventory-low-quantity-notification-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminLowStockReportSimpleProductTwoWebsitesTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminSearchLowStockReportByProductSkuAndSourceCodeActionGroup from module(s): magento/module-inventory-low-quantity-notification-admin-ui
+	 AdminVerifyLowStockProductReportActionGroup from module(s): magento/module-inventory-low-quantity-notification-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminManageStockOnConfigurationPageTurnedOffForGroupedProductOnDefaultStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontCatalogSearchMainSection from module(s): magento/module-catalog-search
+	 AdminAssignProductToGroupActionGroup from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+	 StorefrontCheckQuickSearchStringActionGroup from module(s): magento/module-catalog-search
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminManageStockOnProductPageTurnedOffForDownloadableProductInTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontCheckQuickSearchStringActionGroup from module(s): magento/module-catalog-search
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminOrderCreatedForGuestCustomerWithConfigurableProductWithDropDownAttributeViaTheAdminTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminConfigurableProductFormSection from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminConfigurableProductSelectAttributesSlideOut from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 colorProductAttribute1 from module(s): magento/module-configurable-product
+	 colorProductAttribute2 from module(s): magento/module-configurable-product
+	 colorProductAttribute3 from module(s): magento/module-configurable-product
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminOrderCreatedForGuestCustomerWithConfigurableProductWithSwatchAttributeViaTheAdminTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminConfigurableProductFormSection from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminConfigurableProductSelectAttributesSlideOut from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminNewAttributePanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui, magento/module-swatches
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminOrderCreatedForGuestCustomerWithConfigurableProductWithTextAttributeViaTheAdminTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminConfigurableProductFormSection from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminConfigurableProductSelectAttributesSlideOut from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminNewAttributePanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui, magento/module-swatches
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminOrderCreatedWithConfigurableProductWithSwatchAttributeViaTheAdminTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminConfigurableProductFormSection from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminConfigurableProductSelectAttributesSlideOut from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminNewAttributePanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui, magento/module-swatches
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminOrderCreatedWithConfigurableProductWithTextAttributeViaTheAdminTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminConfigurableProductFormSection from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminConfigurableProductSelectAttributesSlideOut from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminNewAttributePanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui, magento/module-swatches
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminOrderWithGroupedProductWithChildsProductsOnTestStockCanceledFromTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminAssignProductToGroupActionGroup from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+	 addGroupedProductOptionToOrderMsi from module(s): magento/module-inventory-grouped-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminOutOfStockThresholdAppliedToDownloadableProductInAdvancedInventoryOnProductPageTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontCheckQuickSearchStringActionGroup from module(s): magento/module-catalog-search
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminOutOfStockThresholdAppliedToSimpleInAdvancedInventoryOnProductPageTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontCatalogSearchMainSection from module(s): magento/module-catalog-search
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminOutOfStockThresholdOnConfigurationPageTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontCatalogSearchMainSection from module(s): magento/module-catalog-search
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminSaveTwiceDuringCreatingConfigurableProductTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminConfigurableProductFormSection from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminConfigurableProductSelectAttributesSlideOut from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 colorProductAttribute1 from module(s): magento/module-configurable-product
+	 colorProductAttribute2 from module(s): magento/module-configurable-product
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 AdminChooseAffectedAttributeSetPopup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/AdminUserCreatedInvoiceForWholeOrderWithVirtualProductOnTestStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 EnableCashOnDeliveryPaymentMethod from module(s): magento/module-offline-payments
+	 DisableCashOnDeliveryPaymentMethod from module(s): magento/module-offline-payments
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/BackorderNotificationShouldNotBeDisplayedWhenManageStockIsSetToNoTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminAdvancedInventorySection from module(s): magento/module-inventory-catalog-admin-ui
+	 AdminAdvancedInventoryControlsSection from module(s): magento/module-inventory-catalog-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/CatalogPriceRuleConfigurableProductAdditionalStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminConfigurableProductSelectAttributesSlideOut from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 colorProductAttribute1 from module(s): magento/module-configurable-product
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 AdminChooseAffectedAttributeSetPopup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/ConfigurableProductCreatedOnSingleStockModeWithEmptyQtyFieldTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminConfigurableProductFormSection from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/ConfigurableProductWhenAllChildProductsAreOutOfStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 colorProductAttribute1 from module(s): magento/module-configurable-product
+	 colorProductAttribute2 from module(s): magento/module-configurable-product
+	 colorProductAttribute3 from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/ConfigurableProductWithDropDownAttributeOnTestStockGetOutOfStockWhenAllItsChildProductsGetOutOfStockOrDisabledTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 colorProductAttribute3 from module(s): magento/module-configurable-product
+	 colorProductAttribute1 from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/ElasticSearchLayeredNavigationCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontLayeredNavigationSection from module(s): magento/module-layered-navigation
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/ElasticSearchLayeredNavigationTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontLayeredNavigationSection from module(s): magento/module-layered-navigation
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/ElasticSearchQuickAdvancedSearchAdditionalStockProductTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontCatalogSearchAdvancedResultMainSection from module(s): magento/module-catalog-search
+	 StorefrontCheckQuickSearchActionGroup from module(s): magento/module-catalog-search
+	 StorefrontOpenProductFromQuickSearchActionGroup from module(s): magento/module-catalog-search
+	 GoToStoreViewAdvancedCatalogSearchActionGroup from module(s): magento/module-catalog-search
+	 StorefrontAdvancedCatalogSearchByProductNameActionGroup from module(s): magento/module-catalog-search
+	 StorefrontCheckAdvancedSearchResultActionGroup from module(s): magento/module-catalog-search
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/ElasticSearchQuickAdvancedSearchDefaultStockProductTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontCatalogSearchAdvancedResultMainSection from module(s): magento/module-catalog-search
+	 StorefrontCheckQuickSearchActionGroup from module(s): magento/module-catalog-search
+	 StorefrontOpenProductFromQuickSearchActionGroup from module(s): magento/module-catalog-search
+	 GoToStoreViewAdvancedCatalogSearchActionGroup from module(s): magento/module-catalog-search
+	 StorefrontAdvancedCatalogSearchByProductNameActionGroup from module(s): magento/module-catalog-search
+	 StorefrontCheckAdvancedSearchResultActionGroup from module(s): magento/module-catalog-search
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/GroupedProductCreatedWithChildProductsOnDefaultStockByAdminUserTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/GuestCustomerOrderedGroupedProductOnSingleStockModeFromHomepageTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/LoggedInCustomerOrderGroupedProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/LowStockNotificationSimpleProductAdditionalStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminSearchLowStockReportByProductSkuAndSourceCodeActionGroup from module(s): magento/module-inventory-low-quantity-notification-admin-ui
+	 AdminVerifyLowStockProductReportActionGroup from module(s): magento/module-inventory-low-quantity-notification-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/LowStockNotificationSimpleProductDefaultStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminSearchLowStockReportByProductSkuAndSourceCodeActionGroup from module(s): magento/module-inventory-low-quantity-notification-admin-ui
+	 AdminVerifyLowStockProductReportActionGroup from module(s): magento/module-inventory-low-quantity-notification-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/RegisteredCustomerReorderGroupedProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/RegisteredCustomerReorderGroupedProductDefaultStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/ReorderButtonBundleProductDefaultStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontCheckQuickSearchStringActionGroup from module(s): magento/module-catalog-search
+	 StorefrontOpenProductFromQuickSearchActionGroup from module(s): magento/module-catalog-search
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/ReorderButtonGroupedProductOnTestStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/StockStatusChangedForConfigurableProductOnDefaultStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 colorProductAttribute3 from module(s): magento/module-configurable-product
+	 colorProductAttribute1 from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/StockStatusChangedForConfigurableProductOnTestStockAndTestWebsiteTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 colorProductAttribute3 from module(s): magento/module-configurable-product
+	 colorProductAttribute1 from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/StockStatusChangedForConfigurableProductOnTestStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 colorProductAttribute3 from module(s): magento/module-configurable-product
+	 colorProductAttribute1 from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/StorefrontAdvancedSearchBundleProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 GoToStoreViewAdvancedCatalogSearchActionGroup from module(s): magento/module-catalog-search
+	 StorefrontAdvancedCatalogSearchByProductNameActionGroup from module(s): magento/module-catalog-search
+	 StorefrontQuickSearchCheckProductNameInGridActionGroup from module(s): magento/module-catalog-search
+	 StorefrontAdvancedCatalogSearchByProductSkuActionGroup from module(s): magento/module-catalog-search
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/StorefrontAdvancedSearchConfigurableProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminConfigurableProductSelectAttributesSlideOut from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 colorProductAttribute1 from module(s): magento/module-configurable-product
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 AdminChooseAffectedAttributeSetPopup from module(s): magento/module-configurable-product
+	 GoToStoreViewAdvancedCatalogSearchActionGroup from module(s): magento/module-catalog-search
+	 StorefrontAdvancedCatalogSearchByProductNameActionGroup from module(s): magento/module-catalog-search
+	 StorefrontQuickSearchCheckProductNameInGridActionGroup from module(s): magento/module-catalog-search
+	 StorefrontAdvancedCatalogSearchByProductSkuActionGroup from module(s): magento/module-catalog-search
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/StorefrontAdvancedSearchGroupedProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+	 GoToStoreViewAdvancedCatalogSearchActionGroup from module(s): magento/module-catalog-search
+	 StorefrontAdvancedCatalogSearchByProductNameActionGroup from module(s): magento/module-catalog-search
+	 StorefrontQuickSearchCheckProductNameInGridActionGroup from module(s): magento/module-catalog-search
+	 StorefrontAdvancedCatalogSearchByProductSkuActionGroup from module(s): magento/module-catalog-search
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/StorefrontAdvancedSearchSimpleProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 GoToStoreViewAdvancedCatalogSearchActionGroup from module(s): magento/module-catalog-search
+	 StorefrontAdvancedCatalogSearchByProductNameActionGroup from module(s): magento/module-catalog-search
+	 StorefrontQuickSearchCheckProductNameInGridActionGroup from module(s): magento/module-catalog-search
+	 StorefrontAdvancedCatalogSearchByProductSkuActionGroup from module(s): magento/module-catalog-search
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/StorefrontBuyAllStockQtyAndReSaveProductOnAdminTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 CliConsumerStartActionGroup from module(s): magento/module-message-queue
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/StorefrontCacheValidationConfigurableProductSoldOutInSingleStockModeTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontAddConfigurableProductToTheCartActionGroup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/StorefrontCreateOrderAllQuantityConfigurableProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontAddConfigurableProductToTheCartActionGroup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/StorefrontCreateOrderAllQuantityGroupedProductOptionDefaultStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontAddGroupedProductWithTwoLinksToCartActionGroup from module(s): magento/module-grouped-product
+	 AssertLinkPresenceOnGroupedProductPage from module(s): magento/module-grouped-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/StorefrontLoggedInCustomerCreateOrderAllOptionQuantityConfigurableProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontAddConfigurableProductToTheCartActionGroup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/StorefrontLoggedInCustomerOrderConfigurableProductTextSwatchAttributeCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AddTextSwatchToProductActionGroup from module(s): magento/module-swatches
+	 SaveConfigurableProductActionGroup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/StorefrontLoggedInCustomerOrderConfigurableProductWithDropDownAttributeAndCustomSourceTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontAddConfigurableProductToTheCartActionGroup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/StorefrontLoggedInCustomerOrderConfigurableProductWithDropDownAttributeAndDefaultSourceTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontAddConfigurableProductToTheCartActionGroup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/StorefrontLoggedInCustomerOrderedSimpleProductFromTestSourceUsingMultiShipmentsToSeveralAddressesTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 ShippingMethodSection from module(s): magento/module-multishipping
+	 CheckingWithMultipleAddressesActionGroup from module(s): magento/module-multishipping
+	 SelectBillingInfoActionGroup from module(s): magento/module-multishipping
+	 ReviewOrderForSingleShipmentActionGroup from module(s): magento/module-multishipping
+	 PlaceOrderActionGroup from module(s): magento/module-multishipping
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/StorefrontMultishippingLoggedInCustomerOrderedSimpleProductAllQtyCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 CheckingWithSingleAddressActionGroup from module(s): magento/module-multishipping
+	 SelectBillingInfoActionGroup from module(s): magento/module-multishipping
+	 ReviewOrderForSingleShipmentActionGroup from module(s): magento/module-multishipping
+	 PlaceOrderActionGroup from module(s): magento/module-multishipping
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/StorefrontMultishippingLoggedInCustomerOrderedSimpleProductWithNotAvailableQtyCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 CheckingWithSingleAddressActionGroup from module(s): magento/module-multishipping
+	 SelectBillingInfoActionGroup from module(s): magento/module-multishipping
+	 ReviewOrderForSingleShipmentActionGroup from module(s): magento/module-multishipping
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/StorefrontOrderCreatedWIthConfigurableProductWithDropDownAttributeTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminConfigurableProductFormSection from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminConfigurableProductSelectAttributesSlideOut from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 colorProductAttribute1 from module(s): magento/module-configurable-product
+	 colorProductAttribute2 from module(s): magento/module-configurable-product
+	 colorProductAttribute3 from module(s): magento/module-configurable-product
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 StorefrontConfigurableProductPage from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/StorefrontOrderCreatedWithConfigurableProductWithSwatchAttributeTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminConfigurableProductFormSection from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminConfigurableProductSelectAttributesSlideOut from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminNewAttributePanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui, magento/module-swatches
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/StorefrontPriceOfConfigurableProductAssignedToTestStockAndTestWebsiteWhenOptionOfDisplayingOutOfStockProductsEnabledTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontCheckQuickSearchStringActionGroup from module(s): magento/module-catalog-search
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/StorefrontQuickOrderConfigurableProductsCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontQuickOrderSection from module(s): magento/module-quick-order
+	 StorefrontCustomerOrderBySkuSection from module(s): magento/module-advanced-checkout
+	 StorefrontQuickOrderPage from module(s): magento/module-quick-order
+	 StorefrontQuickOrderAddToCartTest from module(s): magento/module-quick-order
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/StorefrontQuickOrderSimpleProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontQuickOrderAddToCartTest from module(s): magento/module-quick-order
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/StorefrontQuickOrderSimpleProductsCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontQuickOrderPage from module(s): magento/module-quick-order
+	 StorefrontQuickOrderAddProductToCart from module(s): magento/module-quick-order
+	 StorefrontQuickOrderAddToCartTest from module(s): magento/module-quick-order
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/StorefrontQuickSearchBundleProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontCheckQuickSearchStringActionGroup from module(s): magento/module-catalog-search
+	 StorefrontQuickSearchCheckProductNameInGridActionGroup from module(s): magento/module-catalog-search
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/StorefrontQuickSearchGroupedProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormGroupedProductsSection from module(s): magento/module-grouped-product
+	 AdminAddProductsToGroupPanel from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+	 StorefrontCheckQuickSearchStringActionGroup from module(s): magento/module-catalog-search
+	 StorefrontQuickSearchCheckProductNameInGridActionGroup from module(s): magento/module-catalog-search
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/StorefrontReorderOfTheOrderWithConfigurableProductWithDropDownAttributeOnDefaultStockFromHomepageTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontAddConfigurableProductToTheCartActionGroup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/StorefrontReorderOfTheOrderWithConfigurableProductWithDropDownAttributeOnTestStockFromHomepageTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontAddConfigurableProductToTheCartActionGroup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/Test/StorefrontSalableQuantityOnNonDefaultStockForGroupedProductAfterPlacingOrderCountedCorrectlyTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminAssignProductToGroupActionGroup from module(s): magento/module-grouped-product
+	 FillDefaultQuantityForLinkedToGroupProductInGridActionGroup from module(s): magento/module-grouped-product, magento/module-inventory-grouped-product-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/ActionGroup/AdminApplyMinAndMaxQtyOnProductEditPageActionGroup.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminAdvancedInventoryControlsSection from module(s): magento/module-inventory-catalog-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/ActionGroup/AdminApplyUseDecimalsOnProductEditPageActionGroup.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminAdvancedInventorySection from module(s): magento/module-inventory-catalog-admin-ui
+	 AdminAdvancedInventoryControlsSection from module(s): magento/module-inventory-catalog-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/ActionGroup/AdminChangeManageStockStatusOnProductEditPageActionGroup.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminAdvancedInventorySection from module(s): magento/module-inventory-catalog-admin-ui
+	 AdminAdvancedInventoryControlsSection from module(s): magento/module-inventory-catalog-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/ActionGroup/AdminChangeOutOfStockThresholdOnProductEditPageActionGroup.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminAdvancedInventorySection from module(s): magento/module-inventory-catalog-admin-ui
+	 AdminAdvancedInventoryControlsSection from module(s): magento/module-inventory-catalog-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/ActionGroup/AdminConfigurableProductActionGroup.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminChooseAffectedAttributeSetPopup from module(s): magento/module-configurable-product
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 GenerateConfigurationsByAttributeCodeActionGroup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/ActionGroup/AdminCreateOptionsForAttributeMultiStockActionGroup.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 GenerateConfigurationsByAttributeCodeActionGroup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/ActionGroup/AdminCreateThreeConfigurationsForConfigurableProductActionGroup.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 AdminChooseAffectedAttributeSetPopup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/ActionGroup/AdminEditConfigurableProductActionGroup.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductFormConfigurationsSection from module(s): magento/module-configurable-product
+	 AdminCreateProductConfigurationsPanel from module(s): magento/module-configurable-product, magento/module-inventory-configurable-product-admin-ui
+	 AdminConfigurableProductAssignSourcesSlideOut from module(s): magento/module-inventory-configurable-product-admin-ui
+	 AdminChooseAffectedAttributeSetPopup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/ActionGroup/AdminEnableBackordersOnProductEditPageActionGroup.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminAdvancedInventorySection from module(s): magento/module-inventory-catalog-admin-ui
+	 AdminAdvancedInventoryControlsSection from module(s): magento/module-inventory-catalog-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/ActionGroup/AdminEnableQtyIncrementsOnProductEditPageActionGroup.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminAdvancedInventoryControlsSection from module(s): magento/module-inventory-catalog-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/ActionGroup/StorefrontAddConfigurableProductWithTextSwatchToTheCartActionGroup.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontAddConfigurableProductToTheCartActionGroup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/ActionGroup/StorefrontAddConfigurableProductWithTwoAttributesToTheCartActionGroup.xml"
+contains entity references that violate dependency constraints:
+		
+	 StorefrontAddConfigurableProductToTheCartActionGroup from module(s): magento/module-configurable-product
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/ActionGroup/StorefrontMultishippingPlaceOrderActionGroup.xml"
+contains entity references that violate dependency constraints:
+		
+	 SingleShippingSection from module(s): magento/module-multishipping
+
+File "/var/www/html/app/code/Magento/InventoryAdminUi/Test/Mftf/ActionGroup/StorefrontSelectShippingInfoActionGroup.xml"
+contains entity references that violate dependency constraints:
+		
+	 ShippingMethodSection from module(s): magento/module-multishipping

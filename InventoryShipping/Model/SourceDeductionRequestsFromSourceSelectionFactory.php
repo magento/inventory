@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -59,6 +59,8 @@ class SourceDeductionRequestsFromSourceSelectionFactory
     }
 
     /**
+     * Creates source deduction requests based on source selection results, sales event, and website ID.
+     *
      * @param SourceSelectionResultInterface $sourceSelectionResult
      * @param SalesEventInterface $salesEvent
      * @param int $websiteId
@@ -91,6 +93,8 @@ class SourceDeductionRequestsFromSourceSelectionFactory
     }
 
     /**
+     * Groups source selection items by source code and creates deduction items for each source with valid quantities.
+     *
      * @param SourceSelectionItemInterface[] $sourceSelectionItems
      * @return ItemToDeductInterface[]
      */

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -21,6 +21,7 @@ use Magento\InventorySourceSelectionApi\Api\Data\AddressInterface;
 
 /**
  * @inheritdoc
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class GetLatLngFromAddress implements GetLatLngFromAddressInterface
 {
@@ -53,6 +54,8 @@ class GetLatLngFromAddress implements GetLatLngFromAddressInterface
      * @param AddressToQueryString $addressToQueryString @deprecated
      * @param AddressToString $addressToString
      * @param GetGeoCodesForAddress $getGeoCodesForAddress
+     * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __construct(
         ClientInterface $client,
@@ -62,7 +65,7 @@ class GetLatLngFromAddress implements GetLatLngFromAddressInterface
         AddressToComponentsString $addressToComponentsString,
         AddressToQueryString $addressToQueryString,
         AddressToString $addressToString,
-        GetGeoCodesForAddress $getGeoCodesForAddress = null
+        ?GetGeoCodesForAddress $getGeoCodesForAddress = null
     ) {
         $this->latLngInterfaceFactory = $latLngInterfaceFactory;
         $this->addressToString = $addressToString;
@@ -72,7 +75,9 @@ class GetLatLngFromAddress implements GetLatLngFromAddressInterface
 
     /**
      * @inheritdoc
+     *
      * @throws LocalizedException
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     public function execute(AddressInterface $address): LatLngInterface
     {

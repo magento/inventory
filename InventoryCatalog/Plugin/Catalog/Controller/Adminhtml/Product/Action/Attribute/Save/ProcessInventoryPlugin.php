@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -10,7 +10,6 @@ namespace Magento\InventoryCatalog\Plugin\Catalog\Controller\Adminhtml\Product\A
 use Magento\Catalog\Controller\Adminhtml\Product\Action\Attribute\Save;
 use Magento\Catalog\Helper\Product\Edit\Action\Attribute;
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
-use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\MessageQueue\PublisherInterface;
 use Magento\Framework\Serialize\SerializerInterface;
@@ -53,6 +52,13 @@ class ProcessInventoryPlugin
     private $serialize;
 
     /**
+     * @var array
+     */
+    private $useConfigFieldMap = [
+        'enable_qty_increments' => 'use_config_enable_qty_inc'
+    ];
+
+    /**
      * @param Attribute $attributeHelper
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param StockConfigurationInterface $stockConfiguration
@@ -80,11 +86,9 @@ class ProcessInventoryPlugin
      * Asynchronously process legacy stock items.
      *
      * @param Save $subject
-     *
-     * @param ResultInterface $result
-     * @return ResultInterface
+     * @return void
      */
-    public function afterExecute(Save $subject, ResultInterface $result)
+    public function beforeExecute(Save $subject): void
     {
         $request = $subject->getRequest();
         $inventoryData = $this->addConfigSettings($request->getParam('inventory', []));
@@ -103,8 +107,6 @@ class ProcessInventoryPlugin
             );
             $this->publisher->publish('inventory.mass.update', $inventoryData);
         }
-
-        return $result;
     }
 
     /**
@@ -117,7 +119,9 @@ class ProcessInventoryPlugin
     {
         $options = $this->stockConfiguration->getConfigItemOptions();
         foreach ($options as $option) {
-            $useConfig = 'use_config_' . $option;
+            $useConfig = isset($this->useConfigFieldMap[$option])
+                ? $this->useConfigFieldMap[$option]
+                : 'use_config_' . $option;
             if (isset($inventoryData[$option]) && !isset($inventoryData[$useConfig])) {
                 $inventoryData[$useConfig] = 0;
             }

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -72,7 +72,9 @@ class Collector
     {
         $metadata = $this->serializer->unserialize($reservation->getMetadata());
         $objectId = $metadata['object_id'];
-        $objectIncrementId = $metadata['object_increment_id'] ?? $this->getOrderIncrementId->execute((int)$objectId);
+        $objectIncrementId = !empty($metadata['object_increment_id'])
+            ? $metadata['object_increment_id']
+            : $this->getOrderIncrementId->execute((int)$objectId);
         $stockId = $reservation->getStockId();
         $key = $objectIncrementId . '-' . $stockId;
 

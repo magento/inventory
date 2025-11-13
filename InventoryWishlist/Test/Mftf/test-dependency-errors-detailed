@@ -1,0 +1,38 @@
+
+File "/var/www/html/app/code/Magento/InventoryWishlist/Test/Mftf/Test/AddSimpleProductAssignedToTestSourceToCustomersWhishlistTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductEditPage from module(s): magento/module-catalog, magento/module-catalog-staging, magento/module-staging, magento/module-weee
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 _defaultWebsite from module(s): magento/module-store
+	 AdminLoginActionGroup from module(s): magento/module-admin-analytics, magento/module-backend, magento/module-two-factor-auth
+	 AdminAssignSourceToProductAndSetSourceQuantityActionGroup from module(s): magento/module-inventory-admin-ui
+	 SaveProductFormActionGroup from module(s): magento/module-catalog
+	 StorefrontCustomerLogoutActionGroup from module(s): magento/module-customer
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 DisableAllSourcesActionGroup from module(s): magento/module-inventory-admin-ui
+	 AdminLogoutActionGroup from module(s): magento/module-backend
+	 CliIndexerReindexActionGroup from module(s): magento/module-indexer
+	 LoginToStorefrontActionGroup from module(s): magento/module-customer
+	 OpenStoreFrontProductPageActionGroup from module(s): magento/module-catalog
+	 StorefrontCustomerAddProductToWishlistActionGroup from module(s): magento/module-wishlist
+	 AssertProductIsPresentInWishListActionGroup from module(s): magento/module-wishlist
+
+File "/var/www/html/app/code/Magento/InventoryWishlist/Test/Mftf/Test/StorefrontWishlistCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductEditPage from module(s): magento/module-catalog, magento/module-catalog-staging, magento/module-staging, magento/module-weee
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 _defaultWebsite from module(s): magento/module-store
+	 AdminLoginActionGroup from module(s): magento/module-admin-analytics, magento/module-backend, magento/module-two-factor-auth
+	 AdminAssignSourceToProductAndSetSourceQuantityActionGroup from module(s): magento/module-inventory-admin-ui
+	 SaveProductFormActionGroup from module(s): magento/module-catalog
+	 StorefrontCustomerLogoutActionGroup from module(s): magento/module-customer
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 DisableAllSourcesActionGroup from module(s): magento/module-inventory-admin-ui
+	 AdminLogoutActionGroup from module(s): magento/module-backend
+	 CliIndexerReindexActionGroup from module(s): magento/module-indexer
+	 LoginToStorefrontActionGroup from module(s): magento/module-customer
+	 OpenStoreFrontProductPageActionGroup from module(s): magento/module-catalog
+	 StorefrontCustomerAddProductToWishlistActionGroup from module(s): magento/module-wishlist
+	 AssertProductIsPresentInWishListActionGroup from module(s): magento/module-wishlist

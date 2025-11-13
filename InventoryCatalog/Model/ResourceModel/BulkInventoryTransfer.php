@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -127,7 +127,7 @@ class BulkInventoryTransfer
 
         if ($orgSourceItem !== null) {
             $status = (int) $orgSourceItem[SourceItemInterface::STATUS];
-        } elseif ($dstSourceItemQty !== null) {
+        } elseif ($dstSourceItem !== null) {
             $status = (int) $dstSourceItem[SourceItemInterface::STATUS];
         } else {
             $status = (int) SourceItemInterface::STATUS_OUT_OF_STOCK;

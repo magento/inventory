@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -58,6 +58,7 @@ class SourcesSelection implements ArgumentInterface
 
     /**
      * Get a list of available sources
+     *
      * @return SourceInterface[]
      */
     public function getSources(): array
@@ -67,6 +68,7 @@ class SourcesSelection implements ArgumentInterface
 
     /**
      * Get a list of sources assigned to the products selection
+     *
      * @return SourceInterface[]
      */
     public function getAssignedSources(): array
@@ -86,6 +88,8 @@ class SourcesSelection implements ArgumentInterface
     }
 
     /**
+     * Returns the count of product SKUs stored in the bulk session storage.
+     *
      * @return int
      */
     public function getProductsCount(): int

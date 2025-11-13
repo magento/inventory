@@ -1,17 +1,14 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
 namespace Magento\InventorySales\Model\IsProductSalableCondition;
 
-use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\InventoryApi\Api\Data\SourceItemInterface;
-use Magento\InventoryApi\Api\GetSourcesAssignedToStockOrderedByPriorityInterface;
-use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForSkuInterface;
+use Magento\InventorySales\Model\ResourceModel\GetIsAnySourceItemInStock;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 
 /**
@@ -19,21 +16,6 @@ use Magento\InventorySalesApi\Api\IsProductSalableInterface;
  */
 class IsAnySourceItemInStockCondition implements IsProductSalableInterface
 {
-    /**
-     * @var SourceItemRepositoryInterface
-     */
-    private $sourceItemRepository;
-
-    /**
-     * @var SearchCriteriaBuilder
-     */
-    private $searchCriteriaBuilder;
-
-    /**
-     * @var GetSourcesAssignedToStockOrderedByPriorityInterface
-     */
-    private $getSourcesAssignedToStockOrderedByPriority;
-
     /**
      * @var IsSourceItemManagementAllowedForSkuInterface
      */
@@ -45,24 +27,23 @@ class IsAnySourceItemInStockCondition implements IsProductSalableInterface
     private $manageStockCondition;
 
     /**
-     * @param SourceItemRepositoryInterface $sourceItemRepository
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
-     * @param GetSourcesAssignedToStockOrderedByPriorityInterface $getSourcesAssignedToStockOrderedByPriority
+     * @var GetIsAnySourceItemInStock
+     */
+    private $getIsAnySourceItemInStock;
+
+    /**
      * @param IsSourceItemManagementAllowedForSkuInterface $isSourceItemManagementAllowedForSku
      * @param ManageStockCondition $manageStockCondition
+     * @param GetIsAnySourceItemInStock $getIsAnySourceItemInStock
      */
     public function __construct(
-        SourceItemRepositoryInterface $sourceItemRepository,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
-        GetSourcesAssignedToStockOrderedByPriorityInterface $getSourcesAssignedToStockOrderedByPriority,
         IsSourceItemManagementAllowedForSkuInterface $isSourceItemManagementAllowedForSku,
-        ManageStockCondition $manageStockCondition
+        ManageStockCondition $manageStockCondition,
+        GetIsAnySourceItemInStock $getIsAnySourceItemInStock
     ) {
-        $this->sourceItemRepository = $sourceItemRepository;
-        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->getSourcesAssignedToStockOrderedByPriority = $getSourcesAssignedToStockOrderedByPriority;
         $this->isSourceItemManagementAllowedForSku = $isSourceItemManagementAllowedForSku;
         $this->manageStockCondition = $manageStockCondition;
+        $this->getIsAnySourceItemInStock = $getIsAnySourceItemInStock;
     }
 
     /**
@@ -79,38 +60,6 @@ class IsAnySourceItemInStockCondition implements IsProductSalableInterface
             return true;
         }
 
-        $sourceCodes = $this->getSourceCodesAssignedToStock($stockId);
-
-        $searchCriteria = $this->searchCriteriaBuilder
-            ->addFilter(SourceItemInterface::SKU, $sku)
-            ->addFilter(SourceItemInterface::SOURCE_CODE, $sourceCodes, 'in')
-            ->addFilter(SourceItemInterface::STATUS, SourceItemInterface::STATUS_IN_STOCK)
-            ->create();
-
-        $sourceItems = $this->sourceItemRepository->getList($searchCriteria)->getItems();
-
-        return (bool)count($sourceItems);
-    }
-
-    /**
-     * Provides source codes for certain stock
-     *
-     * @param int $stockId
-     *
-     * @return array
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Exception\LocalizedException
-     */
-    private function getSourceCodesAssignedToStock(int $stockId): array
-    {
-        $sources = $this->getSourcesAssignedToStockOrderedByPriority->execute($stockId);
-        $sourceCodes = [];
-        foreach ($sources as $source) {
-            if ($source->isEnabled()) {
-                $sourceCodes[] = $source->getSourceCode();
-            }
-        }
-
-        return $sourceCodes;
+        return $this->getIsAnySourceItemInStock->execute($sku, $stockId);
     }
 }

@@ -1,26 +1,34 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Address as OrderAddress;
 use Magento\Sales\Model\Order\Item as OrderItem;
 use Magento\Sales\Model\Order\Payment;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\TestFramework\Helper\Bootstrap;
 
-require __DIR__ . '/../../../../../../../dev/tests/integration/testsuite/Magento/Sales/_files/default_rollback.php';
-require __DIR__ . '/../../../../../../../dev/tests/integration/testsuite/Magento/Catalog/_files/product_simple.php';
-/** @var \Magento\Catalog\Model\Product $product */
+$objectManager = Bootstrap::getObjectManager();
 
-$addressData = include __DIR__ .
-    '/../../../../../../../dev/tests/integration/testsuite/Magento/Sales/_files/address_data.php';
-
-$objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
-
+$addressData = [
+    'region' => 'CA',
+    'region_id' => '12',
+    'postcode' => '11111',
+    'company' => 'Test Company',
+    'lastname' => 'lastname',
+    'firstname' => 'firstname',
+    'street' => 'street',
+    'city' => 'Los Angeles',
+    'email' => 'admin@example.com',
+    'telephone' => '11111111',
+    'country_id' => 'US'
+];
 $billingAddress = $objectManager->create(OrderAddress::class, ['data' => $addressData]);
 $billingAddress->setAddressType('billing');
 
@@ -38,6 +46,9 @@ $payment->setMethod('checkmo')
             'fraudulent' => false,
         ]
     );
+
+$productRepository = $objectManager->get(ProductRepositoryInterface::class);
+$product = $productRepository->get('simple');
 
 /** @var OrderItem $orderItem */
 $orderItem = $objectManager->create(OrderItem::class);

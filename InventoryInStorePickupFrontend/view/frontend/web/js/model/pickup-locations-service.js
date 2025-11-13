@@ -1,6 +1,6 @@
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 
 define([
@@ -12,9 +12,13 @@ define([
     'Magento_Checkout/js/checkout-data',
     'Magento_Checkout/js/model/address-converter',
     'Magento_Checkout/js/action/select-shipping-address',
+    'Magento_Checkout/js/action/select-billing-address',
+    'Magento_Checkout/js/model/checkout-data-resolver',
+    'Magento_Checkout/js/model/quote',
     'underscore',
     'mage/translate',
-    'mage/url'
+    'mage/url',
+    'Magento_InventoryInStorePickupFrontend/js/model/pickup-address-converter'
 ], function (
     $,
     ko,
@@ -24,9 +28,13 @@ define([
     checkoutData,
     addressConverter,
     selectShippingAddressAction,
+    selectBillingAddressAction,
+    checkoutDataResolver,
+    quote,
     _,
     $t,
-    url
+    url,
+    pickupAddressConverter
 ) {
     'use strict';
 
@@ -50,7 +58,10 @@ define([
 
             return storage
                 .get(serviceUrl, {}, false)
-                .then(function (address) {
+                .then(function (result) {
+                    var addresses = result.items || [],
+                        address = addresses[0] || {};
+
                     return this.formatAddress(address);
                 }.bind(this))
                 .fail(function (response) {
@@ -99,52 +110,44 @@ define([
         },
 
         /**
-         * Select location for sipping.
+         * Select location for shipping.
          *
          * @param {Object} location
+         * @param {Boolean} [persist=true]
          * @returns void
          */
-        selectForShipping: function (location) {
-            var address = $.extend(
-                {},
-                addressConverter.formAddressDataToQuoteAddress({
-                    firstname: location.name,
-                    lastname: 'Store',
-                    street: location.street,
-                    city: location.city,
-                    postcode: location.postcode,
-                    'country_id': location['country_id'],
-                    telephone: location.telephone,
-                    'region_id': location['region_id'],
-                    'save_in_address_book': 0
-                }),
-                {
-                    /**
-                     * Is address can be used for billing
-                     *
-                     * @return {Boolean}
-                     */
-                    canUseForBilling: function () {
-                        return false;
-                    },
+        selectForShipping: function (location, persist) {
+            var billingAddress = quote.billingAddress(),
+                address = $.extend(
+                    {},
+                    addressConverter.formAddressDataToQuoteAddress({
+                        firstname: location.name,
+                        lastname: 'Store',
+                        street: location.street,
+                        city: location.city,
+                        postcode: location.postcode,
+                        'country_id': location['country_id'],
+                        telephone: location.telephone,
+                        'region_id': location['region_id'],
+                        'save_in_address_book': 0,
+                        'extension_attributes': {
+                            'pickup_location_code': location['pickup_location_code']
+                        }
+                    }));
 
-                    /**
-                     * Returns address type
-                     *
-                     * @return {String}
-                     */
-                    getType: function () {
-                        return 'store-pickup-address';
-                    },
-                    'extension_attributes': {
-                        'pickup_location_code': location['pickup_location_code']
-                    }
-                }
-            );
-
+            address = pickupAddressConverter.formatAddressToPickupAddress(address);
             this.selectedLocation(location);
             selectShippingAddressAction(address);
-            checkoutData.setSelectedShippingAddress(address.getKey());
+            if (persist !== false) {
+                checkoutData.setSelectedShippingAddress(address.getKey());
+                checkoutData.setSelectedPickupAddress(
+                    addressConverter.quoteAddressToFormAddressData(address)
+                );
+            }
+            if (!billingAddress) {
+                quote.billingAddress(null);
+                checkoutDataResolver.resolveBillingAddress();
+            }
         },
 
         /**
@@ -200,6 +203,43 @@ define([
         },
 
         /**
+         * Check if billing address is incomplete (missing required fields)
+         *
+         * @param {Object} billingAddress
+         * @returns {Boolean}
+         */
+        isBillingAddressIncomplete: function (billingAddress) {
+            var field,
+                value,
+                counter,
+                requiredFields = [
+                    'firstname',
+                    'lastname',
+                    'street',
+                    'city',
+                    'postcode',
+                    'telephone',
+                    'regionId',
+                    'countryId'
+                ];
+
+            if (!billingAddress) {
+                return true;
+            }
+            for (counter = 0; counter < requiredFields.length; counter++) {
+                field = requiredFields[counter];
+                value = billingAddress[field];
+                if (field === 'street' && (!value || !Array.isArray(value) || value.length === 0 || !value[0])) {
+                    return true;
+                }
+                if (field !== 'street' && (!value || value === '' || value === null || value === undefined)) {
+                    return true;
+                }
+            }
+            return false;
+        },
+
+        /**
          * Process response errors.
          *
          * @param {Object} response
@@ -218,7 +258,7 @@ define([
 
             try {
                 error = JSON.parse(response.responseText);
-            } catch (exception) {
+            } catch (exception) { // eslint-disable-line no-unused-vars
                 error = $t(
                     'Something went wrong with your request. Please try again later.'
                 );
@@ -235,6 +275,29 @@ define([
                     return error.parameters.shift();
                 });
             }
+        },
+
+        /**
+         * Returns selected pick up address from local storage
+         *
+         * @returns {Object|null}
+         */
+        getSelectedPickupAddress: function () {
+            var shippingAddress,
+                pickUpAddress;
+
+            if (checkoutData.getSelectedPickupAddress()) {
+                shippingAddress = addressConverter.formAddressDataToQuoteAddress(
+                    checkoutData.getSelectedPickupAddress()
+                );
+                pickUpAddress = pickupAddressConverter.formatAddressToPickupAddress(
+                    shippingAddress
+                );
+
+                return pickUpAddress;
+            }
+
+            return null;
         }
     };
 });

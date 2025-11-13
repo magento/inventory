@@ -1,14 +1,13 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Model\Queue;
 
 use Magento\Framework\Exception\StateException;
-use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus\IndexProcessor;
 
 /**
@@ -17,41 +16,25 @@ use Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus\IndexProces
 class UpdateIndexSalabilityStatus
 {
     /**
-     * @var DefaultStockProviderInterface
-     */
-    private $defaultStockProvider;
-
-    /**
-     * @var IndexProcessor
-     */
-    private $indexProcessor;
-
-    /**
-     * @param DefaultStockProviderInterface $defaultStockProvider
      * @param IndexProcessor $indexProcessor
      */
     public function __construct(
-        DefaultStockProviderInterface $defaultStockProvider,
-        IndexProcessor $indexProcessor
+        private readonly IndexProcessor $indexProcessor,
     ) {
-        $this->defaultStockProvider = $defaultStockProvider;
-        $this->indexProcessor = $indexProcessor;
     }
 
     /**
      * Reindex items salability statuses.
      *
      * @param ReservationData $reservationData
-     *
-     * @return bool[] - ['sku' => bool]: list of SKUs with salability status changed.
+     * @return array<string, bool> - ['sku' => bool]: list of SKUs with salability status changed.
      * @throws StateException
      */
     public function execute(ReservationData $reservationData): array
     {
-        $stockId = $reservationData->getStock();
         $dataForUpdate = [];
-        if ($stockId !== $this->defaultStockProvider->getId() && $reservationData->getSkus()) {
-            $dataForUpdate = $this->indexProcessor->execute($reservationData, $stockId);
+        if ($reservationData->getSkus()) {
+            $dataForUpdate = $this->indexProcessor->execute($reservationData);
         }
 
         return $dataForUpdate;

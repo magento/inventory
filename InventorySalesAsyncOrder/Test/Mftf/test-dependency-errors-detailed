@@ -1,0 +1,20 @@
+
+File "/var/www/html/app/code/Magento/InventorySalesAsyncOrder/Test/Mftf/Test/AsyncOrderStockReservationRollbackTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AsyncPlaceOrderConsumerData from module(s): magento/module-async-order
+	 AssertReceivedOrderInGridActionGroup from module(s): magento/module-async-order
+	 AdminGoToProductGridFilterResultsByInput from module(s): magento/module-inventory-admin-ui
+	 CliConsumerStartActionGroup from module(s): magento/module-message-queue
+	 AssertRejectedOrderInGridActionGroup from module(s): magento/module-async-order
+	 AsyncOrderStockReservationTest from module(s): magento/module-async-order
+
+File "/var/www/html/app/code/Magento/InventorySalesAsyncOrder/Test/Mftf/Test/AsyncOrderWithAsyncStockReservationTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AsyncPlaceOrderConsumerData from module(s): magento/module-async-order
+	 AssertReceivedOrderInGridActionGroup from module(s): magento/module-async-order
+	 AdminGoToProductGridFilterResultsByInput from module(s): magento/module-inventory-admin-ui
+	 CliConsumerStartActionGroup from module(s): magento/module-message-queue
+	 AssertProcessedOrderInGridActionGroup from module(s): magento/module-async-order
+	 AsyncOrderStockReservationTest from module(s): magento/module-async-order

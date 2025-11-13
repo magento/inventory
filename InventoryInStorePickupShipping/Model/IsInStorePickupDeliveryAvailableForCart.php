@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -120,8 +120,9 @@ class IsInStorePickupDeliveryAvailableForCart implements IsInStorePickupDelivery
      */
     private function getEstimateAddress(CartInterface $cart): EstimateAddressInterface
     {
+        $shippingAssignments = $cart->getExtensionAttributes()->getShippingAssignments();
         /** @var ShippingAssignmentInterface|null $assignment */
-        $assignment = current($cart->getExtensionAttributes()->getShippingAssignments());
+        $assignment = $shippingAssignments ? current($shippingAssignments) : null;
         $data = ['country_id' => $this->getDefaultCountry()];
         if ($assignment) {
             $shippingAddress = $assignment->getShipping()->getAddress();

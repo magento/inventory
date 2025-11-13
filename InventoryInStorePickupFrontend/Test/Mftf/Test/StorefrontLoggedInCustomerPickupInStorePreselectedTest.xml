@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright 2025 Adobe
+  * All Rights Reserved.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontLoggedInCustomerPickupInStorePreselectedTest">
+        <annotations>
+            <stories value="Simple Product Custom Stock."/>
+            <title value="Nearest store should be selected if logged-in customer address is within the configured radius of an existing store"/>
+            <description value="Nearest store should be selected if logged-in customer address is within the configured radius of an existing store"/>
+            <testCaseId value="AC-14155"/>
+            <useCaseId value="ACP2E-3728"/>
+            <severity value="MINOR"/>
+            <group value="msi"/>
+            <group value="store_pickup"/>
+        </annotations>
+        <before>
+            <!--Set Distance Provider for Distance Based SSA to offline-->
+            <magentoCLI command="config:set {{OfflineDistanceProviderForDistanceBasedSSA.path}} {{OfflineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
+            <!--Enable 'In Store Pickup' shipping method-->
+            <magentoCLI command="config:set {{EnableInStorePickup.path}} {{EnableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
+            <!--Download tables for 'US'-->
+            <magentoCLI command="{{ImportTables.path}} {{USTable.value}}" stepKey="downloadTables"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
+            <!--Create test data-->
+            <createData entity="LosAngelesStorePickupEnabledSource" stepKey="losAngelesSource"/>
+            <createData entity="AustinStorePickupEnabledSource" stepKey="austinSource"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink1">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="losAngelesSource"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink2">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="austinSource"/>
+            </createData>
+            <createData entity="Msi_US_Customer_NY_CA_Addresses" stepKey="customer"/>
+            <createData entity="_defaultCategory" stepKey="category"/>
+            <createData entity="SimpleProduct" stepKey="product">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <!--Assign product to sources-->
+            <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openProductEditPage">
+                <argument name="productId" value="$$product.id$$"/>
+            </actionGroup>
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignLosAngelesSourceAndSetQty">
+                <argument name="sourceCode" value="$losAngelesSource.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignAustinSourceAndSetQty">
+                <argument name="sourceCode" value="$austinSource.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
+        </before>
+        <after>
+            <!--Revert Distance Provider for Distance Based SSA to online-->
+            <magentoCLI command="config:set {{OnlineDistanceProviderForDistanceBasedSSA.path}} {{OnlineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
+            <!--Disable 'In Store Pickup' shipping method-->
+            <magentoCLI command="config:set {{DisableInStorePickup.path}} {{DisableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <!--Assign Default Stock to Default Website-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <deleteData createDataKey="stock" stepKey="deleteStock"/>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+        </after>
+        <!--Login as customer-->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
+            <argument name="Customer" value="$customer$"/>
+        </actionGroup>
+        <!--Add product to cart-->
+        <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addProductToCart">
+            <argument name="product" value="$product$"/>
+        </actionGroup>
+        <!--Navigate to checkout-->
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="goToCheckoutFromMinicart"/>
+        <!-- Verify that selected address is NY address -->
+        <comment userInput="Comment is added to preserve the step key for backward compatibility" stepKey="assertSelectedShippingAddressIsLA"/>
+        <actionGroup ref="CheckSelectedShippingAddressInCheckoutActionGroup" stepKey="assertSelectedShippingAddressIsNYAsDefaultAddress">
+            <argument name="customerVar" value="$customer$" />
+            <argument name="customerAddressVar" value="US_Address_NY" />
+        </actionGroup>
+        <!--Select CA address-->
+        <waitForElementVisible selector="{{CheckoutShippingSection.shipHereButton(US_Address_CA.postcode)}}" stepKey="waitForShipHereVisibleCA1"/>
+        <click selector="{{CheckoutShippingSection.shipHereButton(US_Address_CA.postcode)}}" stepKey="clickShipHereCA1"/>
+        <!--Verify that selected address is CA address-->
+        <actionGroup ref="CheckSelectedShippingAddressInCheckoutActionGroup" stepKey="assertSelectedShippingAddressIsCA1">
+            <argument name="customerVar" value="$customer$" />
+            <argument name="customerAddressVar" value="US_Address_CA" />
+        </actionGroup>
+        <!--Select flat rate shipping method-->
+        <waitForElementClickable selector="{{CheckoutShippingMethodsSection.shippingMethodFlatRate}}" stepKey="waitForShippingMethod"/>
+        <actionGroup ref="CheckoutSelectFlatRateShippingMethodActionGroup" stepKey="selectFlatRate"/>
+        <!--Switch to In Pick In Store-->
+        <actionGroup ref="StorefrontPickInStoreActionGroup" stepKey="pickInStore"/>
+        <!--Verify that store is selected-->
+        <actionGroup ref="StorefrontAssertSelectedStoreActionGroup" stepKey="verifyThatStoreIsSelected">
+            <argument name="sourceName" value="$losAngelesSource.source[name]$"/>
+        </actionGroup>
+        <!--Refresh Page-->
+        <actionGroup ref="ReloadPageActionGroup" stepKey="refreshPage"/>
+        <!--Verify that store is pre-selected-->
+        <actionGroup ref="StorefrontAssertSelectedStoreActionGroup" stepKey="verifyThatStoreIsSelectedAfterPageRefresh">
+            <argument name="sourceName" value="$losAngelesSource.source[name]$"/>
+        </actionGroup>
+        <!--Click 'Shipping'-->
+        <actionGroup ref="StorefrontSelectShippingActionGroup" stepKey="switchToShipping"/>
+        <!--Verify that selected address is CA address-->
+        <actionGroup ref="CheckSelectedShippingAddressInCheckoutActionGroup" stepKey="assertSelectedShippingAddressIsLAAfterPageRefresh">
+            <argument name="customerVar" value="$customer$" />
+            <argument name="customerAddressVar" value="US_Address_CA" />
+        </actionGroup>
+        <!--Refresh Page-->
+        <actionGroup ref="ReloadPageActionGroup" stepKey="refreshPage2"/>
+        <!--Verify that selected address is CA address-->
+        <actionGroup ref="CheckSelectedShippingAddressInCheckoutActionGroup" stepKey="assertSelectedShippingAddressIsCAAfterPageRefresh2">
+            <argument name="customerVar" value="$customer$" />
+            <argument name="customerAddressVar" value="US_Address_CA" />
+        </actionGroup>
+        <!--Switch to In Pick In Store-->
+        <actionGroup ref="StorefrontPickInStoreActionGroup" stepKey="pickInStore2"/>
+        <!--Verify that store is pre-selected-->
+        <actionGroup ref="StorefrontAssertSelectedStoreActionGroup" stepKey="verifyThatStoreIsSelectedAfterPageRefresh2">
+            <argument name="sourceName" value="$losAngelesSource.source[name]$"/>
+        </actionGroup>
+        <!--Click 'Shipping'-->
+        <actionGroup ref="StorefrontSelectShippingActionGroup" stepKey="switchToShipping2"/>
+        <!--Select NY address-->
+        <waitForElementVisible selector="{{CheckoutShippingSection.shipHereButton(US_Address_NY.postcode)}}" stepKey="waitForShipHereVisible"/>
+        <click selector="{{CheckoutShippingSection.shipHereButton(US_Address_NY.postcode)}}" stepKey="clickShipHere"/>
+        <!-- Verify that selected address is NY address -->
+        <actionGroup ref="CheckSelectedShippingAddressInCheckoutActionGroup" stepKey="assertSelectedShippingAddressIsNY">
+            <argument name="customerVar" value="$customer$" />
+            <argument name="customerAddressVar" value="US_Address_NY" />
+        </actionGroup>
+        <!--Switch to In Pick In Store-->
+        <actionGroup ref="StorefrontPickInStoreActionGroup" stepKey="pickInStore3"/>
+        <!--Verify that store is not pre-selected-->
+        <actionGroup ref="StorefrontAssertNoStoreIsSelectedInPickInStoreActionGroup" stepKey="verifyThatStoreIsNotSelectedAfterChangingShippingAddress"/>
+        <!--Refresh Page-->
+        <actionGroup ref="ReloadPageActionGroup" stepKey="refreshPage3"/>
+        <!--Verify that store is not pre-selected-->
+        <actionGroup ref="StorefrontAssertNoStoreIsSelectedInPickInStoreActionGroup" stepKey="verifyThatStoreIsNotSelectedAfterChangingShippingAddressAfterPageRefresh"/>
+        <!--Click 'Shipping'-->
+        <actionGroup ref="StorefrontSelectShippingActionGroup" stepKey="switchToShipping3"/>
+        <!-- Verify that selected address is NY address -->
+        <actionGroup ref="CheckSelectedShippingAddressInCheckoutActionGroup" stepKey="assertSelectedShippingAddressIsNYAfterPageRefresh">
+            <argument name="customerVar" value="$customer$" />
+            <argument name="customerAddressVar" value="US_Address_NY" />
+        </actionGroup>
+        <!--Select CA address-->
+        <waitForElementVisible selector="{{CheckoutShippingSection.shipHereButton(US_Address_CA.postcode)}}" stepKey="waitForShipHereVisibleCA2"/>
+        <click selector="{{CheckoutShippingSection.shipHereButton(US_Address_CA.postcode)}}" stepKey="clickShipHereCA2"/>
+        <!--Verify that selected address is CA address-->
+        <actionGroup ref="CheckSelectedShippingAddressInCheckoutActionGroup" stepKey="assertSelectedShippingAddressIsCA2">
+            <argument name="customerVar" value="$customer$" />
+            <argument name="customerAddressVar" value="US_Address_CA" />
+        </actionGroup>
+        <!--Switch to In Pick In Store-->
+        <actionGroup ref="StorefrontPickInStoreActionGroup" stepKey="pickInStore4"/>
+        <!--Verify that store is selected-->
+        <actionGroup ref="StorefrontAssertSelectedStoreActionGroup" stepKey="verifyThatStoreIsSelectedAfterChangingShippingAddressToCA">
+            <argument name="sourceName" value="$losAngelesSource.source[name]$"/>
+        </actionGroup>
+        <!--Navigate to Payments-->
+        <actionGroup ref="StorefrontPickInStoreNavigateToPaymentActionGroup" stepKey="navigateToPaymentStep"/>
+        <!--Go to home page -->
+        <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="goToHomePage"/>
+        <!--Clear local storage to remove checkout data from browser-->
+        <executeJS function="window.localStorage.clear();" stepKey="clearLocalStorage"/>
+        <!--Navigate to checkout-->
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="goToCheckoutFromMinicart2"/>
+        <!--Verify that store is selected-->
+        <actionGroup ref="StorefrontAssertSelectedStoreActionGroup" stepKey="verifyThatStoreIsSelectedAfterVisitingHomePage">
+            <argument name="sourceName" value="$losAngelesSource.source[name]$"/>
+        </actionGroup>
+    </test>
+</tests>

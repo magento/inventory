@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -45,6 +45,8 @@ class GetQuantityInformationPerSource
     }
 
     /**
+     * Gets quantity and status information per source for a given SKU by fetching source and source item details.
+     *
      * @param string $sku
      *
      * @return array

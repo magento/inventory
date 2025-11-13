@@ -1,13 +1,13 @@
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
  */
 /* eslint-disable max-nested-callbacks */
 
 define([
     'Magento_InventoryCatalogAdminUi/js/product/form/sources/qty'
 ], function (Qty) {
-    'use strict';
+    'use strict'; //eslint-disable-line
 
     describe('Magento_InventoryCatalogAdminUi/js/product/form/sources/qty', function () {
         var model,

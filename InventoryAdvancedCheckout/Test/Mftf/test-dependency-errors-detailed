@@ -1,0 +1,51 @@
+
+File "/var/www/html/app/code/Magento/InventoryAdvancedCheckout/Test/Mftf/Test/AddBundleDynamicFromCustomStockBySkuFromCustomerAccountTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductSourcesGrid from module(s): magento/module-inventory-admin-ui
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 AssignSourceToProductActionGroup from module(s): magento/module-inventory-admin-ui
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 DisableSourceActionGroup from module(s): magento/module-inventory-admin-ui
+	 AddBundleDynamicProductBySkuFromCustomerAccountTest from module(s): magento/module-advanced-checkout
+
+File "/var/www/html/app/code/Magento/InventoryAdvancedCheckout/Test/Mftf/Test/AddConfigurableFromCustomStockBySkuFromCustomerAccountTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductSourcesGrid from module(s): magento/module-inventory-admin-ui
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 AssignSourceToProductActionGroup from module(s): magento/module-inventory-admin-ui
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 DisableSourceActionGroup from module(s): magento/module-inventory-admin-ui
+	 AddConfigurableProductBySkuFromCustomerAccountTest from module(s): magento/module-advanced-checkout
+
+File "/var/www/html/app/code/Magento/InventoryAdvancedCheckout/Test/Mftf/Test/AddSimpleFromCustomStockBySkuFromCustomerAccountTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductSourcesGrid from module(s): magento/module-inventory-admin-ui
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 AssignSourceToProductActionGroup from module(s): magento/module-inventory-admin-ui
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 DisableSourceActionGroup from module(s): magento/module-inventory-admin-ui
+	 AddSimpleProductBySkuFromCustomerAccountTest from module(s): magento/module-advanced-checkout
+
+File "/var/www/html/app/code/Magento/InventoryAdvancedCheckout/Test/Mftf/Test/AddSimpleOutOfStockProductBySkuFromCustomerAccountAdditionalStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductSourcesGrid from module(s): magento/module-inventory-admin-ui
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 AssignSourceToProductActionGroup from module(s): magento/module-inventory-admin-ui
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 DisableSourceActionGroup from module(s): magento/module-inventory-admin-ui
+	 AddSimpleOutOfStockProductBySkuFromCustomerAccountTest from module(s): magento/module-advanced-checkout
+
+File "/var/www/html/app/code/Magento/InventoryAdvancedCheckout/Test/Mftf/Test/CreateOrderWithConfigurableProductCustomStockCustomWebsiteBySkuFromCustomerAccountTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminProductSourcesGrid from module(s): magento/module-inventory-admin-ui
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 AssignSourceToProductActionGroup from module(s): magento/module-inventory-admin-ui
+	 DisableSourceActionGroup from module(s): magento/module-inventory-admin-ui
+	 RegisterCustomOnStorefrontActionGroup from module(s): magento/module-inventory-admin-ui
+	 AddConfigurableProductBySkuFromCustomerAccountTest from module(s): magento/module-advanced-checkout

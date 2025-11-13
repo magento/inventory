@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -36,7 +36,10 @@ class IsProductSalableConditionChain implements IsProductSalableInterface
     }
 
     /**
+     * Sets required and unrequired conditions by validating input and sorting unrequired conditions by sort order.
+     *
      * @param array $conditions
+     * @throws LocalizedException
      */
     private function setConditions(array $conditions)
     {
@@ -60,6 +63,8 @@ class IsProductSalableConditionChain implements IsProductSalableInterface
     }
 
     /**
+     * Validates conditions by ensuring required parameters exist and objects implement the IsProductSalableInterface.
+     *
      * @param array $conditions
      * @throws LocalizedException
      */
@@ -83,6 +88,8 @@ class IsProductSalableConditionChain implements IsProductSalableInterface
     }
 
     /**
+     * Sorts conditions by their sort_order value in ascending order, maintaining stability for equal values.
+     *
      * @param array $conditions
      * @return array
      */

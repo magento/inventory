@@ -1,0 +1,1 @@
+The InventoryWishlist module adds multi-sourcing capabilities to the Wishlist module

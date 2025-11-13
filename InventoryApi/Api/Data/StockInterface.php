@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -19,8 +19,8 @@ interface StockInterface extends \Magento\Framework\Api\ExtensibleDataInterface
     /**
      * Constants for keys of data array. Identical to the name of the getter in snake case
      */
-    const STOCK_ID = 'stock_id';
-    const NAME = 'name';
+    public const STOCK_ID = 'stock_id';
+    public const NAME = 'name';
     /**#@-*/
 
     /**

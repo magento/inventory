@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -63,6 +63,7 @@ class StatusValidator implements SourceItemValidatorInterface
                 __('"%field" should a known status.', ['field' => SourceItemInterface::STATUS])
             ];
         }
+        // @phpstan-ignore-next-line
         $errors = !empty($errors) ? array_merge(...$errors) : $errors;
 
         return $this->validationResultFactory->create(['errors' => $errors]);

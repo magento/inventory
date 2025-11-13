@@ -1,164 +1,83 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Model\SourceItemsSaveSynchronization;
 
-use Magento\CatalogInventory\Api\Data\StockItemInterface;
-use Magento\CatalogInventory\Api\StockItemRepositoryInterface;
-use Magento\CatalogInventory\Api\StockItemCriteriaInterfaceFactory;
-use Magento\CatalogInventory\Model\Indexer\Stock\Processor;
 use Magento\CatalogInventory\Model\Spi\StockStateProviderInterface;
-use Magento\CatalogInventory\Model\Stock;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockItem;
-use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockStatus;
-use Magento\InventoryCatalogApi\Model\SourceItemsSaveSynchronizationInterface;
+use Magento\InventoryCatalog\Model\UpdateDefaultStock;
+use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
+use Magento\InventoryConfiguration\Model\GetLegacyStockItemsInterface;
+use Magento\InventoryIndexer\Model\ProductSalabilityChangeProcessorInterface;
 
 /**
  * Set Qty and status for legacy CatalogInventory Stock Information tables.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class SetDataToLegacyCatalogInventory
 {
     /**
-     * @var SetDataToLegacyStockItem
-     */
-    private $setDataToLegacyStockItem;
-
-    /**
-     * @var SetDataToLegacyStockStatus
-     */
-    private $setDataToLegacyStockStatus;
-
-    /**
-     * @var StockItemCriteriaInterfaceFactory
-     */
-    private $legacyStockItemCriteriaFactory;
-
-    /**
-     * @var StockItemRepositoryInterface
-     */
-    private $legacyStockItemRepository;
-
-    /**
-     * @var GetProductIdsBySkusInterface
-     */
-    private $getProductIdsBySkus;
-
-    /**
-     * @var StockStateProviderInterface
-     */
-    private $stockStateProvider;
-
-    /**
-     * @var Processor
-     */
-    private $indexerProcessor;
-
-    /**
      * @param SetDataToLegacyStockItem $setDataToLegacyStockItem
-     * @param StockItemCriteriaInterfaceFactory $legacyStockItemCriteriaFactory
-     * @param StockItemRepositoryInterface $legacyStockItemRepository
      * @param GetProductIdsBySkusInterface $getProductIdsBySkus
      * @param StockStateProviderInterface $stockStateProvider
-     * @param Processor $indexerProcessor
-     * @param SetDataToLegacyStockStatus $setDataToLegacyStockStatus
+     * @param GetLegacyStockItemsInterface $getLegacyStockItems
+     * @param UpdateDefaultStock $updateDefaultStock
+     * @param ProductSalabilityChangeProcessorInterface $productSalabilityChangeProcessor
      */
     public function __construct(
-        SetDataToLegacyStockItem $setDataToLegacyStockItem,
-        StockItemCriteriaInterfaceFactory $legacyStockItemCriteriaFactory,
-        StockItemRepositoryInterface $legacyStockItemRepository,
-        GetProductIdsBySkusInterface $getProductIdsBySkus,
-        StockStateProviderInterface $stockStateProvider,
-        Processor $indexerProcessor,
-        SetDataToLegacyStockStatus $setDataToLegacyStockStatus
+        private readonly SetDataToLegacyStockItem $setDataToLegacyStockItem,
+        private readonly GetProductIdsBySkusInterface $getProductIdsBySkus,
+        private readonly StockStateProviderInterface $stockStateProvider,
+        private readonly GetLegacyStockItemsInterface $getLegacyStockItems,
+        private readonly UpdateDefaultStock $updateDefaultStock,
+        private readonly ProductSalabilityChangeProcessorInterface $productSalabilityChangeProcessor
     ) {
-        $this->setDataToLegacyStockItem = $setDataToLegacyStockItem;
-        $this->setDataToLegacyStockStatus = $setDataToLegacyStockStatus;
-        $this->legacyStockItemCriteriaFactory = $legacyStockItemCriteriaFactory;
-        $this->legacyStockItemRepository = $legacyStockItemRepository;
-        $this->getProductIdsBySkus = $getProductIdsBySkus;
-        $this->stockStateProvider = $stockStateProvider;
-        $this->indexerProcessor = $indexerProcessor;
     }
 
     /**
      * Updates Stock information in legacy inventory.
      *
      * @param array $sourceItems
-     * @return void
      */
     public function execute(array $sourceItems): void
     {
-        $productIds = [];
+        $skus = array_map(fn ($sourceItem) => $sourceItem->getSku(), $sourceItems);
+        $legacyStockItemsByProductId = [];
+        foreach ($this->getLegacyStockItems->execute($skus) as $legacyStockItem) {
+            $legacyStockItemsByProductId[$legacyStockItem->getProductId()] = $legacyStockItem;
+        }
         foreach ($sourceItems as $sourceItem) {
             $sku = $sourceItem->getSku();
-
             try {
                 $productId = (int)$this->getProductIdsBySkus->execute([$sku])[$sku];
             } catch (NoSuchEntityException $e) {
                 // Skip synchronization of for not existed product
                 continue;
             }
-
-            $legacyStockItem = $this->getLegacyStockItem($productId);
+            $legacyStockItem = $legacyStockItemsByProductId[$productId] ?? null;
             if (null === $legacyStockItem) {
                 continue;
             }
-
-            $isInStock = (int)$sourceItem->getStatus();
-
-            if ($legacyStockItem->getManageStock()) {
-                $legacyStockItem->setIsInStock($isInStock);
-                $legacyStockItem->setQty((float)$sourceItem->getQuantity());
-
-                if (false === $this->stockStateProvider->verifyStock($legacyStockItem)) {
-                    $isInStock = 0;
-                }
+            $legacyStockItem->setQty((float)$sourceItem->getQuantity());
+            $legacyStockItem->setIsInStock((int)$sourceItem->getStatus());
+            if ($legacyStockItem->getManageStock() && !$this->stockStateProvider->verifyStock($legacyStockItem)) {
+                $legacyStockItem->setIsInStock(0);
             }
-
             $this->setDataToLegacyStockItem->execute(
                 (string)$sourceItem->getSku(),
-                (float)$sourceItem->getQuantity(),
-                $isInStock
+                (float)$legacyStockItem->getQty(),
+                (int) $legacyStockItem->getIsInStock()
             );
-            $this->setDataToLegacyStockStatus->execute(
-                (string)$sourceItem->getSku(),
-                (float)$sourceItem->getQuantity(),
-                $isInStock
-            );
-            $productIds[] = $productId;
         }
-
-        if ($productIds) {
-            $this->indexerProcessor->reindexList($productIds);
+        $affectedSkus = $this->updateDefaultStock->execute($skus);
+        if ($affectedSkus) {
+            $this->productSalabilityChangeProcessor->execute($affectedSkus);
         }
-    }
-
-    /**
-     * Returns StockItem from legacy inventory.
-     *
-     * @param int $productId
-     * @return null|StockItemInterface
-     */
-    private function getLegacyStockItem(int $productId): ?StockItemInterface
-    {
-        $searchCriteria = $this->legacyStockItemCriteriaFactory->create();
-
-        $searchCriteria->addFilter(StockItemInterface::PRODUCT_ID, StockItemInterface::PRODUCT_ID, $productId);
-        $searchCriteria->addFilter(StockItemInterface::STOCK_ID, StockItemInterface::STOCK_ID, Stock::DEFAULT_STOCK_ID);
-
-        $stockItemCollection = $this->legacyStockItemRepository->getList($searchCriteria);
-        if ($stockItemCollection->getTotalCount() === 0) {
-            return null;
-        }
-
-        $stockItems = $stockItemCollection->getItems();
-        $stockItem = reset($stockItems);
-        return $stockItem;
     }
 }

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -106,7 +106,7 @@ class NegativeMinQtyTest extends TestCase
      *
      * @return array
      */
-    public function isProductSalableForRequestedQtyWithBackordersEnabledAtProductLevelDataProvider(): array
+    public static function isProductSalableForRequestedQtyWithBackordersEnabledAtProductLevelDataProvider(): array
     {
         return [
             'salable_qty' => ['SKU-1', 10, -4.5, 13, true],
@@ -162,7 +162,7 @@ class NegativeMinQtyTest extends TestCase
      *
      * @return array
      */
-    public function isProductSalableForRequestedQtyWithBackordersEnabledGloballyDataProvider(): array
+    public static function isProductSalableForRequestedQtyWithBackordersEnabledGloballyDataProvider(): array
     {
         return [
             'salable_qty' => ['SKU-1', 10, 13, true],

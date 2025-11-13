@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -10,6 +10,7 @@ namespace Magento\InventoryCatalogAdminUi\Observer;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Controller\Adminhtml\Product\Save;
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
+use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Framework\Event\Observer as EventObserver;
@@ -31,57 +32,23 @@ use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProd
 class ProcessSourceItemsObserver implements ObserverInterface
 {
     /**
-     * @var IsSourceItemManagementAllowedForProductTypeInterface
-     */
-    private $isSourceItemManagementAllowedForProductType;
-
-    /**
-     * @var SourceItemsProcessorInterface
-     */
-    private $sourceItemsProcessor;
-
-    /**
-     * @var IsSingleSourceModeInterface
-     */
-    private $isSingleSourceMode;
-
-    /**
-     * @var DefaultSourceProviderInterface
-     */
-    private $defaultSourceProvider;
-
-    /**
-     * @var SearchCriteriaBuilderFactory
-     */
-    private $searchCriteriaBuilderFactory;
-
-    /**
-     * @var SourceItemRepositoryInterface
-     */
-    private $sourceItemRepository;
-
-    /**
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
      * @param SourceItemsProcessorInterface $sourceItemsProcessor
      * @param IsSingleSourceModeInterface $isSingleSourceMode
      * @param DefaultSourceProviderInterface $defaultSourceProvider
      * @param SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory
      * @param SourceItemRepositoryInterface $sourceItemRepository
+     * @param StockRegistryInterface $stockRegistry
      */
     public function __construct(
-        IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType,
-        SourceItemsProcessorInterface $sourceItemsProcessor,
-        IsSingleSourceModeInterface $isSingleSourceMode,
-        DefaultSourceProviderInterface $defaultSourceProvider,
-        SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory,
-        SourceItemRepositoryInterface $sourceItemRepository
+        private IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType,
+        private SourceItemsProcessorInterface $sourceItemsProcessor,
+        private IsSingleSourceModeInterface $isSingleSourceMode,
+        private DefaultSourceProviderInterface $defaultSourceProvider,
+        private SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory,
+        private SourceItemRepositoryInterface $sourceItemRepository,
+        private StockRegistryInterface $stockRegistry
     ) {
-        $this->isSourceItemManagementAllowedForProductType = $isSourceItemManagementAllowedForProductType;
-        $this->sourceItemsProcessor = $sourceItemsProcessor;
-        $this->isSingleSourceMode = $isSingleSourceMode;
-        $this->defaultSourceProvider = $defaultSourceProvider;
-        $this->searchCriteriaBuilderFactory = $searchCriteriaBuilderFactory;
-        $this->sourceItemRepository = $sourceItemRepository;
     }
 
     /**
@@ -101,30 +68,19 @@ class ProcessSourceItemsObserver implements ObserverInterface
         /** @var Save $controller */
         $controller = $observer->getEvent()->getController();
         $productData = $controller->getRequest()->getParam('product', []);
-        $singleSourceData = $productData['quantity_and_stock_status'] ?? [];
 
         if (!$this->isSingleSourceMode->execute()) {
             $sources = $controller->getRequest()->getParam('sources', []);
             $assignedSources =
                 isset($sources['assigned_sources'])
                 && is_array($sources['assigned_sources'])
-                    ? $this->prepareAssignedSources($sources['assigned_sources'])
+                    ? $this->prepareAssignedSources($product, $sources['assigned_sources'])
                     : [];
             $this->sourceItemsProcessor->execute((string)$productData['sku'], $assignedSources);
-        } elseif (!empty($singleSourceData)) {
-            /** @var StockItemInterface $stockItem */
-            $stockItem = $product->getExtensionAttributes()->getStockItem();
-            $qty = $singleSourceData['qty'] ?? (empty($stockItem) ? 0 : $stockItem->getQty());
-            $isInStock = $singleSourceData['is_in_stock'] ?? (empty($stockItem) ? 1 : (int)$stockItem->getIsInStock());
-            $defaultSourceData = [
-                SourceItemInterface::SKU => $productData['sku'],
-                SourceItemInterface::SOURCE_CODE => $this->defaultSourceProvider->getCode(),
-                SourceItemInterface::QUANTITY => $qty,
-                SourceItemInterface::STATUS => $isInStock,
-            ];
-            $sourceItems = $this->getSourceItemsWithoutDefault($productData['sku']);
-            $sourceItems[] = $defaultSourceData;
-            $this->sourceItemsProcessor->execute((string)$productData['sku'], $sourceItems);
+        } else {
+            $sourceItems = $this->getSourceItemsWithoutDefault($product->getSku());
+            $sourceItems[] = $this->getDefaultSourceData($product);
+            $this->sourceItemsProcessor->execute((string)$product->getSku(), $sourceItems);
         }
     }
 
@@ -161,10 +117,11 @@ class ProcessSourceItemsObserver implements ObserverInterface
     /**
      * Convert built-in UI component property qty into quantity and source_status into status
      *
+     * @param ProductInterface $product
      * @param array $assignedSources
      * @return array
      */
-    private function prepareAssignedSources(array $assignedSources): array
+    private function prepareAssignedSources(ProductInterface $product, array $assignedSources): array
     {
         foreach ($assignedSources as $key => $source) {
             if (!key_exists('quantity', $source) && isset($source['qty'])) {
@@ -175,7 +132,34 @@ class ProcessSourceItemsObserver implements ObserverInterface
                 $source['status'] = (int) $source['source_status'];
                 $assignedSources[$key] = $source;
             }
+            if (isset($source['source_code']) && $source['source_code'] === $this->defaultSourceProvider->getCode()) {
+                $assignedSources[$key] = $this->getDefaultSourceData($product) + $source;
+            }
         }
         return $assignedSources;
+    }
+
+    /**
+     * Get default source data from stock item
+     *
+     * This is important because default stock item status can change depending on stock configurations
+     * such as qty, backorders, min qty etc., and we need to reflect that in default source item data.
+     * In multi-source mode, the default source quantity will override the stock item qty in the plugin below
+     *
+     * @see \Magento\InventoryCatalogAdminUi\Plugin\CatalogInventory\Api\StockRegistry\SetQtyToLegacyStock
+     * @param ProductInterface $product
+     * @return array
+     */
+    private function getDefaultSourceData(ProductInterface $product): array
+    {
+        /** @var StockItemInterface $stockItem */
+        $stockItem = $product->getExtensionAttributes()?->getStockItem()
+            ?? $this->stockRegistry->getStockItem($product->getId());
+        return [
+            SourceItemInterface::SKU => $product->getSku(),
+            SourceItemInterface::SOURCE_CODE => $this->defaultSourceProvider->getCode(),
+            SourceItemInterface::QUANTITY => $stockItem->getQty(),
+            SourceItemInterface::STATUS => $stockItem->getIsInStock(),
+        ];
     }
 }

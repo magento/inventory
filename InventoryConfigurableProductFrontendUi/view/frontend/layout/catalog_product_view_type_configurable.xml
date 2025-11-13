@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="product.info.type">
+            <block name="product.info.configurable.catalog_inventory_stockqty_default" after="product.info.configurable" before="product.info.sku" template="Magento_InventoryConfigurableProductFrontendUi::product/view/stockQty.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -18,8 +18,8 @@ class GetSourceSelectionAlgorithmListTest extends WebapiAbstract
     /**#@+
      * Service constants
      */
-    const RESOURCE_PATH = '/V1/inventory/source-selection-algorithm-list';
-    const SERVICE_NAME = 'inventorySourceSelectionApiGetSourceSelectionAlgorithmListV1';
+    public const RESOURCE_PATH = '/V1/inventory/source-selection-algorithm-list';
+    public const SERVICE_NAME = 'inventorySourceSelectionApiGetSourceSelectionAlgorithmListV1';
     /**#@-*/
 
     public function testGetSourceSelectionAlgorithmList()
@@ -39,7 +39,7 @@ class GetSourceSelectionAlgorithmListTest extends WebapiAbstract
             ? $this->_webApiCall($serviceInfo)
             : $this->_webApiCall($serviceInfo);
 
-        self::assertInternalType('array', $sourceSelectionAlgorithmList);
+        self::assertIsArray($sourceSelectionAlgorithmList);
         self::assertNotEmpty($sourceSelectionAlgorithmList);
     }
 }

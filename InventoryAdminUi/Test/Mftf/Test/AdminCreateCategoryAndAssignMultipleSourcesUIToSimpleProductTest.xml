@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright 2025 Adobe
+ * All Rights Reserved.
+ */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+  <test name="AdminCreateCategoryAndAssignMultipleSourcesUIToSimpleProductTest">
+    <annotations>
+      <features value="Inventory Management"/>
+      <stories value="Create Category and Assign 22 Sources to Simple Product via Admin UI"/>
+      <title value="Admin creates category, 22 sources via UI, and assigns all sources to simple product"/>
+      <description value="Verify admin can create category, create 22 sources through UI with address data, create simple product, and assign all 22 sources plus default source to the product"/>
+      <severity value="MAJOR"/>
+      <testCaseId value="AC-6556"/>
+      <group value="msi"/>
+    </annotations>
+    <before>
+      <!-- Step 1: Create category -->
+      <createData entity="SimpleSubCategory" stepKey="createCategory"/>
+      <!-- Step 2-3: Create 22 Sources using Helper -->
+      <helper class="Magento\Inventory\Test\Mftf\Helper\MultipleSourcesHelper" method="createMultipleSources" stepKey="createMultipleSources">
+        <argument name="count">22</argument>
+        <argument name="prefix">TestSource</argument>
+      </helper>
+      <!-- Step 4: Create product -->
+      <createData entity="SimpleProduct" stepKey="createProduct">
+        <requiredEntity createDataKey="createCategory"/>
+      </createData>
+      <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+    </before>
+    <after>
+      <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
+      <deleteData createDataKey="createProduct" stepKey="deleteProduct"/>
+      <!-- Disable all created sources -->
+      <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+      <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdmin"/>
+    </after>
+    <!-- Step 5: Verify product in grid -->
+    <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="navigateToProductIndex"/>
+    <actionGroup ref="FilterProductGridByNameActionGroup" stepKey="filterProduct">
+      <argument name="product" value="$$createProduct$$"/>
+    </actionGroup>
+    <!-- Verify product appears in grid -->
+    <actionGroup ref="AssertAdminProductGridCellActionGroup" stepKey="verifyProductNameInGrid">
+      <argument name="column" value="Name"/>
+      <argument name="value" value="$createProduct.name$"/>
+    </actionGroup>
+    <actionGroup ref="AssertAdminProductGridCellActionGroup" stepKey="verifyProductSkuInGrid">
+      <argument name="column" value="SKU"/>
+      <argument name="value" value="$createProduct.sku$"/>
+    </actionGroup>
+    <actionGroup ref="AssertAdminProductGridCellActionGroup" stepKey="verifyProductPriceInGrid">
+      <argument name="column" value="Price"/>
+      <argument name="value" value="$123.00"/>
+    </actionGroup>
+    <actionGroup ref="AssertAdminProductGridCellActionGroup" stepKey="verifyProductStatusInGrid">
+      <argument name="column" value="Status"/>
+      <argument name="value" value="Enabled"/>
+    </actionGroup>
+    <actionGroup ref="AssertAdminProductGridCellActionGroup" stepKey="verifyProductWebsiteInGrid">
+      <argument name="column" value="Websites"/>
+      <argument name="value" value="Main Website"/>
+    </actionGroup>
+    <!-- Step 6: Assign all 22 sources to product -->
+    <click selector="{{AdminProductGridSection.productGridNameProduct($$createProduct.product[name]$$)}}" stepKey="clickProductToEdit"/>
+    <waitForPageLoad stepKey="waitForProductEditPageLoad"/>
+    <!-- Assign sources using bulk selection -->
+    <click selector="{{AdminProductSourcesSection.assignSources}}" stepKey="clickAssignMoreSources"/>
+    <waitForPageLoad stepKey="waitForSourcesModal"/>
+    <!-- Set pagination to show 30 sources -->
+    <actionGroup ref="AdminDataGridSelectPerPageActionGroup" stepKey="selectShow30Sources">
+      <argument name="perPage" value="30"/>
+    </actionGroup>
+    <actionGroup ref="AdminClearGridFiltersActionGroup" stepKey="clearFilters"/>
+    <!-- Use bulk selection to select all available sources -->
+    <click selector="{{AdminGridSelectRows.multicheckDropdown}}" stepKey="openMultiCheckDropdown"/>
+    <click selector="{{AdminGridSelectRows.multicheckOption('Select All')}}" stepKey="selectAllAvailableSources"/>
+    <waitForPageLoad stepKey="waitAfterSelectAll"/>
+    <!-- Click Done -->
+    <click selector="{{AdminAssignSourcesSlideOutSection.done}}" stepKey="clickDoneAfterSelectingSources"/>
+    <!-- Verify sources were assigned successfully -->
+    <waitForElementVisible selector="{{AdminProductSourcesGrid.rowByIndex('1')}}" stepKey="waitForSourcesInGrid"/>
+    <!-- Step 7: Set quantity for a few sources to verify functionality -->
+    <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="setDefaultSourceQuantity"/>
+    <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="setSource1Quantity"/>
+    <fillField selector="{{AdminProductSourcesGrid.rowQty('2')}}" userInput="100" stepKey="setSource2Quantity"/>
+    <fillField selector="{{AdminProductSourcesGrid.rowQty('3')}}" userInput="100" stepKey="setSource3Quantity"/>
+    <fillField selector="{{AdminProductSourcesGrid.rowQty('4')}}" userInput="100" stepKey="setSource4Quantity"/>
+    <fillField selector="{{AdminProductSourcesGrid.rowQty('5')}}" userInput="100" stepKey="setSource5Quantity"/>
+    <fillField selector="{{AdminProductSourcesGrid.rowQty('6')}}" userInput="100" stepKey="setSource6Quantity"/>
+    <fillField selector="{{AdminProductSourcesGrid.rowQty('7')}}" userInput="100" stepKey="setSource7Quantity"/>
+    <fillField selector="{{AdminProductSourcesGrid.rowQty('8')}}" userInput="100" stepKey="setSource8Quantity"/>
+    <fillField selector="{{AdminProductSourcesGrid.rowQty('9')}}" userInput="100" stepKey="setSource9Quantity"/>
+    <fillField selector="{{AdminProductSourcesGrid.rowQty('10')}}" userInput="100" stepKey="setSource10Quantity"/>
+    <fillField selector="{{AdminProductSourcesGrid.rowQty('11')}}" userInput="100" stepKey="setSource11Quantity"/>
+    <fillField selector="{{AdminProductSourcesGrid.rowQty('12')}}" userInput="100" stepKey="setSource12Quantity"/>
+    <fillField selector="{{AdminProductSourcesGrid.rowQty('13')}}" userInput="100" stepKey="setSource13Quantity"/>
+    <fillField selector="{{AdminProductSourcesGrid.rowQty('14')}}" userInput="100" stepKey="setSource14Quantity"/>
+    <fillField selector="{{AdminProductSourcesGrid.rowQty('15')}}" userInput="100" stepKey="setSource15Quantity"/>
+    <fillField selector="{{AdminProductSourcesGrid.rowQty('16')}}" userInput="100" stepKey="setSource16Quantity"/>
+    <fillField selector="{{AdminProductSourcesGrid.rowQty('17')}}" userInput="100" stepKey="setSource17Quantity"/>
+    <fillField selector="{{AdminProductSourcesGrid.rowQty('18')}}" userInput="100" stepKey="setSource18Quantity"/>
+    <fillField selector="{{AdminProductSourcesGrid.rowQty('19')}}" userInput="100" stepKey="setSource19Quantity"/>
+    <scrollTo selector="{{AdminDataGridPaginationSection.nextPage}}" stepKey="scrollToNextPageSourcesGrid"/>
+    <waitForElementClickable selector="{{AdminDataGridPaginationSection.nextPage}}" stepKey="waitForNextPageClickable"/>
+    <executeJS function="document.querySelector('{{AdminDataGridPaginationSection.nextPage}}').click();" stepKey="clickNextPageViaJS"/>
+    <waitForPageLoad stepKey="waitForNextPageLoad"/>
+    <fillField selector="{{AdminProductSourcesGrid.rowQtyCustom('0', '20')}}" userInput="100" stepKey="setSource20Quantity"/>
+    <fillField selector="{{AdminProductSourcesGrid.rowQtyCustom('1', '21')}}" userInput="100" stepKey="setSource21Quantity"/>
+    <fillField selector="{{AdminProductSourcesGrid.rowQtyCustom('2', '22')}}" userInput="100" stepKey="setSource22Quantity"/>
+    <!-- Step 8: Save product-->
+    <actionGroup ref="AdminProductFormSaveActionGroup" stepKey="saveProductWithAllSources"/>
+    <!-- Step 9: Verify sources were added correctly -->
+    <waitForElementVisible selector="{{AdminProductSourcesGrid.rowByIndex('0')}}" stepKey="verifyDefaultSourcePresent"/>
+    <waitForElementVisible selector="{{AdminProductSourcesGrid.rowByIndex('1')}}" stepKey="verifySource1Present"/>
+    <waitForElementVisible selector="{{AdminProductSourcesGrid.rowByIndex('2')}}" stepKey="verifySource2Present"/>
+    <waitForElementVisible selector="{{AdminProductSourcesGrid.rowByIndex('3')}}" stepKey="verifySource3Present"/>
+    <waitForElementVisible selector="{{AdminProductSourcesGrid.rowByIndex('4')}}" stepKey="verifySource4Present"/>
+    <waitForElementVisible selector="{{AdminProductSourcesGrid.rowByIndex('5')}}" stepKey="verifySource5Present"/>
+    <waitForElementVisible selector="{{AdminProductSourcesGrid.rowByIndex('6')}}" stepKey="verifySource6Present"/>
+    <waitForElementVisible selector="{{AdminProductSourcesGrid.rowByIndex('7')}}" stepKey="verifySource7Present"/>
+    <waitForElementVisible selector="{{AdminProductSourcesGrid.rowByIndex('8')}}" stepKey="verifySource8Present"/>
+    <waitForElementVisible selector="{{AdminProductSourcesGrid.rowByIndex('9')}}" stepKey="verifySource9Present"/>
+    <waitForElementVisible selector="{{AdminProductSourcesGrid.rowByIndex('10')}}" stepKey="verifySource10Present"/>
+    <waitForElementVisible selector="{{AdminProductSourcesGrid.rowByIndex('11')}}" stepKey="verifySource11Present"/>
+    <waitForElementVisible selector="{{AdminProductSourcesGrid.rowByIndex('12')}}" stepKey="verifySource12Present"/>
+    <waitForElementVisible selector="{{AdminProductSourcesGrid.rowByIndex('13')}}" stepKey="verifySource13Present"/>
+    <waitForElementVisible selector="{{AdminProductSourcesGrid.rowByIndex('14')}}" stepKey="verifySource14Present"/>
+    <waitForElementVisible selector="{{AdminProductSourcesGrid.rowByIndex('15')}}" stepKey="verifySource15Present"/>
+    <waitForElementVisible selector="{{AdminProductSourcesGrid.rowByIndex('16')}}" stepKey="verifySource16Present"/>
+    <waitForElementVisible selector="{{AdminProductSourcesGrid.rowByIndex('17')}}" stepKey="verifySource17Present"/>
+    <waitForElementVisible selector="{{AdminProductSourcesGrid.rowByIndex('18')}}" stepKey="verifySource18Present"/>
+    <waitForElementVisible selector="{{AdminProductSourcesGrid.rowByIndex('19')}}" stepKey="verifySource19Present"/>
+    <waitForElementClickable selector="{{AdminDataGridPaginationSection.nextPage}}" stepKey="waitForNextPageClickableAgain"/>
+    <executeJS function="document.querySelector('{{AdminDataGridPaginationSection.nextPage}}').click();" stepKey="clickNextPageViaJSAgain"/>
+    <waitForElementVisible selector="{{AdminProductSourcesGrid.rowByIndex('0')}}" stepKey="verifySource20Present"/>
+    <waitForElementVisible selector="{{AdminProductSourcesGrid.rowByIndex('1')}}" stepKey="verifySource21Present"/>
+    <waitForElementVisible selector="{{AdminProductSourcesGrid.rowByIndex('2')}}" stepKey="verifySource22Present"/>
+  </test>
+</tests>

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -115,6 +115,38 @@ class BundleProductShipTogetherSaveChildValidationTest extends WebapiAbstract
             'position' => 1,
             'priceType' => 2,
             'price' => 10,
+            'is_default' => true,
+            'can_change_quantity' => 0,
+        ];
+        $result = $this->saveChild($bundleProduct->getSku(), $linkedProduct);
+        self::assertTrue($result);
+    }
+
+    /**
+     * Verify, simple product can be updated in bundle product "Ship Together" in case of single source.
+     *
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/source_items.php
+     * @magentoApiDataFixture Magento_InventoryBundleProduct::Test/_files/product_bundle_ship_together.php
+     */
+    public function testUpdateSimpleProductShipmentTypeTogetherSingleSource(): void
+    {
+        $bundleProduct = $this->productRepository->get('bundle-ship-together');
+        $options = $bundleProduct->getExtensionAttributes()->getBundleProductOptions();
+        $option = current($options);
+        $simple = $this->productRepository->get('SKU-5');
+        $simple->setName($simple->getName().'-updated-option');
+        $simple->setPrice(100);
+        $this->productRepository->save($simple);
+        $productLink = current($option->getProductLinks());
+        $linkedProduct = [
+            'id' => $productLink->getId(),
+            'sku' => $simple->getSku(),
+            'option_id' => $option->getId(),
+            'qty' => 1,
+            'position' => 1,
+            'priceType' => 2,
+            'price' => $simple->getPrice(),
             'is_default' => true,
             'can_change_quantity' => 0,
         ];

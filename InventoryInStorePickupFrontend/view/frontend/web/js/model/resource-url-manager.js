@@ -1,13 +1,13 @@
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 
 define(['jquery', 'Magento_Checkout/js/model/resource-url-manager'], function (
     $,
     resourceUrlManager
 ) {
-    'use strict';
+    'use strict'; //eslint-disable-line
 
     return {
         /**
@@ -77,8 +77,8 @@ define(['jquery', 'Magento_Checkout/js/model/resource-url-manager'], function (
                 },
                 searchRequest = {
                     searchRequest: {
-                        filterSet: {
-                            pickupLocationCodeFilter: {
+                        filters: {
+                            pickupLocationCode: {
                                 value: pickupLocationCode
                             }
                         },

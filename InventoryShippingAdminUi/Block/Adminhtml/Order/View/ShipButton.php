@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -48,7 +48,7 @@ class ShipButton extends Container
         Registry $registry,
         IsWebsiteInMultiSourceMode $isWebsiteInMultiSourceMode,
         array $data = [],
-        IsOrderSourceManageable $isOrderSourceManageable = null
+        ?IsOrderSourceManageable $isOrderSourceManageable = null
     ) {
         parent::__construct($context, $data);
         $this->registry = $registry;

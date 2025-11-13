@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -15,6 +15,7 @@ use Magento\Inventory\Model\ResourceModel\StockSourceLink\CollectionFactory as S
 use Magento\InventoryApi\Api\Data\StockSourceLinkSearchResultsInterface;
 use Magento\InventoryApi\Api\Data\StockSourceLinkSearchResultsInterfaceFactory;
 use Magento\InventoryApi\Api\GetStockSourceLinksInterface;
+use Magento\Framework\Api\ExtensionAttribute\JoinProcessorInterface;
 
 /**
  * @inheritdoc
@@ -42,21 +43,29 @@ class GetStockSourceLinks implements GetStockSourceLinksInterface
     private $searchCriteriaBuilder;
 
     /**
+     * @var StockSourceLinksExtensionAttributes
+     */
+    private $stockSourceLinksExtensionAttributes;
+
+    /**
      * @param CollectionProcessorInterface $collectionProcessor
      * @param StockSourceLinkCollectionFactory $stockSourceLinkCollectionFactory
      * @param StockSourceLinkSearchResultsInterfaceFactory $stockSourceLinkSearchResultsFactory
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param StockSourceLinksExtensionAttributes $stockSourceLinksExtensionAttributes
      */
     public function __construct(
         CollectionProcessorInterface $collectionProcessor,
         StockSourceLinkCollectionFactory $stockSourceLinkCollectionFactory,
         StockSourceLinkSearchResultsInterfaceFactory $stockSourceLinkSearchResultsFactory,
-        SearchCriteriaBuilder $searchCriteriaBuilder
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        StockSourceLinksExtensionAttributes $stockSourceLinksExtensionAttributes
     ) {
         $this->collectionProcessor = $collectionProcessor;
         $this->stockSourceLinkCollectionFactory = $stockSourceLinkCollectionFactory;
         $this->stockSourceLinkSearchResultsFactory = $stockSourceLinkSearchResultsFactory;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->stockSourceLinksExtensionAttributes = $stockSourceLinksExtensionAttributes;
     }
 
     /**
@@ -68,6 +77,7 @@ class GetStockSourceLinks implements GetStockSourceLinksInterface
         $collection = $this->stockSourceLinkCollectionFactory->create();
 
         $this->collectionProcessor->process($searchCriteria, $collection);
+        $this->stockSourceLinksExtensionAttributes->process($collection);
 
         /** @var StockSourceLinkSearchResultsInterface $searchResult */
         $searchResult = $this->stockSourceLinkSearchResultsFactory->create();

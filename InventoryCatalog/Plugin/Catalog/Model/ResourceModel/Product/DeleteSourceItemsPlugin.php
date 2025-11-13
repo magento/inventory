@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -23,18 +23,11 @@ class DeleteSourceItemsPlugin
     private $publisher;
 
     /**
-     * @var ScopeConfigInterface
-     */
-    private $config;
-
-    /**
      * @param PublisherInterface $publisher
-     * @param ScopeConfigInterface $config
      */
-    public function __construct(PublisherInterface $publisher, ScopeConfigInterface $config)
+    public function __construct(PublisherInterface $publisher)
     {
         $this->publisher = $publisher;
-        $this->config = $config;
     }
 
     /**
@@ -48,14 +41,12 @@ class DeleteSourceItemsPlugin
      */
     public function afterDelete(Product $subject, $result, $product): Product
     {
-        if ($this->config->getValue('cataloginventory/options/synchronize_with_catalog')) {
-            $this->publisher->publish(
-                'inventory.source.items.cleanup',
-                [
-                    (string)$product->getSku(),
-                ]
-            );
-        }
+        $this->publisher->publish(
+            'inventory.source.items.cleanup',
+            [
+                (string)$product->getSku(),
+            ]
+        );
 
         return $result;
     }

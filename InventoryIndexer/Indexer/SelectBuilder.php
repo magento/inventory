@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -15,12 +15,13 @@ use Magento\Inventory\Model\ResourceModel\StockSourceLink as StockSourceLinkReso
 use Magento\Inventory\Model\StockSourceLink;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
+use Magento\InventoryIndexer\Indexer\Stock\ReservationsIndexTable;
 use Magento\InventorySales\Model\ResourceModel\IsStockItemSalableCondition\GetIsStockItemSalableConditionInterface;
 
 /**
- * Select builder
+ * Prepare select for data provider
  */
-class SelectBuilder
+class SelectBuilder implements SelectBuilderInterface
 {
     /**
      * @var ResourceConnection
@@ -38,25 +39,43 @@ class SelectBuilder
     private $productTableName;
 
     /**
+     * @var ReservationsIndexTable
+     */
+    private $reservationsIndexTable;
+
+    /**
      * @param ResourceConnection $resourceConnection
      * @param GetIsStockItemSalableConditionInterface $getIsStockItemSalableCondition
      * @param string $productTableName
+     * @param ReservationsIndexTable $reservationsIndexTable
      */
     public function __construct(
         ResourceConnection $resourceConnection,
         GetIsStockItemSalableConditionInterface $getIsStockItemSalableCondition,
-        string $productTableName
+        string $productTableName,
+        ReservationsIndexTable $reservationsIndexTable
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->getIsStockItemSalableCondition = $getIsStockItemSalableCondition;
         $this->productTableName = $productTableName;
+        $this->reservationsIndexTable = $reservationsIndexTable;
     }
 
     /**
+     * Build select based on stockId
+     *
      * @param int $stockId
      * @return Select
      */
     public function execute(int $stockId): Select
+    {
+        return $this->getSelect($stockId);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getSelect(int $stockId, array $skuList = []): Select
     {
         $connection = $this->resourceConnection->getConnection();
         $sourceItemTable = $this->resourceConnection->getTableName(SourceItemResourceModel::TABLE_NAME_SOURCE_ITEM);
@@ -64,7 +83,7 @@ class SelectBuilder
         $quantityExpression = (string)$this->resourceConnection->getConnection()->getCheckSql(
             'source_item.' . SourceItemInterface::STATUS . ' = ' . SourceItemInterface::STATUS_OUT_OF_STOCK,
             0,
-            SourceItemInterface::QUANTITY
+            'source_item.' . SourceItemInterface::QUANTITY
         );
         $sourceCodes = $this->getSourceCodes($stockId);
 
@@ -77,6 +96,14 @@ class SelectBuilder
             ['legacy_stock_item' => $this->resourceConnection->getTableName('cataloginventory_stock_item')],
             'product.entity_id = legacy_stock_item.product_id',
             []
+        )->joinLeft(
+            [
+                'reservations' => $this->resourceConnection->getTableName(
+                    $this->reservationsIndexTable->getTableName($stockId)
+                )
+            ],
+            ' source_item.' . SourceItemInterface::SKU . ' = reservations.sku',
+            []
         );
 
         $select->from(
@@ -88,7 +115,11 @@ class SelectBuilder
             ]
         )
             ->where('source_item.' . SourceItemInterface::SOURCE_CODE . ' IN (?)', $sourceCodes)
-            ->group([SourceItemInterface::SKU]);
+            ->group(['source_item.' .SourceItemInterface::SKU]);
+
+        if ($skuList) {
+            $select->where('source_item.' . SourceItemInterface::SKU . ' IN (?)', $skuList);
+        }
 
         return $select;
     }
@@ -117,7 +148,6 @@ class SelectBuilder
             ->where('stock_source_link.' . StockSourceLink::STOCK_ID . ' = ?', $stockId)
             ->where(SourceInterface::ENABLED . ' = ?', 1);
 
-        $sourceCodes = $connection->fetchCol($select);
-        return $sourceCodes;
+        return $connection->fetchCol($select);
     }
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 -->
 <listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
@@ -17,6 +17,7 @@
                 <url path="*/*/new"/>
                 <class>primary</class>
                 <label translate="true">Add New Source</label>
+                <aclResource>Magento_InventoryApi::source_edit</aclResource>
             </button>
         </buttons>
         <spinner>inventory_source_listing_columns</spinner>
@@ -58,7 +59,7 @@
                 </templates>
             </settings>
         </filters>
-        <massaction name="listing_massaction" component="Magento_Ui/js/grid/tree-massactions">
+        <massaction name="listing_massaction" component="Magento_Ui/js/grid/tree-massactions" class="Magento\InventoryAdminUi\Ui\Component\Listing\MassAction">
             <action name="enable">
                 <settings>
                     <confirm>
@@ -84,7 +85,7 @@
         </massaction>
         <paging name="listing_paging"/>
     </listingToolbar>
-    <columns name="inventory_source_listing_columns">
+    <columns name="inventory_source_listing_columns" class="Magento\InventoryAdminUi\Ui\Component\Listing\Columns">
         <settings>
             <editorConfig>
                 <param name="clientConfig" xsi:type="array">
@@ -269,7 +270,7 @@
                 <visible>false</visible>
             </settings>
         </column>
-        <actionsColumn name="actions" class="Magento\Backend\Ui\Component\Listing\Column\EditAction" sortOrder="200">
+        <actionsColumn name="actions" class="Magento\InventoryAdminUi\Ui\Component\Listing\Column\EditAction" sortOrder="200">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="editUrlPath" xsi:type="string">inventory/source/edit</item>

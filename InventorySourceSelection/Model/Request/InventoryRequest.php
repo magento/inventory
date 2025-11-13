@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -56,8 +56,8 @@ class InventoryRequest extends AbstractExtensibleModel implements InventoryReque
         ItemRequestInterfaceFactory $itemRequestFactory,
         int $stockId,
         array $items,
-        \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
-        \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
+        ?\Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
+        ?\Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
     ) {
         parent::__construct(
@@ -74,6 +74,7 @@ class InventoryRequest extends AbstractExtensibleModel implements InventoryReque
         $this->stockId = $stockId;
 
         //TODO: Temporary fix for resolving issue with webApi (https://github.com/magento-engcom/msi/issues/1524)
+        $this->items = [];
         foreach ($items as $item) {
             if (false === $item instanceof ItemRequestInterface) {
                 $this->items[] = $this->itemRequestFactory->create([

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -17,11 +17,11 @@ use Magento\Eav\Api\Data\AttributeOptionInterface;
 use Magento\Eav\Model\Config;
 use Magento\Store\Model\Website;
 use Magento\TestFramework\Helper\Bootstrap;
+use Magento\TestFramework\Workaround\Override\Fixture\Resolver;
 
-\Magento\TestFramework\Helper\Bootstrap::getInstance()->reinitialize();
+Bootstrap::getInstance()->reinitialize();
 
-require __DIR__ .
-    '/../../../../../../dev/tests/integration/testsuite/Magento/ConfigurableProduct/_files/configurable_attribute.php';
+Resolver::getInstance()->requireDataFixture('Magento/ConfigurableProduct/_files/configurable_attribute.php');
 
 /** @var ProductRepositoryInterface $productRepository */
 $productRepository = Bootstrap::getObjectManager()->create(ProductRepositoryInterface::class);
@@ -145,7 +145,7 @@ $product->setTypeId(Configurable::TYPE_CODE)
 $productRepository->save($product);
 
 /** @var \Magento\Catalog\Api\CategoryLinkManagementInterface $categoryLinkManagement */
-$categoryLinkManagement = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
+$categoryLinkManagement = Bootstrap::getObjectManager()
     ->create(\Magento\Catalog\Api\CategoryLinkManagementInterface::class);
 
 $categoryLinkManagement->assignProductToCategories(

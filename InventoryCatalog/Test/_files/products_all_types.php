@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 
 use Magento\Bundle\Model\Product\Price;
@@ -44,7 +44,7 @@ foreach ($productTypes as $productType => $additionalProductData) {
     ];
 
     if (!empty($additionalProductData)) {
-        $attrProductData = array_merge($attrProductData, $additionalProductData);
+        $attrProductData += $additionalProductData;
     }
 
     /** @var $product ProductInterface */

@@ -13,7 +13,7 @@
 "Condition have to implement IsProductSalableForRequestedQtyInterface.","Condition have to implement IsProductSalableForRequestedQtyInterface."
 "The requested sku is not assigned to given stock.","The requested sku is not assigned to given stock."
 "The requested sku is not assigned to given stock","The requested sku is not assigned to given stock"
-"The requested qty is not available","The requested qty is not available"
+"Not enough items for sale","Not enough items for sale"
 "Manage stock is enabled","Manage stock is enabled"
 "Condition must implement %1","Condition must implement %1"
 """%field"" can not be empty.","""%field"" can not be empty."

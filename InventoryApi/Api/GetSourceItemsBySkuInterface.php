@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -15,6 +15,8 @@ namespace Magento\InventoryApi\Api;
 interface GetSourceItemsBySkuInterface
 {
     /**
+     * Finds and returns source items associated with the given SKU as an array of `SourceItemInterface` objects.
+     *
      * @param string $sku
      * @return \Magento\InventoryApi\Api\Data\SourceItemInterface[]
      */

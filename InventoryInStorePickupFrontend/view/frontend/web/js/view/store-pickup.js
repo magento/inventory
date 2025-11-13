@@ -1,6 +1,6 @@
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 
 define([
@@ -16,7 +16,10 @@ define([
     'Magento_Checkout/js/model/step-navigator',
     'Magento_Checkout/js/model/shipping-rate-service',
     'Magento_InventoryInStorePickupFrontend/js/model/shipping-rate-processor/store-pickup-address',
-    'Magento_InventoryInStorePickupFrontend/js/model/pickup-locations-service'
+    'Magento_InventoryInStorePickupFrontend/js/model/pickup-locations-service',
+    'Magento_InventoryInStorePickupFrontend/js/model/pickup-address-converter',
+    'Magento_Checkout/js/model/checkout-data-resolver',
+    'Magento_Checkout/js/action/select-shipping-address'
 ], function (
     Component,
     _,
@@ -30,7 +33,10 @@ define([
     stepNavigator,
     shippingRateService,
     shippingRateProcessor,
-    pickupLocationsService
+    pickupLocationsService,
+    pickupAddressConverter,
+    checkoutDataResolver,
+    selectShippingAddress
 ) {
     'use strict';
 
@@ -41,6 +47,7 @@ define([
             isVisible: false,
             isAvailable: false,
             isStorePickupSelected: false,
+            isStoreLocationAutoSelected: false,
             rate: {
                 'carrier_code': 'instore',
                 'method_code': 'pickup'
@@ -49,7 +56,8 @@ define([
             defaultCountry: window.checkoutConfig.defaultCountryId,
             delimiter: window.checkoutConfig.storePickupApiSearchTermDelimiter,
             rates: shippingService.getShippingRates(),
-            inStoreMethod: null
+            inStoreMethod: null,
+            lastSelectedNonPickUpShippingAddress: null
         },
 
         /**
@@ -60,14 +68,39 @@ define([
 
             shippingRateService.registerProcessor('store-pickup-address', shippingRateProcessor);
 
-            quote.shippingAddress.subscribe(function (shippingAddress) {
-                this.convertAddressType(shippingAddress);
-            }, this);
             this.convertAddressType(quote.shippingAddress());
 
             this.isStorePickupSelected.subscribe(function () {
                 this.preselectLocation();
             }, this);
+
+            pickupLocationsService.selectedLocation.subscribe(() => {
+                this.isStoreLocationAutoSelected(false);
+            });
+
+            // reset selected location when shipping address is changed
+            quote.shippingAddress.subscribe((shippingAddress) => {
+                if (this.isStoreLocationAutoSelected()
+                    && !this.isStorePickupSelected()
+                    && !this.isStorePickupAddress(shippingAddress)
+                ) {
+                    pickupLocationsService.selectedLocation(null);
+                }
+            });
+
+            // reset selected location when shipping address form is changed
+            registry.async('checkoutProvider')((checkoutProvider) => {
+                checkoutProvider.on('shippingAddress', (shippingAddressData, changes) => {
+                    if (this.isStoreLocationAutoSelected()
+                        && !this.isStorePickupSelected()
+                        && changes
+                        && changes.length > 0
+                    ) {
+                        pickupLocationsService.selectedLocation(null);
+                    }
+                });
+            });
+
             this.preselectLocation();
 
             this.syncWithShipping();
@@ -79,7 +112,7 @@ define([
          * @return {exports}
          */
         initObservable: function () {
-            this._super().observe(['isVisible']);
+            this._super().observe(['isVisible', 'isStoreLocationAutoSelected']);
 
             this.isStorePickupSelected = ko.pureComputed(function () {
                 return _.isMatch(quote.shippingMethod(), this.rate);
@@ -116,25 +149,29 @@ define([
          */
         selectShipping: function () {
             var nonPickupShippingMethod = _.find(
-                this.rates(),
-                function (rate) {
-                    return (
-                        rate['carrier_code'] !== this.rate['carrier_code'] &&
+                    this.rates(),
+                    function (rate) {
+                        return (
+                            rate['carrier_code'] !== this.rate['carrier_code'] &&
                         rate['method_code'] !== this.rate['method_code']
-                    );
-                },
-                this
-            );
+                        );
+                    },
+                    this
+                ),
+                nonPickupShippingAddress;
 
+            if (this.lastSelectedNonPickUpShippingAddress) {
+                checkoutData.setSelectedShippingAddress(this.lastSelectedNonPickUpShippingAddress);
+            }
             this.selectShippingMethod(nonPickupShippingMethod);
 
-            registry.async('checkoutProvider')(function (checkoutProvider) {
-                checkoutProvider.set(
-                    'shippingAddress',
-                    quote.shippingAddress()
-                );
-                checkoutProvider.trigger('data.reset');
-            });
+            if (this.isStorePickupAddress(quote.shippingAddress())) {
+                nonPickupShippingAddress = checkoutDataResolver.getShippingAddressFromCustomerAddressList();
+
+                if (nonPickupShippingAddress) {
+                    selectShippingAddress(nonPickupShippingAddress);
+                }
+            }
         },
 
         /**
@@ -150,6 +187,7 @@ define([
                 this
             );
 
+            this.lastSelectedNonPickUpShippingAddress = checkoutData.getSelectedShippingAddress();
             this.preselectLocation();
             this.selectShippingMethod(pickupShippingMethod);
         },
@@ -159,8 +197,8 @@ define([
          */
         selectShippingMethod: function (shippingMethod) {
             selectShippingMethodAction(shippingMethod);
-            checkoutData.setSelectedShippingAddress(
-                quote.shippingAddress().getKey()
+            checkoutData.setSelectedShippingRate(
+                shippingMethod ? shippingMethod['carrier_code'] + '_' + shippingMethod['method_code'] : null
             );
         },
 
@@ -169,31 +207,17 @@ define([
          * @returns void
          */
         convertAddressType: function (shippingAddress) {
+            var pickUpAddress;
+
             if (
                 !this.isStorePickupAddress(shippingAddress) &&
                 this.isStorePickupSelected()
             ) {
-                quote.shippingAddress(
-                    $.extend({}, shippingAddress, {
-                        /**
-                         * Is address can be used for billing
-                         *
-                         * @return {Boolean}
-                         */
-                        canUseForBilling: function () {
-                            return false;
-                        },
+                pickUpAddress = pickupAddressConverter.formatAddressToPickupAddress(shippingAddress);
 
-                        /**
-                         * Returns address type
-                         *
-                         * @return {String}
-                         */
-                        getType: function () {
-                            return 'store-pickup-address';
-                        }
-                    })
-                );
+                if (quote.shippingAddress() !== pickUpAddress) {
+                    quote.shippingAddress(pickUpAddress);
+                }
             }
         },
 
@@ -203,9 +227,12 @@ define([
         preselectLocation: function () {
             var selectedLocation,
                 shippingAddress,
+                selectedPickupAddress,
                 customAttributes,
+                selectedSource,
                 selectedSourceCode,
                 nearestLocation,
+                self = this,
                 productsInfo = [],
                 items = quote.getItems();
 
@@ -223,13 +250,31 @@ define([
 
             shippingAddress = quote.shippingAddress();
             customAttributes = shippingAddress.customAttributes || [];
-            selectedSourceCode = _.findWhere(customAttributes, {
+            selectedSource = _.findWhere(customAttributes, {
                 'attribute_code': 'sourceCode'
             });
 
+            if (selectedSource) {
+                selectedSourceCode = selectedSource.value;
+            }
+
+            if (!selectedSourceCode) {
+                selectedSourceCode = this.getPickupLocationCodeFromAddress(shippingAddress);
+            }
+
+            if (!selectedSourceCode) {
+                selectedPickupAddress = pickupLocationsService.getSelectedPickupAddress();
+                selectedSourceCode = this.getPickupLocationCodeFromAddress(selectedPickupAddress);
+            }
+
+            if (!selectedSourceCode) {
+                // Get the source code from the checkout config
+                selectedSourceCode = window.checkoutConfig.selectedPickupLocationCode;
+            }
+
             if (selectedSourceCode) {
                 pickupLocationsService
-                    .getLocation(selectedSourceCode.value)
+                    .getLocation(selectedSourceCode)
                     .then(function (location) {
                         pickupLocationsService.selectForShipping(location);
                     });
@@ -260,8 +305,10 @@ define([
 
                         if (nearestLocation) {
                             pickupLocationsService.selectForShipping(
-                                nearestLocation
+                                nearestLocation,
+                                false
                             );
+                            self.isStoreLocationAutoSelected(true);
                         }
                     });
             }
@@ -273,6 +320,21 @@ define([
          */
         isStorePickupAddress: function (address) {
             return address.getType() === 'store-pickup-address';
+        },
+
+        /**
+         * @param {Object} address
+         * @returns {String|null}
+         */
+        getPickupLocationCodeFromAddress: function (address) {
+            if (address &&
+                !_.isEmpty(address.extensionAttributes) &&
+                address.extensionAttributes['pickup_location_code']
+            ) {
+                return address.extensionAttributes['pickup_location_code'];
+            }
+
+            return null;
         }
     });
 });

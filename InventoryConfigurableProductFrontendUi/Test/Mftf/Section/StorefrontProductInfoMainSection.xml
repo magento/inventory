@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
+ */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+    <section name="StorefrontProductInfoMainSection">
+        <element name="configurableVariationQty" type="text" selector=".configurable-variation-qty"/>
+        <element name="productAttributeDropDown" type="select" selector="select[id*='attribute']"/>
+        <element name="storefrontColorProductDropdown" type="button" selector="//div[@class='product-options-wrapper']"/>
+        <element name="storefrontColorProductDropdownValues" type="text" selector="//div[@class='product-options-wrapper']//option[contains(text(),'{{var}}')]" parameterized="true"/>
+    </section>
+</sections>

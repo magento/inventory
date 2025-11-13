@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 
 declare(strict_types=1);
@@ -70,11 +70,11 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
     }
 
     /**
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
-     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
      * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
      * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_items.php
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
@@ -106,11 +106,11 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
     }
 
     /**
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
-     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
      * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
      * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_items.php
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
@@ -166,7 +166,7 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
     /**
      * @return array
      */
-    public function singleStorePickupOrderProvider(): array
+    public static function singleStorePickupOrderProvider(): array
     {
         return [
             ['eu-1', 'SKU-1', 2.0], //3.5 reserved
@@ -182,7 +182,7 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
     /**
      * @return array
      */
-    public function multipleStorePickupOrdersProvider(): array
+    public static function multipleStorePickupOrdersProvider(): array
     {
         return [
             ['eu-1', 'SKU-1', 1.0], //3.5 + 1.0 reserved

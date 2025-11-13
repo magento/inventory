@@ -1,6 +1,6 @@
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 
 define([
@@ -14,8 +14,7 @@ define([
     'Magento_Checkout/js/model/step-navigator',
     'Magento_Checkout/js/model/address-converter',
     'Magento_Checkout/js/action/set-shipping-information',
-    'Magento_InventoryInStorePickupFrontend/js/model/pickup-locations-service',
-    'Magento_Checkout/js/checkout-data'
+    'Magento_InventoryInStorePickupFrontend/js/model/pickup-locations-service'
 ], function (
     $,
     _,
@@ -27,10 +26,9 @@ define([
     stepNavigator,
     addressConverter,
     setShippingInformationAction,
-    pickupLocationsService,
-    checkoutData
+    pickupLocationsService
 ) {
-    'use strict';
+    'use strict'; //eslint-disable-line
 
     return Component.extend({
         defaults: {
@@ -92,11 +90,7 @@ define([
          * Set shipping information handler
          */
         setPickupInformation: function () {
-            var shippingAddress = quote.shippingAddress();
-
             if (this.validatePickupInformation()) {
-                shippingAddress = addressConverter.quoteAddressToFormAddressData(shippingAddress);
-                checkoutData.setShippingAddressFromData(shippingAddress);
                 setShippingInformationAction().done(function () {
                     stepNavigator.next();
                 });
@@ -134,7 +128,7 @@ define([
         openPopup: function () {
             var shippingAddress = quote.shippingAddress(),
                 country = shippingAddress.countryId ? shippingAddress.countryId :
-                this.defaultCountryId,
+                    this.defaultCountryId,
                 searchTerm = '';
 
             this.getPopup().openModal();
@@ -219,7 +213,7 @@ define([
                 emailValidationResult = $(loginFormSelector + ' input[name=username]').valid() ? true : false;
 
                 if (!emailValidationResult) {
-                    $(this.loginFormSelector + ' input[name=username]').focus();
+                    $(this.loginFormSelector + ' input[name=username]').trigger('focus');
 
                     return false;
                 }

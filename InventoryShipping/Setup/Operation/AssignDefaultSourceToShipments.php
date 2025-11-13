@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -17,8 +17,8 @@ class AssignDefaultSourceToShipments
     /**
      * Constant for fields in data array
      */
-    const SHIPMENT_ID = 'shipment_id';
-    const SOURCE_CODE = 'source_code';
+    public const SHIPMENT_ID = 'shipment_id';
+    public const SOURCE_CODE = 'source_code';
 
     /**
      * @var ResourceConnection
@@ -43,6 +43,8 @@ class AssignDefaultSourceToShipments
     }
 
     /**
+     * Assigns the default source code to all shipments by inserting data into the `inventory_shipment_source` table.
+     *
      * @param ModuleDataSetupInterface $setup
      * @return void
      */

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -79,6 +79,7 @@ class IsProductSalableForRequestedQtyConditionChain implements IsProductSalableF
 
     /**
      * This method validates conditions, splits them between required and not required and sorts the latter.
+     *
      * Required conditions are not sorted because changing their order may impact on the condition chain logic.
      */
     private function setConditions()
@@ -103,6 +104,8 @@ class IsProductSalableForRequestedQtyConditionChain implements IsProductSalableF
     }
 
     /**
+     * Determines product salability by validating product type and processing required and sufficient conditions.
+     *
      * @param array $this->conditions
      * @throws LocalizedException
      */
@@ -128,6 +131,8 @@ class IsProductSalableForRequestedQtyConditionChain implements IsProductSalableF
     }
 
     /**
+     * Processes conditions to determine product salability based on required and sufficient condition checks.
+     *
      * @param array $conditions
      * @return array
      */
@@ -231,6 +236,8 @@ class IsProductSalableForRequestedQtyConditionChain implements IsProductSalableF
     }
 
     /**
+     * Validates product type and processes required and sufficient conditions to determine product salability.
+     *
      * @param string $sku
      * @throws LocalizedException
      */
