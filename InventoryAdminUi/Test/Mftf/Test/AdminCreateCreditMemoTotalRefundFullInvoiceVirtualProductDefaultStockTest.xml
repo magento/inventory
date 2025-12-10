@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -34,13 +34,19 @@
             </actionGroup>
         </before>
         <after>
+            <deleteData createDataKey="product" stepKey="deleteProduct1"/>
+            <deleteData createDataKey="customer" stepKey="deleteCustomer1"/>
             <!--Disable additional source.-->
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource">
-                <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
-            </actionGroup>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableSource"/>
+            <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openProductsGrid"/>
+            <actionGroup ref="ResetProductGridToDefaultViewActionGroup" stepKey="resetGrid"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
-            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
-            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
+            <comment userInput="BIC workaround" stepKey="deleteCustomer"/>
+            <comment userInput="BIC workaround" stepKey="deleteProduct"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!--Set product default source quantity.-->
@@ -53,7 +59,7 @@
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
         <!--Add product to cart.-->
-        <amOnPage url="{{StorefrontProductPage.url($$product.name$$)}}" stepKey="navigateToPDP"/>
+        <amOnPage url="{{StorefrontProductPage.url($$product.custom_attributes[url_key]$$)}}" stepKey="navigateToPDP"/>
         <fillField selector="{{StorefrontProductPageSection.qtyInput}}" userInput="10" stepKey="fillProductQty"/>
         <click selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="addToCart"/>
         <!--Place order.-->
@@ -62,8 +68,8 @@
         <waitForPageLoad time="30" stepKey="waitForCheckoutPage"/>
         <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectCheckMoneyOrderPayment"/>
         <see selector="{{CheckoutPaymentSection.billingAddress}}" userInput="{{US_Address_TX.street[0]}}" stepKey="chooseBillingAddress"/>
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="placeOrder"/>
-        <waitForPageLoad time="30" stepKey="waitForOrderPlacement"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="placeOrder"/>
+        <comment userInput="BIC workaround" stepKey="waitForOrderPlacement"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="grabOrderNumber"/>
         <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessage"/>
         <!--Admin Area Check ordered quantity-->
@@ -82,7 +88,7 @@
         <click selector="{{AdminCreditMemoItemsSection.itemReturnToStock('1')}}" stepKey="returnToStockCheckbox"/>
         <click selector="{{AdminCreditMemoTotalSection.submitRefundOffline}}" stepKey="clickSubmit"/>
         <!--Admin Area Check quantities after Credit Memo-->
-        <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductIndexPageForCheckProductQtyAfterCreditMemo"/>
+        <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="navigateToProductIndexPageForCheckProductQtyAfterCreditMemo"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findProductBySkuToCheckQtyAfterCreditMemo">
             <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
             <argument name="value" value="$$product.sku$$"/>

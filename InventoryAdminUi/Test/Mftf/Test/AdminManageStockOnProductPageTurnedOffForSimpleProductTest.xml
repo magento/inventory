@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -17,6 +17,7 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
+            <group value="pr_exclude"/>
         </annotations>
 
         <before>
@@ -29,6 +30,10 @@
         </before>
         <after>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
+            
+            <!-- Delete all products via API using ProductApiHelper -->
+            <helper class="Magento\Catalog\Test\Mftf\Helper\ProductApiHelper" method="deleteAllProductsApi" stepKey="deleteAllProductsViaApi"/>
+            
             <amOnPage url="{{AdminManageSourcePage.url}}" stepKey="navigateToSourceList"/>
             <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}"
                               dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true"
@@ -101,7 +106,7 @@
         <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose"/>
 
         <!-- Check Product is visible on Storefront-->
-        <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.name$$)}}" stepKey="navigateToCategoryPage"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPage"/>
         <waitForPageLoad time="30" stepKey="waitForCategoryPageLoad"/>
         <see userInput="{{SimpleMsiProduct.name}}" stepKey="checkProductNameIsPresentOnCategoryPage"/>
         <see userInput="{{SimpleMsiProduct.price}}" stepKey="checkProductPriceIsPresentOnCategoryPage"/>
@@ -120,7 +125,7 @@
         <seeElement selector="{{AdminProductMessagesSection.successMessage}}" stepKey="checkMessageAfterProductSave"/>
 
         <!-- Check Product is not visible on storefront-->
-        <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.name$$)}}"
+        <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.custom_attributes[url_key]$$)}}"
                   stepKey="navigateToEditedProductCategoryPage"/>
         <waitForPageLoad time="30" stepKey="waitForCategoryLoad"/>
         <see selector=".empty" userInput="We can't find products matching the selection." stepKey="verifyProductIsAbsentOnCategoryPage"/>
@@ -140,7 +145,7 @@
         <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveProductManageStockTurnedOff"/>
 
         <!-- Check Product is visible on Storefront-->
-        <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.name$$)}}" stepKey="navigateToCategoryPageManageStockTurnedOff"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPageManageStockTurnedOff"/>
         <waitForPageLoad time="30" stepKey="waitForCategoryPageLoadManageStockTurnedOff"/>
         <see userInput="{{SimpleMsiProduct.name}}" stepKey="checkProductNameIsPresentOnCategoryPageManageStockTurnedOff"/>
         <see userInput="{{SimpleMsiProduct.price}}" stepKey="checkProductPriceIsPresentOnCategoryPageManageStockTurnedOff"/>

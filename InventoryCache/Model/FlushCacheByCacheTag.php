@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2021 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -59,7 +59,10 @@ class FlushCacheByCacheTag
             $cacheContext = $this->cacheContextFactory->create();
             $cacheContext->registerEntities($cacheTag, $entityIds);
             $this->eventManager->dispatch('clean_cache_by_tags', ['object' => $cacheContext]);
-            $this->appCache->clean($cacheContext->getIdentities());
+            $tags = $cacheContext->getIdentities();
+            if ($tags) {
+                $this->appCache->clean($tags);
+            }
         }
     }
 }

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -19,8 +19,8 @@ class GetListTest extends WebapiAbstract
     /**#@+
      * Service constants
      */
-    const RESOURCE_PATH = '/V1/inventory/source-items';
-    const SERVICE_NAME = 'inventoryApiSourceItemRepositoryV1';
+    public const RESOURCE_PATH = '/V1/inventory/source-items';
+    public const SERVICE_NAME = 'inventoryApiSourceItemRepositoryV1';
     /**#@-*/
 
     /**

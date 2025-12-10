@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 -->
 
@@ -19,6 +19,7 @@
             <severity value="MAJOR"/>
             <group value="msi_ee"/>
             <group value="multi_mode"/>
+            <group value="pr_exclude"/>
         </annotations>
         <before>
             <!--Create additional stock ans source.-->
@@ -50,6 +51,9 @@
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logout" before="deleteStock"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteStock" before="deleteSimpleProduct"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex" after="deleteBundleProduct">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
     </test>
 </tests>

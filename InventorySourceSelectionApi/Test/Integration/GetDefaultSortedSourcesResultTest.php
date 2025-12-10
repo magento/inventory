@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -50,7 +50,7 @@ class GetDefaultSortedSourcesResultTest extends TestCase
     /**
      * @return array
      */
-    public function shouldReturnDefaultResultsDataProvider(): array
+    public static function shouldReturnDefaultResultsDataProvider(): array
     {
         return [
             [
@@ -123,6 +123,19 @@ class GetDefaultSortedSourcesResultTest extends TestCase
                 20,
                 [
                     ['sku' => 'SKU-2', 'qty' => 3],
+                ],
+                [
+                    'us-1',
+                ],
+                [
+                    'us-1/SKU-2' => ['deduct' => 3, 'avail' => 5],
+                ],
+                true
+            ],
+            [
+                20,
+                [
+                    ['sku' => 'SKU-2', 'qty' => 1], ['sku' => 'SKU-2', 'qty' => 2],
                 ],
                 [
                     'us-1',

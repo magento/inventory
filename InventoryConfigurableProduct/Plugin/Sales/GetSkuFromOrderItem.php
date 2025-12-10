@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -17,6 +17,8 @@ use Magento\Sales\Api\Data\OrderItemInterface;
 class GetSkuFromOrderItem
 {
     /**
+     * Gets the SKU of a simple product from a configurable order item, or proceeds with the default behavior.
+     *
      * @param GetSkuFromOrderItemInterface $subject
      * @param callable $proceed
      * @param OrderItemInterface $orderItem

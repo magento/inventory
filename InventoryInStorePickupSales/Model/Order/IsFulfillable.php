@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -74,7 +74,12 @@ class IsFulfillable
                 if ($item->getHasChildren()) {
                     continue;
                 }
-                if (!$this->isItemFulfillable($item->getSku(), $sourceCode, (float)$item->getQtyOrdered())) {
+
+                $stockItem =  $item->getProduct()->getExtensionAttributes()->getStockItem();
+                if (!$stockItem->getManageStock()) {
+                    return $stockItem->getIsInStock() === (bool)SourceItemInterface::STATUS_IN_STOCK &&
+                        $this->sourceRepository->get($sourceCode)->isEnabled();
+                } elseif (!$this->isItemFulfillable($item->getSku(), $sourceCode, (float)$item->getQtyOrdered())) {
                     return false;
                 }
             }

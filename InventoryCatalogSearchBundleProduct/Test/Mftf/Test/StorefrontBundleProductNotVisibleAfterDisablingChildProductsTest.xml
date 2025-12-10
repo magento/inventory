@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -77,13 +77,19 @@
                 <argument name="sourceCode" value="$createSource.source[source_code]$"/>
             </actionGroup>
             <actionGroup ref="SaveProductFormActionGroup" stepKey="saveSecondChildProduct"/>
-            <actionGroup ref="AdminReindexAndFlushCache" stepKey="reindexAndFlushCache"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexAndFlushCache">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </before>
         <after>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
             <deleteData createDataKey="createBundleProduct" stepKey="deleteBundleProduct"/>
             <deleteData createDataKey="createFirstSimpleProduct" stepKey="deleteFirstChildProduct"/>
             <deleteData createDataKey="createSecondSimpleProduct" stepKey="deleteSecondChildProduct"/>
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <!-- Assign Default Stock to Main Website -->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
@@ -92,9 +98,14 @@
             <deleteData createDataKey="createStock" stepKey="deleteStock"/>
             <!-- Disable source -->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableSources"/>
-            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <!-- Reindex invalidated indices after product attribute has been created/deleted -->
-            <magentoCron groups="index" stepKey="reindexInvalidatedIndices"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexInvalidatedIndices">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
         </after>
         <!-- Verify product is visible on storefront -->
         <actionGroup ref="StorefrontNavigateCategoryPageActionGroup" stepKey="openCategoryPageOnFrontend">

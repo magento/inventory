@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -17,6 +17,7 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
+            <group value="pr_exclude"/>
         </annotations>
 
         <before>
@@ -38,7 +39,9 @@
             <createData entity="VirtualProduct" stepKey="virtualProduct">
                 <requiredEntity createDataKey="category"/>
             </createData>
-            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
                 <argument name="tags" value=""/>
             </actionGroup>
@@ -46,16 +49,25 @@
         </before>
         <after>
             <!--Disable additional source.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableAdditionalSource">
                 <argument name="sourceCode" value="$additionalSource.source[source_code]$"/>
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <!--Clean up created data.-->
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
             <deleteData createDataKey="virtualProduct" stepKey="deleteProduct2"/>
+            <deleteData createDataKey="groupedProduct" stepKey="deleteGroupedProduct"/>
             <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableStockManagement"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openProductGrid2"/>
@@ -89,13 +101,19 @@
             <argument name="categoryName" value="$category.name$"/>
         </actionGroup>
 
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexBeforeQuickSearch">
+            <argument name="indices" value=""/>
+        </actionGroup>
+
         <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="openStoreFrontHomePage"/>
         <actionGroup ref="StorefrontCheckQuickSearchStringActionGroup" stepKey="quickSearchByProductName">
             <argument name="phrase" value="$groupedProduct.name$"/>
         </actionGroup>
         <dontSee selector="{{StorefrontCatalogSearchMainSection.searchResults}}" userInput="$groupedProduct.name$" stepKey="verifyProductNotPresentOnStorefront"/>
         <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOffManageStockConfig.value}}" stepKey="manageStockToNo"/>
-        <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
         <actionGroup ref="CliCacheCleanActionGroup" stepKey="flushCache">
             <argument name="tags" value=""/>
         </actionGroup>

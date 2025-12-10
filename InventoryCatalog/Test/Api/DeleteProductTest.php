@@ -1,14 +1,14 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Test\Api;
 
-use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\MessageQueue\ConsumerFactory;
+use Magento\Framework\MessageQueue\DefaultValueProvider;
 use Magento\Framework\MessageQueue\QueueFactoryInterface;
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
@@ -30,9 +30,9 @@ class DeleteProductTest extends WebapiAbstract
     private $getSourceItemsBySku;
 
     /**
-     * @var ProductRepositoryInterface
+     * @var DefaultValueProvider
      */
-    private $productRepository;
+    private $defaultValueProvider;
 
     /**
      * @inheritDoc
@@ -40,7 +40,7 @@ class DeleteProductTest extends WebapiAbstract
     protected function setUp(): void
     {
         $this->getSourceItemsBySku = Bootstrap::getObjectManager()->get(GetSourceItemsBySkuInterface::class);
-        $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
+        $this->defaultValueProvider = Bootstrap::getObjectManager()->get(DefaultValueProvider::class);
         $this->rejectMessages();
     }
 
@@ -98,7 +98,13 @@ class DeleteProductTest extends WebapiAbstract
     private function rejectMessages()
     {
         $queueFactory = Bootstrap::getObjectManager()->get(QueueFactoryInterface::class);
-        $queue = $queueFactory->create('inventory.source.items.cleanup', 'db');
+        $queue = $queueFactory->create(
+            'inventory.source.items.cleanup',
+            $this->defaultValueProvider->getConnection()
+        );
+        if ($this->defaultValueProvider->getConnection() === 'stomp') {
+            $queue->subscribeQueue();
+        }
         while ($envelope = $queue->dequeue()) {
             $queue->reject($envelope, false);
         }

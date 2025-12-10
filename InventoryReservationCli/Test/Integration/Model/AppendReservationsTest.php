@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -65,7 +65,7 @@ class AppendReservationsTest extends TestCase
         $argument = '100000001:simple_10:-' . $items['simple_10'] . ':' . $stockId;
         $reservation = $this->getReservationFromCompensationArgument->execute($argument);
         $this->appendReservations->execute([$reservation]);
-        $inconsistencies = $this->getSalableQuantityInconsistencies();;
+        $inconsistencies = $this->getSalableQuantityInconsistencies();
         self::assertCount(0, $inconsistencies);
     }
 
@@ -103,6 +103,14 @@ class AppendReservationsTest extends TestCase
         $this->appendReservations->execute([$reservation]);
         $inconsistencies = $this->getSalableQuantityInconsistencies();
         self::assertCount(0, $inconsistencies);
+    }
+
+    public function testCompensateMissingOrderId()
+    {
+        $argument = '000000000:Test11:1:1';
+        $this->expectException(\InvalidArgumentException::class);
+        $reservation = $this->getReservationFromCompensationArgument->execute($argument);
+        $this->appendReservations->execute([$reservation]);
     }
 
     /**

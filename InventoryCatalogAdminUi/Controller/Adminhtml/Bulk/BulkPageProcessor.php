@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -78,6 +78,8 @@ class BulkPageProcessor
     }
 
     /**
+     * Processes bulk product actions, verifies source assignments, and prepares the result page for the bulk operation.
+     *
      * @param Phrase $title
      * @param bool $verifyProductsAssignment
      * @return ResponseInterface|ResultInterface

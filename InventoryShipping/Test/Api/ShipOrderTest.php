@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -19,9 +19,9 @@ use Magento\TestFramework\TestCase\WebapiAbstract;
 
 class ShipOrderTest extends WebapiAbstract
 {
-    const SERVICE_READ_NAME = 'salesShipOrderV1';
+    public const SERVICE_READ_NAME = 'salesShipOrderV1';
 
-    const SERVICE_VERSION = 'V1';
+    public const SERVICE_VERSION = 'V1';
 
     /**
      * @var ObjectManagerInterface

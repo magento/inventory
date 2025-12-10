@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -24,10 +24,11 @@ interface GetListInterface
 {
     /**
      * Find Stocks by given SearchCriteria
+     *
      * SearchCriteria is not required because load all stocks is useful case
      *
      * @param SearchCriteriaInterface|null $searchCriteria
      * @return StockSearchResultsInterface
      */
-    public function execute(SearchCriteriaInterface $searchCriteria = null): StockSearchResultsInterface;
+    public function execute(?SearchCriteriaInterface $searchCriteria = null): StockSearchResultsInterface;
 }

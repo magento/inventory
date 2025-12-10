@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -70,14 +70,15 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedSource" before="assignMainWebsiteToDefaultStock">
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
             </actionGroup>
+            <deleteData createDataKey="createProduct" stepKey="deleteProduct"/>
             <!--Delete stock.-->
             <deleteData createDataKey="additionalStock" stepKey="deleteStock" after="assignMainWebsiteToDefaultStock"/>
         </after>
 
         <!--Verify configurable product prices.-->
         <remove keyForRemoval="seeDiscountedPrice1"/>
-        <see selector="{{StorefrontCategoryProductSection.ProductInfoByNumber('1')}}" userInput="As low as $90.00" stepKey="seeDiscountedPrice1" after="seeProduct1"/>
+        <see selector="{{StorefrontCategoryProductSection.ProductInfoByNumber('1')}}" userInput="$90.00" stepKey="seeDiscountedPrice1" after="seeProduct1"/>
         <remove keyForRemoval="seeDiscountedPrice2"/>
-        <see selector="{{StorefrontCategoryProductSection.ProductInfoByNumber('1')}}" userInput="As low as $100.00" stepKey="seeDiscountedPrice2" after="seeProduct2"/>
+        <see selector="{{StorefrontCategoryProductSection.ProductInfoByNumber('1')}}" userInput="$100.00" stepKey="seeDiscountedPrice2" after="seeProduct2"/>
     </test>
 </tests>

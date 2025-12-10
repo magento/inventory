@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright 2025 Adobe
+ * All Rights Reserved.
+ */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AdminPickInStoreGuestCustomerFillBillingAddressWithParamsActionGroup">
+        <annotations>
+            <description>Fill guest customer billing address for store pickup shipping method with provided address in admin.</description>
+        </annotations>
+        <arguments>
+            <argument name="customerVar"/>
+            <argument name="customerAddressVar"/>
+        </arguments>
+
+        <!-- The billing form is already in edit mode, so just wait for it to be visible -->
+        <waitForElementVisible selector="{{CheckoutPaymentSection.guestFirstName}}" stepKey="waitForBillingFormVisible"/>
+
+        <!-- Fill the form fields -->
+        <fillField selector="{{CheckoutPaymentSection.guestFirstName}}" userInput="{{customerVar.firstname}}" stepKey="enterFirstName"/>
+        <fillField selector="{{CheckoutPaymentSection.guestLastName}}" userInput="{{customerVar.lastname}}" stepKey="enterLastName"/>
+        <fillField selector="{{CheckoutPaymentSection.guestStreet}}" userInput="{{customerAddressVar.street[0]}}" stepKey="enterStreet"/>
+        <fillField selector="{{CheckoutPaymentSection.guestCity}}" userInput="{{customerAddressVar.city}}" stepKey="enterCity"/>
+        <selectOption selector="{{CheckoutPaymentSection.guestRegion}}" userInput="{{customerAddressVar.state}}" stepKey="selectRegion"/>
+        <fillField selector="{{CheckoutPaymentSection.guestPostcode}}" userInput="{{customerAddressVar.postcode}}" stepKey="enterPostcode"/>
+        <fillField selector="{{CheckoutPaymentSection.guestTelephone}}" userInput="{{customerAddressVar.telephone}}" stepKey="enterTelephone"/>
+
+        <!-- Save the address -->
+        <click selector="{{CheckoutPaymentSection.update}}" stepKey="updateAddress"/>
+        <waitForLoadingMaskToDisappear stepKey="waitForAddressUpdate"/>
+    </actionGroup>
+</actionGroups>
+

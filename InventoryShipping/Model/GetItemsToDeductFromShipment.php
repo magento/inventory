@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -53,7 +53,7 @@ class GetItemsToDeductFromShipment
         GetSkuFromOrderItemInterface $getSkuFromOrderItem,
         Json $jsonSerializer,
         ItemToDeductInterfaceFactory $itemToDeduct,
-        IsItemCouldBeDeductedByTypes $itemCouldBeDeducted = null
+        ?IsItemCouldBeDeductedByTypes $itemCouldBeDeducted = null
     ) {
         $this->jsonSerializer = $jsonSerializer;
         $this->itemToDeduct = $itemToDeduct;
@@ -75,6 +75,7 @@ class GetItemsToDeductFromShipment
 
         /** @var \Magento\Sales\Model\Order\Shipment\Item $shipmentItem */
         foreach ($shipment->getAllItems() as $shipmentItem) {
+            $shipmentItem->setShipment($shipment);
             $orderItem = $shipmentItem->getOrderItem();
             // This code was added as quick fix for merge mainline
             // https://github.com/magento-engcom/msi/issues/1586

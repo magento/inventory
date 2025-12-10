@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -120,7 +120,7 @@ class IsSalableWithReservationsConditionTest extends TestCase
     /**
      * @return array
      */
-    public function productIsSalableDataProvider(): array
+    public static function productIsSalableDataProvider(): array
     {
         return [
             ['SKU-1', 10, true],

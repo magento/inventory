@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -10,16 +10,16 @@ namespace Magento\InventoryShipping\Model\ResourceModel\ShipmentSource;
 use Magento\Framework\App\ResourceConnection;
 
 /**
- * Get source code by shipment Id
+ * Gets the source code associated with a shipment ID from the `inventory_shipment_source` table.
  */
 class GetSourceCodeByShipmentId
 {
     /**
      * Constant for fields in data array
      */
-    const SHIPMENT_ID = 'shipment_id';
-    const SOURCE_CODE = 'source_code';
-    
+    public const SHIPMENT_ID = 'shipment_id';
+    public const SOURCE_CODE = 'source_code';
+
     /**
      * @var ResourceConnection
      */

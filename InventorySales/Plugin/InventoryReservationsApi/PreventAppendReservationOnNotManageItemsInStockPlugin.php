@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -41,6 +41,8 @@ class PreventAppendReservationOnNotManageItemsInStockPlugin
     }
 
     /**
+     * Prevents appending reservations if use_config_manage_stock is disabled or items are not set to manage stock.
+     *
      * @param AppendReservationsInterface $subject
      * @param \Closure $proceed
      * @param ReservationInterface[] $reservations

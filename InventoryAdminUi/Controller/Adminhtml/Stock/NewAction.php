@@ -1,8 +1,7 @@
 <?php
 /**
- *
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -22,7 +21,7 @@ class NewAction extends Action implements HttpGetActionInterface
     /**
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Magento_InventoryApi::stock_edit';
+    public const ADMIN_RESOURCE = 'Magento_InventoryApi::stock_edit';
 
     /**
      * @inheritdoc

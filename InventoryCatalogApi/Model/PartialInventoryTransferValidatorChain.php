@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -60,6 +60,7 @@ class PartialInventoryTransferValidatorChain implements PartialInventoryTransfer
             $validationResult = $validator->validate($originSourceCode, $destinationSourceCode, $items);
 
             if (!$validationResult->isValid()) {
+                // phpcs:ignore Magento2.Performance.ForeachArrayMerge
                 $errors = array_merge($errors, $validationResult->getErrors());
             }
         }

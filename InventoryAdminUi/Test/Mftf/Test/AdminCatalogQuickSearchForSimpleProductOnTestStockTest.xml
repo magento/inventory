@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -31,6 +31,9 @@
             <createData entity="SimpleMsiProduct" stepKey="simpleProduct1"/>
 
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin1"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </before>
         <after>
             <!--Assign Default Stock to Default Website.-->
@@ -38,7 +41,14 @@
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <deleteData createDataKey="createStock1" stepKey="deleteStock"/>
+            <deleteData createDataKey="simpleCategory1" stepKey="deleteCategory"/>
+            <deleteData createDataKey="simpleProduct1" stepKey="deleteProduct"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <actionGroup ref="AdminGoToProductGridFilterResultsByInputEditProduct" stepKey="goToProductGridFilterResultsByInputEditProduct1">
@@ -55,8 +65,8 @@
 
         <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCreatedVirtualProduct1"/>
 
-        <amOnPage url="{{StorefrontHomePage.url}}" stepKey="goToHomePage1"/>
-        <waitForPageLoad time="30" stepKey="waitForPageLoad1"/>
+        <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="goToHomePage1"/>
+        <comment userInput="BIC workaround" stepKey="waitForPageLoad1"/>
 
         <fillField userInput="$$simpleProduct1.product[name]$$" selector="{{StorefrontQuickSearchSection.searchPhrase}}" stepKey="fillSearchBar1"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad2"/>

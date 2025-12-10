@@ -1,13 +1,19 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 -->
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
     <route url="/V1/inventory/in-store-pickup/pickup-locations/" method="GET">
+        <service class="Magento\InventoryInStorePickupApi\Api\GetPickupLocationsInterface" method="execute"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route url="/V1/inventory/in-store-pickup/pickup-locations/" method="POST">
         <service class="Magento\InventoryInStorePickupApi\Api\GetPickupLocationsInterface" method="execute"/>
         <resources>
             <resource ref="anonymous"/>

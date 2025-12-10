@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -72,20 +72,27 @@
             <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose"/>
 
             <!-- Perform reindex and flush cache -->
-            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </before>
         <after>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
+            <!-- Delete all products via API -->
+            <helper class="Magento\Catalog\Test\Mftf\Helper\ProductApiHelper" method="deleteAllProductsApi" stepKey="deleteAllProductsViaApi"/>
         </after>
 
         <!-- Login as Customer and add Product to Cart-->
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="customerLogin">
             <argument name="Customer" value="$$createCustomer$$"/>
         </actionGroup>
-        <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.name$$)}}" stepKey="navigateToCategory"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.custom_attributes[url_key]$$)}}" stepKey="navigateToCategory"/>
         <waitForPageLoad time="30" stepKey="waitForCategoryPageLoad"/>
         <click selector="{{StorefrontCategoryMainSection.specifiedProductItemInfo(SimpleMsiProduct.name)}}"
                stepKey="openProductPage"/>
@@ -97,14 +104,14 @@
 
         <!-- Place Order -->
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="goToCheckoutFromMinicart"/>
-        <conditionalClick selector="{{CheckoutPaymentSection.cartItemsArea}}"
-                          dependentSelector="{{CheckoutPaymentSection.cartItemsArea}}" visible="true"
-                          stepKey="exposeMiniCart"/>
-        <waitForLoadingMaskToDisappear stepKey="waitForLoadingMaskForCartItem"/>
-        <click selector="{{CheckoutShippingSection.next}}" stepKey="clickNext"/>
+        <waitForElementClickable selector="{{CheckoutPaymentSection.cartItemsArea}}" stepKey="waitForCartItemsClickable"/>
+        <waitForElementNotVisible selector="{{CheckoutPaymentSection.cartItemsAreaActive}}" stepKey="waitForCartItemsActive"/>
+        <click selector="{{CheckoutPaymentSection.cartItemsArea}}" stepKey="exposeMiniCart"/>
+        <waitForPageLoad stepKey="waitForLoadingMaskForCartItem"/>
+        <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="clickNext"/>
         <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="checkMoneyOrderPayment"/>
-        <waitForElement selector="{{CheckoutPaymentSection.placeOrder}}" time="30" stepKey="waitForPlaceOrderButton"/>
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="clickPlaceOrder"/>
+        <comment userInput="BIC workaround" stepKey="waitForPlaceOrderButton"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickPlaceOrder"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="grabOrderNumber"/>
 
         <!-- Source Selection -->
@@ -112,7 +119,7 @@
             <argument name="orderId" value="{$grabOrderNumber}"/>
         </actionGroup>
         <click selector="{{AdminOrderDetailsMainActionsSection.ship}}" stepKey="clickShip"/>
-        <waitForLoadingMaskToDisappear stepKey="waitForShipmentPageLoaded"/>
+        <waitForPageLoad stepKey="waitForShipmentPageLoaded"/>
 
         <fillField selector="{{AdminShipmentItemsSection.itemQtyToShip('1')}}" userInput="3" stepKey="ship3Items"/>
         <click selector="{{AdminShipmentMainActionsSection.submitShipment}}" stepKey="submitShipment"/>
@@ -126,12 +133,13 @@
 
         <!-- Verify Shipment is present in "Shipments" tab of Order -->
         <click selector="{{AdminOrderDetailsOrderViewSection.shipments}}" stepKey="clickOrderShipmentsTab"/>
-        <waitForLoadingMaskToDisappear stepKey="waitToSeeShipmentCreated"/>
+        <waitForPageLoad stepKey="waitToSeeShipmentCreated"/>
         <seeElement selector="{{AdminOrderShipmentsTabSection.gridRow('1')}}" stepKey="seeShipmentInGrid"/>
 
         <!-- Verify Source Quantities and Salable Quantity are Correct-->
-        <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductIndexToFinalCheck"/>
-        <waitForPageLoad time="30" stepKey="waitFoProductIndexPageLoad"/>
+        <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="navigateToProductIndexToFinalCheck"/>
+        <comment userInput="BIC workaround" stepKey="waitFoProductIndexPageLoad"/>
+        <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="resetGrid"/>
 
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSearchResultsToFinalCheck">
             <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>

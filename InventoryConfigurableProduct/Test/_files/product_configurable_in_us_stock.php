@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -123,6 +123,7 @@ $product->setTypeId(Configurable::TYPE_CODE)
     ->setName('Configurable Product')
     ->setSku('configurable')
     ->setVisibility(Visibility::VISIBILITY_BOTH)
-    ->setStatus(Status::STATUS_ENABLED);
+    ->setStatus(Status::STATUS_ENABLED)
+    ->setStockData(['use_config_manage_stock' => 1, 'is_in_stock' => 1]);
 
 $productRepository->save($product);

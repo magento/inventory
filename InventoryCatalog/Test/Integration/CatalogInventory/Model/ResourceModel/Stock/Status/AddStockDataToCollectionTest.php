@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -79,7 +79,7 @@ class AddStockDataToCollectionTest extends TestCase
     /**
      * @return array
      */
-    public function addStockDataToCollectionDataProvider(): array
+    public static function addStockDataToCollectionDataProvider(): array
     {
         return [
             ['store_for_eu_website', 3, true],

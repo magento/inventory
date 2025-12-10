@@ -1,0 +1,7 @@
+
+File "/var/www/html/app/code/Magento/InventoryBundleProductIndexer/Test/Mftf/Test/AdminCheckOutOfStockBundleProductNotVisibleWithCustomSource.xml"
+contains entity references that violate dependency constraints:
+		
+	 TurnOnManageStockConfig from module(s): magento/module-inventory-admin-ui
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui

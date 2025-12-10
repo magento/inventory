@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -17,8 +17,8 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
+            <group value="pr_exclude"/>
         </annotations>
-
         <before>
             <createData entity="FullSource1" stepKey="createSource1"/>
             <createData entity="BasicMsiStockWithMainWebsite1" stepKey="createStock1"/>
@@ -28,7 +28,6 @@
             </createData>
             <createData entity="SimpleSubCategory" stepKey="createCategory1"/>
             <createData entity="SimpleMsiProduct" stepKey="createProduct1"/>
-
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdmin1"/>
             <waitForPageLoad time="30" stepKey="waitForPageLoad1"/>
             <!--Create new website,store and store view-->
@@ -63,7 +62,9 @@
                           stepKey="selectWebsiteAsSalesChannelForCustomStock"/>
             <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="clickOnSaveAndContinue"/>
             <seeElement selector=".success" stepKey="seeSuccessMessage"/>
-            <magentoCLI command="indexer:reindex" stepKey="doReindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="doReindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </before>
         <after>
             <!--Assign Default Stock to Default Website.-->
@@ -77,10 +78,16 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedSource">
                 <argument name="sourceCode" value="$$createSource1.source[source_code]$$"/>
             </actionGroup>
+            <!--Delete customers generated through other action groups -->
+            <actionGroup ref="AdminDeleteAllCustomerActionGroup" stepKey="deleteAllCustomers"/>
             <deleteData createDataKey="createProduct1" stepKey="deleteProduct"/>
             <deleteData createDataKey="createCategory1" stepKey="deleteCategory"/>
-            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </after>
         <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="goToProduct1">
             <argument name="productId" value="$createProduct1.id$"/>
@@ -96,7 +103,6 @@
         </actionGroup>
         <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="10" stepKey="fillSourceQuantityField"/>
         <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseFourthProductForm"/>
-
         <comment userInput="Create order with simple product from admin area."
                  stepKey="createOrderWithGroupedProductComment"/>
         <amOnPage url="{{AdminOrdersPage.url}}" stepKey="goToOrdersPage1"/>
@@ -117,16 +123,13 @@
         <scrollToTopOfPage stepKey="scrollToTop"/>
         <click selector="#add_products" stepKey="clickOnAddProductsButton1"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad15"/>
-
         <fillField selector="{{AdminOrderFormItemsSection.skuFilter}}" userInput="{{SimpleMsiProduct.sku}}"
                    stepKey="fillProductSkuField1"/>
         <waitForPageLoad time="10" stepKey="waitForPageLoad16"/>
         <click selector="#order-search button[title='Search']" stepKey="clickOnSearch2"/>
         <waitForPageLoad time="10" stepKey="waitForPageLoad17"/>
-
         <click selector="#order-search tbody tr .col-sku" stepKey="clickOnSku1"/>
         <waitForPageLoad time="10" stepKey="waitForPageLoad18"/>
-
         <fillField selector="#order-search tr .qty" userInput="5" stepKey="fillProductQuantity2"/>
         <click selector="#order-search .action-add" stepKey="clickOnAddSelectedProductsToOrder1"/>
         <waitForPageLoad time="10" stepKey="waitForPageLoad19"/>
@@ -137,14 +140,12 @@
         <waitForPageLoad time="10" stepKey="waitForPageLoad22"/>
         <click selector=".order-totals-actions .save" stepKey="clickOnSubmitOrder1"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad23"/>
-
         <seeElement selector="{{AdminOrderDetailsMessagesSection.successMessage}}" stepKey="seeSuccessMessage1"/>
         <see selector="{{AdminOrderDetailsMessagesSection.successMessage}}" userInput="You created the order."
              stepKey="seeSuccessMessage2"/>
         <grabTextFrom selector=".page-title" stepKey="grabTheOrderId1"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductIndex2"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad26"/>
-
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSearchResults3">
             <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
             <argument name="value" value="{{SimpleMsiProduct.sku}}"/>

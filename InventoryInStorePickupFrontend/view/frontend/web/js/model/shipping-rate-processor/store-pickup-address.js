@@ -1,10 +1,10 @@
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 
 define([], function () {
-    'use strict';
+    'use strict'; //eslint-disable-line
 
     return {
         /*eslint-disable no-unused-vars*/

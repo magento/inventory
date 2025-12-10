@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -29,6 +29,8 @@ class GetSourceCodesBySkus
     }
 
     /**
+     * Retrieves distinct source codes for given SKUs by querying the `inventory_source_item` database table.
+     *
      * @param array $skus
      * @return string[]
      */

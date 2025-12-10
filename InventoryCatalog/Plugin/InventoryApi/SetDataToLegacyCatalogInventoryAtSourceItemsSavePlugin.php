@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -58,6 +58,8 @@ class SetDataToLegacyCatalogInventoryAtSourceItemsSavePlugin
     }
 
     /**
+     * Synchronizes legacy stock items with saved source items for the default source in the inventory system.
+     *
      * @param SourceItemsSaveInterface $subject
      * @param void $result
      * @param SourceItemInterface[] $sourceItems

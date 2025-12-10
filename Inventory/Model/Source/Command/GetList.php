@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -61,7 +61,7 @@ class GetList implements GetListInterface
     /**
      * @inheritdoc
      */
-    public function execute(SearchCriteriaInterface $searchCriteria = null): SourceSearchResultsInterface
+    public function execute(?SearchCriteriaInterface $searchCriteria = null): SourceSearchResultsInterface
     {
         /** @var Collection $collection */
         $collection = $this->sourceCollectionFactory->create();

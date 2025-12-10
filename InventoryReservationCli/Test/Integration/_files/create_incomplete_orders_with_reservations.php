@@ -1,12 +1,11 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\Framework\DB\Transaction;
 use Magento\Sales\Api\OrderManagementInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Address as OrderAddress;
@@ -15,10 +14,6 @@ use Magento\Sales\Model\Order\Payment;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\ObjectManager;
-use Magento\TestFramework\Workaround\Override\Fixture\Resolver;
-
-Resolver::getInstance()->requireDataFixture('Magento/Sales/_files/default_rollback.php');
-Resolver::getInstance()->requireDataFixture('Magento/Catalog/_files/product_simple.php');
 
 /** @var $objectManager ObjectManager */
 $objectManager = Bootstrap::getObjectManager();
@@ -27,13 +22,22 @@ $objectManager = Bootstrap::getObjectManager();
 $productRepository = $objectManager->create(ProductRepositoryInterface::class);
 $product = $productRepository->get('simple');
 
-$addressData = include __DIR__ .
-    '/../../../../../../../dev/tests/integration/testsuite/Magento/Sales/_files/address_data.php';
-
 /** @var OrderManagementInterface $orderManagement */
 $orderManagement = $objectManager->create(OrderManagementInterface::class);
-/** @var Transaction $transaction */
-$transaction = $objectManager->create(Transaction::class);
+
+$addressData = [
+    'region' => 'CA',
+    'region_id' => '12',
+    'postcode' => '11111',
+    'company' => 'Test Company',
+    'lastname' => 'lastname',
+    'firstname' => 'firstname',
+    'street' => 'street',
+    'city' => 'Los Angeles',
+    'email' => 'admin@example.com',
+    'telephone' => '11111111',
+    'country_id' => 'US'
+];
 
 for ($i = 1; $i <= 3; $i++) {
     $billingAddress = $objectManager->create(OrderAddress::class, ['data' => $addressData]);
@@ -82,5 +86,4 @@ for ($i = 1; $i <= 3; $i++) {
         ->addItem($orderItem)
         ->setPayment($payment);
     $orderManagement->place($order);
-    $transaction->addObject($order)->save();
 }

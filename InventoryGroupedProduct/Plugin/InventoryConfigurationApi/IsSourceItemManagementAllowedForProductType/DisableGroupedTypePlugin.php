@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -16,6 +16,8 @@ use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProd
 class DisableGroupedTypePlugin
 {
     /**
+     * Disables source item management for grouped product types by overriding the default behavior in execution.
+     *
      * @param IsSourceItemManagementAllowedForProductTypeInterface $subject
      * @param callable $proceed
      * @param string $productType

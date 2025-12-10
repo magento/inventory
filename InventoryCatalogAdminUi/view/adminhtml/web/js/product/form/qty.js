@@ -1,12 +1,12 @@
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 
 define([
     'Magento_CatalogInventory/js/components/qty-validator-changer'
 ], function (Abstract) {
-    'use strict';
+    'use strict'; //eslint-disable-line
 
     return Abstract.extend({
         defaults: {
@@ -35,9 +35,14 @@ define([
 
         /** @inheritdoc */
         setDifferedFromDefault: function () {
-            this._super();
+            var initialValue;
 
-            if (this.value() && parseFloat(this.initialValue) !== parseFloat(this.value())) {
+            this._super();
+            initialValue = this.source.data.product['current_product_id'] !== null ? this.initialValue : 0;
+
+            if (this.value() &&
+                parseFloat(initialValue) !== parseFloat(this.value())
+            ) {
                 this.source.set(this.dataScope, this.value());
             } else {
                 this.source.remove(this.dataScope);

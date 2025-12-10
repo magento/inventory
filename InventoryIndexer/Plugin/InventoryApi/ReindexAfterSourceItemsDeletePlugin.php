@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -9,27 +9,31 @@ namespace Magento\InventoryIndexer\Plugin\InventoryApi;
 
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemsDeleteInterface;
-use Magento\InventoryIndexer\Indexer\Source\SourceIndexer;
+use Magento\InventoryIndexer\Indexer\SourceItem\GetSkuListInStock;
+use Magento\InventoryIndexer\Indexer\SourceItem\GetSourceItemIds;
+use Magento\InventoryIndexer\Indexer\Stock\SkuListsProcessor;
 
 /**
- * Reindex after source items delete plugin
+ * Handles reindexing of source items after they are deleted by intercepting the execution
+ * and triggering the source indexer.
  */
 class ReindexAfterSourceItemsDeletePlugin
 {
     /**
-     * @var SourceIndexer
+     * @param GetSourceItemIds $getSourceItemIds
+     * @param GetSkuListInStock $getSkuListInStock
+     * @param SkuListsProcessor $skuListsProcessor
      */
-    private $sourceIndexer;
-
-    /**
-     * @param SourceIndexer $sourceIndexer
-     */
-    public function __construct(SourceIndexer $sourceIndexer)
-    {
-        $this->sourceIndexer = $sourceIndexer;
+    public function __construct(
+        private readonly GetSourceItemIds $getSourceItemIds,
+        private readonly GetSkuListInStock $getSkuListInStock,
+        private readonly SkuListsProcessor $skuListsProcessor,
+    ) {
     }
 
     /**
+     * Reindexes source items after deletion by intercepting execution and triggering the source indexer.
+     *
      * @param SourceItemsDeleteInterface $subject
      * @param callable $proceed
      * @param SourceItemInterface[] $sourceItems
@@ -41,15 +45,13 @@ class ReindexAfterSourceItemsDeletePlugin
         callable $proceed,
         array $sourceItems
     ) {
-        $sourceCodes = [];
-        foreach ($sourceItems as $sourceItem) {
-            $sourceCodes[] = $sourceItem->getSourceCode();
-        }
+        $sourceItemIds = $this->getSourceItemIds->execute($sourceItems);
+        $skuListInStockList = $this->getSkuListInStock->execute($sourceItemIds);
 
         $proceed($sourceItems);
 
-        if (count($sourceCodes)) {
-            $this->sourceIndexer->executeList($sourceCodes);
+        if ($skuListInStockList) {
+            $this->skuListsProcessor->reindexList($skuListInStockList);
         }
     }
 }

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -42,6 +42,8 @@ class Grid extends GridWidget
     }
 
     /**
+     * Prepares the low quantity product collection, applies store filters, and sets it for the grid widget.
+     *
      * @return GridWidget
      */
     protected function _prepareCollection(): GridWidget

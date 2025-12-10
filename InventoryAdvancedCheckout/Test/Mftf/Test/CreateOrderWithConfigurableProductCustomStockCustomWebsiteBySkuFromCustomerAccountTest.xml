@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 -->
 
@@ -51,6 +51,9 @@
                 <argument name="stockName" value="$$additionalStock.stock[name]$$"/>
                 <argument name="websiteName" value="{{customWebsite.name}}"/>
             </actionGroup>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <!--Assign configurable to additional website.-->
             <amOnPage url="{{AdminProductEditPage.url($$createConfigProduct.id$$)}}" stepKey="openConfigurableProductEditPage"/>
             <actionGroup ref="AddWebsiteToProductActionGroup" stepKey="assignConfigurableProductToAdditionalWebsite">
@@ -94,6 +97,9 @@
             <deleteData createDataKey="additionalStock" stepKey="deleteStock" before="deleteConfigChildProductOne"/>
             <!--Revert "Add Store Code To URL" configuration.-->
             <magentoCLI command="config:set {{StorefrontDisableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlDisable" after="deleteStock"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <remove keyForRemoval="loginAsCustomer"/>
@@ -104,15 +110,16 @@
             <argument name="storeCode" value="customStore.code"/>
         </actionGroup>
         <!--Place order from storefront.-->
-        <click selector="{{CheckoutCartSummarySection.proceedToCheckout}}" stepKey="clickProceedToCheckout" after="clickUpdateCart"/>
+        <waitForElementClickable selector="{{CheckoutCartSummarySection.proceedToCheckout}}" stepKey="waitForProceedToCheckoutButtonClickable" after="clickUpdateCart" />
+        <click selector="{{CheckoutCartSummarySection.proceedToCheckout}}" stepKey="clickProceedToCheckout" after="waitForProceedToCheckoutButtonClickable"/>
         <!-- Fill customer new shipping address -->
         <actionGroup ref="CustomerCheckoutFillNewShippingAddressActionGroup" stepKey="fillShippingAddress">
             <argument name="address" value="US_Address_TX"/>
         </actionGroup>
-        <click selector="{{CheckoutShippingGuestInfoSection.next}}" stepKey="clickNext"/>
-        <waitForPageLoad stepKey="waitForShipmentPageLoad"/>
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="placeOrder"/>
-        <waitForPageLoad stepKey="waitUntilOrderPlaced"/>
+        <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="clickNext"/>
+        <comment userInput="BIC workaround" stepKey="waitForShipmentPageLoad"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="placeOrder"/>
+        <comment userInput="BIC workaround" stepKey="waitUntilOrderPlaced"/>
         <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessage"/>
         <!--Verify first product variation quantity-->
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProduct1"/>

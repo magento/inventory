@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -64,7 +64,8 @@ class GetOrderDataForOrderInFinalState
                 ]
             )
             ->where($entityIdCondition . ' OR ' . $incrementIdCondition)
-            ->where('main_table.state IN (?)', $this->getCompleteOrderStateList->execute());
+            ->where('main_table.state IN (?)', $this->getCompleteOrderStateList->execute())
+            ->where('main_table.store_id IS NOT NULL');
 
         $orders = $connection->fetchAll($query);
         $storeWebsiteIds = $this->getStoreWebsiteIds();

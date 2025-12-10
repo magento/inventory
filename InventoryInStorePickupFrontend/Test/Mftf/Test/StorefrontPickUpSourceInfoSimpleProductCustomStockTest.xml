@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
@@ -19,6 +19,7 @@
         </annotations>
 
         <before>
+            <magentoCLI command="config:set {{MediaGalleryConfigDataDisabled.path}} {{MediaGalleryConfigDataDisabled.value}}" stepKey="enabledOldMediaGallery"/>
             <!--Set Distance Provider for Distance Based SSA to offline-->
             <magentoCLI command="config:set {{OfflineDistanceProviderForDistanceBasedSSA.path}} {{OfflineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
             <!--Enable 'In Store Pickup' shipping method.-->
@@ -27,8 +28,12 @@
             <magentoCLI stepKey="disableWYSYWYG" command="config:set {{enableWYSYWYG.path}} {{enableWYSYWYG.value}}"/>
             <!--Download tables for 'US'-->
             <magentoCLI command="{{ImportTables.path}} {{USTable.value}}" stepKey="downloadTables"/>
-            <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
             <!--Create test data.-->
             <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
             <createData entity="CulverStorePickupEnabledSource" stepKey="culverSource"/>
@@ -45,8 +50,12 @@
             <amOnPage url="{{AdminEditSourcePage.url($culverSource.source[source_code]$)}}" stepKey="navigateToCulverSourceEditPage"/>
             <actionGroup ref="AdminAddImageToSourceDescriptionActionGroup" stepKey="addImage"/>
             <actionGroup ref="ClickBrowseBtnOnUploadPopupActionGroup" stepKey="clickBrowserBtn"/>
-            <actionGroup ref="NavigateToMediaFolderActionGroup" stepKey="navigateToFolder">
-                 <argument name="FolderName" value="Storage Root"/>
+            <comment userInput="BIC workaround" stepKey="navigateToFolder"/>
+            <actionGroup ref="AdminExpandMediaGalleryFolderActionGroup" stepKey="expandStorageRootFolder">
+                <argument name="FolderName" value="Storage Root"/>
+            </actionGroup>
+            <actionGroup ref="NavigateToMediaFolderActionGroup" stepKey="navigateToWysiwygFolder">
+                <argument name="FolderName" value="wysiwyg"/>
             </actionGroup>
             <actionGroup ref="CreateImageFolderActionGroup" stepKey="CreateImageFolder">
                 <argument name="ImageFolder" value="ImageFolder"/>
@@ -68,7 +77,14 @@
             <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
         </before>
         <after>
+            <wait time="10" stepKey="disabledOldMediaGallery"/>
             <actionGroup ref="NavigateToMediaGalleryActionGroup" stepKey="navigateToMediaGallery"/>
+            <actionGroup ref="AdminExpandMediaGalleryFolderActionGroup" stepKey="expandStorageRootFolder">
+                <argument name="FolderName" value="Storage Root"/>
+            </actionGroup>
+            <actionGroup ref="AdminExpandMediaGalleryFolderActionGroup" stepKey="expandWysiwygFolder">
+                <argument name="FolderName" value="wysiwyg"/>
+            </actionGroup>
              <actionGroup ref="DeleteFolderActionGroup" stepKey="DeleteCreatedFolder">
                 <argument name="ImageFolder" value="ImageFolder"/>
             </actionGroup>
@@ -88,6 +104,10 @@
             <deleteData createDataKey="stock" stepKey="deleteStock"/>
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <magentoCLI command="config:set {{MediaGalleryConfigDataEnabled.path}} {{MediaGalleryConfigDataEnabled.value}}" stepKey="disableOldMediaGallery"/>
         </after>
 
         <!--Add product to cart.-->

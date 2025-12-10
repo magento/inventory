@@ -1,12 +1,12 @@
-/*
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+/**
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 define([
     'Magento_Ui/js/form/components/fieldset',
     'ko'
 ], function (Fieldset, ko) {
-    'use strict';
+    'use strict'; //eslint-disable-line
 
     /**
      * TODO Remove when issue is resolved in core.
@@ -35,7 +35,7 @@ define([
                      * @param {String} value
                      */
                     write: function (value) {
-                        value = Boolean(value) === value ? value : Boolean(parseInt(value, 0));
+                        value = Boolean(value) === value ? value : Boolean(parseInt(value, 10));
                         visible(value);
                     },
                     owner: this
