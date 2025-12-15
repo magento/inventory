@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -36,6 +36,7 @@ interface ProductStockIndexDataInterface
      * Provides product is salable flag
      *
      * @return bool
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getIsSalable(): bool;
 
@@ -62,5 +63,4 @@ interface ProductStockIndexDataInterface
      * @return void
      */
     public function setIsSalable(bool $isSalable): void;
-
 }

@@ -1,12 +1,13 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
 namespace Magento\InventoryDistanceBasedSourceSelection\Console\Command;
 
+use Magento\Framework\Console\Cli;
 use Magento\InventoryDistanceBasedSourceSelection\Model\ImportGeoNames;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -62,7 +63,7 @@ class ImportGeoNamesCommand extends Command
     /**
      * @inheritdoc
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $countries = $input->getArgument(self::COUNTRIES);
 
@@ -77,5 +78,7 @@ class ImportGeoNamesCommand extends Command
         }
 
         $output->writeln('Done.');
+
+        return Cli::RETURN_SUCCESS;
     }
 }

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -9,6 +9,8 @@ namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Model\ResourceModel;
 
 use Magento\CatalogInventory\Model\ResourceModel\StockStatusFilterInterface;
 use Magento\Framework\DB\Select;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalog\Model\ResourceModel\StockStatusFilter;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
@@ -65,8 +67,8 @@ class StockStatusFilterPlugin
      * @param string $stockStatusTableAlias
      * @param int|null $websiteId
      * @return Select
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundExecute(
@@ -80,6 +82,7 @@ class StockStatusFilterPlugin
         $websiteCode = $this->storeManager->getWebsite($websiteId)->getCode();
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
         $stockId = (int)$stock->getStockId();
+
         if ($this->defaultStockProvider->getId() === $stockId) {
             $select = $proceed(
                 $select,

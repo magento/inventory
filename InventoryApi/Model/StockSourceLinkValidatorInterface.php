@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 
 declare(strict_types=1);
@@ -20,6 +20,8 @@ use Magento\InventoryApi\Api\Data\StockSourceLinkInterface;
 interface StockSourceLinkValidatorInterface
 {
     /**
+     * Validates a stock source link and returns a `ValidationResult` indicating whether the link is valid or not.
+     *
      * @param StockSourceLinkInterface $link
      * @return ValidationResult
      */

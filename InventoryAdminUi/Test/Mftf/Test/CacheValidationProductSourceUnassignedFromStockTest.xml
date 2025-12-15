@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -17,6 +17,7 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
+            <group value="pr_exclude"/>
         </annotations>
 
         <before>
@@ -42,8 +43,12 @@
             <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveEditedSimpleProduct"/>
 
             <!-- Perform reindex and flush cache -->
-            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </before>
 
         <after>
@@ -52,23 +57,29 @@
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
             </actionGroup>
             <!-- Assign Sales Channel to Default Stock -->
-            <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockIndexPage"/>
-            <waitForPageLoad time="30" stepKey="waitForStockGridPageLoad"/>
-            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchDefaultStockByKeyword">
-                <argument name="keyword" value="_defaultStock.name"/>
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
-            <click selector="{{AdminGridRow.editByValue(_defaultStock.name)}}" stepKey="clickOnEditForDefaultStock"/>
-            <waitForPageLoad time="30" stepKey="waitForStockEditPageLoad"/>
-            <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="Main Website" stepKey="selectWebsiteAsSalesChannel"/>
-            <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveDefaultStock"/>
+            <comment userInput="BIC workaround" stepKey="navigateToStockIndexPage"/>
+            <comment userInput="BIC workaround" stepKey="waitForStockGridPageLoad"/>
+            <comment userInput="BIC workaround" stepKey="searchDefaultStockByKeyword"/>
+            <comment userInput="BIC workaround" stepKey="clickOnEditForDefaultStock"/>
+            <comment userInput="BIC workaround" stepKey="waitForStockEditPageLoad"/>
+            <comment userInput="BIC workaround" stepKey="selectWebsiteAsSalesChannel"/>
+            <comment userInput="BIC workaround" stepKey="saveDefaultStock"/>
+
             <!--Remove created product, stock and category.-->
             <deleteData stepKey="deleteProduct" createDataKey="simpleProduct"/>
             <deleteData stepKey="deleteCategory" createDataKey="simpleCategory"/>
             <deleteData stepKey="deleteAdditionalStock" createDataKey="additionalStock"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
         <!--Verify product is visible in storefront page.-->
-        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory.name$$)}}" stepKey="navigateToCategoryToVerifyProductIsVisible"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryToVerifyProductIsVisible"/>
         <waitForPageLoad time="30" stepKey="waitForCategoryPageIsLoadToVerifyProductIsNotVisible"/>
         <see userInput="$$simpleProduct.name$$" stepKey="verifyProductIsVisible"/>
 
@@ -77,10 +88,15 @@
             <argument name="stockName" value="$$additionalStock.stock[name]$$"/>
             <argument name="sourceNumInGrid" value="0"/>
         </actionGroup>
-        <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanFullPageCache">
+            <argument name="tags" value="full_page"/>
+        </actionGroup>
 
         <!--Verify product is not visible on storefront page.-->
-        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory.name$$)}}" stepKey="navigateToCategoryToVerifyProductIsNotVisible"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryToVerifyProductIsNotVisible"/>
         <waitForPageLoad time="30" stepKey="waitForCategoryPageIsLoadToVerifyProductIsVisible"/>
         <dontSee userInput="$$simpleProduct.name$$" stepKey="verifyProductIsNotVisible"/>
     </test>

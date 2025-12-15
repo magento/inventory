@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -39,6 +39,9 @@
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
+            <deleteData createDataKey="simpleCategory1" stepKey="deletesimpleCategory1"/>
+            <!-- Delete virtual product created via UI -->
+            <helper class="Magento\Catalog\Test\Mftf\Helper\ProductApiHelper" method="deleteAllProductsApi" stepKey="deleteAllProductsViaApi"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
         </after>
 
@@ -74,6 +77,7 @@
             <argument name="product" value="VirtualMsiProduct"/>
         </actionGroup>
 
+        <waitForElementClickable selector="{{StorefrontProductActionSection.addToCart}}" stepKey="waitForAddToCartButton"/>
         <click selector="{{StorefrontProductActionSection.addToCart}}" stepKey="clickOnAddToCart1"/>
         <waitForPageLoad stepKey="waitForPageLoad9"/>
         <waitForElementVisible selector="{{StorefrontMessagesSection.success}}" stepKey="waitForSuccessMessage"/>
@@ -83,7 +87,7 @@
 
         <click selector="{{StorefrontMinicartSection.goToCheckout}}" stepKey="clickOnProceedToCheckout1"/>
 
-        <fillField selector="{{CheckoutShippingSection.email}}" userInput="{{MsiCustomer1.email}}" stepKey="enterEmail"/>
+        <fillField selector="{{CheckoutShippingSection.emailAddress}}" userInput="{{MsiCustomer1.email}}" stepKey="enterEmail"/>
         <waitForPageLoad stepKey="waitForPageLoad11"/>
         <fillField selector=".payment-method-billing-address input[name=firstname]" userInput="{{MsiCustomer1.firstname}}" stepKey="enterFirstName"/>
         <waitForPageLoad stepKey="waitForPageLoad12"/>
@@ -103,7 +107,7 @@
         <click selector=".action-update" stepKey="clickOnUpdate1"/>
         <waitForPageLoad stepKey="waitForPageLoad19"/>
 
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="clickPlaceOrder1"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickPlaceOrder1"/>
         <seeElement selector="{{CheckoutSuccessMainSection.success}}" stepKey="seeOrderNumber1"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber}}" stepKey="grabOrderNumber1"/>
 

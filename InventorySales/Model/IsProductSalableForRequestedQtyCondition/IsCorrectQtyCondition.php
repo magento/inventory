@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -100,7 +100,7 @@ class IsCorrectQtyCondition implements IsProductSalableForRequestedQtyInterface
             return $this->createErrorResult(
                 'is_correct_qty-min_sale_qty',
                 __(
-                    'The fewest you may purchase is %1',
+                    'The fewest you may purchase is %1.',
                     $stockItemConfiguration->getMinSaleQty()
                 )
             );

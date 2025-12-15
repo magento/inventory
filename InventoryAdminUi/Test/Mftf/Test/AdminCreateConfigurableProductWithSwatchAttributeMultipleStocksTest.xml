@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -61,6 +61,9 @@
                 <argument name="stockName" value="$$additionalStockAdditionalWebsite.stock[name]$$"/>
                 <argument name="websiteName" value="{{customWebsite.name}}"/>
             </actionGroup>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </before>
         <after>
             <!--Delete created website.-->
@@ -84,9 +87,13 @@
             <!--Delete category, stocks and revert configuration.-->
             <magentoCLI command="config:set {{StorefrontDisableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlDisable"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
-            <deleteData createDataKey="configurableProduct" stepKey="deleteConfigurable"/>
             <deleteData createDataKey="additionalStockAdditionalWebsite" stepKey="deleteMainWebsiteStock"/>
             <deleteData createDataKey="additionalStockMainWebsite" stepKey="deleteAdditionalWebsiteStock"/>
+            <!-- Delete all products via API -->
+            <helper class="Magento\Catalog\Test\Mftf\Helper\ProductApiHelper" method="deleteAllProductsApi" stepKey="deleteAllProductsViaApi"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!--Create configurable variations.-->
@@ -157,8 +164,12 @@
         <amOnPage url="{{AdminProductEditPage.url($$configurableProduct.id$$)}}" stepKey="openProductEditPage"/>
         <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="In Stock" stepKey="setProductStockStatus"/>
         <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveConfigurableProduct"/>
-        <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
-        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <!--Verify configurable product with red variation on main website.-->
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="verifyConfigurableVisibleOnStoreFrontMainWebsite">
             <argument name="category" value="$$category$$"/>
@@ -169,7 +180,7 @@
         <seeElement selector="//div[@data-option-label='{{visualSwatchColor1.name}}']" stepKey="verifyRedVariationIsPresentOnMainWebsite"/>
         <dontSeeElement selector="//div[@data-option-label='{{visualSwatchColor2.name}}']" stepKey="verifyBlueVariationIsNotPresentOnMainWebsite"/>
         <!--Verify configurable product with blue variation on additional website.-->
-        <amOnPage url="{{StorefrontHomePage.url}}/{{customStore.code}}/$$category.name$$.html" stepKey="navigateToAdditionalCategoryPage"/>
+        <amOnPage url="{{StorefrontHomePage.url}}/{{customStore.code}}/$$category.custom_attributes[url_key]$$.html" stepKey="navigateToAdditionalCategoryPage"/>
         <waitForPageLoad stepKey="waitForAdditionalWebsiteCategoryPageLoad"/>
         <see userInput="$$configurableProduct.name$$" stepKey="assertProductPresent"/>
         <amOnPage url="{{StorefrontHomePage.url}}/{{customStore.code}}/$$configurableProduct.custom_attributes[url_key]$$.html" stepKey="navigateToPDP"/>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
+ */
 -->
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
@@ -41,6 +41,8 @@
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
+            <deleteData createDataKey="simpleCategory1" stepKey="deletesimpleCategory1"/>
+            <deleteData createDataKey="virtualProduct1" stepKey="deleteProduct"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
         </after>
 
@@ -64,7 +66,7 @@
                    stepKey="fillSourceQtyField2"/>
         <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose"/>
 
-        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory1.name$$)}}" stepKey="navigateToCategory"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory1.custom_attributes[url_key]$$)}}" stepKey="navigateToCategory"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad1"/>
         <click selector="{{StorefrontCategoryMainSection.specifiedProductItemInfo($$virtualProduct1.product[name]$$)}}" stepKey="openProductPage"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad2"/>
@@ -73,7 +75,7 @@
         <waitForPageLoad time="30" stepKey="waitForPageLoad4"/>
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="goToCheckoutFromMinicart"/>
 
-        <fillField selector="{{CheckoutShippingSection.email}}" userInput="{{MsiCustomer1.email}}" stepKey="enterEmail"/>
+        <fillField selector="{{CheckoutShippingSection.emailAddress}}" userInput="{{MsiCustomer1.email}}" stepKey="enterEmail"/>
         <waitForPageLoad stepKey="waitForPageLoad14"/>
         <fillField selector=".payment-method-billing-address input[name=firstname]" userInput="{{MsiCustomer1.firstname}}" stepKey="enterFirstName"/>
         <waitForPageLoad stepKey="waitForPageLoad15"/>
@@ -92,8 +94,8 @@
 
         <click selector=".action-update" stepKey="clickOnUpdate1"/>
         <waitForPageLoad stepKey="waitForPageLoad23"/>
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="clickPlaceOrder3"/>
-        <waitForPageLoad stepKey="waitForPageLoad24"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickPlaceOrder3"/>
+        <comment userInput="BIC workaround" stepKey="waitForPageLoad24"/>
         <see selector="{{CheckoutSuccessMainSection.successTitle}}" userInput="Thank you for your purchase!" stepKey="waitForLoadSuccessPage3"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber}}" stepKey="grabOrderNumber"/>
 
@@ -117,7 +119,7 @@
         <waitForPageLoad stepKey="waitForPageLoad31"/>
         <see selector="{{AdminOrderDetailsInformationSection.orderStatus}}" userInput="Complete" stepKey="checkOrderStatus"/>
 
-        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory1.name$$)}}" stepKey="navigateToCategoryPage2"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory1.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPage2"/>
         <see selector=".empty" userInput="We can't find products matching the selection." stepKey="seeErrorMessage1"/>
     </test>
 </tests>

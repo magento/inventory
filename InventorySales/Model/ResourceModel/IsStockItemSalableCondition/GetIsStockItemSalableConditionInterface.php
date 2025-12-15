@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -17,6 +17,8 @@ use Magento\Framework\DB\Select;
 interface GetIsStockItemSalableConditionInterface
 {
     /**
+     * Builds and returns a condition string to determine if a stock item is salable based on backorder settings.
+     *
      * @param Select $select
      * @return string
      */

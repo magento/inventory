@@ -1,6 +1,6 @@
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 
 define([
@@ -8,7 +8,7 @@ define([
     'uiRegistry',
     'uiComponent'
 ], function (_, registry, component) {
-    'use strict';
+    'use strict'; //eslint-disable-line
 
     return component.extend({
         defaults: {

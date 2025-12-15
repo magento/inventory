@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -17,8 +17,8 @@ class ValidationTest extends WebapiAbstract
     /**#@+
      * Service constants
      */
-    const RESOURCE_PATH = '/V1/inventory/source-items';
-    const SERVICE_NAME = 'inventoryApiSourceItemsSaveV1';
+    public const RESOURCE_PATH = '/V1/inventory/source-items';
+    public const SERVICE_NAME = 'inventoryApiSourceItemsSaveV1';
     /**#@-*/
 
     /**
@@ -60,7 +60,7 @@ class ValidationTest extends WebapiAbstract
     /**
      * @return array
      */
-    public function dataProviderRequiredFields(): array
+    public static function dataProviderRequiredFields(): array
     {
         return [
             'without_' . SourceItemInterface::SKU => [
@@ -152,7 +152,7 @@ class ValidationTest extends WebapiAbstract
      * @return array
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function failedValidationDataProvider(): array
+    public static function failedValidationDataProvider(): array
     {
         if (TESTS_WEB_API_ADAPTER === self::ADAPTER_SOAP) {
             $nonExistedSourceCodeError = [
@@ -202,6 +202,12 @@ class ValidationTest extends WebapiAbstract
                     'errors' => [
                         [
                             'message' => '"%field" can not be empty.',
+                            'parameters' => [
+                                'field' => SourceItemInterface::SKU,
+                            ],
+                        ],
+                        [
+                            'message' => '"%field" can not contain leading or trailing spaces.',
                             'parameters' => [
                                 'field' => SourceItemInterface::SKU,
                             ],
@@ -351,7 +357,7 @@ class ValidationTest extends WebapiAbstract
     /**
      * @return array
      */
-    public function failedValidationRelatedOnlyForRestDataProvider(): array
+    public static function failedValidationRelatedOnlyForRestDataProvider(): array
     {
         return [
             'empty_' . SourceItemInterface::QUANTITY => [

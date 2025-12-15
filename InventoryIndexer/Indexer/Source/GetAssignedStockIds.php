@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -31,6 +31,8 @@ class GetAssignedStockIds
     }
 
     /**
+     * Fetches stock IDs assigned to given source codes by querying the database and returns them as an integer array.
+     *
      * @param string[] $sourceCodes
      * @return int[]
      */

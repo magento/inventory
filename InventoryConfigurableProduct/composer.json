@@ -2,16 +2,23 @@
     "name": "magento/module-inventory-configurable-product",
     "description": "N/A",
     "require": {
-        "php": "~7.3.0||~7.4.0",
+        "php": "~8.2.0||~8.3.0||~8.4.0",
         "magento/framework": "*",
         "magento/module-catalog": "*",
+        "magento/module-inventory-catalog": "*",
+        "magento/module-inventory-configuration": "*",
         "magento/module-inventory-sales-api": "*",
         "magento/module-inventory-catalog-api": "*",
         "magento/module-inventory-indexer": "*",
         "magento/module-store": "*",
         "magento/module-catalog-inventory": "*",
         "magento/module-sales": "*",
-        "magento/module-configurable-product": "*"
+        "magento/module-configurable-product": "*",
+        "magento/module-eav": "*"
+    },
+    "suggest": {
+        "magento/module-inventory": "*",
+        "magento/module-inventory-api": "*"
     },
     "type": "magento2-module",
     "license": [

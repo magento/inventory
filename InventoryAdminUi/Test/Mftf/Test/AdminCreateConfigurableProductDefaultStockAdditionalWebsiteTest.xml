@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -46,17 +46,13 @@
                 <argument name="StoreGroup" value="customStoreGroup"/>
                 <argument name="customStore" value="customStore"/>
             </actionGroup>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </before>
         <after>
-            <!--Delete configurable product.-->
-            <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToAdminProductGridToDeleteProducts"/>
-            <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findConfigurableProduct">
-                <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
-                <argument name="value" value="{{ConfigurableMsiProduct.sku}}"/>
-            </actionGroup>
-            <actionGroup ref="DeleteProductActionGroup" stepKey="deleteConfigurableProduct">
-                <argument name="productName" value="ConfigurableMsiProduct.name"/>
-            </actionGroup>
+            <!-- Delete configurable product and its variations -->
+            <helper class="Magento\Catalog\Test\Mftf\Helper\ProductApiHelper" method="deleteAllProductsApi" stepKey="deleteAllProductsViaApi"/>
             <!--Delete created website.-->
             <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite">
                 <argument name="websiteName" value="{{customWebsite.name}}"/>
@@ -66,20 +62,25 @@
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
             </actionGroup>
             <!-- Assign Main Website to Default Stock -->
-            <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockIndexPage"/>
-            <waitForPageLoad time="30" stepKey="waitForStockGridPageLoad"/>
-            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchDefaultStockByKeyword">
-                <argument name="keyword" value="_defaultStock.name"/>
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
-            <click selector="{{AdminGridRow.editByValue(_defaultStock.name)}}" stepKey="clickOnEditForDefaultStock"/>
-            <waitForPageLoad time="30" stepKey="waitForStockEditPageLoad"/>
-            <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="Main Website" stepKey="selectWebsiteAsSalesChannel"/>
-            <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveDefaultStock"/>
+            <comment userInput="BIC workaround" stepKey="navigateToStockIndexPage"/>
+            <comment userInput="BIC workaround" stepKey="waitForStockGridPageLoad"/>
+            <comment userInput="BIC workaround" stepKey="searchDefaultStockByKeyword"/>
+            <comment userInput="BIC workaround" stepKey="clickOnEditForDefaultStock"/>
+            <comment userInput="BIC workaround" stepKey="waitForStockEditPageLoad"/>
+            <comment userInput="BIC workaround" stepKey="selectWebsiteAsSalesChannel"/>
+            <comment userInput="BIC workaround" stepKey="saveDefaultStock"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <!--Delete category, stock and revert configuration.-->
             <magentoCLI command="config:set {{StorefrontDisableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlDisable"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!--Assign Default Stock to Additional Website.-->
@@ -150,7 +151,7 @@
             <argument name="website" value="{{customWebsite.name}}"/>
         </actionGroup>
         <!--Verify configurable product on storefront.-->
-        <amOnPage url="{{StorefrontHomePage.url}}/{{customStore.code}}/$$category.name$$.html" stepKey="navigateToCategoryPage"/>
+        <amOnPage url="{{StorefrontHomePage.url}}/{{customStore.code}}/$$category.custom_attributes[url_key]$$.html" stepKey="navigateToCategoryPage"/>
         <waitForPageLoad stepKey="waitForCategoryPageLoad"/>
         <see userInput="{{ConfigurableMsiProduct.name}}" stepKey="assertProductPresent"/>
         <see userInput="$100" stepKey="assertProductPricePresent"/>

@@ -1,0 +1,23 @@
+
+File "/var/www/html/app/code/Magento/InventoryInStorePickupSalesAdminUi/Test/Mftf/Test/AdminAddRemoveSourceColumnsTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 AdminManageSourcesGridColumnControls from module(s): magento/module-inventory-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryInStorePickupSalesAdminUi/Test/Mftf/Test/InStorePickupOrderPlacementWithSimpleProductAdditionalStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 OfflineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	 EnableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 ImportTables from module(s): magento/module-inventory-admin-ui
+	 USTable from module(s): magento/module-inventory-admin-ui
+	 _defaultSource from module(s): magento/module-inventory-admin-ui
+	 OnlineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	 DisableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 _defaultStock from module(s): magento/module-inventory-admin-ui
+	 UnassignSourceFromProductActionGroup from module(s): magento/module-inventory-admin-ui
+	 AdminAssignSourceToProductAndSetSourceQuantityActionGroup from module(s): magento/module-inventory-admin-ui
+	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 DisableAllSourcesActionGroup from module(s): magento/module-inventory-admin-ui
+	 AdminSelectInStorePickupShippingMethodActionGroup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 AdminAssertOrderWithStorePickupShippingMethodActionGroup from module(s): magento/module-inventory-in-store-pickup-admin-ui

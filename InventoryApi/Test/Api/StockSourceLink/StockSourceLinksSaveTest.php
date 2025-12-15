@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -18,10 +18,10 @@ class StockSourceLinksSaveTest extends WebapiAbstract
     /**#@+
      * Service constants
      */
-    const RESOURCE_PATH = '/V1/inventory/stock-source-links';
-    const SERVICE_NAME_SAVE = 'inventoryApiStockSourceLinksSaveV1';
-    const SERVICE_NAME_DELETE = 'inventoryApiStockSourceLinksDeleteV1';
-    const SERVICE_NAME_GET_LIST = 'inventoryApiGetStockSourceLinksV1';
+    public const RESOURCE_PATH = '/V1/inventory/stock-source-links';
+    public const SERVICE_NAME_SAVE = 'inventoryApiStockSourceLinksSaveV1';
+    public const SERVICE_NAME_DELETE = 'inventoryApiStockSourceLinksDeleteV1';
+    public const SERVICE_NAME_GET_LIST = 'inventoryApiGetStockSourceLinksV1';
     /**#@-*/
 
     /**

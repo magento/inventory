@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -42,6 +42,8 @@ class UpdateSalesChannelWebsiteCodePlugin
     }
 
     /**
+     * Intercepts WebsiteResourceModel::save to update sales channel website code when the website code changes.
+     *
      * @param WebsiteResourceModel $subject
      * @param callable $proceed
      * @param Website|AbstractModel $website

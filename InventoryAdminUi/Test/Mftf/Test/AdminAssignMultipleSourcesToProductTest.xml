@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -17,6 +17,7 @@
             <severity value="MAJOR"/>
             <group value="msi"/>
             <group value="multi_mode"/>
+            <group value="cloud"/>
         </annotations>
 
         <before>
@@ -50,73 +51,15 @@
             </createData>
         </before>
         <after>
-            <!--Disable multiple sources.-->
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableFirstCreatedSource">
-                <argument name="sourceCode" value="$$createFirstCustomSource.source[source_code]$$"/>
-            </actionGroup>
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSecondCreatedSource">
-                <argument name="sourceCode" value="$$createSecondCustomSource.source[source_code]$$"/>
-            </actionGroup>
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableThirdCreatedSource">
-                <argument name="sourceCode" value="$$createThirdCustomSource.source[source_code]$$"/>
-            </actionGroup>
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableFourthCreatedSource">
-                <argument name="sourceCode" value="$$createFourthCustomSource.source[source_code]$$"/>
-            </actionGroup>
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableFifthCreatedSource">
-                <argument name="sourceCode" value="$$createFifthCustomSource.source[source_code]$$"/>
-            </actionGroup>
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSixthCreatedSource">
-                <argument name="sourceCode" value="$$createSixthCustomSource.source[source_code]$$"/>
-            </actionGroup>
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSeventhCreatedSource">
-                <argument name="sourceCode" value="$$createSeventhCustomSource.source[source_code]$$"/>
-            </actionGroup>
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableEighthCreatedSource">
-                <argument name="sourceCode" value="$$createEighthCustomSource.source[source_code]$$"/>
-            </actionGroup>
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableNineCreatedSource">
-                <argument name="sourceCode" value="$$createNineCustomSource.source[source_code]$$"/>
-            </actionGroup>
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableTenthCreatedSource">
-                <argument name="sourceCode" value="$$createTenthCustomSource.source[source_code]$$"/>
-            </actionGroup>
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableEleventhCreatedSource">
-                <argument name="sourceCode" value="$$createEleventhCustomSource.source[source_code]$$"/>
-            </actionGroup>
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableTwelveCreatedSource">
-                <argument name="sourceCode" value="$$createTwelveCustomSource.source[source_code]$$"/>
-            </actionGroup>
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableThirteenCreatedSource">
-                <argument name="sourceCode" value="$$createThirteenCustomSource.source[source_code]$$"/>
-            </actionGroup>
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableFourteenthCreatedSource">
-                <argument name="sourceCode" value="$$createFourteenthCustomSource.source[source_code]$$"/>
-            </actionGroup>
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableFifteenCreatedSource">
-                <argument name="sourceCode" value="$$createFifteenCustomSource.source[source_code]$$"/>
-            </actionGroup>
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSixteenCreatedSource">
-                <argument name="sourceCode" value="$$createSixteenCustomSource.source[source_code]$$"/>
-            </actionGroup>
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSeventeenCreatedSource">
-                <argument name="sourceCode" value="$$createSeventeenCustomSource.source[source_code]$$"/>
-            </actionGroup>
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableEighteenCreatedSource">
-                <argument name="sourceCode" value="$$createEighteenCustomSource.source[source_code]$$"/>
-            </actionGroup>
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableNineteenCreatedSource">
-                <argument name="sourceCode" value="$$createNineteenCustomSource.source[source_code]$$"/>
-            </actionGroup>
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableTwentyCreatedSource">
-                <argument name="sourceCode" value="$$createTwentyCustomSource.source[source_code]$$"/>
-            </actionGroup>
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableTwentyOneCreatedSource">
-                <argument name="sourceCode" value="$$createTwentyOneCustomSource.source[source_code]$$"/>
-            </actionGroup>
+            <!-- Disable all created sources -->
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!--Search for the product and open in edit mode.-->

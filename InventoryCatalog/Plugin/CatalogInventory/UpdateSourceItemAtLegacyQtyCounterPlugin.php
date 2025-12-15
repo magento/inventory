@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -77,6 +77,8 @@ class UpdateSourceItemAtLegacyQtyCounterPlugin
     }
 
     /**
+     * Wraps the `correctItemsQty` method to update source item quantities and handle transactions safely.
+     *
      * @param QtyCounterInterface $subject
      * @param callable $proceed
      * @param int[] $items
@@ -112,6 +114,8 @@ class UpdateSourceItemAtLegacyQtyCounterPlugin
     }
 
     /**
+     * Updates source item quantities by mapping product IDs to SKUs and applying quantity changes per operator.
+     *
      * @param int[] $productQuantitiesByProductId
      * @param string $operator
      * @return void
@@ -141,6 +145,8 @@ class UpdateSourceItemAtLegacyQtyCounterPlugin
     }
 
     /**
+     * Maps product IDs to SKUs and associates them with their respective quantities from the provided input array.
+     *
      * @param int[] $productQuantitiesByProductId
      * @return array
      */

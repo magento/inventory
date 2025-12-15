@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -19,7 +19,7 @@ use Magento\InventorySourceDeductionApi\Model\SourceDeductionRequestInterface;
 use Magento\InventorySalesApi\Api\Data\ItemToSellInterfaceFactory;
 
 /**
- * Class SourceDeductionProcessor
+ * Processes source deductions and compensating reservations for shipments during the shipment creation event.
  */
 class SourceDeductionProcessor implements ObserverInterface
 {
@@ -86,6 +86,8 @@ class SourceDeductionProcessor implements ObserverInterface
     }
 
     /**
+     * Processes source deductions and compensating reservations for a shipment during its creation event.
+     *
      * @param EventObserver $observer
      * @return void
      */
@@ -105,11 +107,10 @@ class SourceDeductionProcessor implements ObserverInterface
         }
 
         $shipmentItems = $this->getItemsToDeductFromShipment->execute($shipment);
-
         if (!empty($shipmentItems)) {
             $sourceDeductionRequest = $this->sourceDeductionRequestFromShipmentFactory->execute(
                 $shipment,
-                $sourceCode,
+                $sourceCode, // @phpstan-ignore variable.undefined
                 $shipmentItems
             );
             $this->sourceDeductionService->execute($sourceDeductionRequest);

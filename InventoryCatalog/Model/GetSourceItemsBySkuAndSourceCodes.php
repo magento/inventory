@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -32,6 +32,8 @@ class GetSourceItemsBySkuAndSourceCodes
     }
 
     /**
+     * Fetches source items by SKU and source codes using search criteria to filter and return matching items.
+     *
      * @param string $sku
      * @param array $sourceCodes
      * @return SourceItemInterface[]

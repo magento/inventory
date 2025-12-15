@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -50,7 +50,7 @@ class MinQtyStockCondition implements GetIsStockItemSalableConditionInterface
         $quantityExpression = (string)$this->resourceConnection->getConnection()->getCheckSql(
             'source_item.' . SourceItemInterface::STATUS . ' = ' . SourceItemInterface::STATUS_OUT_OF_STOCK,
             0,
-            SourceItemInterface::QUANTITY
+            'source_item.' . SourceItemInterface::QUANTITY
         );
         $quantityExpression = 'SUM(' . $quantityExpression . ')';
 

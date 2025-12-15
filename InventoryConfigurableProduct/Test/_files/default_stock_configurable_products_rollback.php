@@ -1,9 +1,11 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
+
+use Magento\TestFramework\Workaround\Override\Fixture\Resolver;
 
 $objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
 
@@ -32,9 +34,10 @@ foreach ($skus as $sku) {
     }
 }
 
-// @codingStandardsIgnoreStart
-require __DIR__ . '/../../../../../../dev/tests/integration/testsuite/Magento/ConfigurableProduct/_files/configurable_attribute_rollback.php';
-// @codingStandardsIgnoreEnd
+Resolver::getInstance()->requireDataFixture(
+    'Magento/ConfigurableProduct/_files/configurable_attribute_rollback.php'
+);
+
 
 $registry->unregister('isSecureArea');
 $registry->register('isSecureArea', false);

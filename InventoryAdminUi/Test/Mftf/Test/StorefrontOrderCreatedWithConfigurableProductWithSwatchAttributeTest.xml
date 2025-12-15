@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -17,6 +17,7 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
+            <group value="pr_exclude"/>
         </annotations>
 
         <before>
@@ -38,6 +39,8 @@
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
+            <!-- Delete all products via API using ProductApiHelper -->
+            <helper class="Magento\Catalog\Test\Mftf\Helper\ProductApiHelper" method="deleteAllProductsApi" stepKey="deleteAllProductsViaApi"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
             <deleteData createDataKey="simpleCategory1" stepKey="deleteCategory1"/>
         </after>
@@ -58,9 +61,11 @@
         <waitForPageLoad stepKey="waitForPageLoad3"/>
 
         <click selector="{{AdminProductFormConfigurationsSection.createConfigurations}}" stepKey="clickOnTheCreateConfigurationsButton1"/>
-        <waitForElementVisible selector="{{AdminConfigurableProductSelectAttributesSlideOut.grid}}" time="30" stepKey="waitForGridPresent1"/>
+        <waitForPageLoad stepKey="waitForConfigurationsPageLoad"/>
+        <waitForElementVisible selector="{{AdminConfigurableProductSelectAttributesSlideOut.grid}}" stepKey="waitForGridPresent1"/>
 
         <waitForPageLoad stepKey="waitForPageLoad4"/>
+        <waitForElementClickable selector="{{AdminCreateProductConfigurationsPanel.createNewAttribute}}" stepKey="waitForCreateNewAttributeBtn"/>
         <click selector="{{AdminCreateProductConfigurationsPanel.createNewAttribute}}" stepKey="clickOnCreateNewAttribute1"/>
         <waitForPageLoad stepKey="waitForPageLoad5"/>
 
@@ -127,6 +132,7 @@
 
         <fillField selector="#qty" userInput="5" stepKey="fillQtyField1"/>
 
+        <waitForElementClickable selector="{{StorefrontProductActionSection.addToCart}}" stepKey="waitForAddToCartButton"/>
         <click selector="{{StorefrontProductActionSection.addToCart}}" stepKey="clickOnAddToCart1"/>
         <waitForPageLoad stepKey="waitForPageLoad12"/>
         <waitForElementVisible selector="{{StorefrontMessagesSection.success}}" stepKey="waitForSuccessMessage"/>
@@ -136,7 +142,7 @@
 
         <click selector="{{StorefrontMinicartSection.goToCheckout}}" stepKey="clickOnProceedToCheckout1"/>
 
-        <fillField selector="{{CheckoutShippingSection.email}}" userInput="{{MsiCustomer1.email}}" stepKey="enterEmail"/>
+        <fillField selector="{{CheckoutShippingSection.emailAddress}}" userInput="{{MsiCustomer1.email}}" stepKey="enterEmail"/>
         <waitForPageLoad stepKey="waitForPageLoad14"/>
         <fillField selector="#shipping-new-address-form input[name=firstname]" userInput="{{MsiCustomer1.firstname}}" stepKey="enterFirstName"/>
         <waitForPageLoad stepKey="waitForPageLoad15"/>
@@ -153,10 +159,10 @@
         <fillField selector="#shipping-new-address-form input[name=telephone]" userInput="{{CustomerAddressSimple.telephone}}" stepKey="enterTelephone"/>
         <waitForPageLoad stepKey="waitForPageLoad21"/>
 
-        <click selector=".continue" stepKey="clickOnNext1"/>
-        <waitForPageLoad stepKey="waitForPageLoad22"/>
+        <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="clickOnNext1"/>
+        <comment userInput="BIC workaround" stepKey="waitForPageLoad22"/>
 
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="clickPlaceOrder1"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickPlaceOrder1"/>
         <seeElement selector="{{CheckoutSuccessMainSection.success}}" stepKey="seeOrderNumber1"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber}}" stepKey="grabOrderNumber1"/>
 

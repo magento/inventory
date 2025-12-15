@@ -1,15 +1,15 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Model\Queue;
 
-use Magento\Framework\Exception\LocalizedException;
+use Magento\InventoryCatalogApi\Model\GetParentSkusOfChildrenSkusInterface;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
-use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
+use Magento\InventorySalesApi\Model\GetStockItemsDataInterface;
 
 /**
  * Get stock status changes for given reservation.
@@ -17,71 +17,40 @@ use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 class GetSalabilityDataForUpdate
 {
     /**
-     * @var AreProductsSalableInterface
-     */
-    private $areProductsSalable;
-
-    /**
-     * @var GetStockItemDataInterface
-     */
-    private $getStockItemData;
-
-    /**
+     * @param GetParentSkusOfChildrenSkusInterface $getParentSkusOfChildrenSkus
      * @param AreProductsSalableInterface $areProductsSalable
-     * @param GetStockItemDataInterface $getStockItemData
+     * @param GetStockItemsDataInterface $getStockItemsData
      */
     public function __construct(
-        AreProductsSalableInterface $areProductsSalable,
-        GetStockItemDataInterface $getStockItemData
+        private readonly GetParentSkusOfChildrenSkusInterface $getParentSkusOfChildrenSkus,
+        private readonly AreProductsSalableInterface $areProductsSalable,
+        private readonly GetStockItemsDataInterface $getStockItemsData
     ) {
-        $this->areProductsSalable = $areProductsSalable;
-        $this->getStockItemData = $getStockItemData;
     }
 
     /**
      * Get stock status changes for given reservation.
      *
      * @param ReservationData $reservationData
-     * @return bool[] - ['sku' => bool]
+     * @return array<string, bool> - ['sku' => bool]
      */
     public function execute(ReservationData $reservationData): array
     {
-        $salabilityData = $this->areProductsSalable->execute(
-            $reservationData->getSkus(),
-            $reservationData->getStock()
-        );
+        $stockId = $reservationData->getStock();
+        $skus = $reservationData->getSkus();
+        $parentSkusOfChildrenSkus = $this->getParentSkusOfChildrenSkus->execute($skus);
+        $skus = array_merge($skus, ...array_values($parentSkusOfChildrenSkus));
+        $salabilityData = $this->areProductsSalable->execute($skus, $stockId);
+        $currentStatuses = $this->getStockItemsData->execute($skus, $stockId);
 
         $data = [];
         foreach ($salabilityData as $isProductSalableResult) {
-            $currentStatus = $this->isCurrentlySalable(
-                $isProductSalableResult->getSku(),
-                $reservationData->getStock()
-            );
+            $currentStatus = $currentStatuses[$isProductSalableResult->getSku()]['is_salable'];
             if ($isProductSalableResult->isSalable() !== $currentStatus) {
                 $data[$isProductSalableResult->getSku()] = $isProductSalableResult->isSalable();
             }
         }
 
         return $data;
-    }
-
-    /**
-     * Get current is_salable value.
-     *
-     * @param string $sku
-     * @param int $stockId
-     *
-     * @return bool
-     */
-    private function isCurrentlySalable(string $sku, int $stockId): bool
-    {
-        try {
-            $data = $this->getStockItemData->execute($sku, $stockId);
-            $isSalable = $data ? (bool)$data[GetStockItemDataInterface::IS_SALABLE] : false;
-        } catch (LocalizedException $e) {
-            $isSalable = false;
-        }
-
-        return $isSalable;
     }
 }

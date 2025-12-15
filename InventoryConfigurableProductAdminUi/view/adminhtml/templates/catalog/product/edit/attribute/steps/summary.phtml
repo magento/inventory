@@ -1,12 +1,12 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 
 // @codingStandardsIgnoreFile
 
-/* @var $block \Magento\ConfigurableProduct\Block\Adminhtml\Product\Steps\Summary */
+/** @var \Magento\ConfigurableProduct\Block\Adminhtml\Product\Steps\Summary $block */
 ?>
 <div data-bind="scope: '<?= /* @noEscape */  $block->getComponentName() ?>'">
     <h2 class="steps-wizard-title"><?= $block->escapeHtml(
@@ -55,8 +55,11 @@
                         "component": "Magento_InventoryConfigurableProductAdminUi/js/variations/steps/summary",
                         "appendTo": "<?= /* @noEscape */  $block->getParentComponentName() ?>",
                         "gridTemplate": "Magento_InventoryConfigurableProductAdminUi/variations/steps/summary-grid",
-                        "variationsComponent": "<?= /* @noEscape */ $block->getData('config/form') ?>.configurableVariations",
-                        "modalComponent": "<?= /* @noEscape */ $block->getData('config/form') ?>.configurableModal"
+                        "variationsComponent": "<?= /* @noEscape */ $block->getData('config/form')
+                        ?>.configurableVariations",
+                        "modalComponent": "<?= /* @noEscape */ $block->getData('config/form') ?>.configurableModal",
+                        "matrixGridComponent": "<?= /* @noEscape */ $block->getData('config/form')
+                        ?>.configurable.configurable-matrix"
                     }
                 }
             }

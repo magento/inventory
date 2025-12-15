@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -45,7 +45,12 @@ class PartialTransferItemsValidator implements PartialInventoryTransferValidator
             try {
                 $originSourceItem = $this->getSourceItemBySkuAndSource($item->getSku(), $originSourceCode);
                 if ($originSourceItem->getQuantity() < $item->getQty()) {
-                    $errors[] = __('Requested transfer amount for sku %sku is not available', ['sku' => $item->getSku()]);
+                    $errors[] = __(
+                        'Requested transfer amount for sku %sku is not available',
+                        [
+                            'sku' => $item->getSku()
+                        ]
+                    );
                 }
 
                 $this->getSourceItemBySkuAndSource($item->getSku(), $destinationSourceCode);
@@ -58,6 +63,8 @@ class PartialTransferItemsValidator implements PartialInventoryTransferValidator
     }
 
     /**
+     * Fetches a source item by SKU and source code, throwing an exception if no matching item is found.
+     *
      * @param string $sku
      * @param string $sourceCode
      * @return SourceItemInterface
@@ -67,7 +74,15 @@ class PartialTransferItemsValidator implements PartialInventoryTransferValidator
     {
         $result = $this->getSourceItem->execute($sku, [$sourceCode]);
         if (!count($result)) {
-            throw new NoSuchEntityException(__('Source item for %sku and %sourceCode does not exist', ['sku' => $sku, 'sourceCode' => $sourceCode]));
+            throw new NoSuchEntityException(
+                __(
+                    'Source item for %sku and %sourceCode does not exist',
+                    [
+                        'sku' => $sku,
+                        'sourceCode' => $sourceCode
+                    ]
+                )
+            );
         }
 
         return array_shift($result);

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -76,6 +76,7 @@ class AlgorithmSelectionButton implements ButtonProviderInterface
             'class_name' => Container::SPLIT_BUTTON,
             'options' => $this->getAlgorithmsListOptions(),
             'sort_order' => 10,
+            'aclResource' => 'Magento_InventoryApi::ship_source_selection',
         ];
     }
 

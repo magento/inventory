@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -18,14 +18,12 @@
             <group value="msi"/>
             <group value="multi_mode"/>
         </annotations>
-
         <before>
             <createData entity="SimpleSubCategory" stepKey="simpleCategory"/>
             <!--Add store code to url.-->
             <magentoCLI
                 command="config:set {{StorefrontEnableAddStoreCodeToUrls.path}} {{StorefrontEnableAddStoreCodeToUrls.value}}"
                 stepKey="addStoreCodeToUrlEnable"/>
-
             <!--Create additional source and stock.-->
             <createData entity="BasicMsiStock1" stepKey="additionalStock"/>
             <createData entity="FullSource1" stepKey="createSource"/>
@@ -37,7 +35,6 @@
             <createData entity="SimpleProduct" stepKey="simpleProduct">
                 <requiredEntity createDataKey="simpleCategory"/>
             </createData>
-
             <!--Create new website,store and store view-->
             <actionGroup ref="AdminCreateWebsiteActionGroup" stepKey="createWebsite" >
                 <argument name="newWebsiteName" value="{{customWebsite.name}}"/>
@@ -52,16 +49,21 @@
                 <argument name="StoreGroup" value="customStoreGroup"/>
                 <argument name="customStore" value="customStore"/>
             </actionGroup>
-
             <!--Assign Custom Stock to Additional Website.-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignStockToAdditionalWebsite">
                 <argument name="stockName" value="{{BasicMsiStock1.name}}"/>
                 <argument name="websiteName" value="{{customWebsite.name}}"/>
             </actionGroup>
-            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache" />
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </before>
         <after>
+            <!--Delete product created via API-->
+            <deleteData createDataKey="simpleProduct" stepKey="deleteSimpleProduct"/>
             <!--Delete category-->
             <deleteData createDataKey="simpleCategory" stepKey="deleteCategory"/>
             <!--Assign Default Stock to Default Website.-->
@@ -76,12 +78,16 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedSource">
                 <argument name="sourceCode" value="$$createSource.source[source_code]$$"/>
             </actionGroup>
+            <!-- child test is generating same customer email, so we need to make sure that customer is deleted -->
+            <actionGroup ref="AdminDeleteAllCustomerActionGroup" stepKey="deleteAllCustomers"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
             <magentoCLI
                 command="config:set {{StorefrontDisableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}"
                 stepKey="addStoreCodeToUrlDisable" />
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
-
         <!-- Assign product to custom website -->
         <amOnPage url="{{AdminProductEditPage.url($$simpleProduct.id$$)}}" stepKey="openProductEditPage"/>
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTestSourceToCreatedProduct" >
@@ -91,18 +97,15 @@
         <actionGroup ref="AddWebsiteToProductActionGroup" stepKey="assignProductToAdditionalWebsite" >
             <argument name="website" value="{{customWebsite.name}}"/>
         </actionGroup>
-
         <!-- Create a user account -->
         <actionGroup ref="RegisterCustomOnStorefrontActionGroup" stepKey="createAnAccount">
             <argument name="Customer" value="MsiCustomer1"/>
             <argument name="storeCode" value="customStore.code"/>
         </actionGroup>
-
         <actionGroup ref="StorefrontOpenProductPageUsingStoreCodeInUrlActionGroup" stepKey="openProductPageUsingStoreCodeInUrl">
             <argument name="product" value="$$simpleProduct$$"/>
             <argument name="storeView" value="customStore"/>
         </actionGroup>
-
         <!--Place order -->
         <fillField selector="{{StorefrontProductPageSection.qtyInput}}" userInput="5" stepKey="fillCorrectQuantity"/>
         <click selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="addProductToCart"/>
@@ -112,13 +115,12 @@
         <actionGroup ref="CustomerCheckoutFillNewShippingAddressActionGroup" stepKey="fillShippingAddress">
             <argument name="address" value="US_Address_TX"/>
         </actionGroup>
-        <click selector="{{CheckoutShippingGuestInfoSection.next}}" stepKey="clickNext"/>
-        <waitForPageLoad stepKey="waitForShipmentPageLoad"/>
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="placeOrder"/>
-        <waitForPageLoad stepKey="waitUntilOrderPlaced"/>
+        <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="clickNext"/>
+        <comment userInput="BIC workaround" stepKey="waitForShipmentPageLoad"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="placeOrder"/>
+        <comment userInput="BIC workaround" stepKey="waitUntilOrderPlaced"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="grabOrderNumber"/>
         <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessage"/>
-
         <!--Verify that reservation '-5' items of 'Configurable product 1-red' on Default stock is created correctly -->
         <amOnPage url="{{AdminProductIndexPage.url}}"
                   stepKey="navigateToProductIndexPageForCheckProductQtyAfterReorder"/>

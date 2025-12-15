@@ -1,21 +1,31 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Model\Cache;
 
+use Magento\Framework\ObjectManager\ResetAfterRequestInterface;
+
 /**
  * Cache storage for ID/SKU pairs
  */
-class ProductSkusByIdsStorage
+class ProductSkusByIdsStorage implements ResetAfterRequestInterface
 {
     /**
      * @var array
      */
     private $storage = [];
+
+    /**
+     * @inheritDoc
+     */
+    public function _resetState(): void
+    {
+        $this->clean();
+    }
 
     /**
      * Get SKU by ID
@@ -37,6 +47,16 @@ class ProductSkusByIdsStorage
     public function set(int $id, string $sku): void
     {
         $this->storage[$id] = $sku;
+    }
+
+    /**
+     * Invalidate cache for provided id
+     *
+     * @param int $id
+     */
+    public function delete(int $id): void
+    {
+        unset($this->storage[$id]);
     }
 
     /**

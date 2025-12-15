@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -39,7 +39,6 @@ $dataObjectHelper->populateWithArray(
         SourceInterface::PHONE => 'source-phone',
         SourceInterface::FAX => 'source-fax',
         SourceInterface::USE_DEFAULT_CARRIER_CONFIG => 0,
-        SourceInterface::USE_DEFAULT_CARRIER_CONFIG => false,
         SourceInterface::CARRIER_LINKS => [],
     ],
     SourceInterface::class

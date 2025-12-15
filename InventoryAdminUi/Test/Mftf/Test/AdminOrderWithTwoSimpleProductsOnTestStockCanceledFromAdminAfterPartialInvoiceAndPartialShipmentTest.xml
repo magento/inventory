@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -29,8 +29,12 @@
                 <requiredEntity createDataKey="additionalStock"/>
                 <requiredEntity createDataKey="createSource"/>
             </createData>
-            <magentoCLI stepKey="reindex" command="indexer:reindex"/>
-            <magentoCLI stepKey="flushCache" command="cache:flush"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
             <createData entity="SimpleProduct" stepKey="simpleProduct">
                 <requiredEntity createDataKey="simpleCategory"/>
             </createData>
@@ -47,11 +51,16 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedCustomSource">
                 <argument name="sourceCode" value="$$createSource.source[source_code]$$"/>
             </actionGroup>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
+            <deleteData createDataKey="simpleProduct2" stepKey="deleteProduct2"/>
             <deleteData createDataKey="simpleCategory" stepKey="deleteCategory"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteCustomStock"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!-- assign first simple product to custom source -->
@@ -79,7 +88,7 @@
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct2" after="setCustomSourceQuantity2"/>
 
         <!-- Create order -->
-        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="newOrder">
+        <actionGroup ref="AdminNavigateToNewOrderPageExistingCustomerActionGroup" stepKey="newOrder">
             <argument name="customer" value="$$customer$$"/>
         </actionGroup>
         <actionGroup ref="AddSimpleProductWithQtyToOrderActionGroup" stepKey="addFirstProductToOrder" >
@@ -92,9 +101,11 @@
         </actionGroup>
         <actionGroup ref="OrderSelectFlatRateShippingActionGroup" stepKey="selectFlatRate"/>
         <actionGroup ref="AdminSubmitOrderActionGroup" stepKey="submitOrder"/>
-        <grabTextFrom selector="|Order # (\d+)|" stepKey="getOrderId"/>
+        <comment userInput="BIC workaround" stepKey="getOrderId"/>
+        <grabTextFrom selector="|Order # (\d+)|" stepKey="orderNumber"/>
+        <grabFromCurrentUrl regex="~/order_id/(\d+)/~" stepKey="orderId"/>
         <assertNotEmpty stepKey="assertOrderIdIsNotEmpty">
-			<actualResult type="const">$getOrderId</actualResult>
+			<actualResult type="const">$orderNumber</actualResult>
         </assertNotEmpty>
 
         <!-- Invoice the order -->

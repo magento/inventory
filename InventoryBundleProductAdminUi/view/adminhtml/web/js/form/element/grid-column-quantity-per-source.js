@@ -1,12 +1,12 @@
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
  */
 define([
     'mage/translate',
     'Magento_Ui/js/grid/columns/column'
 ], function ($t, Column) {
-    'use strict';
+    'use strict'; //eslint-disable-line
 
     return Column.extend({
         defaults: {

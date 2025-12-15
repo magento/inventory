@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -32,10 +32,8 @@ class SourceItemsDelete implements SourceItemsDeleteInterface
      * @param DeleteMultiple $deleteMultiple
      * @param LoggerInterface $logger
      */
-    public function __construct(
-        DeleteMultiple $deleteMultiple,
-        LoggerInterface $logger
-    ) {
+    public function __construct(DeleteMultiple $deleteMultiple, LoggerInterface $logger)
+    {
         $this->deleteMultiple = $deleteMultiple;
         $this->logger = $logger;
     }

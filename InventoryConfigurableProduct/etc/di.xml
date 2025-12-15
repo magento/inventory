@@ -1,12 +1,13 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 -->
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magento\ConfigurableProduct\Model\ResourceModel\Product\Indexer\Price\OptionsIndexerInterface" type="Magento\InventoryConfigurableProduct\Pricing\Price\Indexer\OptionsIndexer" />
     <type name="Magento\Catalog\Model\ResourceModel\Product\CompositeBaseSelectProcessor">
         <arguments>
             <argument name="baseSelectProcessors" xsi:type="array">
@@ -23,12 +24,37 @@
             <argument name="baseSelectProcessor" xsi:type="object">Magento\InventoryConfigurableProduct\Pricing\Price\LowestPriceOptionsProvider\StockStatusBaseSelectProcessor</argument>
         </arguments>
     </type>
-    <type name="Magento\CatalogInventory\Observer\ParentItemProcessorInterface">
-        <plugin name="adapt_parent_stock_processor" type="Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\Observer\ParentItemProcessor\AdaptParentItemProcessorPlugin"/>
-    </type>
-    <type name="Magento\ConfigurableProduct\Model\ResourceModel\Product\Indexer\Price\Configurable">
+    <type name="Magento\ConfigurableProduct\Model\ResourceModel\Product\Indexer\Price\OptionsSelectBuilder">
         <arguments>
-            <argument name="baseSelectProcessor" xsi:type="object">Magento\InventoryConfigurableProduct\Pricing\Price\Indexer\BaseStockStatusSelectProcessor</argument>
+            <argument name="selectProcessor" xsi:type="object">Magento\InventoryConfigurableProduct\Pricing\Price\Indexer\BaseStockStatusSelectProcessor</argument>
+        </arguments>
+    </type>
+    <type name="Magento\CatalogInventory\Api\StockRegistryInterface">
+        <plugin name="inventory_catalog_add_qty_to_legacy_stock_configurable"
+                type="Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\Api\StockRegistry\SetQtyToLegacyStock" sortOrder="100"/>
+    </type>
+    <type name="Magento\CatalogInventory\Model\ResourceModel\Stock\Item">
+        <plugin name="after_update_stock_item_for_configurable_product"
+                type="Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\UpdateLegacyStockStatusForConfigurableProduct"
+                sortOrder="100"/>
+        <plugin name="updateStockChangedAuto" disabled="true"/>
+    </type>
+    <type name="Magento\InventoryCatalogApi\Model\CompositeProductStockStatusProcessorPool">
+        <arguments>
+            <argument name="compositeProductStockStatusProcessors" xsi:type="array">
+                <item name="configurable" xsi:type="object">Magento\InventoryConfigurableProduct\Model\StockStatusProcessor</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\InventorySalesApi\Model\GetIsQtySalableInterface">
+        <plugin name="inventory_configurable_product_is_any_child_salable"
+                type="Magento\InventoryConfigurableProduct\Plugin\InventorySales\Model\IsProductSalableCondition\GetIsQtySalableForConfigurableProduct"/>
+    </type>
+    <type name="Magento\CatalogInventory\Model\ResourceModel\Indexer\Stock\GetStatusExpression">
+        <arguments>
+            <argument name="statusExpressions" xsi:type="array">
+                <item name="configurable" xsi:type="object">Magento\CatalogInventory\Model\ResourceModel\Indexer\Stock\StatusExpression\DefaultExpression</item>
+            </argument>
         </arguments>
     </type>
 </config>

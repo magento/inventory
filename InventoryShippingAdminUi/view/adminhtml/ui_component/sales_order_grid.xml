@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 -->
 <listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
@@ -12,6 +12,7 @@
                 component="Magento_InventoryShippingAdminUi/js/order/grid/cell/allocated-sources">
             <settings>
                 <filter>false</filter>
+                <sortable>false</sortable>
                 <label translate="true">Allocated sources</label>
             </settings>
         </column>

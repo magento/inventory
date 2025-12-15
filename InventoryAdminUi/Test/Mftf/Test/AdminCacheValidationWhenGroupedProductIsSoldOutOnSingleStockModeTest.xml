@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 -->
 
@@ -41,6 +41,7 @@
             <deleteData createDataKey="simpleProduct" stepKey="deleteSimpleProduct"/>
             <deleteData createDataKey="virtualProduct" stepKey="deleteVirtualProduct"/>
             <deleteData createDataKey="groupedProduct" stepKey="deleteGroupedProduct"/>
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
         </after>
 
@@ -76,13 +77,13 @@
         <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCreatedGroupedProduct"/>
 
         <!--Verify Grouped product presents on Category page on frontend-->
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToCategoryPageOnStorefrontToSeeTheProduct"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPageOnStorefrontToSeeTheProduct"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoadCategoryPage"/>
         <see userInput="{{GroupedProduct.name}}" stepKey="assertProductPresentOnCategoryPageOnStorefront"/>
 
         <!--Create Order with Grouped product from Admin-->
         <comment userInput="Create order with grouped product from admin area." stepKey="createOrderWithGroupedProductComment"/>
-        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer">
+        <actionGroup ref="AdminNavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer">
             <argument name="customer" value="$$customer$$"/>
         </actionGroup>
         <conditionalClick selector="#store_1" dependentSelector="#order-store-selector" visible="true" stepKey="clickOnDefaultStoreViewIfPresent"/>
@@ -108,11 +109,12 @@
         <seeElement selector="{{AdminOrderDetailsMessagesSection.successMessage}}" stepKey="seeSuccessMessage"/>
         <see selector="{{AdminOrderDetailsMessagesSection.successMessage}}" userInput="You created the order." stepKey="seeSuccessMessageForShipping"/>
         <grabTextFrom selector="|Order # (\d+)|" stepKey="orderNumber"/>
+        <grabFromCurrentUrl regex="~/order_id/(\d+)/~" stepKey="grabOrderId"/>
 
         <!--Admin create full Shipment -->
         <comment userInput="Admin - Ship order" stepKey="AdminShipOrder"/>
-        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
-            <argument name="orderId" value="{$orderNumber}"/>
+        <actionGroup ref="AdminOpenOrderByEntityIdActionGroup" stepKey="openOrder">
+            <argument name="entityId" value="{$grabOrderId}"/>
         </actionGroup>
         <click selector="{{AdminOrderDetailsMainActionsSection.ship}}" stepKey="clickShip"/>
         <waitForLoadingMaskToDisappear stepKey="waitForShipLoadingMask"/>
@@ -129,7 +131,7 @@
         <see selector="{{AdminOrderDetailsMessagesSection.successMessage}}" userInput="The invoice has been created." stepKey="checkSuccessMessage"/>
 
         <!--Verify Grouped product is not visible on Category page on frontend-->
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToCategoryPageOnStorefrontToNotSeeTheProduct"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPageOnStorefrontToNotSeeTheProduct"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoadCategoryPageWhenProductIsSold"/>
         <dontSee userInput="{{GroupedProduct.name}}" stepKey="assertProductNotPresentOnCategoryPageOnStorefront"/>
     </test>

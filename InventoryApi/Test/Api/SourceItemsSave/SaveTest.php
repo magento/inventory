@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -18,9 +18,9 @@ class SaveTest extends WebapiAbstract
     /**#@+
      * Service constants
      */
-    const RESOURCE_PATH = '/V1/inventory/source-items';
-    const SERVICE_NAME_SAVE = 'inventoryApiSourceItemsSaveV1';
-    const SERVICE_NAME_DELETE = 'inventoryApiSourceItemsDeleteV1';
+    public const RESOURCE_PATH = '/V1/inventory/source-items';
+    public const SERVICE_NAME_SAVE = 'inventoryApiSourceItemsSaveV1';
+    public const SERVICE_NAME_DELETE = 'inventoryApiSourceItemsDeleteV1';
     /**#@-*/
 
     /**

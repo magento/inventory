@@ -1,13 +1,12 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
 namespace Magento\InventoryConfigurableProductIndexer\Indexer;
 
-use Exception;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
@@ -15,37 +14,13 @@ use Magento\Framework\EntityManager\MetadataPool;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Indexer\IndexStructure;
 use Magento\InventoryIndexer\Indexer\InventoryIndexer;
-use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
+use Magento\InventoryIndexer\Indexer\SiblingSelectBuilderInterface;
+use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexAlias;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameResolverInterface;
-use Magento\InventoryIndexer\Indexer\SelectBuilderInterface;
 
-class SelectBuilder implements SelectBuilderInterface
+class SelectBuilder implements SiblingSelectBuilderInterface
 {
-    /**
-     * @var ResourceConnection
-     */
-    private $resourceConnection;
-
-    /**
-     * @var IndexNameBuilder
-     */
-    private $indexNameBuilder;
-
-    /**
-     * @var IndexNameResolverInterface
-     */
-    private $indexNameResolver;
-
-    /**
-     * @var MetadataPool
-     */
-    private $metadataPool;
-    /**
-     * @var DefaultStockProviderInterface
-     */
-    private $defaultStockProvider;
-
     /**
      * @param ResourceConnection $resourceConnection
      * @param IndexNameBuilder $indexNameBuilder
@@ -54,38 +29,25 @@ class SelectBuilder implements SelectBuilderInterface
      * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
-        ResourceConnection $resourceConnection,
-        IndexNameBuilder $indexNameBuilder,
-        IndexNameResolverInterface $indexNameResolver,
-        MetadataPool $metadataPool,
-        DefaultStockProviderInterface $defaultStockProvider
+        private readonly ResourceConnection $resourceConnection,
+        private readonly IndexNameBuilder $indexNameBuilder,
+        private readonly IndexNameResolverInterface $indexNameResolver,
+        private readonly MetadataPool $metadataPool,
+        private readonly DefaultStockProviderInterface $defaultStockProvider
     ) {
-        $this->resourceConnection = $resourceConnection;
-        $this->indexNameBuilder = $indexNameBuilder;
-        $this->indexNameResolver = $indexNameResolver;
-        $this->metadataPool = $metadataPool;
-        $this->defaultStockProvider = $defaultStockProvider;
     }
 
     /**
-     * Prepare select.
-     *
-     * @param int $stockId
-     * @return Select
-     * @throws Exception
+     * @inheritdoc
      */
-    public function execute(int $stockId): Select
+    public function getSelect(int $stockId, array $skuList = [], IndexAlias $indexAlias = IndexAlias::MAIN): Select
     {
         $connection = $this->resourceConnection->getConnection();
-
-        $indexName = $this->indexNameBuilder
-            ->setIndexId(InventoryIndexer::INDEXER_ID)
-            ->addDimension('stock_', (string)$stockId)
-            ->setAlias(Alias::ALIAS_MAIN)
+        $indexName = $this->indexNameBuilder->setIndexId(InventoryIndexer::INDEXER_ID)
+            ->addDimension('stock_', (string) $stockId)
+            ->setAlias($indexAlias->value)
             ->build();
-
         $indexTableName = $this->indexNameResolver->resolveName($indexName);
-
         $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
         $linkField = $metadata->getLinkField();
 
@@ -116,6 +78,10 @@ class SelectBuilder implements SelectBuilderInterface
                 []
             )
             ->group(['parent_product_entity.sku']);
+
+        if ($skuList) {
+            $select->where('parent_product_entity.sku IN (?)', $skuList);
+        }
 
         return $select;
     }

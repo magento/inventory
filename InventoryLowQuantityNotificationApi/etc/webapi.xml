@@ -1,7 +1,7 @@
 <!--
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 -->
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -9,19 +9,19 @@
     <route url="/V1/inventory/low-quantity-notification/:sourceCode/:sku" method="GET">
         <service class="Magento\InventoryLowQuantityNotificationApi\Api\GetSourceItemConfigurationInterface" method="execute"/>
         <resources>
-            <resource ref="Magento_InventoryApi::source"/>
+            <resource ref="Magento_InventoryLowQuantityNotificationApi::low_quantity_notification"/>
         </resources>
     </route>
     <route url="/V1/inventory/low-quantity-notification" method="POST">
         <service class="Magento\InventoryLowQuantityNotificationApi\Api\SourceItemConfigurationsSaveInterface" method="execute"/>
         <resources>
-            <resource ref="Magento_InventoryApi::source"/>
+            <resource ref="Magento_InventoryLowQuantityNotificationApi::stock_create_low_quantity_notification"/>
         </resources>
     </route>
     <route url="/V1/inventory/low-quantity-notifications-delete" method="POST">
         <service class="Magento\InventoryLowQuantityNotificationApi\Api\DeleteSourceItemsConfigurationInterface" method="execute"/>
         <resources>
-            <resource ref="Magento_InventoryApi::source"/>
+            <resource ref="Magento_InventoryLowQuantityNotificationApi::stock_delete_low_quantity_notification"/>
         </resources>
     </route>
 </routes>

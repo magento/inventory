@@ -1,6 +1,6 @@
-/*
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+/**
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 
 define(
@@ -9,7 +9,7 @@ define(
         'prototype'
     ],
     function (jQuery) {
-        'use strict';
+        'use strict'; //eslint-disable-line
 
         return function () {
             var STORE_PICKUP_METHOD = 'instore_pickup',
@@ -20,7 +20,6 @@ define(
                 IN_STORE_PICKUP_CHECKBOX_SELECTOR = '#s_method_instore_pickup';
 
             /**
-             * Disable shipping address form elements;
              * Display sources dropdown field;
              * And vice-versa
              *
@@ -28,14 +27,10 @@ define(
              */
             function setStorePickupMethod(isStorePickup) {
                 var sourcesInput = jQuery(SOURCES_FIELD_SELECTOR),
-                    theSameAsBillingCheckBox = jQuery(SAME_AS_BILLING_SELECTOR),
-                    customerShippingAddressId = jQuery(CUSTOMER_SHIPPING_ADDRESS_ID_SELECTOR),
-                    customerShippingAddressSaveInAddressBook = jQuery(CUSTOMER_ADDRESS_SAVE_IN_ADDRESS_BOOK_SELECTOR);
+                    shippingAddressSaveInAddressBook = jQuery(CUSTOMER_ADDRESS_SAVE_IN_ADDRESS_BOOK_SELECTOR);
 
                 if (isStorePickup) {
-                    theSameAsBillingCheckBox.prop('disabled', true);
-                    customerShippingAddressId.prop('disabled', true);
-                    customerShippingAddressSaveInAddressBook.prop('disabled', true);
+                    shippingAddressSaveInAddressBook.prop('checked', false);
                     sourcesInput.show();
 
                     return;
@@ -45,6 +40,33 @@ define(
             }
 
             /**
+             * Verify is store pickup delivery method is checked.
+             */
+            function isStorePickupSelected() {
+                var storePickupCheckbox = jQuery(IN_STORE_PICKUP_CHECKBOX_SELECTOR);
+
+                return storePickupCheckbox.length && storePickupCheckbox.prop('checked');
+            }
+
+            /**
+             * Always disable unwanted shipping address fields in case store pickup is selected.
+             */
+            window.AdminOrder.prototype.disableShippingAddress =
+                window.AdminOrder.prototype.disableShippingAddress.wrap(function (proceed, flag) {
+                    var shippingAddressId = jQuery(CUSTOMER_SHIPPING_ADDRESS_ID_SELECTOR),
+                        theSameAsBillingCheckBox = jQuery(SAME_AS_BILLING_SELECTOR),
+                        shippingAddressSaveInAddressBook = jQuery(CUSTOMER_ADDRESS_SAVE_IN_ADDRESS_BOOK_SELECTOR);
+
+                    proceed(flag);
+
+                    if (isStorePickupSelected()) {
+                        shippingAddressId.prop('disabled', true);
+                        theSameAsBillingCheckBox.prop('disabled', true);
+                        shippingAddressSaveInAddressBook.prop('disabled', true);
+                    }
+                });
+
+            /**
              * Set shipping method override
              *
              * @param {String} method
@@ -52,9 +74,11 @@ define(
             window.AdminOrder.prototype.setShippingMethod = function (method) {
                 var data = {},
                     areas = [
+                        'items',
                         'shipping_method',
                         'totals',
-                        'billing_method'
+                        'billing_method',
+                        'shipping_address'
                     ];
 
                 data['order[shipping_method]'] = method;
@@ -64,7 +88,6 @@ define(
                     data['order[shipping_method]'] = method;
                     data['shipping_as_billing'] = 0;
                     data['save_in_address_book'] = 0;
-                    areas.push('shipping_address');
                     this.shippingAsBilling = 0;
                     this.saveInAddressBook = 0;
                 }
@@ -84,9 +107,10 @@ define(
                 var storePickupCheckbox = jQuery(IN_STORE_PICKUP_CHECKBOX_SELECTOR);
 
                 if (!this.isOnlyVirtualProduct) {
+                    /* eslint-disable no-undef */
                     $(this.getAreaId('shipping_method')).update(this.shippingTemplate);
 
-                    if (storePickupCheckbox.length && storePickupCheckbox.prop('checked')) {
+                    if (isStorePickupSelected()) {
                         window.order.setShippingMethod(storePickupCheckbox.val());
                     }
                 }

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -34,7 +34,7 @@ class AddStockDataToCollection
      */
     public function __construct(
         StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
-        DefaultStockProviderInterface $defaultStockProvider = null
+        ?DefaultStockProviderInterface $defaultStockProvider = null
     ) {
         $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
         $this->defaultStockProvider = $defaultStockProvider ?: ObjectManager::getInstance()
@@ -55,7 +55,7 @@ class AddStockDataToCollection
             $isSalableColumnName = 'stock_status';
             $resource = $collection->getResource();
             $collection->getSelect()
-                ->join(
+                ->{$isFilterInStock ? 'join' : 'joinLeft'}(
                     ['stock_status_index' => $resource->getTable('cataloginventory_stock_status')],
                     sprintf('%s.entity_id = stock_status_index.product_id', Collection::MAIN_TABLE_ALIAS),
                     [IndexStructure::IS_SALABLE => $isSalableColumnName]

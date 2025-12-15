@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
  */
 
 namespace Magento\InventoryAdminUi\Test\Mftf\Helper;
@@ -29,6 +29,7 @@ class AssertSourceCodeIsNotEditable extends Helper
         }
         $selector = "(//span[@class='data-grid-cell-content'][text()='Code'])";
         $selector .= "/../../../..//div[@class='data-grid-cell-content']";
+        //phpstan:ignore
         $element = $webDriver->webDriver->findElement(\Facebook\WebDriver\WebDriverBy::xpath($selector));
         $ableToEditSourceCode = true;
         try {

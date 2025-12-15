@@ -1,40 +1,46 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
 namespace Magento\InventoryImportExport\Plugin\Import;
 
-use Magento\CatalogImportExport\Model\StockItemImporterInterface;
-use Magento\InventoryApi\Api\Data\SourceItemInterfaceFactory;
+use Magento\CatalogImportExport\Model\Import\Product\SkuStorage;
+use Magento\CatalogImportExport\Model\StockItemProcessorInterface;
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Validation\ValidationException;
+use Magento\Inventory\Model\ResourceModel\SourceItem as SourceItemResourceModel;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
+use Magento\InventoryApi\Api\Data\SourceItemInterfaceFactory;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
+use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
+use Magento\InventoryIndexer\Indexer\CompositeProductsIndexer;
+use Magento\InventoryIndexer\Indexer\SourceItem\SourceItemIndexer;
 
+/**
+ * Assigning products to default source
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class SourceItemImporter
 {
     /**
-     * Source Items Save Interface for saving multiple source items
+     * These inventory configurations affects all sources
      *
-     * @var SourceItemsSaveInterface $sourceItemsSave
+     * @var string[]
      */
-    private $sourceItemsSave;
-
-    /**
-     * Source Item Interface Factory
-     *
-     * @var SourceItemInterfaceFactory $sourceItemFactory
-     */
-    private $sourceItemFactory;
-
-    /**
-     * Default Source Provider
-     *
-     * @var DefaultSourceProviderInterface $defaultSource
-     */
-    private $defaultSource;
+    private const STOCK_CONFIGURATION_FIELDS = [
+        'min_qty' => null,
+        'use_config_min_qty' => null,
+        'backorders' => null,
+        'use_config_backorders' => null,
+        'out_of_stock_qty' => null, // alias for min_qty
+        'allow_backorders' => null // alias for backorders
+    ];
 
     /**
      * StockItemImporter constructor
@@ -42,51 +48,136 @@ class SourceItemImporter
      * @param SourceItemsSaveInterface $sourceItemsSave
      * @param SourceItemInterfaceFactory $sourceItemFactory
      * @param DefaultSourceProviderInterface $defaultSourceProvider
+     * @param IsSingleSourceModeInterface $isSingleSourceMode
+     * @param SkuStorage $skuStorage
+     * @param SourceItemResourceModel $sourceItemResourceModel
+     * @param SourceItemIndexer $sourceItemIndexer
+     * @param CompositeProductsIndexer $compositeProductsIndexer
      */
     public function __construct(
-        SourceItemsSaveInterface $sourceItemsSave,
-        SourceItemInterfaceFactory $sourceItemFactory,
-        DefaultSourceProviderInterface $defaultSourceProvider
+        private readonly SourceItemsSaveInterface $sourceItemsSave,
+        private readonly SourceItemInterfaceFactory $sourceItemFactory,
+        private readonly DefaultSourceProviderInterface $defaultSourceProvider,
+        private readonly IsSingleSourceModeInterface $isSingleSourceMode,
+        private readonly SkuStorage $skuStorage,
+        private readonly SourceItemResourceModel $sourceItemResourceModel,
+        private readonly SourceItemIndexer $sourceItemIndexer,
+        private readonly CompositeProductsIndexer $compositeProductsIndexer,
     ) {
-        $this->sourceItemsSave = $sourceItemsSave;
-        $this->sourceItemFactory = $sourceItemFactory;
-        $this->defaultSource = $defaultSourceProvider;
     }
 
     /**
      * After plugin Import to import Stock Data to Source Items
      *
-     * @param StockItemImporterInterface $subject
-     * @param null $result
+     * @param StockItemProcessorInterface $subject
+     * @param mixed $result
      * @param array $stockData
-     * @throws \Magento\Framework\Exception\CouldNotSaveException
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Validation\ValidationException
+     * @param array $importedData
      * @return void
-     * @see StockItemImporterInterface::import()
+     * @throws CouldNotSaveException
+     * @throws InputException
+     * @throws ValidationException
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterImport(
-        StockItemImporterInterface $subject,
-        $result,
-        array $stockData
-    ) {
+    public function afterProcess(
+        StockItemProcessorInterface $subject,
+        mixed $result,
+        array $stockData,
+        array $importedData
+    ): void {
         $sourceItems = [];
+        $skus = [];
+
+        $isSingleSourceMode = $this->isSingleSourceMode->execute();
+        // No need to load existing source items in single source mode as we know the only source is 'default'
+        $existingSourceItemsBySKU = $isSingleSourceMode ? [] : $this->getSourceItems(array_keys($stockData));
+        $defaultSourceCode = $this->defaultSourceProvider->getCode();
+        $sourceItemIds = [];
         foreach ($stockData as $sku => $stockDatum) {
-            $inStock = (isset($stockDatum['is_in_stock'])) ? intval($stockDatum['is_in_stock']) : 0;
-            $qty = (isset($stockDatum['qty'])) ? $stockDatum['qty'] : 0;
-            /** @var SourceItemInterface $sourceItem */
-            $sourceItem = $this->sourceItemFactory->create();
-            $sourceItem->setSku((string)$sku);
-            $sourceItem->setSourceCode($this->defaultSource->getCode());
-            $sourceItem->setQuantity((float)$qty);
-            $sourceItem->setStatus($inStock);
-            $sourceItems[] = $sourceItem;
+            $sku = (string)$sku;
+            $skus[] = $sku;
+            $sources = $existingSourceItemsBySKU[$sku] ?? [];
+            $isQtyExplicitlySet = (bool) ($importedData[$sku]['qty'] ?? false);
+            $hasDefaultSource = isset($sources[$defaultSourceCode]);
+
+            if ($this->shouldUpdateDefaultSourceItem($sku, $isQtyExplicitlySet, $hasDefaultSource, $isSingleSourceMode)
+            ) {
+                $sourceItem = $this->sourceItemFactory->create();
+                $sourceItem->setSku($sku);
+                $sourceItem->setSourceCode($defaultSourceCode);
+                $sourceItem->setQuantity((float) ($stockDatum['qty'] ?? 0));
+                $sourceItem->setStatus((int) ($stockDatum['is_in_stock'] ?? 0));
+                $sourceItems[] = $sourceItem;
+            }
+
+            unset($sources[$defaultSourceCode]);
+            // Is there any other source (except the default source) assigned to the product
+            if (count($sources) > 0
+                && array_filter(
+                    array_intersect_key($importedData[$sku] ?? [], self::STOCK_CONFIGURATION_FIELDS),
+                    fn ($value) => $value !== null
+                )
+            ) {
+                array_push($sourceItemIds, ...array_values($sources));
+            }
         }
         if (count($sourceItems) > 0) {
-            /** SourceItemInterface[] $sourceItems */
             $this->sourceItemsSave->execute($sourceItems);
         }
+        // Reindex non default source items if global stock configuration such as backorders have changed
+        if (!empty($sourceItemIds)) {
+            $this->sourceItemIndexer->executeList($sourceItemIds);
+        }
+
+        // Reindex composite products present in data.
+        // As they don't have their own source items, no reindex will be triggered automatically.
+        $this->compositeProductsIndexer->reindexList($skus);
+    }
+
+    /**
+     * Checks whether default source item should be updated for the given SKU
+     *
+     * Prevent products to be assigned to `default` source unless
+     *
+     * - The product is new
+     * - The qty is explicitly set in the import file
+     * - Only one source exists (single source mode)
+     * - The product is already assigned to the default source
+     *
+     * @param string $sku
+     * @param bool $hasQty
+     * @param bool $hasDefaultSource
+     * @param bool $isSingleSourceMode
+     * @return bool
+     */
+    private function shouldUpdateDefaultSourceItem(
+        string $sku,
+        bool $hasQty,
+        bool $hasDefaultSource,
+        bool $isSingleSourceMode
+    ): bool {
+        return !$this->skuStorage->has($sku) || $hasQty || $isSingleSourceMode || $hasDefaultSource;
+    }
+
+    /**
+     * Fetch product's source items
+     *
+     * @param array $skus
+     * @return array
+     */
+    private function getSourceItems(array $skus): array
+    {
+        $fields = [
+            SourceItemResourceModel::ID_FIELD_NAME,
+            SourceItemInterface::SOURCE_CODE,
+            SourceItemInterface::SKU
+        ];
+        $result = [];
+        foreach ($this->sourceItemResourceModel->findAllBySkus($skus, $fields) as $item) {
+            $result[$item[SourceItemInterface::SKU]][$item[SourceItemInterface::SOURCE_CODE]] =
+                $item[SourceItemResourceModel::ID_FIELD_NAME];
+        }
+        return $result;
     }
 }

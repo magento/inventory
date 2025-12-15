@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -11,6 +11,7 @@ use Magento\CatalogInventory\Api\StockStatusRepositoryInterface;
 use Magento\Framework\Registry;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Framework\Indexer\IndexerRegistry;
 
 $objectManager = Bootstrap::getObjectManager();
 /** @var ProductRepositoryInterface $productRepository */
@@ -46,6 +47,10 @@ foreach ($skus as $sku) {
         $stockStatusRepository->delete($stockStatus);
     }
 }
+
+\Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get(IndexerRegistry::class)
+    ->get(Magento\CatalogInventory\Model\Indexer\Stock\Processor::INDEXER_ID)
+    ->reindexAll();
 
 $registry->unregister('isSecureArea');
 $registry->register('isSecureArea', $currentArea);

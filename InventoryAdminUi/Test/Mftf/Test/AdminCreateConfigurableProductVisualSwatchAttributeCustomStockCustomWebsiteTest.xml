@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
+ */
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -52,17 +52,13 @@
                 <argument name="stockName" value="$$additionalStockAdditionalWebsite.stock[name]$$"/>
                 <argument name="websiteName" value="{{customWebsite.name}}"/>
             </actionGroup>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </before>
         <after>
-            <!--Delete configurable product.-->
-            <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToAdminProductGridToDeleteProducts"/>
-            <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findConfigurableProduct">
-                <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
-                <argument name="value" value="{{ConfigurableMsiProduct.sku}}"/>
-            </actionGroup>
-            <actionGroup ref="DeleteProductActionGroup" stepKey="deleteConfigurableProduct">
-                <argument name="productName" value="ConfigurableMsiProduct.name"/>
-            </actionGroup>
+            <!-- Delete configurable product and its variations -->
+            <helper class="Magento\Catalog\Test\Mftf\Helper\ProductApiHelper" method="deleteAllProductsApi" stepKey="deleteAllProductsViaApi"/>
             <!--Delete created website.-->
             <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite">
                 <argument name="websiteName" value="{{customWebsite.name}}"/>
@@ -81,6 +77,9 @@
             <magentoCLI command="config:set {{StorefrontDisableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlDisable"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="additionalStockAdditionalWebsite" stepKey="deleteAdditionalWebsiteStock"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
 
         <!--Start creating configurable product.-->
@@ -147,7 +146,7 @@
             <argument name="categoryName" value="$$category.name$$"/>
         </actionGroup>
         <!--Verify configurable product on storefront.-->
-        <amOnPage url="{{StorefrontHomePage.url}}/{{customStore.code}}/$$category.name$$.html" stepKey="navigateToCategoryPage"/>
+        <amOnPage url="{{StorefrontHomePage.url}}/{{customStore.code}}/$$category.custom_attributes[url_key]$$.html" stepKey="navigateToCategoryPage"/>
         <waitForPageLoad stepKey="waitForCategoryPageLoad"/>
         <see userInput="{{ConfigurableMsiProduct.name}}" stepKey="assertProductPresent"/>
         <see userInput="{{ConfigurableMsiProduct.price}}" stepKey="assertProductPricePresent"/>

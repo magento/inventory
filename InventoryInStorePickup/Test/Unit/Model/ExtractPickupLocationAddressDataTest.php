@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -52,12 +52,12 @@ class ExtractPickupLocationAddressDataTest extends TestCase
 
         $this->objectCopyServiceMock = $this->getMockBuilder(Copy::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getDataFromFieldset'])
+            ->onlyMethods(['getDataFromFieldset'])
             ->getMockForAbstractClass();
 
         $regionFactoryMock = $this->getMockBuilder(RegionFactory::class)
             ->disableOriginalConstructor()
-            ->setMethods(['create'])
+            ->onlyMethods(['create'])
             ->getMockForAbstractClass();
 
         $regionFactoryMock->expects($this->any())
@@ -104,7 +104,7 @@ class ExtractPickupLocationAddressDataTest extends TestCase
      *
      * @return array
      */
-    public function executeDataProvider(): array
+    public static function executeDataProvider(): array
     {
         return [
             [

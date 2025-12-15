@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2019 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -14,6 +14,8 @@ use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AreaInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchRequest\Area\Pipeline;
 use Magento\InventorySourceSelectionApi\Api\Data\AddressInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\AddressInterfaceFactory;
+use Psr\Log\LoggerInterface;
+use Magento\Framework\App\ObjectManager;
 
 /**
  * Provide associated list of Source codes and distance to them in KM.
@@ -48,21 +50,29 @@ class GetDistanceToSources
     private $searchTermPipeline;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @param GetLatsLngsFromAddressInterface $getLatsLngsFromAddress
      * @param GetOrderedDistanceToSources $getOrderedDistanceToSources
      * @param AddressInterfaceFactory $addressInterfaceFactory
      * @param Pipeline $searchTermPipeline
+     * @param LoggerInterface $logger
      */
     public function __construct(
         GetLatsLngsFromAddressInterface $getLatsLngsFromAddress,
         GetOrderedDistanceToSources $getOrderedDistanceToSources,
         AddressInterfaceFactory $addressInterfaceFactory,
-        Pipeline $searchTermPipeline
+        Pipeline $searchTermPipeline,
+        ?LoggerInterface $logger = null
     ) {
         $this->getLatsLngsFromAddress = $getLatsLngsFromAddress;
         $this->getOrderedDistanceToSources = $getOrderedDistanceToSources;
         $this->addressInterfaceFactory = $addressInterfaceFactory;
         $this->searchTermPipeline = $searchTermPipeline;
+        $this->logger = $logger ?: ObjectManager::getInstance()->get(LoggerInterface::class);
     }
 
     /**
@@ -108,6 +118,7 @@ class GetDistanceToSources
         try {
             $latsLngs = $this->getLatsLngsFromAddress->execute($sourceSelectionAddress);
         } catch (LocalizedException $exception) {
+            $this->logger->error($exception->getMessage());
             return [];
         }
 

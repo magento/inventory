@@ -1,0 +1,364 @@
+File "/var/www/html/app/code/Magento/InventoryInStorePickupFrontend/Test/Mftf/Test/GuestCustomerPlaceOrderWithPickupInStoreMethodWithGoogleAPIEnabledTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 EnableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 OnlineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	 OfflineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	 DisableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 AdminGoToStockGridFilterResultsByInputEditStock from module(s): magento/module-inventory-admin-ui
+	 AdminOnStockEditPageAssignSourceToStock from module(s): magento/module-inventory-admin-ui
+	 AdminAssertOrderWithStorePickupShippingMethodActionGroup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	
+File "/var/www/html/app/code/Magento/InventoryInStorePickupFrontend/Test/Mftf/Test/LoggedInCustomerPlaceOrderWithPickupInStoreMethodWithGoogleAPIEnabledTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 EnableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 OnlineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	 OfflineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	 DisableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 CulverStorePickupEnabledSource2 from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 AdminGoToStockGridFilterResultsByInputEditStock from module(s): magento/module-inventory-admin-ui
+	 AdminOnStockEditPageAssignSourceToStock from module(s): magento/module-inventory-admin-ui
+	 AdminAssertOrderWithStorePickupShippingMethodActionGroup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryInStorePickupFrontend/Test/Mftf/Test/StorePickupButtonHiddenOnCheckoutWhenNotAllProductsInTheCartAvailableForPickupTest.xml"
+contains entity references that violate dependency constraints:
+		
+	EnableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	OfflineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	DisableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	AdminGoToStockGridFilterResultsByInputEditStock from module(s): magento/module-inventory-admin-ui
+	AdminOnStockEditPageAssignSourceToStock from module(s): magento/module-inventory-admin-ui
+	 
+File "/var/www/html/app/code/Magento/InventoryInStorePickupFrontend/Test/Mftf/Test/StorefrontBillingAddressClearFieldsAfterRefreshingPageTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 OfflineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	 EnableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 ImportTables from module(s): magento/module-inventory-admin-ui
+	 USTable from module(s): magento/module-inventory-admin-ui
+	 OnlineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	 DisableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 CulverStorePickupEnabledSource from module(s): magento/module-inventory-in-store-pickup-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryInStorePickupFrontend/Test/Mftf/Test/StorefrontBillingAddressFilledAutomaticallyWithSimpleProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	OfflineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	EnableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	ImportTables from module(s): magento/module-inventory-admin-ui
+	USTable from module(s): magento/module-inventory-admin-ui
+	OnlineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	DisableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	CulverStorePickupEnabledSource from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	
+File "/var/www/html/app/code/Magento/InventoryInStorePickupFrontend/Test/Mftf/Test/StorefrontChangePickUpLocationSimpleProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 OfflineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	 EnableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 ImportTables from module(s): magento/module-inventory-admin-ui
+	 USTable from module(s): magento/module-inventory-admin-ui
+	 OnlineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	 DisableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 CulverStorePickupEnabledSource from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 DallasStorePickupEnabledSource from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 SanDiegoStorePickupEnabledSource from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 LosAngelesStorePickupEnabledSource from module(s): magento/module-inventory-in-store-pickup-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryInStorePickupFrontend/Test/Mftf/Test/StorefrontChangeSearchRadiusWithSimpleProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	OfflineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	IncreaseSearchRadius from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	EnableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	ImportTables from module(s): magento/module-inventory-admin-ui
+	USTable from module(s): magento/module-inventory-admin-ui
+	OnlineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	SetDefaultSearchRadius from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	DisableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	CulverStorePickupEnabledSource from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	LosAngelesStorePickupEnabledSource from module(s): magento/module-inventory-in-store-pickup-admin-ui
+
+	File "/var/www/html/app/code/Magento/InventoryInStorePickupFrontend/Test/Mftf/Test/StorefrontGuestBillingAddressFormEmptyTest.xml"
+	contains entity references that violate dependency constraints:
+			
+		 OfflineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+		 EnableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+		 ImportTables from module(s): magento/module-inventory-admin-ui
+		 USTable from module(s): magento/module-inventory-admin-ui
+		 OnlineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+		 DisableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+		 CulverStorePickupEnabledSource from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	
+File "/var/www/html/app/code/Magento/InventoryInStorePickupFrontend/Test/Mftf/Test/StorefrontGuestBillingAddressPreselectedTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 OfflineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	 EnableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 ImportTables from module(s): magento/module-inventory-admin-ui
+	 USTable from module(s): magento/module-inventory-admin-ui
+	 OnlineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	 DisableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 CulverStorePickupEnabledSource from module(s): magento/module-inventory-in-store-pickup-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryInStorePickupFrontend/Test/Mftf/Test/StorefrontGuestCreateOrderWithBundleProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	OfflineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	EnableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	ImportTables from module(s): magento/module-inventory-admin-ui
+	USTable from module(s): magento/module-inventory-admin-ui
+	OnlineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	DisableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	CulverStorePickupEnabledSource from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	defaultProductStockQtyWithTwoSourcesBoughtWith1Piece from module(s): magento/module-inventory-admin-ui
+	AdminAssertOrderWithStorePickupShippingMethodActionGroup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 
+
+File "/var/www/html/app/code/Magento/InventoryInStorePickupFrontend/Test/Mftf/Test/StorefrontGuestCreateOrderWithConfigurableProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 OfflineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	 EnableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 ImportTables from module(s): magento/module-inventory-admin-ui
+	 USTable from module(s): magento/module-inventory-admin-ui
+	 OnlineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	 DisableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 CulverStorePickupEnabledSource from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 defaultProductQtyBoughtWithOnePiece from module(s): magento/module-inventory-admin-ui
+	 AdminAssertOrderWithStorePickupShippingMethodActionGroup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryInStorePickupFrontend/Test/Mftf/Test/StorefrontGuestCreateOrderWithGroupedProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	OfflineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	EnableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	ImportTables from module(s): magento/module-inventory-admin-ui
+	USTable from module(s): magento/module-inventory-admin-ui
+	OnlineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	DisableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	tenPiecesAddToCart from module(s): magento/module-inventory-admin-ui
+	CulverStorePickupEnabledSource from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	defaultProductStockQtyWithTwoSourcesBoughtWith10Pieces from module(s): magento/module-inventory-admin-ui
+	AdminAssertOrderWithStorePickupShippingMethodActionGroup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryInStorePickupFrontend/Test/Mftf/Test/StorefrontGuestCreateOrderWithSimpleProductCustomStockCustomWebsiteTest.xml"
+contains entity references that violate dependency constraints:
+		
+	OfflineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	EnableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	ImportTables from module(s): magento/module-inventory-admin-ui
+	USTable from module(s): magento/module-inventory-admin-ui
+	OnlineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	DisableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	CulverStorePickupEnabledSource from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	defaultProductQtyBoughtWithOnePiece from module(s): magento/module-inventory-admin-ui
+	StorefrontAddSimpleProductToCartCustomWebsiteActionGroup from module(s): magento/module-inventory-admin-ui
+			   
+File "/var/www/html/app/code/Magento/InventoryInStorePickupFrontend/Test/Mftf/Test/StorefrontGuestCreateOrderWithSimpleProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 OfflineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	 EnableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 ImportTables from module(s): magento/module-inventory-admin-ui
+	 USTable from module(s): magento/module-inventory-admin-ui
+	 OnlineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	 DisableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 CulverStorePickupEnabledSource from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 defaultProductQtyBoughtWithOnePiece from module(s): magento/module-inventory-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryInStorePickupFrontend/Test/Mftf/Test/StorefrontGuestCreateOrderWithSimpleProductNumericSourceTest.xml"
+contains entity references that violate dependency constraints:
+		
+	OfflineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	EnableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	ImportTables from module(s): magento/module-inventory-admin-ui
+	USTable from module(s): magento/module-inventory-admin-ui
+	OnlineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	DisableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	PickupNumericSource from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	AdminAssertOrderWithStorePickupShippingMethodActionGroup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryInStorePickupFrontend/Test/Mftf/Test/StorefrontGuestNotAbleToSelectStorePickupWithSimpleProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	OfflineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	EnableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	ImportTables from module(s): magento/module-inventory-admin-ui
+	USTable from module(s): magento/module-inventory-admin-ui
+	OnlineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	DisableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+			   
+
+File "/var/www/html/app/code/Magento/InventoryInStorePickupFrontend/Test/Mftf/Test/StorefrontGuestShippingAddressRemainsEmptyAfterSwitchToCartTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 OfflineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	 EnableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 ImportTables from module(s): magento/module-inventory-admin-ui
+	 USTable from module(s): magento/module-inventory-admin-ui
+	 OnlineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	 DisableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 AustinStorePickupEnabledSource from module(s): magento/module-inventory-in-store-pickup-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryInStorePickupFrontend/Test/Mftf/Test/StorefrontGuestShippingAddressSwitchAndRefreshTest.xml"
+contains entity references that violate dependency constraints:
+		
+	OfflineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	EnableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	ImportTables from module(s): magento/module-inventory-admin-ui
+	USTable from module(s): magento/module-inventory-admin-ui
+	OnlineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	DisableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	CulverStorePickupEnabledSource from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 
+File "/var/www/html/app/code/Magento/InventoryInStorePickupFrontend/Test/Mftf/Test/StorefrontLoggedInCustomerCreateOrderWithSimpleProductCustomStockCustomWebsiteTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 OfflineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	 EnableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 ImportTables from module(s): magento/module-inventory-admin-ui
+	 USTable from module(s): magento/module-inventory-admin-ui
+	 OnlineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	 DisableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 CulverStorePickupEnabledSource from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 defaultProductQtyBoughtWithOnePiece from module(s): magento/module-inventory-admin-ui
+	 StorefrontAddSimpleProductToCartCustomWebsiteActionGroup from module(s): magento/module-inventory-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryInStorePickupFrontend/Test/Mftf/Test/StorefrontLoggedInCustomerCreateOrderWithSimpleProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	OfflineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	EnableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	ImportTables from module(s): magento/module-inventory-admin-ui
+	USTable from module(s): magento/module-inventory-admin-ui
+	OnlineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	DisableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	CulverStorePickupEnabledSource from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	defaultProductQtyBoughtWithOnePiece from module(s): magento/module-inventory-admin-ui
+	 
+
+File "/var/www/html/app/code/Magento/InventoryInStorePickupFrontend/Test/Mftf/Test/StorefrontLoggedInCustomerNotAbleToSelectStorePickupWithSimpleProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+		OfflineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+		EnableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+		ImportTables from module(s): magento/module-inventory-admin-ui
+		USTable from module(s): magento/module-inventory-admin-ui
+		OnlineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+		DisableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	
+File "/var/www/html/app/code/Magento/InventoryInStorePickupFrontend/Test/Mftf/Test/StorefrontLoggedInCustomerNotAbleToSelectStorePickupWithSimpleProductMultishippingCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 OfflineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	 EnableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 ImportTables from module(s): magento/module-inventory-admin-ui
+	 USTable from module(s): magento/module-inventory-admin-ui
+	 OnlineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	 DisableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryInStorePickupFrontend/Test/Mftf/Test/StorefrontPickUpSourceInfoSimpleProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	MediaGalleryConfigDataDisabled from module(s): magento/module-media-gallery-ui
+	OfflineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	EnableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	enableWYSYWYG from module(s): magento/module-inventory-admin-ui
+	ImportTables from module(s): magento/module-inventory-admin-ui
+	USTable from module(s): magento/module-inventory-admin-ui
+	AdminEditSourcePage from module(s): magento/module-inventory-admin-ui, magento/module-inventory-in-store-pickup-admin-ui
+	OnlineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	DisableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	disableWYSYWYG from module(s): magento/module-inventory-admin-ui
+	CulverStorePickupEnabledSource from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	AdminAddImageToSourceDescriptionActionGroup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	AdminSaveAndContinueSourceActionGroup from module(s): magento/module-inventory-admin-ui
+	 
+File "/var/www/html/app/code/Magento/InventoryInStorePickupFrontend/Test/Mftf/Test/StorefrontReviewAndPaymentPageWithSimpleProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 OfflineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	 EnableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 ImportTables from module(s): magento/module-inventory-admin-ui
+	 USTable from module(s): magento/module-inventory-admin-ui
+	 OnlineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	 DisableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 CulverStorePickupEnabledSource from module(s): magento/module-inventory-in-store-pickup-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryInStorePickupFrontend/Test/Mftf/Test/StorefrontSearchSourceByCitySimpleProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	OfflineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	EnableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	ImportTables from module(s): magento/module-inventory-admin-ui
+	USTable from module(s): magento/module-inventory-admin-ui
+	OnlineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	DisableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	CulverStorePickupEnabledSource from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 
+File "/var/www/html/app/code/Magento/InventoryInStorePickupFrontend/Test/Mftf/Test/StorefrontSearchSourceByPostCodeSimpleProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 OfflineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	 EnableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 ImportTables from module(s): magento/module-inventory-admin-ui
+	 USTable from module(s): magento/module-inventory-admin-ui
+	 OnlineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	 DisableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 CulverStorePickupEnabledSource from module(s): magento/module-inventory-in-store-pickup-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryInStorePickupFrontend/Test/Mftf/Test/StorefrontSummaryShippingSectionWithSimpleProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	OfflineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	EnableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	ImportTables from module(s): magento/module-inventory-admin-ui
+	USTable from module(s): magento/module-inventory-admin-ui
+	OnlineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	DisableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	CulverStorePickupEnabledSource from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 
+File "/var/www/html/app/code/Magento/InventoryInStorePickupFrontend/Test/Mftf/Test/StorefrontVerifySearchedSourcesWithSimpleProductCustomStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 OfflineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	 IncreaseSearchRadius from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 EnableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 ImportTables from module(s): magento/module-inventory-admin-ui
+	 USTable from module(s): magento/module-inventory-admin-ui
+	 OnlineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	 SetDefaultSearchRadius from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 DisableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 CulverStorePickupEnabledSource from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 DallasStorePickupEnabledSource from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 SanDiegoStorePickupEnabledSource from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 LosAngelesStorePickupEnabledSource from module(s): magento/module-inventory-in-store-pickup-admin-ui
+
+File "/var/www/html/app/code/Magento/InventoryInStorePickupSalesAdminUi/Test/Mftf/Test/AdminAddRemoveSourceColumnsTest.xml"
+contains entity references that violate dependency constraints:
+		
+	AdminManageSourcesGridColumnControls from module(s): magento/module-inventory-admin-ui
+	 
+File "/var/www/html/app/code/Magento/InventoryInStorePickupSalesAdminUi/Test/Mftf/Test/InStorePickupOrderPlacementWithSimpleProductAdditionalStockTest.xml"
+contains entity references that violate dependency constraints:
+		
+	 OfflineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	 EnableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 ImportTables from module(s): magento/module-inventory-admin-ui
+	 USTable from module(s): magento/module-inventory-admin-ui
+	 OnlineDistanceProviderForDistanceBasedSSA from module(s): magento/module-inventory-admin-ui
+	 DisableInStorePickup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 AdminSelectInStorePickupShippingMethodActionGroup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+	 AdminAssertOrderWithStorePickupShippingMethodActionGroup from module(s): magento/module-inventory-in-store-pickup-admin-ui
+
+File "/var/www/html/app/code/Magento/PurchaseOrder/Test/Mftf/Test/UpdateCurrencyRateForQuotesInStatusesOrderedAndClosedTest.xml"
+contains entity references that violate dependency constraints:
+		
+	AdminSetDefaultCurrencyActionGroup from module(s): magento/module-currency-symbol
+
+File "/var/www/html/app/code/Magento/Customer/Test/Mftf/ActionGroup/StorefrontFillCustomerAddressWithAttributeActionGroup.xml"
+contains entity references that violate dependency constraints:
+		
+	AddressAttributeTextField from module(s): magento/module-customer-custom-attributes

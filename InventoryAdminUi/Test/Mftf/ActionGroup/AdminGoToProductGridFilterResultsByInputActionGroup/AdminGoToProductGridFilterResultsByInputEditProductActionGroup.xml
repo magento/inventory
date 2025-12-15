@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- /**
-  * Copyright © Magento, Inc. All rights reserved.
-  * See COPYING.txt for license details.
-  */
+/**
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
+ */
 -->
 <actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
@@ -24,7 +24,7 @@
         <click selector="{{AdminGridFilterControls.applyFilters}}" stepKey="clickOnApplyFilters1"/>
         <waitForPageLoad stepKey="waitForPageLoad2"/>
 
-        <click selector="{{AdminGridRow.editByValue(filter_value)}}" stepKey="clickOnEdit1"/>
+        <click selector="{{AdminGridRow.editByRow(filter_value)}}" stepKey="clickOnEdit1"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad3"/>
     </actionGroup>
 </actionGroups>

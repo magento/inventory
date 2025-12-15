@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -10,16 +10,16 @@ namespace Magento\InventoryShipping\Model\ResourceModel\ShipmentSource;
 use Magento\Framework\App\ResourceConnection;
 
 /**
- * Save Shipment Source
+ * Saves shipment source records to the `inventory_shipment_source` table, updating the source code if it already exists
  */
 class SaveShipmentSource
 {
     /**
      * Constant for fields in data array
      */
-    const SHIPMENT_ID = 'shipment_id';
-    const SOURCE_CODE = 'source_code';
-    
+    public const SHIPMENT_ID = 'shipment_id';
+    public const SOURCE_CODE = 'source_code';
+
     /**
      * @var ResourceConnection
      */
@@ -35,6 +35,8 @@ class SaveShipmentSource
     }
 
     /**
+     * Saves or updates a shipment source record in the `inventory_shipment_source` table with given data.
+     *
      * @param int $shipmentId
      * @param string $sourceCode
      * @return void

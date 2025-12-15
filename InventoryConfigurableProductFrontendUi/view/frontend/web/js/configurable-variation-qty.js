@@ -1,6 +1,6 @@
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
  */
 
 /**
@@ -11,7 +11,7 @@ define([
     'underscore',
     'mage/url'
 ], function ($, _, urlBuilder) {
-    'use strict';
+    'use strict'; //eslint-disable-line
 
     return function (productSku, salesChannel, salesChannelCode) {
         var selectorInfoStockSkuQty = '.availability.only',
@@ -29,7 +29,7 @@ define([
                     'salesChannelCode': salesChannelCode
                 }
             }).done(function (response) {
-                if (response.qty !== null) {
+                if (response.qty !== null && response.qty > 0) {
                     productQtyInfo.text(response.qty);
                     productQtyInfoBlock.show();
                 } else {

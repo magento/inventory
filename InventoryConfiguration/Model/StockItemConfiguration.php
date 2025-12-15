@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -53,8 +53,8 @@ class StockItemConfiguration extends AbstractExtensibleModel implements StockIte
         AttributeValueFactory $customAttributeFactory,
         StockItemInterface $stockItem,
         ScopeConfigInterface $scopeConfig,
-        AbstractResource $resource = null,
-        AbstractDb $resourceCollection = null,
+        ?AbstractResource $resource = null,
+        ?AbstractDb $resourceCollection = null,
         array $data = []
     ) {
         parent::__construct(
@@ -389,6 +389,7 @@ class StockItemConfiguration extends AbstractExtensibleModel implements StockIte
 
     /**
      * @inheritdoc
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getStockStatusChangedAuto(): bool
     {

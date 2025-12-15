@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -11,7 +11,8 @@ use Magento\Framework\Api\SearchResults;
 use Magento\InventoryApi\Api\Data\SourceSearchResultsInterface;
 
 /**
- * SourceSearchResults
+ * Represents the search results for inventory sources,
+ * extending the base `SearchResults` class and implementing the `SourceSearchResultsInterface`.
  */
 class SourceSearchResults extends SearchResults implements SourceSearchResultsInterface
 {

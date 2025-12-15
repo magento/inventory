@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright 2025 Adobe
+ * All Rights Reserved.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Logging\Model\Config">
+        <plugin name="inventory_source_item_logging" type="Magento\InventoryLogging\Plugin\Logging\Model\ConfigPlugin"/>
+    </type>
+    <type name="Magento\Inventory\Model\SourceItem\Command\Handler\SourceItemsSaveHandler">
+        <plugin name="inventory_source_item_save_logging" type="Magento\InventoryLogging\Plugin\Inventory\Model\SourceItem\Command\Handler\SourceItemsSaveHandlerPlugin"/>
+    </type>
+    <type name="Magento\Inventory\Model\SourceItem\Command\SourceItemsDelete">
+        <plugin name="inventory_source_item_delete_logging" type="Magento\InventoryLogging\Plugin\Inventory\Model\SourceItem\Command\SourceItemsDeletePlugin"/>
+    </type>
+</config>

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2017 Adobe
+ * All Rights Reserved.
  */
 declare(strict_types=1);
 
@@ -15,6 +15,7 @@ use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryImportExport\Model\Export\ColumnProviderInterface;
 use Magento\InventoryImportExport\Model\Export\SourceItemCollectionFactoryInterface;
 use Magento\ImportExport\Model\Export;
+use Magento\InventoryImportExport\Model\ResourceModel\Export\GetWebsiteCodesByWebsiteIds;
 
 /**
  * @inheritdoc
@@ -24,7 +25,7 @@ class SourceItemCollectionFactory implements SourceItemCollectionFactoryInterfac
     /**
      * Source code field name
      */
-    const SOURCE_CODE_FIELD = 'source_' . SourceInterface::SOURCE_CODE;
+    public const SOURCE_CODE_FIELD = 'source_' . SourceInterface::SOURCE_CODE;
 
     /**
      * @var ObjectManagerInterface
@@ -42,21 +43,39 @@ class SourceItemCollectionFactory implements SourceItemCollectionFactoryInterfac
     private $columnProvider;
 
     /**
+     * @var SourceItemCollectionWebsiteFilter
+     */
+    private $sourceItemCollectionWebsiteFilter;
+
+    /**
+     * @var GetWebsiteCodesByWebsiteIds
+     */
+    private $getWebsiteCodesByWebsiteIds;
+
+    /**
      * @param ObjectManagerInterface $objectManager
      * @param FilterProcessorAggregator $filterProcessor
      * @param ColumnProviderInterface $columnProvider
+     * @param SourceItemCollectionWebsiteFilter $sourceItemCollectionWebsiteFilter
+     * @param GetWebsiteCodesByWebsiteIds $getWebsiteCodesByWebsiteIds
      */
     public function __construct(
         ObjectManagerInterface $objectManager,
         FilterProcessorAggregator $filterProcessor,
-        ColumnProviderInterface $columnProvider
+        ColumnProviderInterface $columnProvider,
+        SourceItemCollectionWebsiteFilter $sourceItemCollectionWebsiteFilter,
+        GetWebsiteCodesByWebsiteIds $getWebsiteCodesByWebsiteIds
     ) {
         $this->objectManager = $objectManager;
         $this->filterProcessor = $filterProcessor;
         $this->columnProvider = $columnProvider;
+        $this->sourceItemCollectionWebsiteFilter = $sourceItemCollectionWebsiteFilter;
+        $this->getWebsiteCodesByWebsiteIds = $getWebsiteCodesByWebsiteIds;
     }
 
     /**
+     * Creates a source item collection, applies filters, and processes attributes based on their backend types.
+     *
      * @param AttributeCollection $attributeCollection
      * @param array $filters
      * @return Collection
@@ -70,6 +89,12 @@ class SourceItemCollectionFactory implements SourceItemCollectionFactoryInterfac
         $collection->addFieldToSelect($columns);
 
         foreach ($this->retrieveFilterData($filters) as $columnName => $value) {
+            if ($columnName === 'website_id') {
+                $websiteCodes = $this->getWebsiteCodesByWebsiteIds->execute($value);
+                $collection = $this->sourceItemCollectionWebsiteFilter
+                    ->filterByWebsiteCodes($collection, $websiteCodes);
+                continue;
+            }
             $attributeDefinition = $attributeCollection->getItemById($columnName);
             if (!$attributeDefinition) {
                 throw new LocalizedException(__(
@@ -92,6 +117,8 @@ class SourceItemCollectionFactory implements SourceItemCollectionFactoryInterfac
     }
 
     /**
+     * Filters the input array to exclude empty values from the `FILTER_ELEMENT_GROUP` key, if it exists.
+     *
      * @param array $filters
      * @return array
      */
