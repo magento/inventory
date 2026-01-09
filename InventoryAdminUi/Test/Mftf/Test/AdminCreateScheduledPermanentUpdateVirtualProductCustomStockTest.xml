@@ -50,7 +50,7 @@
             </actionGroup>
         </before>
         <after>
-            <deleteData createDataKey="product" stepKey="deleteProduct" before="disableSource"/>
+            <deleteData createDataKey="product" stepKey="deleteVirtualProduct" before="disableSource"/>
             <!--Disable additional source.-->
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource" before="assignMainWebsiteToDefaultStock">
                 <argument name="sourceCode" value="$source.source[source_code]$"/>

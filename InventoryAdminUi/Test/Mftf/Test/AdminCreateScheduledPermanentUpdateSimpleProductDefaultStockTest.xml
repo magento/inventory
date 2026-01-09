@@ -38,7 +38,7 @@
             </actionGroup>
         </before>
         <after>
-            <deleteData createDataKey="product" stepKey="deleteProduct" before="disableSource"/>
+            <deleteData createDataKey="product" stepKey="deleteSimpleProduct" before="disableSource"/>
             <!--Disable additional source.-->
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource" before="amOnLogoutPage">
                 <argument name="sourceCode" value="$source.source[source_code]$"/>
