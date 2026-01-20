@@ -38,6 +38,8 @@
             <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="createStock" stepKey="deleteCustomStock"/>
             <deleteData createDataKey="createSubCategory" stepKey="deleteCategory"/>
+            <!-- Delete all products via API using ProductApiHelper -->
+            <helper class="Magento\Catalog\Test\Mftf\Helper\ProductApiHelper" method="deleteAllProductsApi" stepKey="deleteAllProductsViaApi"/>
         </after>
         <!--  Step 1: Create New Category -->
         <createData entity="SimpleSubCategory" stepKey="createSubCategory"/>
