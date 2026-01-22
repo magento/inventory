@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2026 Adobe
+ * Copyright 2017 Adobe
  * All Rights Reserved.
  */
 declare(strict_types=1);
@@ -51,12 +51,13 @@ class SkuValidator implements SourceItemValidatorInterface
         ValidationResultFactory $validationResultFactory,
         NotAnEmptyString $notAnEmptyString,
         NoSpaceBeforeAndAfterString $noSpaceBeforeAndAfterString,
-        ProductRepositoryInterface $productRepository
+        ?ProductRepositoryInterface $productRepository = null
     ) {
         $this->validationResultFactory = $validationResultFactory;
         $this->notAnEmptyString = $notAnEmptyString;
         $this->noSpaceBeforeAndAfterString = $noSpaceBeforeAndAfterString;
-        $this->productRepository = $productRepository;
+        $this->productRepository = $productRepository ?:
+            \Magento\Framework\App\ObjectManager::getInstance()->get(ProductRepositoryInterface::class);
     }
 
     /**
