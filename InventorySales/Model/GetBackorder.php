@@ -76,6 +76,13 @@ class GetBackorder
     private $getBackorderQty;
 
     /**
+     * Product backorder qty's checked
+     *
+     * @var array
+     */
+    private $backorderQty = [];
+
+    /**
      * @param ObjectFactory $objectFactory
      * @param FormatInterface $format
      * @param AreProductsSalableForRequestedQtyInterface $areProductsSalableForRequestedQty
@@ -161,6 +168,11 @@ class GetBackorder
                 }
             }
             $backorderQty = $this->getBackorderQty->execute($productSku, (int)$stockId, $qty);
+            if (isset($this->backorderQty[$productSku])) {
+                $backorderQty -= $this->backorderQty[$productSku];
+            } else {
+                $this->backorderQty[$productSku] = $backorderQty;
+            }
             if ($backorderQty > 0) {
                 $result->setItemBackorders($backorderQty);
             }

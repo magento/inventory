@@ -46,6 +46,13 @@ class BackOrderNotifyCustomerCondition implements IsProductSalableForRequestedQt
     private $getBackorderQty;
 
     /**
+     * Product backorder qty's checked
+     *
+     * @var array
+     */
+    private $backorderQty = [];
+
+    /**
      * @param GetStockItemConfigurationInterface $getStockItemConfiguration
      * @param GetStockItemDataInterface $getStockItemData @deprecated
      * @param ProductSalableResultInterfaceFactory $productSalableResultFactory
@@ -80,6 +87,12 @@ class BackOrderNotifyCustomerCondition implements IsProductSalableForRequestedQt
             && $stockItemConfiguration->getBackorders() === StockItemConfigurationInterface::BACKORDERS_YES_NOTIFY
         ) {
             $backorderQty = $this->getBackorderQty->execute($sku, $stockId, $requestedQty);
+
+            if (isset($this->backorderQty[$sku])) {
+                $backorderQty -= $this->backorderQty[$sku];
+            } else {
+                $this->backorderQty[$sku] = $backorderQty;
+            }
 
             if ($backorderQty > 0) {
                 $errors = [
