@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryGroupedProductIndexer\Indexer;
 
 use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\GroupedProduct\Model\ResourceModel\Product\Link;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\EntityManager\MetadataPool;
 use Magento\InventoryIndexer\Indexer\SiblingProductsProviderInterface;
@@ -29,6 +30,7 @@ class SiblingProductsProvider implements SiblingProductsProviderInterface
      */
     public function getSkus(array $skus): array
     {
+        $linkTypeId = Link::LINK_TYPE_GROUPED;
         $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
 
         $connection = $this->resourceConnection->getConnection();
@@ -38,7 +40,8 @@ class SiblingProductsProvider implements SiblingProductsProviderInterface
                 []
             )->joinInner(
                 ['sibling_link' => $this->resourceConnection->getTableName('catalog_product_link')],
-                'sibling_link.linked_product_id = child_product_entity.' . $metadata->getIdentifierField(),
+                'sibling_link.linked_product_id = child_product_entity.' . $metadata->getIdentifierField()
+                . ' AND sibling_link.link_type_id = ' . $linkTypeId,
                 []
             )->joinInner(
                 ['sibling_product_entity' => $this->resourceConnection->getTableName('catalog_product_entity')],

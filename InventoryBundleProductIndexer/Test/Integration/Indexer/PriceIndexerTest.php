@@ -39,6 +39,16 @@ use PHPUnit\Framework\TestCase;
     DataFixture(StoreFixture::class, ['store_group_id' => '$group2.id$'], 'store2'),
     DataFixture(SourceFixture::class, as: 'source2'),
     DataFixture(StockFixture::class, as: 'stock2'),
+    DataFixture(
+        StockSourceLinksFixture::class,
+        [
+            ['stock_id' => '$stock2.stock_id$', 'source_code' => '$source2.source_code$'],
+        ]
+    ),
+    DataFixture(
+        StockSalesChannelsFixture::class,
+        ['stock_id' => '$stock2.stock_id$', 'sales_channels' => ['$website2.code$']]
+    ),
     DataFixture(ProductFixture::class, ['website_ids' => ['1', '$website2.id$'], 'price' => 10], 'product1'),
     DataFixture(ProductFixture::class, ['website_ids' => ['1', '$website2.id$'], 'price' => 20], 'product2'),
     DataFixture(ProductFixture::class, ['website_ids' => ['1', '$website2.id$'], 'price' => 5], 'product3'),
@@ -51,16 +61,6 @@ use PHPUnit\Framework\TestCase;
         ProductFixture::class,
         ['website_ids' => ['1', '$website2.id$'], 'price' => 8, 'status' => 2],
         'product9'
-    ),
-    DataFixture(
-        StockSourceLinksFixture::class,
-        [
-            ['stock_id' => '$stock2.stock_id$', 'source_code' => '$source2.source_code$'],
-        ]
-    ),
-    DataFixture(
-        StockSalesChannelsFixture::class,
-        ['stock_id' => '$stock2.stock_id$', 'sales_channels' => ['$website2.code$']]
     ),
     DataFixture(
         SourceItemsFixture::class,

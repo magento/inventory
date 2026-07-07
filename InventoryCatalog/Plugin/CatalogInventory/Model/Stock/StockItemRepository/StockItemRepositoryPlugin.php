@@ -28,7 +28,7 @@ class StockItemRepositoryPlugin
         private readonly FullProductIndexer $fullProductIndexer,
         private readonly InventoryIndexer $inventoryIndexer,
         private readonly GetSkusByProductIdsInterface $getSkusByProductIds,
-        private readonly getSourceItemsBySku $getSourceItemsBySku
+        private readonly GetSourceItemsBySku $getSourceItemsBySku
     ) {
     }
 

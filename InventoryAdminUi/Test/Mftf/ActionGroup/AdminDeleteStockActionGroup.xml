@@ -16,7 +16,10 @@
             <argument name="websiteName" defaultValue="Main Website" type="string"/>
         </arguments>
         <amOnPage url="{{AdminStockPage.url}}" stepKey="navigateToManageStockPage"/>
+        <waitForPageLoad stepKey="waitForManageStockPageLoad"/>
         <conditionalClick selector="{{AdminProductGridFilterSection.clearFilters}}" dependentSelector="{{AdminProductGridFilterSection.clearFilters}}" visible="true" stepKey="clickClearFilters"/>
+        <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clickClearKeywordFilters"/>
+        <waitForElementVisible selector="{{AdminManageStockGridBody.searchStockText}}" stepKey="waitForStockGridSearchField"/>
         <fillField selector="{{AdminManageStockGridBody.searchStockText}}" userInput="{{stockName}}" stepKey="enterStockName" />
         <click selector="{{AdminManageStockGridBody.clickSearchStock}}" stepKey="clickSearchStockButton" />
         <waitForPageLoad stepKey="waitForStoreGroupPageLoad" />
@@ -29,6 +32,7 @@
         <waitForPageLoad stepKey="waitForStoreGroupPageLoadPostEditingTheSources" />
         <waitForLoadingMaskToDisappear stepKey="waitForLoadingMaskToDisappear"/>
         <seeElement selector="{{AdminManageStockGridBody.stockSavedSuccessfulMessage}}" stepKey="verifyTheStockSavedSuccessfully"/>
+        <waitForElementVisible selector="{{AdminManageStockGridBody.searchStockText}}" stepKey="waitForStockGridSearchFieldForDelete"/>
         <fillField selector="{{AdminManageStockGridBody.searchStockText}}" userInput="{{stockName}}" stepKey="enterStockNameForDelete" />
         <click selector="{{AdminManageStockGridBody.clickSearchStock}}" stepKey="clickSearchStockButtonForDelete" />
         <waitForPageLoad stepKey="waitForStoreGroupPageLoadForDelete" />

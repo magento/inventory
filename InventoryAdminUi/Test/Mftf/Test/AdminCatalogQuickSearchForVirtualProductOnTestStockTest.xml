@@ -42,6 +42,7 @@
             </actionGroup>
             <deleteData createDataKey="virtualProduct1" stepKey="deleteVirtualProduct"/>
             <deleteData createDataKey="createCategory1" stepKey="deletecreateCategory1"/>
+            <actionGroup ref="AdminResetFilterInManageSourcesGridActionGroup" stepKey="resetManageSourcesGridFilters"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
         </after>
 

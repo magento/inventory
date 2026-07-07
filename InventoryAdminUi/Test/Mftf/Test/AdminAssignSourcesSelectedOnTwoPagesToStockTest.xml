@@ -47,8 +47,9 @@
         </before>
         <after>
             <deleteData createDataKey="createStock" stepKey="deleteStock"/>
-            <amOnPage url="{{AdminManageStockPage.url}}" stepKey="amOnStockListPage"/>
-            <actionGroup ref="AdminGridFilterResetActionGroup" stepKey="clearSourceFilters"/>
+            <amOnPage url="{{AdminManageStockPage.url}}" stepKey="goToStockGridBeforeClearFilters"/>
+            <waitForPageLoad stepKey="waitForStockGridLoad"/>
+            <actionGroup ref="ClearFiltersAdminDataGridActionGroup" stepKey="clearInventoryStockListingFiltersAfter"/>
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">

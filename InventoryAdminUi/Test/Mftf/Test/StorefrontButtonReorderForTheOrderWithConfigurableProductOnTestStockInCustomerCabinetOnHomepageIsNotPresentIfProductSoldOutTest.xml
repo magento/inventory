@@ -28,6 +28,7 @@
             <remove keyForRemoval="assignMainWebsiteToDefaultStock"/>
         </before>
         <after>
+            <actionGroup ref="AdminOrdersGridClearFiltersActionGroup" stepKey="clearOrdersGridFiltersAfter"/>
             <!--Assign Default Stock to Default Website.-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock" before="logoutOfAdmin1">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>

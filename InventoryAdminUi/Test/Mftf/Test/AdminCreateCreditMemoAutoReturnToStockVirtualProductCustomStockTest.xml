@@ -55,6 +55,7 @@
             <comment userInput="BIC workaround" stepKey="revertAutoReturnItems" after="deleteProduct"/>
             <comment userInput="BIC workaround" stepKey="reindex" after="revertAutoReturnItems"/>
             <comment userInput="BIC workaround" stepKey="flushCache" after="reindex"/>
+            <actionGroup ref="AdminOrdersGridClearFiltersActionGroup" stepKey="clearOrdersGridFilters"/>
         </after>
 
         <!--Assign virtual product to additional source.-->

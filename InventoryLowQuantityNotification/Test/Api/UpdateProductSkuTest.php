@@ -124,9 +124,6 @@ class UpdateProductSkuTest extends WebapiAbstract
             'inventory.source.items.cleanup',
             $this->defaultValueProvider->getConnection()
         );
-        if ($this->defaultValueProvider->getConnection() === 'stomp') {
-            $queue->subscribeQueue();
-        }
         while ($envelope = $queue->dequeue()) {
             $queue->reject($envelope, false);
         }

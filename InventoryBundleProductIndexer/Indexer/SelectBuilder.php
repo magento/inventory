@@ -11,6 +11,7 @@ use Magento\Bundle\Model\Product\Type as BundleProductType;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
+use Magento\InventoryConfigurationApi\Model\InventoryConfigurationInterface;
 use Magento\InventoryIndexer\Indexer\IndexStructure;
 use Magento\InventoryIndexer\Indexer\SiblingSelectBuilderInterface;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexAlias;
@@ -39,11 +40,13 @@ class SelectBuilder implements SiblingSelectBuilderInterface
      * @param ResourceConnection $resourceConnection
      * @param DefaultStockProviderInterface $defaultStockProvider
      * @param OptionsStatusSelectBuilder $optionsStatusSelectBuilder
+     * @param InventoryConfigurationInterface $configuration
      */
     public function __construct(
         ResourceConnection $resourceConnection,
         DefaultStockProviderInterface $defaultStockProvider,
-        OptionsStatusSelectBuilder $optionsStatusSelectBuilder
+        OptionsStatusSelectBuilder $optionsStatusSelectBuilder,
+        private readonly InventoryConfigurationInterface $configuration
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->defaultStockProvider = $defaultStockProvider;
@@ -63,6 +66,13 @@ class SelectBuilder implements SiblingSelectBuilderInterface
             '1',
             '0'
         );
+        
+        $manageStock = '(legacy_stock_item.use_config_manage_stock = 0 AND legacy_stock_item.manage_stock = 1)';
+        if (((int)$this->configuration->getManageStock()) === 1) {
+            $manageStock .= ' OR legacy_stock_item.use_config_manage_stock = 1';
+            $manageStock = "($manageStock)";
+        }
+        
         $select = $connection->select()
             ->from(
                 ['product_entity' => $this->resourceConnection->getTableName('catalog_product_entity')],
@@ -85,7 +95,7 @@ class SelectBuilder implements SiblingSelectBuilderInterface
                 IndexStructure::SKU => 'product_entity.sku',
                 IndexStructure::QUANTITY => $connection->getIfNullSql('SUM(options.quantity)', '0'),
                 IndexStructure::IS_SALABLE => $connection->getCheckSql(
-                    'legacy_stock_item.is_in_stock = 0 OR options.sku IS NULL',
+                    "(legacy_stock_item.is_in_stock = 0 AND $manageStock) OR options.sku IS NULL",
                     '0',
                     'MAX(' . $isRequiredOptionUnavailable . ') = 0 AND MAX(options.stock_status) = 1'
                 ),

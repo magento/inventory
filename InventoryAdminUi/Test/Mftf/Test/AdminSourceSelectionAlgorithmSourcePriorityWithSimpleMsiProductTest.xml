@@ -34,34 +34,23 @@
 
             <createData entity="SourceStockLinked1" stepKey="linkSourceStock1">
                 <requiredEntity createDataKey="createStock1"/>
+                <requiredEntity createDataKey="createSource4"/>
+            </createData>
+            <createData entity="SourceStockLinked2" stepKey="linkSourceStock2">
+                <requiredEntity createDataKey="createStock1"/>
                 <requiredEntity createDataKey="createSource1"/>
             </createData>
-            <createData entity="SourceStockLinked1" stepKey="linkSourceStock2">
+            <createData entity="SourceStockLinked3" stepKey="linkSourceStock3">
                 <requiredEntity createDataKey="createStock1"/>
                 <requiredEntity createDataKey="createSource2"/>
             </createData>
-            <createData entity="SourceStockLinked1" stepKey="linkSourceStock3">
+            <createData entity="SourceStockLinked4" stepKey="linkSourceStock4">
                 <requiredEntity createDataKey="createStock1"/>
                 <requiredEntity createDataKey="createSource3"/>
-            </createData>
-            <createData entity="SourceStockLinked1" stepKey="linkSourceStock4">
-                <requiredEntity createDataKey="createStock1"/>
-                <requiredEntity createDataKey="createSource4"/>
             </createData>
 
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <waitForPageLoad stepKey="waitForPageLoadAfterLogin"/>
-
-            <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStock" stepKey="goToStockGridFilterResultsByInputEditStock1">
-                <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
-                <argument name="filter_value" value="$$createStock1.stock[name]$$"/>
-            </actionGroup>
-
-            <dragAndDrop selector1="{{AdminEditStockSourcesSection.rowSourceDrag('3')}}" selector2="{{AdminEditStockSourcesSection.rowSourceDrag('1')}}" stepKey="dragAndDropNameSource4ToSecondPriority"/>
-            <waitForPageLoad stepKey="waitForPageLoad1"/>
-            <dragAndDrop selector1="{{AdminEditStockSourcesSection.rowSourceDrag('0')}}" selector2="{{AdminEditStockSourcesSection.rowSourceDrag('1')}}" stepKey="dragAndDropNameSource4ToHighestPriority"/>
-            <waitForPageLoad stepKey="waitForPageLoad2"/>
-            <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveCustomStock"/>
 
             <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductGrid"/>
             <waitForPageLoad time="30" stepKey="waitForProductGridPageLoad"/>
@@ -106,11 +95,11 @@
         <scrollToTopOfPage stepKey="scrollToTopOfPage1"/>
         <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$simpleCategory1.name$$]" requiredAction="true" stepKey="searchAndSelectCategory1"/>
 
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillCustomSource1QtyField"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillCustomSource2QtyField"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('2')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillCustomSource3QtyField"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('3')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillCustomSource4QtyField"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('4')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillCustomSource5QtyField"/>
+        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="1000" stepKey="fillCustomSource1QtyField"/>
+        <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="1000" stepKey="fillCustomSource2QtyField"/>
+        <fillField selector="{{AdminProductSourcesGrid.rowQty('2')}}" userInput="1000" stepKey="fillCustomSource3QtyField"/>
+        <fillField selector="{{AdminProductSourcesGrid.rowQty('3')}}" userInput="1000" stepKey="fillCustomSource4QtyField"/>
+        <fillField selector="{{AdminProductSourcesGrid.rowQty('4')}}" userInput="1000" stepKey="fillCustomSource5QtyField"/>
 
         <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseSimpleMsiProduct"/>
         <waitForPageLoad stepKey="waitForSimpleMsiProductGidPageLoad"/>
@@ -125,7 +114,9 @@
         <see selector="{{AdminProductGridSection.productGridCell('1', 'Price')}}" userInput="{{SimpleMsiProduct.price}}"  stepKey="seeSimpleMsiProductPriceInFirstRow"/>
         <see selector="{{AdminProductGridSection.productGridCell('1', 'Status')}}" userInput="Enabled" stepKey="seeSimpleMsiProductStatusInFirstRow"/>
         <see selector="{{AdminProductGridSection.productGridCell('1', 'Websites')}}" userInput="Main Website" stepKey="seeSimpleMsiProductWebsiteInFirstRow"/>
-
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
         <comment userInput="Login as Customer and add Product to Cart" stepKey="loginCustomerComment"/>
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="customerLogin">
             <argument name="Customer" value="$$createCustomer$$"/>
@@ -179,13 +170,14 @@
         <click selector="{{AdminSourceSelectionFormSection.proceedToShipment}}" stepKey="createShipment"/>
         <waitForPageLoad stepKey="waitForPageLoad11"/>
 
-        <see selector="{{AdminShipmentOrderInformationSection.orderStatus}}" userInput="Pending" stepKey="seeOrderStatus"/>
+        <waitForText selector="{{AdminShipmentOrderInformationSection.orderStatus}}" userInput="Pending" stepKey="seeOrderStatus"/>
 
-        <actionGroup ref="SeeProductInShipmentItemsActionGroup" stepKey="checkProductInShipment">
-            <argument name="product" value="SimpleMsiProduct"/>
-        </actionGroup>
+        <scrollTo selector="{{AdminShipmentItemsSection.skuColumn}}" stepKey="scrollToShipmentItemsTable"/>
+        <waitForElementVisible selector="{{AdminShipmentItemsSection.skuColumn}}" time="30" stepKey="waitForShipmentItemsVisible"/>
+        <wait time="60" stepKey="waitForSku"/>
+        <see selector=".order-shipment-table .col-product" userInput="$$simpleMsiProduct1.product[name]$$" stepKey="checkProductInShipment"/>
 
-        <see selector="{{AdminShipmentInventorySection.sourceList}}" userInput="$$createSource4.source[name]$$" stepKey="checkSourceNameOnShipmentPage"/>
+        <waitForText selector="{{AdminShipmentInventorySection.sourceList}}" userInput="$$createSource4.source[name]$$" stepKey="checkSourceNameOnShipmentPage"/>
 
         <click selector="{{AdminShipmentMainActionsSection.submitShipment}}" stepKey="clickSubmitShipment"/>
         <seeInCurrentUrl url="{{AdminOrderDetailsPage.url}}" stepKey="seeViewOrderPageShipping"/>

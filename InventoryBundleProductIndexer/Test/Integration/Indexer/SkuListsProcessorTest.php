@@ -13,6 +13,7 @@ use Magento\Bundle\Test\Fixture\Link as BundleSelectionFixture;
 use Magento\Bundle\Test\Fixture\Option as BundleOptionFixture;
 use Magento\Bundle\Test\Fixture\Product as BundleProductFixture;
 use Magento\Catalog\Test\Fixture\Product as ProductFixture;
+use Magento\Indexer\Test\Fixture\Indexer as IndexerFixture;
 use Magento\InventoryApi\Api\Data\StockInterface;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
@@ -27,10 +28,14 @@ use Magento\InventoryIndexer\Model\ResourceModel\GetStockItemData;
 use Magento\InventoryReservations\Test\Fixture\Reservation as ReservationFixture;
 use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 use Magento\InventorySalesApi\Test\Fixture\StockSalesChannels as StockSalesChannelsFixture;
+use Magento\Store\Test\Fixture\Group as StoreGroupFixture;
+use Magento\Store\Test\Fixture\Store as StoreFixture;
+use Magento\Store\Test\Fixture\Website as WebsiteFixture;
 use Magento\TestFramework\Fixture\DataFixture;
 use Magento\TestFramework\Fixture\DataFixtureStorage;
 use Magento\TestFramework\Fixture\DataFixtureStorageManager;
 use Magento\TestFramework\Fixture\DbIsolation;
+use Magento\TestFramework\Fixture\ScopeFixture;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -86,6 +91,10 @@ class SkuListsProcessorTest extends TestCase
 
     #[
         DbIsolation(false),
+        DataFixture(ScopeFixture::class, ['type' => 'website', 'code' => 'base'], as: 'website1'),
+        DataFixture(WebsiteFixture::class, as: 'website2'),
+        DataFixture(StoreGroupFixture::class, ['website_id' => '$website2.id$'], 'group2'),
+        DataFixture(StoreFixture::class, ['store_group_id' => '$group2.id$'], 'store2'),
         DataFixture(SourceFixture::class, ['source_code' => 's2'], 'source2'),
         DataFixture(SourceFixture::class, ['source_code' => 's3'], 'source3'),
         DataFixture(StockFixture::class, as: 'stock2'),
@@ -98,17 +107,20 @@ class SkuListsProcessorTest extends TestCase
         ),
         DataFixture(
             StockSalesChannelsFixture::class,
-            ['stock_id' => '$stock2.stock_id$', 'sales_channels' => ['base']]
+            ['stock_id' => '$stock2.stock_id$', 'sales_channels' => ['$website2.code$']]
         ),
-
         DataFixture(
             ProductFixture::class,
-            ['sku' => 'simple1', 'stock_item' => ['use_config_min_qty' => 0, 'min_qty' => 2]],
+            [
+                'sku' => 'simple1',
+                'website_ids' => ['1', '$website2.id$'],
+                'stock_item' => ['use_config_min_qty' => 0, 'min_qty' => 2],
+            ],
             's1'
         ),
-        DataFixture(ProductFixture::class, ['sku' => 'simple2'], 's2'),
-        DataFixture(ProductFixture::class, ['sku' => 'simple3'], 's3'),
-        DataFixture(ProductFixture::class, ['sku' => 'simple4'], 's4'),
+        DataFixture(ProductFixture::class, ['sku' => 'simple2', 'website_ids' => ['1', '$website2.id$']], 's2'),
+        DataFixture(ProductFixture::class, ['sku' => 'simple3', 'website_ids' => ['1', '$website2.id$']], 's3'),
+        DataFixture(ProductFixture::class, ['sku' => 'simple4', 'website_ids' => ['1', '$website2.id$']], 's4'),
         DataFixture(
             SourceItemsFixture::class,
             [
@@ -136,7 +148,6 @@ class SkuListsProcessorTest extends TestCase
                 ],
             ]
         ),
-
         DataFixture(
             BundleSelectionFixture::class,
             ['sku' => '$s1.sku$', 'qty' => 3, 'can_change_quantity' => 0],
@@ -162,8 +173,14 @@ class SkuListsProcessorTest extends TestCase
         DataFixture(BundleOptionFixture::class, ['product_links' => ['$link4$'], 'required' => false], 'opt3'),
         DataFixture(
             BundleProductFixture::class,
-            ['sku' => 'bundle1', '_options' => ['$opt1$', '$opt2$', '$opt3$'], 'shipment_type' => 1]
+            [
+                'sku' => 'bundle1',
+                'website_ids' => ['1', '$website2.id$'],
+                '_options' => ['$opt1$', '$opt2$', '$opt3$'],
+                'shipment_type' => 1,
+            ]
         ),
+        DataFixture(IndexerFixture::class),
         DataProvider('executeListDataProvider')
     ]
     /**
