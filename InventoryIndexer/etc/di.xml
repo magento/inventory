@@ -104,4 +104,18 @@
             <argument name="areProductsSalable" xsi:type="object">Magento\InventoryIndexer\Model\AreMultipleProductsSalable</argument>
         </arguments>
     </type>
+    <!--
+    Area-independent salability check that always resolves the reservation-aware condition chain,
+    regardless of the frontend/webapi/graphql area preferences that route IsProductSalableInterface
+    to a read-optimized index reader instead. Intended for write-path consumers that must derive the
+    value they are about to persist from fresh data rather than from the row they are updating.
+    -->
+    <virtualType name="Magento\InventoryIndexer\Model\AreProductsSalableWithReservations"
+                 type="Magento\InventorySales\Model\AreProductsSalable">
+        <arguments>
+            <argument name="isProductSalable" xsi:type="object">
+                Magento\InventorySales\Model\IsProductSalableCondition\IsProductSalableConditionChain
+            </argument>
+        </arguments>
+    </virtualType>
 </config>

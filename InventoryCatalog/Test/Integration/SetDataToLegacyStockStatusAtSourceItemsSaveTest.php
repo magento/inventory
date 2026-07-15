@@ -20,6 +20,9 @@ use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryIndexer\Model\IsProductSalable;
+use Magento\InventoryReservationsApi\Model\AppendReservationsInterface;
+use Magento\InventoryReservationsApi\Model\CleanupReservationsInterface;
+use Magento\InventoryReservationsApi\Model\ReservationBuilderInterface;
 use Magento\TestFramework\Fixture\DataFixture;
 use Magento\TestFramework\Fixture\DataFixtureStorage;
 use Magento\TestFramework\Fixture\DataFixtureStorageManager;
@@ -85,6 +88,21 @@ class SetDataToLegacyStockStatusAtSourceItemsSaveTest extends TestCase
     private $isProductSalable;
 
     /**
+     * @var ReservationBuilderInterface
+     */
+    private $reservationBuilder;
+
+    /**
+     * @var AppendReservationsInterface
+     */
+    private $appendReservations;
+
+    /**
+     * @var CleanupReservationsInterface
+     */
+    private $cleanupReservations;
+
+    /**
      * @inheritdoc
      */
     protected function setUp(): void
@@ -106,6 +124,9 @@ class SetDataToLegacyStockStatusAtSourceItemsSaveTest extends TestCase
             ->get(IndexerRegistry::class);
         $this->fixtures = DataFixtureStorageManager::getStorage();
         $this->isProductSalable = Bootstrap::getObjectManager()->get(IsProductSalable::class);
+        $this->reservationBuilder = Bootstrap::getObjectManager()->get(ReservationBuilderInterface::class);
+        $this->appendReservations = Bootstrap::getObjectManager()->get(AppendReservationsInterface::class);
+        $this->cleanupReservations = Bootstrap::getObjectManager()->get(CleanupReservationsInterface::class);
     }
 
     /**
@@ -181,5 +202,120 @@ class SetDataToLegacyStockStatusAtSourceItemsSaveTest extends TestCase
     {
         $product = $this->fixtures->get('product');
         $this->assertFalse($this->isProductSalable->execute($product->getSku(), Stock::DEFAULT_STOCK_ID));
+    }
+
+    /**
+     * The frontend area routes IsProductSalableInterface/AreProductsSalableInterface to a
+     * read-optimized index reader that selects straight from cataloginventory_stock_status - the
+     * very row this synchronization is about to write. Legacy stock status must still reflect the
+     * newly saved source item, not the pre-write row, in that area.
+     *
+     * @return void
+     * @magentoAppArea frontend
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryCatalog::Test/_files/source_items_on_default_source.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
+     */
+    public function testStatusUpdatedAfterSourceItemsSaveInFrontendArea(): void
+    {
+        $productSku = 'SKU-4';
+        // SKU-4 starts at quantity 0 / out of stock (source_items_on_default_source.php fixture).
+        self::assertFalse($this->isProductSalable->execute($productSku, Stock::DEFAULT_STOCK_ID));
+
+        $searchCriteria = $this->searchCriteriaBuilder
+            ->addFilter(SourceItemInterface::SKU, $productSku)
+            ->addFilter(SourceItemInterface::SOURCE_CODE, $this->defaultSourceProvider->getCode())
+            ->create();
+        $sourceItems = $this->sourceItemRepository->getList($searchCriteria)->getItems();
+        self::assertCount(1, $sourceItems);
+
+        $sourceItem = reset($sourceItems);
+        $sourceItem->setQuantity(10);
+        $sourceItem->setStatus(SourceItemInterface::STATUS_IN_STOCK);
+        $this->sourceItemsSave->execute([$sourceItem]);
+
+        $product = $this->productRepository->get($productSku);
+        $legacyStockStatusCriteria = $this->legacyStockStatusCriteriaFactory->create();
+        $legacyStockStatusCriteria->setProductsFilter($product->getId());
+        $legacyStockStatusCriteria->setScopeFilter(0);
+        $legacyStockStatuses = $this->legacyStockStatusRepository->getList($legacyStockStatusCriteria)->getItems();
+        self::assertCount(1, $legacyStockStatuses);
+
+        $legacyStockStatus = reset($legacyStockStatuses);
+        self::assertEquals(Status::STATUS_IN_STOCK, $legacyStockStatus->getStockStatus());
+        self::assertEquals(10, $legacyStockStatus->getQty());
+        self::assertTrue($this->isProductSalable->execute($productSku, Stock::DEFAULT_STOCK_ID));
+    }
+
+    /**
+     * Same as testStatusUpdatedAfterSourceItemsSaveInFrontendArea, with the stock indexer in
+     * "Update by Schedule" mode. Should behave identically since the legacy stock status write in
+     * UpdateDefaultStock does not depend on the indexer having already run.
+     *
+     * @return void
+     * @magentoAppArea frontend
+     * @magentoDbIsolation disabled
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryCatalog::Test/_files/source_items_on_default_source.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
+     */
+    public function testStatusUpdatedAfterSourceItemsSaveInFrontendAreaWithScheduledIndexer(): void
+    {
+        $indexer = $this->indexerRegistry->get(Processor::INDEXER_ID);
+        $indexer->setScheduled(true);
+
+        $this->testStatusUpdatedAfterSourceItemsSaveInFrontendArea();
+
+        $indexer->setScheduled(false);
+    }
+
+    /**
+     * Regression guard: re-saving a source item's own data unchanged must not clear a
+     * reservation-driven "out of stock" status just because the source item's own status flag
+     * says "in stock" on its own. The write must still go through the reservation-aware
+     * condition chain rather than the legacy stock item flag alone.
+     *
+     * @return void
+     * @magentoAppArea frontend
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryCatalog::Test/_files/source_items_on_default_source.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
+     */
+    public function testReservationDrivenOutOfStockSurvivesUnchangedSourceItemSaveInFrontendArea(): void
+    {
+        $productSku = 'SKU-1';
+        // SKU-1 starts at quantity 5.5 / in stock (source_items_on_default_source.php fixture).
+        self::assertTrue($this->isProductSalable->execute($productSku, Stock::DEFAULT_STOCK_ID));
+
+        $this->appendReservations->execute([
+            $this->reservationBuilder->setStockId(Stock::DEFAULT_STOCK_ID)
+                ->setSku($productSku)
+                ->setQuantity(-5.5)
+                ->build(),
+        ]);
+        self::assertFalse($this->isProductSalable->execute($productSku, Stock::DEFAULT_STOCK_ID));
+
+        $searchCriteria = $this->searchCriteriaBuilder
+            ->addFilter(SourceItemInterface::SKU, $productSku)
+            ->addFilter(SourceItemInterface::SOURCE_CODE, $this->defaultSourceProvider->getCode())
+            ->create();
+        $sourceItems = $this->sourceItemRepository->getList($searchCriteria)->getItems();
+        // Re-save the source item unchanged; it still reports quantity 5.5 / in stock on its own.
+        $this->sourceItemsSave->execute($sourceItems);
+
+        $product = $this->productRepository->get($productSku);
+        $legacyStockStatusCriteria = $this->legacyStockStatusCriteriaFactory->create();
+        $legacyStockStatusCriteria->setProductsFilter($product->getId());
+        $legacyStockStatusCriteria->setScopeFilter(0);
+        $legacyStockStatuses = $this->legacyStockStatusRepository->getList($legacyStockStatusCriteria)->getItems();
+        $legacyStockStatus = reset($legacyStockStatuses);
+
+        self::assertEquals(
+            Status::STATUS_OUT_OF_STOCK,
+            $legacyStockStatus->getStockStatus(),
+            'A fully-reserved product must stay out of stock after re-saving its source item unchanged.'
+        );
+
+        $this->cleanupReservations->execute();
     }
 }

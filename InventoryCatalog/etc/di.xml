@@ -226,5 +226,11 @@
             <argument name="sourceItemsSave" xsi:type="object">Magento\Inventory\Model\SourceItem\Command\SourceItemsSaveWithoutLegacySynchronization</argument>
         </arguments>
     </type>
+    <type name="Magento\InventoryCatalog\Model\UpdateDefaultStock">
+        <arguments>
+            <argument name="areProductsSalable" xsi:type="object">Magento\InventoryIndexer\Model\AreProductsSalableWithReservations</argument>
+            <argument name="cache" xsi:type="object">Magento\InventorySalesApi\Model\CachePool</argument>
+        </arguments>
+    </type>
     <preference for="Magento\Framework\Indexer\Config\Converter\SortingAdjustmentInterface" type="Magento\InventoryCatalog\Model\SortingAdjustment" />
 </config>
