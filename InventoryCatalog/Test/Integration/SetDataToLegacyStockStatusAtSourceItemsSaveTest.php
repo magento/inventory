@@ -18,6 +18,7 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
+use Magento\InventoryApi\Model\CacheInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryIndexer\Model\IsProductSalable;
 use Magento\InventoryReservationsApi\Model\AppendReservationsInterface;
@@ -103,6 +104,11 @@ class SetDataToLegacyStockStatusAtSourceItemsSaveTest extends TestCase
     private $cleanupReservations;
 
     /**
+     * @var CacheInterface
+     */
+    private $cache;
+
+    /**
      * @inheritdoc
      */
     protected function setUp(): void
@@ -127,6 +133,7 @@ class SetDataToLegacyStockStatusAtSourceItemsSaveTest extends TestCase
         $this->reservationBuilder = Bootstrap::getObjectManager()->get(ReservationBuilderInterface::class);
         $this->appendReservations = Bootstrap::getObjectManager()->get(AppendReservationsInterface::class);
         $this->cleanupReservations = Bootstrap::getObjectManager()->get(CleanupReservationsInterface::class);
+        $this->cache = Bootstrap::getObjectManager()->get(\Magento\InventorySalesApi\Model\CachePool::class);
     }
 
     /**
@@ -219,6 +226,9 @@ class SetDataToLegacyStockStatusAtSourceItemsSaveTest extends TestCase
     public function testStatusUpdatedAfterSourceItemsSaveInFrontendArea(): void
     {
         $productSku = 'SKU-4';
+        // The frontend area's salability reader is cache-backed; earlier tests in this same
+        // process may have warmed it before this test's own fixtures wrote fresh data.
+        $this->cache->clean([$productSku], Stock::DEFAULT_STOCK_ID);
         // SKU-4 starts at quantity 0 / out of stock (source_items_on_default_source.php fixture).
         self::assertFalse($this->isProductSalable->execute($productSku, Stock::DEFAULT_STOCK_ID));
 
@@ -284,6 +294,9 @@ class SetDataToLegacyStockStatusAtSourceItemsSaveTest extends TestCase
     public function testReservationDrivenOutOfStockSurvivesUnchangedSourceItemSaveInFrontendArea(): void
     {
         $productSku = 'SKU-1';
+        // The frontend area's salability reader is cache-backed; earlier tests in this same
+        // process may have warmed it before this test's own fixtures wrote fresh data.
+        $this->cache->clean([$productSku], Stock::DEFAULT_STOCK_ID);
         // SKU-1 starts at quantity 5.5 / in stock (source_items_on_default_source.php fixture).
         self::assertTrue($this->isProductSalable->execute($productSku, Stock::DEFAULT_STOCK_ID));
 
