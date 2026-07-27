@@ -80,8 +80,7 @@ class GetStockItemsData implements GetStockItemsDataInterface
                 'stock_status.product_id = product_entity.entity_id',
                 []
             )->where(
-                'product_entity.sku IN (?)',
-                $skus
+                'product_entity.sku IN (:sku)'
             );
         } else {
             $select->from(
@@ -92,13 +91,12 @@ class GetStockItemsData implements GetStockItemsDataInterface
                     GetStockItemsDataInterface::IS_SALABLE => IndexStructure::IS_SALABLE,
                 ]
             )->where(
-                IndexStructure::SKU . ' IN (?)',
-                $skus
+                IndexStructure::SKU . ' IN (:sku)'
             );
         }
 
         try {
-            $stockItemRows = $connection->fetchAll($select) ?: [];
+            $stockItemRows = $connection->fetchAll($select, ['sku' => $skus]) ?: [];
 
             if (!empty($stockItemRows)) {
                 foreach ($stockItemRows as $row) {
@@ -141,7 +139,7 @@ class GetStockItemsData implements GetStockItemsDataInterface
         foreach ($results as $sku => $result) {
             $normalizedResults[$this->normalizeSku((string) $sku)] = $result;
         }
-        
+
         $finalResults = [];
         foreach (array_unique($originalSkus) as $sku) {
             $normalizedSku = $this->normalizeSku((string) $sku);
