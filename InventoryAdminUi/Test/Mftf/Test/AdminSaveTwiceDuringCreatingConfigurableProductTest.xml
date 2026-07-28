@@ -41,7 +41,7 @@
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <!-- Delete all products via API -->
             <helper class="Magento\Catalog\Test\Mftf\Helper\ProductApiHelper" method="deleteAllProductsApi" stepKey="deleteAllProductsViaApi"/>
-
+            <actionGroup ref="AdminResetFilterInManageSourcesGridActionGroup" stepKey="resetManageSourcesGridFilters"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
         </after>
         <comment userInput="Create Configurable product with two options 'In Stock' on 'Default' stock"

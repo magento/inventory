@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright 2026 Adobe
+ * All Rights Reserved.
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontBundleProductOutOfStockWhenDefaultQtyExceedsSalableQtyTest">
+        <annotations>
+            <features value="Inventory Management"/>
+            <stories value="Bundle product is out of stock when bundle default quantity exceeds child salable quantity"/>
+            <title value="Bundle product marked out of stock on storefront when default option qty exceeds salable qty"/>
+            <description value="Bundle product is out of stock when default option quantity requires more items than are salable."/>
+            <severity value="MAJOR"/>
+            <testCaseId value="ACP2E-4220"/>
+            <group value="msi"/>
+        </annotations>
+        <before>
+            <!-- Create additional source and stock -->
+            <createData entity="FullSource1" stepKey="additionalSource"/>
+            <createData entity="BasicMsiStock1" stepKey="additionalStock"/>
+            <!-- Link source to stock -->
+            <createData entity="SourceStockLinked1" stepKey="linkSourceToStock">
+                <requiredEntity createDataKey="additionalStock"/>
+                <requiredEntity createDataKey="additionalSource"/>
+            </createData>
+            <!-- Create simple products -->
+            <createData entity="SimpleProduct" stepKey="simple1"/>
+            <createData entity="SimpleProduct" stepKey="simple2"/>
+            <createData entity="Msi_US_Customer" stepKey="customer"/>
+            <!-- Login as admin -->
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <!-- Open simple product page -->
+            <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openProductEditPage1">
+                <argument name="productId" value="$$simple1.id$$"/>
+            </actionGroup>
+            <waitForElementVisible selector="{{AdminProductSourcesGrid.rowQty('0')}}" stepKey="waitForSimple1SourceQty"/>
+            <!-- Set source qty -->
+            <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="6" stepKey="setSimple1SourceQty"/>
+            <!-- Set out-of-stock threshold -->
+            <actionGroup ref="AdminChangeOutOfStockThresholdOnProductEditPageActionGroup" stepKey="setSimple1OutOfStockThreshold">
+                <argument name="threshold" value="3"/>
+            </actionGroup>
+            <!-- Set max qty in cart -->
+            <actionGroup ref="AdminApplyMinAndMaxQtyOnProductEditPageActionGroup" stepKey="setSimple1MaxQty">
+                <argument name="minQty" value="1"/>
+                <argument name="maxQty" value="6"/>
+            </actionGroup>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveSimple1"/>
+            <!-- Open simple product page -->
+            <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openProductEditPage2">
+                <argument name="productId" value="$$simple2.id$$"/>
+            </actionGroup>
+            <waitForElementVisible selector="{{AdminProductSourcesGrid.rowQty('0')}}" stepKey="waitForSimple2SourceQty"/>
+            <!-- Set source qty -->
+            <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="200" stepKey="setSimple2SourceQty"/>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveSimple2"/>
+            <!-- Navigate to new order page -->
+            <actionGroup ref="AdminNavigateToNewOrderPageExistingCustomerActionGroup" stepKey="goToCreateOrder">
+                <argument name="customer" value="$$customer$$"/>
+            </actionGroup>
+            <conditionalClick selector="{{AdminOrderFormStoreSelectorSection.defaultStoreViewButton}}" dependentSelector="{{AdminOrderFormStoreSelectorSection.storeSelectorContainer}}" visible="true" stepKey="selectDefaultStoreView"/>
+            <waitForPageLoad stepKey="waitForAddProductPageOpened"/>
+            <!-- Add simple products to order -->
+            <actionGroup ref="AddSimpleProductWithQtyToOrderActionGroup" stepKey="addSimple1ToOrder">
+                <argument name="product" value="$$simple1$$"/>
+                <argument name="productQty" value="2"/>
+            </actionGroup>
+            <actionGroup ref="AddSimpleProductWithQtyToOrderActionGroup" stepKey="addSimple2ToOrder">
+                <argument name="product" value="$$simple2$$"/>
+                <argument name="productQty" value="1"/>
+            </actionGroup>
+            <!-- Select shipping method and submit order -->
+            <actionGroup ref="OrderSelectFlatRateShippingActionGroup" stepKey="selectShipping"/>
+            <actionGroup ref="AdminOrderClickSubmitOrderActionGroup" stepKey="submitOrder"/>
+            <!-- Assert salable qty after order simple1 -->
+            <actionGroup ref="AdminGoToProductGridFilterResultsByInput" stepKey="filterProductGridBySimple1Sku">
+                <argument name="filter_selector" value="AdminProductGridFilterSection.skuFilter"/>
+                <argument name="filter_value" value="$$simple1.sku$$"/>
+            </actionGroup>
+            <waitForText selector="{{AdminProductGridSection.productSalableQty('1', 'Default Stock')}}" userInput="1" stepKey="assertSimple1SalableQtyAfterOrder"/>
+            <!-- Assert salable qty after order simple2 -->
+            <actionGroup ref="AdminGoToProductGridFilterResultsByInput" stepKey="filterProductGridBySimple2Sku">
+                <argument name="filter_selector" value="AdminProductGridFilterSection.skuFilter"/>
+                <argument name="filter_value" value="$$simple2.sku$$"/>
+            </actionGroup>
+            <waitForText selector="{{AdminProductGridSection.productSalableQty('1', 'Default Stock')}}" userInput="199" stepKey="assertSimple2SalableQtyAfterOrder"/>
+            <!-- Create bundle product with two radio options -->
+            <createData entity="ApiBundleProductShipmentTypeSeparately" stepKey="bundleProduct">
+                <field key="sku">bp1</field>
+                <field key="name">bp1</field>
+            </createData>
+            <createData entity="RadioButtonsOption" stepKey="bundleOption1">
+                <requiredEntity createDataKey="bundleProduct"/>
+                <field key="title">op1</field>
+            </createData>
+            <createData entity="RadioButtonsOption" stepKey="bundleOption2">
+                <requiredEntity createDataKey="bundleProduct"/>
+                <field key="title">op2</field>
+            </createData>
+            <createData entity="ApiBundleLink" stepKey="bundleLink1">
+                <requiredEntity createDataKey="bundleProduct"/>
+                <requiredEntity createDataKey="bundleOption1"/>
+                <requiredEntity createDataKey="simple1"/>
+                <field key="qty">2</field>
+                <field key="is_default">0</field>
+                <field key="can_change_quantity">0</field>
+            </createData>
+            <createData entity="ApiBundleLink" stepKey="bundleLink2">
+                <requiredEntity createDataKey="bundleProduct"/>
+                <requiredEntity createDataKey="bundleOption2"/>
+                <requiredEntity createDataKey="simple2"/>
+                <field key="qty">150</field>
+                <field key="is_default">0</field>
+                <field key="can_change_quantity">0</field>
+            </createData>
+        </before>
+        <after>
+            <!-- Reset product grid filter applied in before block -->
+            <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openProductIndexPage"/>
+            <actionGroup ref="ClearFiltersAdminDataGridActionGroup" stepKey="resetProductGridFilter"/>
+            <!-- Delete created data -->
+            <deleteData createDataKey="bundleProduct" stepKey="deleteBundle"/>
+            <deleteData createDataKey="simple1" stepKey="deleteSimple1"/>
+            <deleteData createDataKey="simple2" stepKey="deleteSimple2"/>
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableAdditionalSource">
+                <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
+            </actionGroup>
+            <deleteData createDataKey="additionalStock" stepKey="deleteAdditionalStock"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
+        </after>
+        <!-- Open bundle product page -->
+        <actionGroup ref="StorefrontOpenProductPageActionGroup" stepKey="openBundleProductPage">
+            <argument name="productUrl" value="$$bundleProduct.custom_attributes[url_key]$$"/>
+        </actionGroup>
+        <!-- Product must be marked out of stock  -->
+        <waitForElementVisible selector="{{StorefrontProductInfoMainSection.productStockStatus}}" stepKey="waitForStockStatus"/>
+        <grabTextFrom selector="{{StorefrontProductInfoMainSection.productStockStatus}}" stepKey="grabStockStatus"/>
+        <assertEquals stepKey="assertProductOutOfStock">
+            <expectedResult type="string">{{SourceStatusOutOfStock.storefront_display}}</expectedResult>
+            <actualResult type="variable">grabStockStatus</actualResult>
+        </assertEquals>
+        <waitForElementNotVisible selector="{{StorefrontProductActionSection.addToCart}}" stepKey="assertAddToCartNotPresent"/>
+    </test>
+</tests>

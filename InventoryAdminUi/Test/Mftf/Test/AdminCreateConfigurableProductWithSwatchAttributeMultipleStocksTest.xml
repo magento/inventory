@@ -83,6 +83,9 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableAdditionalWebsiteSource">
                 <argument name="sourceCode" value="$$additionalSourceAdditionalWebsite.source[source_code]$$"/>
             </actionGroup>
+            <!--Clear filters and logout.-->
+            <amOnPage url="{{ProductCatalogPage.url}}" stepKey="openProductPage"/>
+            <actionGroup ref="ClearFiltersAdminProductGridActionGroup" stepKey="clearProductGridFilter"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <!--Delete category, stocks and revert configuration.-->
             <magentoCLI command="config:set {{StorefrontDisableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlDisable"/>

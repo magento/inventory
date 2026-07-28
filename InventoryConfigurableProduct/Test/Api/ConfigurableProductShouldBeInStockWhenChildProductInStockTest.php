@@ -28,6 +28,7 @@ use Magento\TestFramework\Fixture\DataFixtureStorage;
 use Magento\TestFramework\Fixture\DataFixtureStorageManager;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\TestCase\WebapiAbstract;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Test validation on add source to child product of configurable product.
@@ -203,10 +204,8 @@ class ConfigurableProductShouldBeInStockWhenChildProductInStockTest extends Weba
         self::assertEquals(1, $collection->count());
     }
 
-    /**
-     * @dataProvider updateConfigurableStockStatusUsingStockItemAPIDataProvider
-     */
     #[
+        DataProvider('updateConfigurableStockStatusUsingStockItemAPIDataProvider'),
         AppArea('frontend'),
         DataFixture(Attribute::class, ['options' => [['label' => 'option', 'sort_order' => 0]]], as:'attribute'),
         DataFixture(Product::class, as: 'simple'),

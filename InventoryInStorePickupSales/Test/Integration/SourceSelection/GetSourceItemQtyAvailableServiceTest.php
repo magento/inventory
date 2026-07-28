@@ -14,6 +14,7 @@ use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryInStorePickupSales\Model\SourceSelection\GetSourceItemQtyAvailableService;
 use Magento\TestFramework\Helper\Bootstrap;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -91,14 +92,13 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
      *
      * @magentoDbIsolation disabled
      *
-     * @dataProvider singleStorePickupOrderProvider
-     *
      * @param string $sourceCode
      * @param string $sku
      * @param float $qtyExpected
      *
      * @throws NoSuchEntityException
      */
+    #[DataProvider('singleStorePickupOrderProvider')]
     public function testSingleStorePickupOrder(string $sourceCode, string $sku, float $qtyExpected)
     {
         $sourceItem = $this->getSourceItem($sourceCode, $sku);
@@ -128,7 +128,6 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
      *
      * @magentoDbIsolation disabled
      *
-     * @dataProvider multipleStorePickupOrdersProvider
      *
      * @param string $sourceCode
      * @param string $sku
@@ -136,6 +135,7 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
      *
      * @throws
      */
+    #[DataProvider('multipleStorePickupOrdersProvider')]
     public function testMultipleStorePickupOrders(string $sourceCode, string $sku, float $qtyExpected)
     {
         $sourceItem = $this->getSourceItem($sourceCode, $sku);

@@ -13,6 +13,7 @@ use Magento\InventorySourceSelectionApi\Api\Data\ItemRequestInterfaceFactory;
 use Magento\InventorySourceSelectionApi\Model\Algorithms\Result\GetDefaultSortedSourcesResult;
 use PHPUnit\Framework\TestCase;
 use Magento\TestFramework\Helper\Bootstrap;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class GetDefaultSortedSourcesResultTest extends TestCase
 {
@@ -153,7 +154,6 @@ class GetDefaultSortedSourcesResultTest extends TestCase
      * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
-     * @dataProvider shouldReturnDefaultResultsDataProvider
      * @param int $stockId
      * @param array $requestItemsData
      * @param array $sortedSourcesCodes
@@ -161,6 +161,7 @@ class GetDefaultSortedSourcesResultTest extends TestCase
      * @param bool $expectIsShippable
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
+    #[DataProvider('shouldReturnDefaultResultsDataProvider')]
     public function testShouldReturnDefaultResults(
         int $stockId,
         array $requestItemsData,

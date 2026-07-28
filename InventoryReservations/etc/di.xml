@@ -11,6 +11,8 @@
     <preference for="Magento\InventoryReservationsApi\Model\ReservationBuilderInterface" type="Magento\InventoryReservations\Model\ReservationBuilder"/>
     <preference for="Magento\InventoryReservationsApi\Model\CleanupReservationsInterface" type="Magento\InventoryReservations\Model\ResourceModel\CleanupReservations"/>
     <preference for="Magento\InventoryReservationsApi\Model\GetReservationsQuantityInterface" type="Magento\InventoryReservations\Model\ResourceModel\GetReservationsQuantity"/>
+    <preference for="Magento\InventoryReservationsApi\Model\GetReservationsQuantityBySkuListInterface" type="Magento\InventoryReservations\Model\ResourceModel\GetReservationsQuantityBySkuList"/>
+    <preference for="Magento\InventoryReservationsApi\Model\GetReservationsQuantityBySkuListCacheInterface" type="Magento\InventoryReservations\Model\GetReservationsQuantityBySkuListCache"/>
     <type name="Magento\InventoryReservations\Model\ResourceModel\CleanupReservations">
         <arguments>
             <argument name="groupConcatMaxLen" xsi:type="number">32768</argument>

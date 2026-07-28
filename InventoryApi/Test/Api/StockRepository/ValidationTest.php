@@ -12,6 +12,7 @@ use Magento\Framework\Webapi\Rest\Request;
 use Magento\InventoryApi\Api\Data\StockInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\TestFramework\TestCase\WebapiAbstract;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ValidationTest extends WebapiAbstract
 {
@@ -33,8 +34,8 @@ class ValidationTest extends WebapiAbstract
      * @param string $field
      * @param array $expectedErrorData
      * @throws \Exception
-     * @dataProvider dataProviderRequiredFields
      */
+    #[DataProvider('dataProviderRequiredFields')]
     public function testCreateWithMissedRequiredFields(string $field, array $expectedErrorData)
     {
         $data = $this->validData;
@@ -80,8 +81,8 @@ class ValidationTest extends WebapiAbstract
      * @param string $field
      * @param string|null $value
      * @param array $expectedErrorData
-     * @dataProvider failedValidationDataProvider
      */
+    #[DataProvider('failedValidationDataProvider')]
     public function testFailedValidationOnCreate(string $field, $value, array $expectedErrorData)
     {
         $data = $this->validData;
@@ -142,9 +143,9 @@ class ValidationTest extends WebapiAbstract
      * @param string $field
      * @param string|null $value
      * @param array $expectedErrorData
-     * @dataProvider failedValidationDataProvider
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock.php
      */
+    #[DataProvider('failedValidationDataProvider')]
     public function testFailedValidationOnUpdate(string $field, $value, array $expectedErrorData)
     {
         $data = $this->validData;

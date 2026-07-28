@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Test\Unit\Model;
 
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\HTTP\PhpEnvironment\Request;
 use Magento\InventoryApi\Api\Data\StockInterface;
 use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
@@ -88,6 +89,54 @@ class GetStockIdForCurrentWebsiteTest extends TestCase
             ->method('getWebsite')
             ->with($websiteId)
             ->willReturn($website);
+        $this->stockResolver->expects($this->once())
+            ->method('execute')
+            ->with(SalesChannelInterface::TYPE_WEBSITE, $websiteCode)
+            ->willReturn($stock);
+
+        $this->assertSame($stockId, $this->model->execute());
+    }
+
+    /**
+     * @return void
+     */
+    public function testExecuteWithInvalidStoreFallsBackToCurrentStore(): void
+    {
+        $invalidStoreCode = 'noneExistent';
+        $websiteId = 1;
+        $websiteCode = 'base';
+        $stockId = 1;
+
+        $this->request->expects($this->once())->method('getParam')
+            ->with('store')
+            ->willReturn($invalidStoreCode);
+
+        $currentStore = $this->createMock(StoreInterface::class);
+        $currentStore->expects($this->once())
+            ->method('getWebsiteId')
+            ->willReturn($websiteId);
+
+        $this->storeManager->expects($this->exactly(2))
+            ->method('getStore')
+            ->willReturnCallback(function ($storeId = null) use ($invalidStoreCode, $currentStore) {
+                if ($storeId === $invalidStoreCode) {
+                    throw new NoSuchEntityException(__('The store that was requested wasn\'t found.'));
+                }
+                return $currentStore;
+            });
+
+        $website = $this->createMock(WebsiteInterface::class);
+        $website->expects($this->once())
+            ->method('getCode')
+            ->willReturn($websiteCode);
+        $this->storeManager->expects($this->once())
+            ->method('getWebsite')
+            ->with($websiteId)
+            ->willReturn($website);
+
+        $stock = $this->createMock(StockInterface::class);
+        $stock->expects($this->once())->method('getStockId')
+            ->willReturn($stockId);
         $this->stockResolver->expects($this->once())
             ->method('execute')
             ->with(SalesChannelInterface::TYPE_WEBSITE, $websiteCode)

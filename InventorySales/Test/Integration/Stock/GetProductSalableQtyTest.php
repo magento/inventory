@@ -12,6 +12,7 @@ use Magento\InventoryReservationsApi\Model\AppendReservationsInterface;
 use Magento\InventoryReservationsApi\Model\ReservationBuilderInterface;
 use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
 use Magento\TestFramework\Helper\Bootstrap;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class GetProductSalableQtyTest extends TestCase
@@ -66,10 +67,9 @@ class GetProductSalableQtyTest extends TestCase
      * @param int $stockId
      * @param float $qty
      *
-     * @dataProvider getProductQuantityProvider
-     *
      * @magentoDbIsolation disabled
      */
+    #[DataProvider('getProductQuantityProvider')]
     public function testGetProductQuantity(string $sku, int $stockId, float $qty)
     {
         self::assertEquals($qty, $this->getProductSalableQty->execute($sku, $stockId));

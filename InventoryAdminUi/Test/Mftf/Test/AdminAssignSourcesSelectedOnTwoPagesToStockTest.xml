@@ -18,9 +18,6 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
-            <skip>
-                <issueId value="MQE-3516"/>
-            </skip>
         </annotations>
         <before>
             <createData entity="BasicMsiStock1" stepKey="createStock"/>
@@ -50,8 +47,9 @@
         </before>
         <after>
             <deleteData createDataKey="createStock" stepKey="deleteStock"/>
-            <amOnPage url="{{AdminManageStockPage.url}}" stepKey="amOnStockListPage"/>
-            <actionGroup ref="AdminGridFilterResetActionGroup" stepKey="clearSourceFilters"/>
+            <amOnPage url="{{AdminManageStockPage.url}}" stepKey="goToStockGridBeforeClearFilters"/>
+            <waitForPageLoad stepKey="waitForStockGridLoad"/>
+            <actionGroup ref="ClearFiltersAdminDataGridActionGroup" stepKey="clearInventoryStockListingFiltersAfter"/>
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">

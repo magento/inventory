@@ -15,6 +15,7 @@ use Magento\Sales\Api\Data\OrderExtensionInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\TestFramework\Helper\Bootstrap;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @inheritdoc
@@ -64,11 +65,10 @@ class IsOrderReadyForPickupTest extends \PHPUnit\Framework\TestCase
      *
      * @magentoDbIsolation disabled
      *
-     * @dataProvider dataProvider
-     *
      * @param string $sourceId
      * @param bool $expectedResult
      */
+    #[DataProvider('dataProvider')]
     public function testIsOrderReadyForPickUp(string $sourceId, bool $expectedResult)
     {
         $createdOrder = $this->getCreatedOrder();

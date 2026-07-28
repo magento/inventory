@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Model;
 
+use Magento\InventoryApi\Model\CacheInterface;
 use Magento\InventorySalesApi\Api\AreProductsSalableForRequestedQtyInterface;
 use Magento\InventorySalesApi\Api\Data\IsProductSalableForRequestedQtyResultInterfaceFactory;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
@@ -17,25 +18,16 @@ use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
 class AreProductsSalableForRequestedQty implements AreProductsSalableForRequestedQtyInterface
 {
     /**
-     * @var IsProductSalableForRequestedQtyInterface
-     */
-    private $isProductSalableForRequestedQtyInterface;
-
-    /**
-     * @var IsProductSalableForRequestedQtyResultInterfaceFactory
-     */
-    private $isProductSalableForRequestedQtyResultFactory;
-
-    /**
      * @param IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQtyInterface
      * @param IsProductSalableForRequestedQtyResultInterfaceFactory $isProductSalableForRequestedQtyResultFactory
+     * @param CacheInterface $cache
      */
     public function __construct(
-        IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQtyInterface,
-        IsProductSalableForRequestedQtyResultInterfaceFactory $isProductSalableForRequestedQtyResultFactory
+        private readonly IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQtyInterface,
+        private readonly IsProductSalableForRequestedQtyResultInterfaceFactory
+        $isProductSalableForRequestedQtyResultFactory,
+        private readonly CacheInterface $cache
     ) {
-        $this->isProductSalableForRequestedQtyInterface = $isProductSalableForRequestedQtyInterface;
-        $this->isProductSalableForRequestedQtyResultFactory = $isProductSalableForRequestedQtyResultFactory;
     }
 
     /**
@@ -46,6 +38,13 @@ class AreProductsSalableForRequestedQty implements AreProductsSalableForRequeste
         int $stockId
     ): array {
         $results = [];
+        $this->cache->warmup(
+            array_map(
+                static fn ($request) => $request->getSku(),
+                $skuRequests
+            ),
+            $stockId
+        );
         foreach ($skuRequests as $request) {
             $result = $this->isProductSalableForRequestedQtyInterface->execute(
                 $request->getSku(),

@@ -77,6 +77,9 @@
             <actionGroup ref="DeleteProductsIfTheyExistActionGroup" stepKey="deleteAllProducts"/>
             <!--Disable source.-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <!--Clear Filters on Order Grid-->
+            <actionGroup ref="AdminOrdersPageOpenActionGroup" stepKey="navigateToSalesOrderPage"/>
+            <actionGroup ref="ClearFiltersAdminDataGridActionGroup" stepKey="clickOnButtonToRemoveFiltersIfPresent"/>
             <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex2">
                 <argument name="indices" value=""/>
             </actionGroup>

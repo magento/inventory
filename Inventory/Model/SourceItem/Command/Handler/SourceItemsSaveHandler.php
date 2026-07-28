@@ -11,6 +11,7 @@ use Exception;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Validation\ValidationException;
+use Magento\Inventory\Model\IsProductAssignedToStock\CacheStorage;
 use Magento\Inventory\Model\ResourceModel\SourceItem\SaveMultiple;
 use Magento\Inventory\Model\SourceItem\Validator\SourceItemsValidator;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
@@ -22,33 +23,17 @@ use Psr\Log\LoggerInterface;
 class SourceItemsSaveHandler
 {
     /**
-     * @var SourceItemsValidator
-     */
-    private $sourceItemsValidator;
-
-    /**
-     * @var SaveMultiple
-     */
-    private $saveMultiple;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
      * @param SourceItemsValidator $sourceItemsValidator
      * @param SaveMultiple $saveMultiple
      * @param LoggerInterface $logger
+     * @param CacheStorage $isProductAssignedToStockCacheStorage
      */
     public function __construct(
-        SourceItemsValidator $sourceItemsValidator,
-        SaveMultiple $saveMultiple,
-        LoggerInterface $logger
+        private readonly SourceItemsValidator $sourceItemsValidator,
+        private readonly SaveMultiple $saveMultiple,
+        private readonly LoggerInterface $logger,
+        private readonly CacheStorage $isProductAssignedToStockCacheStorage
     ) {
-        $this->sourceItemsValidator = $sourceItemsValidator;
-        $this->saveMultiple = $saveMultiple;
-        $this->logger = $logger;
     }
 
     /**
@@ -74,6 +59,9 @@ class SourceItemsSaveHandler
 
         try {
             $this->saveMultiple->execute($sourceItems);
+            foreach ($sourceItems as $sourceItem) {
+                $this->isProductAssignedToStockCacheStorage->delete((string) $sourceItem->getSku());
+            }
         } catch (Exception $e) {
             $this->logger->error($e->getMessage());
             throw new CouldNotSaveException(__('Could not save Source Item'), $e);

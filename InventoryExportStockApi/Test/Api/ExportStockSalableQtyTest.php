@@ -2,6 +2,8 @@
 /**
  * Copyright 2025 Adobe
  * All Rights Reserved.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 declare(strict_types=1);
 
@@ -24,12 +26,14 @@ use Magento\TestFramework\Fixture\DataFixture;
 use Magento\TestFramework\Fixture\DataFixtureStorage;
 use Magento\TestFramework\Fixture\DataFixtureStorageManager;
 use Magento\TestFramework\Helper\Bootstrap;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Salable qty export tests for different types of products.
  *
  * @see https://app.hiptest.com/projects/69435/test-plan/folders/908874/scenarios/3042272
  * @see https://app.hiptest.com/projects/69435/test-plan/folders/908874/scenarios/3042336
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ExportStockSalableQtyTest extends OrderPlacementBase
 {
@@ -60,10 +64,10 @@ class ExportStockSalableQtyTest extends OrderPlacementBase
      * @magentoApiDataFixture Magento_InventoryCatalog::Test/_files/source_items_on_default_source.php
      * @magentoApiDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      *
-     * @dataProvider simpleProductTypesDataProvider()
      * @param array $filters
      * @return void
      */
+    #[DataProvider('simpleProductTypesDataProvider')]
     public function testExportSimpleProductTypesWithReservationsDefaultWebsiteDefaultStock(array $filters): void
     {
         $this->_markTestAsRestOnly();
@@ -142,10 +146,10 @@ class ExportStockSalableQtyTest extends OrderPlacementBase
      * @magentoApiDataFixture Magento_InventoryCatalog::Test/_files/product_virtual_source_item_on_additional_source.php
      * @magentoApiDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      *
-     * @dataProvider simpleProductTypesDataProvider()
      * @param array $filters
      * @return void
      */
+    #[DataProvider('simpleProductTypesDataProvider')]
     public function testExportSimpleProductTypesWithReservationsAdditionalWebsiteAdditionalStock(array $filters): void
     {
         $this->_markTestAsRestOnly();

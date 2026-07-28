@@ -14,14 +14,14 @@ class CacheStorage implements ResetAfterRequestInterface
     /**
      * @var array
      */
-    private $cachedItemData = [[]];
+    private $cachedItemData = [];
 
     /**
      * @inheritDoc
      */
     public function _resetState(): void
     {
-        $this->cachedItemData = [[]];
+        $this->cachedItemData = [];
     }
 
     /**
@@ -33,7 +33,7 @@ class CacheStorage implements ResetAfterRequestInterface
      */
     public function set(int $stockId, string $sku, array $stockItemData): void
     {
-        $this->cachedItemData[$stockId][$sku] = $stockItemData;
+        $this->cachedItemData[$sku][$stockId] = $stockItemData;
     }
 
     /**
@@ -41,21 +41,25 @@ class CacheStorage implements ResetAfterRequestInterface
      *
      * @param int $stockId
      * @param string $sku
-     * @return array
+     * @return array|null
      */
     public function get(int $stockId, string $sku): ?array
     {
-        return $this->cachedItemData[$stockId][$sku] ?? null;
+        return $this->cachedItemData[$sku][$stockId] ?? null;
     }
 
     /**
      * Delete item from cache
      *
-     * @param int $stockId
      * @param string $sku
+     * @param int|null $stockId
      */
-    public function delete(int $stockId, string $sku): void
+    public function delete(string $sku, ?int $stockId): void
     {
-        unset($this->cachedItemData[$stockId][$sku]);
+        if ($stockId === null) {
+            unset($this->cachedItemData[$sku]);
+        } else {
+            unset($this->cachedItemData[$sku][$stockId]);
+        }
     }
 }

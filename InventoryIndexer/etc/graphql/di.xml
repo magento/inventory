@@ -10,4 +10,11 @@
     <preference for="Magento\InventorySalesApi\Model\GetStockItemDataInterface" type="Magento\InventoryIndexer\Model\ResourceModel\GetStockItemDataCache"/>
     <preference for="Magento\InventorySalesApi\Model\GetStockItemsDataInterface" type="Magento\InventoryIndexer\Model\ResourceModel\GetStockItemsDataCache"/>
     <preference for="Magento\InventorySalesApi\Api\AreProductsSalableInterface" type="Magento\InventoryIndexer\Model\AreMultipleProductsSalable"/>
+    <type name="Magento\InventorySalesApi\Model\CachePool">
+        <arguments>
+            <argument name="pool" xsi:type="array">
+                <item name="stock_item_data" xsi:type="object">Magento\InventoryIndexer\Model\ResourceModel\GetStockItemsDataCache</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

@@ -13,6 +13,7 @@ use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\TestCase\WebapiAbstract;
 use Magento\Webapi\Model\Soap\Fault;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class PreventAssignSourcesToDefaultStockTest extends WebapiAbstract
 {
@@ -30,8 +31,8 @@ class PreventAssignSourcesToDefaultStockTest extends WebapiAbstract
      * @param int $stockId
      * @param array $expectedErrorData
      * @throws \Exception
-     * @dataProvider dataProviderWrongParameters
      */
+    #[DataProvider('dataProviderWrongParameters')]
     public function testAssignSourcesToStockWithWrongParameters(
         array $sourceCodes,
         int $stockId,

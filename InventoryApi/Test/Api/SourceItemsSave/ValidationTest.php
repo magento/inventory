@@ -11,6 +11,7 @@ use Magento\Framework\Webapi\Exception;
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\TestFramework\TestCase\WebapiAbstract;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ValidationTest extends WebapiAbstract
 {
@@ -37,8 +38,8 @@ class ValidationTest extends WebapiAbstract
      * @throws \Exception
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @dataProvider dataProviderRequiredFields
      */
+    #[DataProvider('dataProviderRequiredFields')]
     public function testCreateWithMissedRequiredFields(string $field, array $expectedErrorData)
     {
         $data = $this->validData;
@@ -128,8 +129,8 @@ class ValidationTest extends WebapiAbstract
      * @param array $expectedErrorData
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @dataProvider failedValidationDataProvider
      */
+    #[DataProvider('failedValidationDataProvider')]
     public function testFailedValidationOnCreate(string $field, $value, array $expectedErrorData)
     {
         $data = $this->validData;
@@ -327,8 +328,8 @@ class ValidationTest extends WebapiAbstract
      * @param array $expectedErrorData
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @dataProvider failedValidationRelatedOnlyForRestDataProvider
      */
+    #[DataProvider('failedValidationRelatedOnlyForRestDataProvider')]
     public function testFailedValidationOnCreateRelatedOnlyForRest(string $field, $value, array $expectedErrorData)
     {
         if (TESTS_WEB_API_ADAPTER === self::ADAPTER_SOAP) {

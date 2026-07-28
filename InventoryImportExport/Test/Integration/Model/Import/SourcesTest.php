@@ -21,6 +21,7 @@ use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\InventoryImportExport\Model\Import\Sources;
 use Magento\TestFramework\Helper\Bootstrap;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -254,9 +255,9 @@ class SourcesTest extends TestCase
      * @magentoDataFixture Magento_InventoryImportExport::Test/_files/sources_sample_file.php
      * @magentoDataFixture Magento_InventoryImportExport::Test/_files/source_items_sample_file.php
      * @param array $expectedData
-     * @dataProvider getSampleFileExpectedData()
      * @see https://app.hiptest.com/projects/69435/test-plan/folders/908874/scenarios/1418539
      */
+    #[DataProvider('getSampleFileExpectedData')]
     public function testAddUpdateWithSampleFile(array $expectedData): void
     {
         $importer = $this->getImporter(Import::BEHAVIOR_APPEND, '/_files/sample.csv');
@@ -283,9 +284,9 @@ class SourcesTest extends TestCase
      * @magentoDataFixture Magento_InventoryImportExport::Test/_files/sources_sample_file.php
      * @magentoDataFixture Magento_InventoryImportExport::Test/_files/source_items_sample_file.php
      * @param array $expectedData
-     * @dataProvider getSampleFileExpectedData()
      * @see https://app.hiptest.com/projects/69435/test-plan/folders/908874/scenarios/1465136
      */
+    #[DataProvider('getSampleFileExpectedData')]
     public function testReplaceWithSampleFile(array $expectedData): void
     {
         $importer = $this->getImporter(Import::BEHAVIOR_REPLACE, '/_files/sample.csv');
@@ -413,9 +414,10 @@ class SourcesTest extends TestCase
      * @magentoDataFixture Magento_InventoryImportExport::Test/_files/sources_sample_file.php
      * @magentoDataFixture Magento_InventoryImportExport::Test/_files/source_items_sample_file.php
      * @param array $expectedData
-     * @dataProvider getSampleFileExpectedDataDeleteBehavior()
      * @see https://app.hiptest.com/projects/69435/test-plan/folders/908874/scenarios/1465136
      */
+    #[DataProvider('getSampleFileExpectedDataDeleteBehavior')]
+
     public function testDeleteWithSampleFile(array $expectedData): void
     {
         $importer = $this->getImporter(Import::BEHAVIOR_DELETE, '/_files/sample.csv');
@@ -559,7 +561,7 @@ class SourcesTest extends TestCase
     {
         $this->importDataMock->expects($this->any())
             ->method('getNextBunch')
-            ->will($this->onConsecutiveCalls($bunch, false));
+            ->willReturnOnConsecutiveCalls($bunch, false);
 
         $this->importer->importData();
     }

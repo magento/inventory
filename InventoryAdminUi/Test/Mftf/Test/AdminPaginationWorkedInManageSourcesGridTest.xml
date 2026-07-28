@@ -47,6 +47,7 @@
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin1"/>
         </before>
         <after>
+            <actionGroup ref="AdminResetFilterInManageSourcesGridActionGroup" stepKey="resetManageSourcesGridFilters"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
         </after>
 

@@ -11,6 +11,7 @@ use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\TestFramework\Helper\Bootstrap;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class GetStockStatusBySkuOnDefaultStockTest extends TestCase
@@ -48,8 +49,8 @@ class GetStockStatusBySkuOnDefaultStockTest extends TestCase
      * @param int $status
      * @param float $qty
      *
-     * @dataProvider getStatusDataProvider
      */
+    #[DataProvider('getStatusDataProvider')]
     public function testGetStatusIfScopeIdParameterIsNotPassed(string $sku, int $status, float $qty): void
     {
         $stockStatus = $this->stockRegistry->getStockStatusBySku($sku);
@@ -66,8 +67,8 @@ class GetStockStatusBySkuOnDefaultStockTest extends TestCase
      * @param int $status
      * @param float $qty
      *
-     * @dataProvider getStatusDataProvider
      */
+    #[DataProvider('getStatusDataProvider')]
     public function testGetStatusIfScopeIdParameterIsPassed(string $sku, int $status, float $qty): void
     {
         $stockStatus = $this->stockRegistry->getStockStatusBySku($sku, $this->defaultStockProvider->getId());

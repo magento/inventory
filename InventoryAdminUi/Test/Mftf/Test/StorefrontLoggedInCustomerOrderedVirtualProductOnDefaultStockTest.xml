@@ -53,6 +53,7 @@
             <createData entity="VirtualProduct" stepKey="product"/>
         </before>
         <after>
+            <actionGroup ref="AdminResetFilterInManageSourcesGridActionGroup" stepKey="resetManageSourcesGridFilters"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>

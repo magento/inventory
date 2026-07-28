@@ -14,6 +14,7 @@ use Magento\InventoryInStorePickup\Model\GetPickupLocations;
 use Magento\InventoryInStorePickupApi\Model\SearchRequestBuilderInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\TestFramework\Helper\Bootstrap;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -60,11 +61,11 @@ class GeneralTest extends TestCase
      * @param array $sortOrder
      * @param string[] $sortedPickupLocationCodes
      *
-     * @dataProvider executeDataProvider
      * @magentoAppArea frontend
      *
      * @magentoDbIsolation disabled
      */
+    #[DataProvider('executeDataProvider')]
     public function testExecute(
         string $salesChannelCode,
         array $paging,

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright 2026 Adobe
+ * All Rights Reserved.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magento\InventoryReservationsApi\Model\GetReservationsQuantityInterface" type="Magento\InventoryReservations\Model\ResourceModel\GetReservationsQuantityCache"/>
+    <!-- Retrieve data from cache without persisting on cache misses. This allows using cache in REST area for preloaded data without affecting Admin REST where caching should be avoided. -->
+    <type name="Magento\InventoryReservations\Model\ResourceModel\GetReservationsQuantityCache">
+        <arguments>
+            <argument name="isReadonly" xsi:type="boolean">true</argument>
+        </arguments>
+    </type>
+</config>

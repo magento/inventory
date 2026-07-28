@@ -16,9 +16,6 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
-            <skip>
-                <issueId value="https://github.com/magento/inventory/issues/1821"/>
-            </skip>
         </annotations>
 
         <before>
@@ -87,6 +84,9 @@
         <amOnPage url="{{AdminProductEditPage.url($$bundleProduct.id$$)}}" stepKey="openBundleProductEditPage"/>
         <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="{{SourceStatusInStock.value}}" stepKey="selectOutOfStock"/>
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
         <!-- Check product is visible on Storefront-->
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="verifyProductVisibleOnStorefront">
             <argument name="category" value="$category$"/>

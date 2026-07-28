@@ -48,6 +48,8 @@
             <createData entity="MsiCustomer1" stepKey="createCustomer"/>
         </before>
         <after>
+            <actionGroup ref="AdminOrdersPageOpenActionGroup" stepKey="navigateToSalesOrderPage"/>
+            <actionGroup ref="ClearFiltersAdminDataGridActionGroup" stepKey="clickOnButtonToRemoveFiltersIfPresent"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
             <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>

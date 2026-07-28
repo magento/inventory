@@ -15,6 +15,7 @@ use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AreaInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchRequestBuilderInterface;
 use Magento\TestFramework\Helper\Bootstrap;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -63,11 +64,11 @@ class DistanceFilterOfflineTest extends TestCase
      * @param string[] $sortOrder
      * @param string[] $sortedPickupLocationCodes
      *
-     * @dataProvider executeDataProvider
      * @magentoAppArea frontend
      *
      * @magentoDbIsolation disabled
      */
+    #[DataProvider('executeDataProvider')]
     public function testExecute(
         array $searchRequestData,
         string $salesChannelCode,

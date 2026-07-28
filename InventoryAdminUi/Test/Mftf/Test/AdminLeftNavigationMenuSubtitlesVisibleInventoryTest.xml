@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright 2026 Adobe
+ * All Rights Reserved.
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminLeftNavigationMenuSubtitlesVisibleInventoryTest" extends="AdminLeftNavigationMenuSubTitlesVisibleTest">
+        <annotations>
+            <features value="InventoryAdminUi"/>
+            <stories value="Admin left navigation menu in Inventory"/>
+            <title value="Admin left navigation menu subtitles above subcategories in Inventory"/>
+            <description value="Verify backend admin menu subtitles in inventory"/>
+            <severity value="MAJOR"/>
+            <testCaseId value="ACP2E-3540"/>
+            <group value="msi"/>
+        </annotations>
+        <!-- Inventory (MSI): verify in stores inventory subtitle visible -->
+        <waitForElementVisible selector="{{AdminMenuSection.submenuGroupTitle('magento-inventoryadminui-inventory')}}" stepKey="waitForStoresInventorySubtitleVisible" after="waitForStoresTaxesSubtitleVisible"/>
+        <waitForElementVisible selector="{{AdminMenuSection.storesInventory}}" stepKey="waitForStoresInventorySubtitle" after="waitForStoresInventorySubtitleVisible"/>
+    </test>
+</tests>

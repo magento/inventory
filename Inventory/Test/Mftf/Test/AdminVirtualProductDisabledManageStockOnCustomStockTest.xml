@@ -17,9 +17,6 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
-            <skip>
-                <issueId value="https://github.com/magento/inventory/issues/2690"/>
-            </skip>
             <group value="pr_exclude"/>
         </annotations>
 
@@ -45,12 +42,28 @@
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin1"/>
         </before>
         <after>
-            <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
             <!--Assign Default Stock to Default Website.-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
+            <deleteData createDataKey="createProduct" stepKey="deleteProduct"/>
+            <!-- Clear product grid filters -->
+            <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductGridForCleanup"/>
+            <waitForPageLoad time="30" stepKey="waitForProductGridLoad"/>
+            <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clearProductGridFilters"/>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableCustomSource">
+                <argument name="sourceCode" value="$$customSource1.source[source_code]$$"/>
+            </actionGroup>
+            <!-- Clear source grid filters (DisableSource leaves filters applied) -->
+            <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clearSourceGridFilters"/>
+            <deleteData createDataKey="createCategory" stepKey="deleteCreateCategory"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <deleteData createDataKey="customStock" stepKey="deleteCustomStock"/>
+            <!-- Clear stock grid filters -->
+            <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockGridForCleanup"/>
+            <waitForPageLoad time="30" stepKey="waitForStockGridLoad"/>
+            <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clearStockGridFilters"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
             <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="revertConfiguration"/>
         </after>

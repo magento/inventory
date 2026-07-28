@@ -76,7 +76,9 @@
 
             <comment userInput="Set 'Notify for Quantity Below' to '1' by default" stepKey="revertNotifyQtyBelowComment"/>
             <magentoCLI command="config:set cataloginventory/item_options/notify_stock_qty 1" stepKey="setNotifyForQuantityBelowToOne"/>
-
+            <!--Clear filter product listing grid-->
+            <actionGroup ref="AdminOpenCatalogProductPageActionGroup" stepKey="goToProductCatalogPageBeforeClearFilters"/>
+            <actionGroup ref="ClearFiltersAdminProductGridActionGroup" stepKey="clearProductGridFilters"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logOutFromAdminArea"/>
         </after>
 

@@ -9,8 +9,8 @@ namespace Magento\InventorySales\Model;
 
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 use Magento\InventoryReservationsApi\Model\GetReservationsQuantityInterface;
+use Magento\InventorySalesApi\Model\GetProductAvailableQtyInterface;
 use Magento\InventorySalesApi\Model\GetSalableQtyInterface;
-use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 
 /**
  * @inheritdoc
@@ -18,33 +18,15 @@ use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 class GetSalableQty implements GetSalableQtyInterface
 {
     /**
-     * @var GetStockItemConfigurationInterface
-     */
-    private $getStockItemConfiguration;
-
-    /**
-     * @var GetReservationsQuantityInterface
-     */
-    private $getReservationsQuantity;
-
-    /**
-     * @var GetStockItemDataInterface
-     */
-    private $getProductAvailableQty;
-
-    /**
-     * @param GetStockItemConfigurationInterface $getStockItemConfig
+     * @param GetStockItemConfigurationInterface $getStockItemConfiguration
      * @param GetReservationsQuantityInterface $getReservationsQuantity
-     * @param GetProductAvailableQty $getProductAvailableQty
+     * @param GetProductAvailableQtyInterface $getProductAvailableQty
      */
     public function __construct(
-        GetStockItemConfigurationInterface $getStockItemConfig,
-        GetReservationsQuantityInterface $getReservationsQuantity,
-        GetProductAvailableQty $getProductAvailableQty
+        private readonly GetStockItemConfigurationInterface $getStockItemConfiguration,
+        private readonly GetReservationsQuantityInterface $getReservationsQuantity,
+        private readonly GetProductAvailableQtyInterface $getProductAvailableQty
     ) {
-        $this->getStockItemConfiguration = $getStockItemConfig;
-        $this->getReservationsQuantity = $getReservationsQuantity;
-        $this->getProductAvailableQty = $getProductAvailableQty;
     }
 
     /**

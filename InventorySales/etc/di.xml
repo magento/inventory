@@ -142,6 +142,7 @@
     <type name="Magento\InventorySales\Model\AreProductsSalableForRequestedQty">
         <arguments>
             <argument name="isProductSalableForRequestedQty" xsi:type="object">IsProductSalableForRequestedQtyConditionChainOnPlaceOrder</argument>
+            <argument name="cache" xsi:type="object">Magento\InventorySalesApi\Model\CachePool</argument>
         </arguments>
     </type>
     <type name="Magento\CatalogInventory\Model\StockManagement">
@@ -154,6 +155,9 @@
     <!-- Append Reservations when Order Is Placed  -->
     <type name="Magento\Sales\Api\OrderManagementInterface">
         <plugin name="inventory_reservations_placement" type="Magento\InventorySales\Plugin\Sales\OrderManagement\AppendReservationsAfterOrderPlacementPlugin"/>
+    </type>
+    <type name="Magento\Quote\Model\QuoteManagement">
+        <plugin name="inventory_lock_during_place_order" type="Magento\InventorySales\Plugin\Quote\CartManagementPlugin"/>
     </type>
     <!-- Return Processor -->
     <preference for="Magento\InventorySalesApi\Model\ReturnProcessor\Request\ItemsToRefundInterface" type="Magento\InventorySales\Model\ReturnProcessor\Request\ItemsToRefund" />
@@ -203,4 +207,16 @@
     <preference for="Magento\InventorySalesApi\Api\Data\IsProductSalableForRequestedQtyResultInterface" type="Magento\InventorySales\Model\IsProductSalableForRequestedQtyResult"/>
     <preference for="Magento\InventorySalesApi\Api\Data\IsProductSalableResultInterface" type="Magento\InventorySales\Model\IsProductSalableResult"/>
     <preference for="Magento\InventorySales\Model\ReservationExecutionInterface" type="Magento\InventorySales\Model\ReservationExecution"/>
+    <preference for="Magento\InventorySalesApi\Model\GetProductAvailableQtyBySkuListInterface" type="Magento\InventorySales\Model\ResourceModel\GetProductAvailableQtyBySkuList"/>
+    <preference for="Magento\InventorySalesApi\Model\GetProductAvailableQtyInterface" type="Magento\InventorySales\Model\ResourceModel\GetProductAvailableQty"/>
+    <type name="Magento\InventorySales\Model\AppendReservations">
+        <arguments>
+            <argument name="cache" xsi:type="object">Magento\InventoryReservationsApi\Model\GetReservationsQuantityBySkuListCacheInterface</argument>
+        </arguments>
+    </type>
+    <type name="Magento\InventorySales\Observer\PreloadData">
+        <arguments>
+            <argument name="cache" xsi:type="object">Magento\InventorySalesApi\Model\CachePool</argument>
+        </arguments>
+    </type>
 </config>

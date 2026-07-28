@@ -14,6 +14,7 @@ use Magento\Framework\Validation\ValidationException;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\TestFramework\Helper\Bootstrap;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -125,8 +126,6 @@ class InventorySourceExtensionTest extends TestCase
      * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
      * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_addresses.php
      *
-     * @dataProvider dataProvider
-     *
      * @param array $data
      * @param string $sourceCode
      * @param array $expected
@@ -135,6 +134,7 @@ class InventorySourceExtensionTest extends TestCase
      * @throws NoSuchEntityException
      * @throws ValidationException
      */
+    #[DataProvider('dataProvider')]
     public function testGetSourceWithPickupLocationExtensionAfterSave(array $data, string $sourceCode, array $expected)
     {
         $source = $this->sourceRepository->get($sourceCode);

@@ -13,6 +13,7 @@ use Magento\ImportExport\Model\Export;
 use Magento\ImportExport\Model\Export\Adapter\Csv;
 use Magento\InventoryImportExport\Model\Export\Sources;
 use Magento\TestFramework\Helper\Bootstrap;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class SourcesTest extends TestCase
@@ -147,10 +148,10 @@ class SourcesTest extends TestCase
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
-     * @dataProvider exportWithWebsiteFilterDataProvider
      * @param int $websiteId
      * @param string $expectedOutput
      */
+    #[DataProvider('exportWithWebsiteFilterDataProvider')]
     public function testExportWithWebsiteFilter(int $websiteId, string $expectedOutput)
     {
         $this->exporter->setParameters([

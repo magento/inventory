@@ -11,6 +11,7 @@ use Magento\InventoryIndexer\Indexer\Source\SourceIndexer;
 use Magento\InventoryIndexer\Model\ResourceModel\GetStockItemData;
 use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 use Magento\TestFramework\Helper\Bootstrap;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class SourceIndexerTest extends TestCase
@@ -61,10 +62,9 @@ class SourceIndexerTest extends TestCase
      * @param int $stockId
      * @param array|null $expectedData
      *
-     * @dataProvider reindexRowDataProvider
-     *
      * @magentoDbIsolation disabled
      */
+    #[DataProvider('reindexRowDataProvider')]
     public function testReindexRow(string $sku, int $stockId, $expectedData)
     {
         $this->sourceIndexer->executeRow('eu-1');
@@ -102,10 +102,9 @@ class SourceIndexerTest extends TestCase
      * @param int $stockId
      * @param array|null $expectedData
      *
-     * @dataProvider reindexListDataProvider
-     *
      * @magentoDbIsolation disabled
      */
+    #[DataProvider('reindexListDataProvider')]
     public function testReindexList(string $sku, int $stockId, $expectedData)
     {
         $this->sourceIndexer->executeList(['eu-1', 'us-1']);
@@ -127,10 +126,9 @@ class SourceIndexerTest extends TestCase
      * @param int $stockId
      * @param array|null $expectedData
      *
-     * @dataProvider reindexListDataProvider
-     *
      * @magentoDbIsolation disabled
      */
+    #[DataProvider('reindexListDataProvider')]
     public function testReindexAll(string $sku, int $stockId, $expectedData)
     {
         $this->sourceIndexer->executeFull();

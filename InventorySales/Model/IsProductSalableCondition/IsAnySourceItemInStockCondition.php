@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventorySales\Model\IsProductSalableCondition;
 
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForSkuInterface;
-use Magento\InventorySales\Model\ResourceModel\GetIsAnySourceItemInStock;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
+use Magento\InventorySalesApi\Model\GetProductAvailableQtyInterface;
 
 /**
  * Check if product has source items with the in stock status
@@ -17,33 +17,15 @@ use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 class IsAnySourceItemInStockCondition implements IsProductSalableInterface
 {
     /**
-     * @var IsSourceItemManagementAllowedForSkuInterface
-     */
-    private $isSourceItemManagementAllowedForSku;
-
-    /**
-     * @var ManageStockCondition
-     */
-    private $manageStockCondition;
-
-    /**
-     * @var GetIsAnySourceItemInStock
-     */
-    private $getIsAnySourceItemInStock;
-
-    /**
      * @param IsSourceItemManagementAllowedForSkuInterface $isSourceItemManagementAllowedForSku
      * @param ManageStockCondition $manageStockCondition
-     * @param GetIsAnySourceItemInStock $getIsAnySourceItemInStock
+     * @param GetProductAvailableQtyInterface $getProductAvailableQty
      */
     public function __construct(
-        IsSourceItemManagementAllowedForSkuInterface $isSourceItemManagementAllowedForSku,
-        ManageStockCondition $manageStockCondition,
-        GetIsAnySourceItemInStock $getIsAnySourceItemInStock
+        private readonly IsSourceItemManagementAllowedForSkuInterface $isSourceItemManagementAllowedForSku,
+        private readonly ManageStockCondition $manageStockCondition,
+        private readonly GetProductAvailableQtyInterface $getProductAvailableQty
     ) {
-        $this->isSourceItemManagementAllowedForSku = $isSourceItemManagementAllowedForSku;
-        $this->manageStockCondition = $manageStockCondition;
-        $this->getIsAnySourceItemInStock = $getIsAnySourceItemInStock;
     }
 
     /**
@@ -60,6 +42,6 @@ class IsAnySourceItemInStockCondition implements IsProductSalableInterface
             return true;
         }
 
-        return $this->getIsAnySourceItemInStock->execute($sku, $stockId);
+        return $this->getProductAvailableQty->execute($sku, $stockId) !== null;
     }
 }

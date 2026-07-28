@@ -8,10 +8,11 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalog\Model;
 
 use Magento\Framework\App\ObjectManager;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\HTTP\PhpEnvironment\Request;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use Magento\Framework\HTTP\PhpEnvironment\Request;
 
 /**
  * Service for get stock id for current website.
@@ -56,7 +57,11 @@ class GetStockIdForCurrentWebsite
     public function execute(): int
     {
         $storeId = $this->request->getParam('store');
-        $websiteId = $this->storeManager->getStore($storeId)->getWebsiteId();
+        try {
+            $websiteId = $this->storeManager->getStore($storeId)->getWebsiteId();
+        } catch (NoSuchEntityException $e) {
+            $websiteId = $this->storeManager->getStore()->getWebsiteId();
+        }
         $websiteCode = $this->storeManager->getWebsite($websiteId)->getCode();
 
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);

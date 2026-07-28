@@ -81,6 +81,11 @@
                 <argument name="sourceCode" value="$source.source[source_code]$"/>
             </actionGroup>
             <deleteData createDataKey="category" stepKey="deletecategory"/>
+            <!--Clear Filters-->
+            <actionGroup ref="AdminOrdersGridClearFiltersActionGroup" stepKey="clearOrdersFilters"/>
+            <amOnPage url="{{ProductCatalogPage.url}}" stepKey="openProductPage"/>
+            <actionGroup ref="ClearFiltersAdminProductGridActionGroup" stepKey="clearProductGridFilter"/>
+
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
 
             <!-- Reindex invalidated indices after product attribute has been created/deleted -->

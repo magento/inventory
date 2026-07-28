@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright 2026 Adobe
+ * All Rights Reserved.
+ */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AdminResetFilterInManageSourcesGridActionGroup">
+        <annotations>
+            <description>Navigates to the Admin Manage Sources grid and clears keyword search and column filters.</description>
+        </annotations>
+        <amOnPage url="{{AdminManageSourcePage.url}}" stepKey="amOnManageSourcesGridForFilterReset"/>
+        <waitForPageLoad stepKey="waitForManageSourcesGridForFilterReset"/>
+        <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}"
+                          dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true"
+                          stepKey="clearManageSourcesGridKeywordFilters"/>
+        <conditionalClick selector="{{AdminGridFilterControls.clearAll}}"
+                          dependentSelector=".admin__data-grid-header[data-bind='afterRender: \$data.setToolbarNode'] .admin__data-grid-filters-current._show"
+                          visible="true" stepKey="clearManageSourcesGridAppliedFilters"/>
+        <conditionalClick selector="{{AdminGridFilterControls.clearAll}}"
+                          dependentSelector="{{AdminManageSourcesGridFilterControls.dropDown}}" visible="true"
+                          stepKey="clearManageSourcesGridFiltersDropdown"/>
+        <waitForPageLoad stepKey="waitForManageSourcesGridAfterFilterReset"/>
+    </actionGroup>
+</actionGroups>

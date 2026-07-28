@@ -30,6 +30,10 @@
             <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
                 <argument name="indices" value=""/>
             </actionGroup>
+            <amOnPage url="{{AdminManageStockPage.url}}" stepKey="goToStockGridBeforeClearFilters"/>
+            <waitForPageLoad stepKey="waitForStockGridLoad"/>
+            <actionGroup ref="ClearFiltersAdminDataGridActionGroup" stepKey="clearInventoryStockListingFiltersAfter"/>
+            <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="resetInventoryStockListingToDefaultView"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
         </after>
 

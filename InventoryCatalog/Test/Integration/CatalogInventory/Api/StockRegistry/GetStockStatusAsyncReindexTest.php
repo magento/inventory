@@ -15,6 +15,7 @@ use Magento\Framework\MessageQueue\ConsumerFactory;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\Helper\Bootstrap;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -88,8 +89,8 @@ class GetStockStatusAsyncReindexTest extends TestCase
      * @param float $qty
      * @return void
      *
-     * @dataProvider getStatusDataProvider
      */
+    #[DataProvider('getStatusDataProvider')]
     public function testGetStatusIfScopeIdParameterIsNotPassed(
         string $storeCode,
         string $sku,
@@ -124,8 +125,8 @@ class GetStockStatusAsyncReindexTest extends TestCase
      * @param float $qty
      * @return void
      *
-     * @dataProvider getStatusDataProvider
      */
+    #[DataProvider('getStatusDataProvider')]
     public function testGetStatusIfScopeIdParameterIsPassed(
         string $storeCode,
         string $sku,

@@ -35,6 +35,7 @@
             </actionGroup>
         </before>
         <after>
+            <actionGroup ref="AdminResetFilterInManageSourcesGridActionGroup" stepKey="resetManageSourcesGridFilters"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
             <deleteData createDataKey="simpleCategory1" stepKey="deleteCategory1"/>
             <deleteData createDataKey="simpleProduct1" stepKey="deleteProduct1"/>

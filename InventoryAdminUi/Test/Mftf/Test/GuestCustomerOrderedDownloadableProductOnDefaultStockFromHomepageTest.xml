@@ -49,6 +49,9 @@
             <magentoCLI stepKey="disableGuestCheckoutForDownloadable" command="config:set catalog/downloadable/disable_guest_checkout 1" />
             <magentoCLI stepKey="disableShareableDownloadableItems" command="config:set catalog/downloadable/shareable 0" />
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableSources"/>
+            <!--Clear filter product listing grid-->
+            <actionGroup ref="AdminOpenCatalogProductPageActionGroup" stepKey="goToProductCatalogPageBeforeClearFilters"/>
+            <actionGroup ref="ClearFiltersAdminProductGridActionGroup" stepKey="clearProductGridFilters"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
                 <argument name="indices" value=""/>

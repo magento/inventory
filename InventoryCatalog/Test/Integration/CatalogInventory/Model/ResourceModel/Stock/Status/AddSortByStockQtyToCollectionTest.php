@@ -11,6 +11,7 @@ use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\Framework\DB\Select;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Test sort stock quantity for custom stock
@@ -31,8 +32,8 @@ class AddSortByStockQtyToCollectionTest extends TestCase
      * @param string $dir
      * @param array $expectedOrder
      * @return void
-     * @dataProvider executeDataProvider
      */
+    #[DataProvider('executeDataProvider')]
     public function testExecute(string $storeCode, string $dir, array $expectedOrder): void
     {
         /** @var Collection $collection */

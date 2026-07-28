@@ -42,6 +42,8 @@
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <amOnPage url="{{ProductCatalogPage.url}}" stepKey="openProductPage"/>
+            <actionGroup ref="ClearFiltersAdminProductGridActionGroup" stepKey="clearProductGridFilter"/>
             <deleteData createDataKey="createStock1" stepKey="deleteStock"/>
             <deleteData createDataKey="simpleCategory1" stepKey="deleteCategory"/>
             <deleteData createDataKey="simpleProduct1" stepKey="deleteProduct"/>

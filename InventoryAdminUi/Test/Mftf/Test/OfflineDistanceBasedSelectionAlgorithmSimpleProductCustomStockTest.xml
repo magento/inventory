@@ -17,9 +17,6 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
-            <skip>
-                <issueId value="https://github.com/magento/inventory/issues/2690"/>
-            </skip>
             <group value="pr_exclude"/>
         </annotations>
 
@@ -105,6 +102,7 @@
             <comment userInput="BIC workaround" stepKey="selectDefaultWebsiteAsSalesChannelForDefaultStock"/>
             <comment userInput="BIC workaround" stepKey="saveDefaultStock"/>
 
+            <actionGroup ref="AdminOrdersGridClearFiltersActionGroup" stepKey="clearOrdersGridFiltersAfter"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <!--Remove category, product, customer and additional stock.-->
             <deleteData createDataKey="category" stepKey="deleteCategory"/>

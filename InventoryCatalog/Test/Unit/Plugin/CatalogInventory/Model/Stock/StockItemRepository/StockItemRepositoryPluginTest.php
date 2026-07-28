@@ -7,12 +7,12 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Test\Unit\Plugin\CatalogInventory\Model\Stock\StockItemRepository;
 
-use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Model\Indexer\Product\Full as FullProductIndexer;
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\CatalogInventory\Model\Stock\StockItemRepository;
 use Magento\Inventory\Model\SourceItem;
 use Magento\Inventory\Model\SourceItem\Command\GetSourceItemsBySku;
+use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventoryIndexer\Indexer\InventoryIndexer;
 use Magento\InventoryCatalog\Plugin\CatalogInventory\Model\Stock\StockItemRepository\StockItemRepositoryPlugin;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -26,8 +26,8 @@ class StockItemRepositoryPluginTest extends TestCase
     /** @var InventoryIndexer|MockObject */
     private $inventoryIndexer;
 
-    /** @var ProductRepositoryInterface|MockObject */
-    private $productRepository;
+    /** @var GetSkusByProductIdsInterface|MockObject */
+    private $getSkusByProductIds;
 
     /** @var GetSourceItemsBySku|MockObject */
     private $getSourceItemsBySku;
@@ -39,13 +39,13 @@ class StockItemRepositoryPluginTest extends TestCase
     {
         $this->fullProductIndexer = $this->createMock(FullProductIndexer::class);
         $this->inventoryIndexer = $this->createMock(InventoryIndexer::class);
-        $this->productRepository = $this->createMock(ProductRepositoryInterface::class);
+        $this->getSkusByProductIds = $this->createMock(GetSkusByProductIdsInterface::class);
         $this->getSourceItemsBySku = $this->createMock(GetSourceItemsBySku::class);
 
         $this->plugin = new StockItemRepositoryPlugin(
             $this->fullProductIndexer,
             $this->inventoryIndexer,
-            $this->productRepository,
+            $this->getSkusByProductIds,
             $this->getSourceItemsBySku
         );
     }
@@ -59,10 +59,9 @@ class StockItemRepositoryPluginTest extends TestCase
         $stockItem = $this->createMock(StockItemInterface::class);
         $stockItem->method('getProductId')->willReturn($productId);
 
-        $product = $this->createMock(\Magento\Catalog\Api\Data\ProductInterface::class);
-        $product->method('getId')->willReturn($productId);
-        $product->method('getSku')->willReturn($sku);
-        $this->productRepository->method('getById')->with($productId)->willReturn($product);
+        $this->getSkusByProductIds->expects($this->once())
+            ->method('execute')
+            ->willReturn([$productId => $sku]);
 
         $sourceItem = $this->createMock(SourceItem::class);
         $sourceItem->method('getId')->willReturn($sourceItemId);

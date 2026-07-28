@@ -16,6 +16,9 @@
             <testCaseId value="ACPT-930"/>
             <group value="async_checkout"/>
             <group value="async_checkout_msi_ee"/>
+            <skip>
+                <issueId value="AC-16680">Skipped: CartManagementPlugin getActive() fails on inactive quote during placeOrderProcessor; order ends Rejected instead of Pending.</issueId>
+            </skip>
         </annotations>
         <before>
             <!-- Enable Deferred Stock Update -->
@@ -42,6 +45,9 @@
                 <argument name="email" value="{{CustomerEntityOne.email}}"/>
             </actionGroup>
             <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="resetGrid"/>
+            <!--Clear filter product listing grid-->
+            <actionGroup ref="AdminOpenCatalogProductPageActionGroup" stepKey="goToProductCatalogPageBeforeClearFilters"/>
+            <actionGroup ref="ClearFiltersAdminProductGridActionGroup" stepKey="clearProductGridFilters"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="adminLogout"/>
         </after>
 

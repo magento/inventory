@@ -52,6 +52,9 @@
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <!--Disable source.-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <!--Clear Filters-->
+            <actionGroup ref="AdminOrdersPageOpenActionGroup" stepKey="navigateToSalesOrderPage"/>
+            <actionGroup ref="ClearFiltersAdminDataGridActionGroup" stepKey="clickOnButtonToRemoveFiltersIfPresent"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex1">
                 <argument name="indices" value=""/>

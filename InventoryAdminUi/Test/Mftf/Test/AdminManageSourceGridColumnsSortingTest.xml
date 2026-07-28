@@ -68,7 +68,7 @@
             <waitForPageLoad time="30" stepKey="waitForSourceEditPageLoadToDisableCustomSource4"/>
             <click selector="{{AdminEditSourceGeneralSection.isEnabledLabel}}" stepKey="clickIsEnabledToDisableCustomSource4"/>
             <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCustomSourceToDisableCustomSource4"/>
-
+            <actionGroup ref="AdminResetFilterInManageSourcesGridActionGroup" stepKey="resetManageSourcesGridFilters"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 

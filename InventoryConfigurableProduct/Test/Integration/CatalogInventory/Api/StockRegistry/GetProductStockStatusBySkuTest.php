@@ -8,9 +8,11 @@ declare(strict_types=1);
 namespace Magento\InventoryConfigurableProduct\Test\Integration\CatalogInventory\Api\StockRegistry;
 
 use Magento\CatalogInventory\Api\StockRegistryInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class GetProductStockStatusBySkuTest extends TestCase
 {
@@ -51,12 +53,11 @@ class GetProductStockStatusBySkuTest extends TestCase
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      * @magentoDbIsolation disabled
      *
-     * @dataProvider getStatusDataProvider
-     *
      * @param string $storeCode
      * @param int $status
      * @return void
      */
+    #[DataProvider('getStatusDataProvider')]
     public function testGetStatusIfScopeIdParameterIsNotPassed(
         string $storeCode,
         int $status
@@ -79,13 +80,12 @@ class GetProductStockStatusBySkuTest extends TestCase
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      * @magentoDbIsolation disabled
      *
-     * @dataProvider getStatusDataProvider
-     *
      * @param string $storeCode
      * @param int $status
-     * @param int $stockId
      * @return void
+     * @throws NoSuchEntityException
      */
+    #[DataProvider('getStatusDataProvider')]
     public function testGetStatusIfScopeIdParameterIsPassed(
         string $storeCode,
         int $status

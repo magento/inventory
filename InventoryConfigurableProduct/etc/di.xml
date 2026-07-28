@@ -46,10 +46,6 @@
             </argument>
         </arguments>
     </type>
-    <type name="Magento\InventorySalesApi\Model\GetIsQtySalableInterface">
-        <plugin name="inventory_configurable_product_is_any_child_salable"
-                type="Magento\InventoryConfigurableProduct\Plugin\InventorySales\Model\IsProductSalableCondition\GetIsQtySalableForConfigurableProduct"/>
-    </type>
     <type name="Magento\CatalogInventory\Model\ResourceModel\Indexer\Stock\GetStatusExpression">
         <arguments>
             <argument name="statusExpressions" xsi:type="array">

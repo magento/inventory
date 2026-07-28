@@ -57,6 +57,9 @@
             <deleteData url="/V1/products/{{SimpleProduct.sku}}" stepKey="deleteProduct" />
             <!--Disable source.-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <!--Clear Filters.-->
+            <amOnPage url="{{ProductCatalogPage.url}}" stepKey="openProductPage"/>
+            <actionGroup ref="ClearFiltersAdminProductGridActionGroup" stepKey="clearProductGridFilter"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex1">
                 <argument name="indices" value=""/>

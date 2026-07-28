@@ -59,6 +59,8 @@
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
             <deleteData createDataKey="bundleProduct" stepKey="deleteBundleProduct"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <!--Clear Filters-->
+            <actionGroup ref="AdminOrdersGridClearFiltersActionGroup" stepKey="clearOrdersFilters"/>
             <!--Assign Default Stock to Default Website.-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>

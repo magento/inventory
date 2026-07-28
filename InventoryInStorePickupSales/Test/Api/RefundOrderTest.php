@@ -21,19 +21,21 @@ use Magento\InventoryApi\Test\Fixture\StockSourceLinks as StockSourceLinksFixtur
 use Magento\InventoryInStorePickupApi\Test\Fixture\Source as PickupLocationFixture;
 use Magento\InventoryInStorePickupQuote\Test\Fixture\SetInStorePickup;
 use Magento\InventoryReservationsApi\Model\GetReservationsQuantityInterface;
-use Magento\InventorySales\Model\GetProductAvailableQty;
+use Magento\InventorySales\Model\ResourceModel\GetProductAvailableQty;
 use Magento\InventorySalesApi\Test\Fixture\StockSalesChannels as StockSalesChannelsFixture;
 use Magento\Quote\Test\Fixture\AddProductToCart as AddProductToCartFixture;
 use Magento\Quote\Test\Fixture\GuestCart as GuestCartFixture;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Test\Fixture\Invoice as InvoiceFixture;
-use Magento\TestFramework\Fixture\Config as ConfigFixture;
 use Magento\TestFramework\Fixture\DataFixture;
 use Magento\TestFramework\Fixture\DataFixtureStorage;
 use Magento\TestFramework\Fixture\DataFixtureStorageManager;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\TestCase\WebapiAbstract;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class RefundOrderTest extends WebapiAbstract
 {
     private const SERVICE_REFUND_ORDER_NAME = 'salesRefundOrderV1';

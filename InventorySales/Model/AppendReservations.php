@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Model;
 
+use Magento\InventoryApi\Model\CacheInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterfaceFactory;
 use Magento\InventorySalesApi\Api\Data\SalesEventExtensionFactory;
@@ -64,6 +65,7 @@ class AppendReservations
      * @param CheckItemsQuantity $checkItemsQuantity
      * @param StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
      * @param SalesEventExtensionFactory $salesEventExtensionFactory
+     * @param CacheInterface $cache
      */
     public function __construct(
         PlaceReservationsForSalesEventInterface $placeReservationsForSalesEvent,
@@ -72,7 +74,8 @@ class AppendReservations
         SalesEventInterfaceFactory $salesEventFactory,
         CheckItemsQuantity $checkItemsQuantity,
         StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver,
-        SalesEventExtensionFactory $salesEventExtensionFactory
+        SalesEventExtensionFactory $salesEventExtensionFactory,
+        private readonly CacheInterface $cache
     ) {
         $this->placeReservationsForSalesEvent = $placeReservationsForSalesEvent;
         $this->websiteRepository = $websiteRepository;
@@ -97,7 +100,8 @@ class AppendReservations
     {
         $websiteCode = $this->websiteRepository->getById($websiteId)->getCode();
         $stockId = (int)$this->stockByWebsiteIdResolver->execute((int)$websiteId)->getStockId();
-
+        // clean inventory caches before checking salability and placing reservations to prevent overselling
+        $this->cache->clean(array_keys($itemsBySku), $stockId);
         $this->checkItemsQuantity->execute($itemsBySku, $stockId);
 
         /** @var SalesEventExtensionInterface */

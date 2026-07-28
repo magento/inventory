@@ -9,6 +9,7 @@ namespace Magento\InventorySalesApi\Test\Api;
 
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\TestFramework\TestCase\WebapiAbstract;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Verify 'are-product-salable' WEB-API endpoint.
@@ -28,13 +29,13 @@ class AreProductsSalableTest extends WebapiAbstract
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
-     * @dataProvider executeDataProvider
      *
      * @param string $sku
      * @param int $stockId
      * @param bool $expectedResult
      * @return void
      */
+    #[DataProvider('executeDataProvider')]
     public function testProductSaleabilityOnDifferentStocks(
         string $sku,
         int $stockId,

@@ -49,6 +49,8 @@
         <plugin name="update_source_item_at_legacy_qty_counter" type="Magento\InventoryCatalog\Plugin\CatalogInventory\UpdateSourceItemAtLegacyQtyCounterPlugin"/>
     </type>
     <type name="Magento\CatalogInventory\Model\ResourceModel\Stock\Item">
+        <plugin name="reindex_composite_products_on_legacy_stock_item_save"
+                type="Magento\InventoryCatalog\Plugin\CatalogInventory\Model\ResourceModel\Stock\Item\ReindexCompositeProductsOnLegacyStockItemSavePlugin"/>
         <plugin name="update_source_item_at_legacy_stock_item_save"
                 type="Magento\InventoryCatalog\Plugin\CatalogInventory\UpdateSourceItemAtLegacyStockItemSavePlugin"/>
     </type>

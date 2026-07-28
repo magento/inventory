@@ -11,6 +11,7 @@ use Magento\Framework\Webapi\Rest\Request;
 use Magento\InventoryApi\Api\Data\SourceCarrierLinkInterface;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\TestFramework\TestCase\WebapiAbstract;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class CarrierLinkManagementTest extends WebapiAbstract
 {
@@ -24,8 +25,8 @@ class CarrierLinkManagementTest extends WebapiAbstract
     /**
      * @param array $carrierLinks
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source.php
-     * @dataProvider dataProviderCarrierLinks
      */
+    #[DataProvider('dataProviderCarrierLinks')]
     public function testCarrierLinksManagement(array $carrierLinks)
     {
         $this->markTestSkipped('Binding carriers to individual sources is not implemented in MSI MVP');

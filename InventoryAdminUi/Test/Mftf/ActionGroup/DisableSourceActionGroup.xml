@@ -32,5 +32,7 @@
         <click selector="//span[contains(@title, 'Close')]" stepKey="clickOnSaveAndClose"/>
         <seeElement selector="{{AdminProductMessagesSection.successMessage}}" stepKey="assertSaveMessageSuccess"/>
         <waitForPageLoad time="30" stepKey="waitForSavedAndClosed"/>
+        <click selector="{{AdminDataGridHeaderSection.clearFilters}}" stepKey="clearFiltersAfterSave"/>
+        <waitForPageLoad stepKey="waitForSourceGridPageLoadAfterFiltersClearing"/>
     </actionGroup>
 </actionGroups>

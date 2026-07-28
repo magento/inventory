@@ -11,6 +11,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryInStorePickup\Model\GetPickupLocation;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\TestFramework\Helper\Bootstrap;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -45,11 +46,11 @@ class GetPickupLocationTest extends TestCase
      * @param string|null $exceptionMessage
      *
      * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @dataProvider executeDataProvider
      * @magentoAppArea frontend
      *
      * @magentoDbIsolation disabled
      */
+    #[DataProvider('executeDataProvider')]
     public function testExecute(
         string $pickupLocationCode,
         string $salesChannelCode,

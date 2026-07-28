@@ -9,6 +9,7 @@ namespace Magento\InventorySalesApi\Test\Api;
 
 use Magento\TestFramework\TestCase\WebapiAbstract;
 use Magento\Framework\Webapi\Rest\Request;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class IsProductSalableForRequestedQtyTest extends WebapiAbstract
 {
@@ -40,10 +41,10 @@ class IsProductSalableForRequestedQtyTest extends WebapiAbstract
      * @magentoApiDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
      * @magentoApiDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      * @magentoConfigFixture default_store cataloginventory/item_options/manage_stock 0
-     * @dataProvider executeDataProvider
      *
      * @magentoDbIsolation disabled
      */
+    #[DataProvider('executeDataProvider')]
     public function testDeleteSourceItemConfiguration(
         string $sku,
         int $stockId,
