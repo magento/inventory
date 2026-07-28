@@ -9,4 +9,9 @@
     <type name="Magento\QuoteGraphQl\Model\Cart\GetShippingAddress">
         <plugin name="adapt_set_shipping_address_on_cart_for_store_pickup_plugin" type="Magento\InventoryInStorePickupQuoteGraphQl\Model\Cart\GetShippingAddress\AdaptGetShippingAddressPlugin"/>
     </type>
+    <type name="Magento\Checkout\Model\ShippingInformationManagement">
+        <plugin name="inventory_in_store_pickup_quote_graphql_clear_pickup_on_non_pickup_shipping_method"
+                type="Magento\InventoryInStorePickupQuoteGraphQl\Plugin\Checkout\ClearPickupLocationOnNonPickupShippingMethodPlugin"
+                sortOrder="10"/>
+    </type>
 </config>
