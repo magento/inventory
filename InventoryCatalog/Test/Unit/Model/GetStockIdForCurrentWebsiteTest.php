@@ -106,7 +106,6 @@ class GetStockIdForCurrentWebsiteTest extends TestCase
         $websiteId = 1;
         $websiteCode = 'base';
         $stockId = 1;
-
         $this->request->expects($this->once())->method('getParam')
             ->with('store')
             ->willReturn($invalidStoreCode);
