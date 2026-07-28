@@ -67,7 +67,7 @@ class GetStockItemsData implements GetStockItemsDataInterface
         $select = $connection->select();
         $results = [];
 
-        $keys = array_map(static fn (int $i): string => 'sku' . $i, array_keys($skus));
+        $keys = array_map(static fn (string $i): string => 'sku' . $i, array_keys($skus));
         $placeholders = array_map(static fn (string $key): string => ':' . $key, $keys);
         $bind = array_combine($keys, $skus);
 
