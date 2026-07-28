@@ -109,7 +109,7 @@ class GetStockItemsDataTest extends TestCase
             ->method('fetchAll')
             ->with(
                 $this->identicalTo($this->selectMock),
-                $this->equalTo(['sku' => $skus])
+                $this->equalTo(self::buildExpectedBind($skus))
             )
             ->willReturn([
                 ['sku' => 'sku1', 'quantity' => 5, 'is_salable' => 1],
@@ -146,6 +146,20 @@ class GetStockItemsDataTest extends TestCase
     }
 
     /**
+     * Build the expected fetchAll() binding array the way GetStockItemsData::execute() does:
+     * each SKU gets its own indexed placeholder (sku0, sku1, ...).
+     *
+     * @param string[] $skus
+     * @return array
+     */
+    private static function buildExpectedBind(array $skus): array
+    {
+        $keys = array_map(static fn (int $i): string => 'sku' . $i, array_keys($skus));
+
+        return array_combine($keys, $skus);
+    }
+
+    /**
      * @return void
      * @throws LocalizedException
      * @throws \PHPUnit\Framework\MockObject\Exception
@@ -160,7 +174,7 @@ class GetStockItemsDataTest extends TestCase
             ->method('fetchAll')
             ->with(
                 $this->identicalTo($this->selectMock),
-                $this->equalTo(['sku' => $skus])
+                $this->equalTo(self::buildExpectedBind($skus))
             )
             ->willReturn([]);
 
@@ -197,7 +211,7 @@ class GetStockItemsDataTest extends TestCase
             ->method('fetchAll')
             ->with(
                 $this->identicalTo($this->selectMock),
-                $this->equalTo(['sku' => $skus])
+                $this->equalTo(self::buildExpectedBind($skus))
             )
             ->willThrowException(new \Exception('DB error'));
 

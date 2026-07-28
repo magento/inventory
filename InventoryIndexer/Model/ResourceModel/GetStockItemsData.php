@@ -67,6 +67,10 @@ class GetStockItemsData implements GetStockItemsDataInterface
         $select = $connection->select();
         $results = [];
 
+        $keys = array_map(static fn (int $i): string => 'sku' . $i, array_keys($skus));
+        $placeholders = array_map(static fn (string $key): string => ':' . $key, $keys);
+        $bind = array_combine($keys, $skus);
+
         if ($this->defaultStockProvider->getId() === $stockId) {
             $select->from(
                 ['stock_status' => $this->resource->getTableName('cataloginventory_stock_status')],
@@ -80,7 +84,7 @@ class GetStockItemsData implements GetStockItemsDataInterface
                 'stock_status.product_id = product_entity.entity_id',
                 []
             )->where(
-                'product_entity.sku IN (:sku)'
+                'product_entity.sku IN (' . implode(',', $placeholders) . ')'
             );
         } else {
             $select->from(
@@ -91,12 +95,12 @@ class GetStockItemsData implements GetStockItemsDataInterface
                     GetStockItemsDataInterface::IS_SALABLE => IndexStructure::IS_SALABLE,
                 ]
             )->where(
-                IndexStructure::SKU . ' IN (:sku)'
+                IndexStructure::SKU . ' (' . implode(',', $placeholders) . ')'
             );
         }
 
         try {
-            $stockItemRows = $connection->fetchAll($select, ['sku' => $skus]) ?: [];
+            $stockItemRows = $connection->fetchAll($select, $bind) ?: [];
 
             if (!empty($stockItemRows)) {
                 foreach ($stockItemRows as $row) {
