@@ -33,7 +33,10 @@ class ShippingInformationManagementPlugin
         $address = $addressInformation->getShippingAddress();
         $billingAddress = $addressInformation->getBillingAddress();
 
-        if (!$this->isPickupStoreShipping($address) && $this->isBillingAddressCompletelyNull($billingAddress)) {
+        if (!$this->isPickupStoreShipping($address)
+            && $this->isBillingAddressCompletelyNull($billingAddress)
+            && $this->hasCompleteShippingAddress($address)
+        ) {
             $addressInformation->setBillingAddress($address);
         }
 
@@ -56,6 +59,24 @@ class ShippingInformationManagementPlugin
             return true;
         }
         return false;
+    }
+
+    /**
+     * Check if shipping address has enough data to be copied to billing.
+     *
+     * @param AddressInterface|null $shippingAddress
+     * @return bool
+     */
+    private function hasCompleteShippingAddress(?AddressInterface $shippingAddress): bool
+    {
+        if (!$shippingAddress) {
+            return false;
+        }
+        $street = $shippingAddress->getStreet();
+        if (is_array($street)) {
+            $street = implode('', $street);
+        }
+        return $street && $shippingAddress->getCity();
     }
 
     /**
