@@ -67,9 +67,10 @@ class GetStockItemsData implements GetStockItemsDataInterface
         $select = $connection->select();
         $results = [];
 
-        $keys = array_map(static fn (string $i): string => 'sku' . $i, array_keys($skus));
+        $values = array_values($skus);
+        $keys = array_map(static fn (int $i): string => 'sku' . $i, array_keys($values));
         $placeholders = array_map(static fn (string $key): string => ':' . $key, $keys);
-        $bind = array_combine($keys, $skus);
+        $bind = array_combine($keys, $values);
 
         if ($this->defaultStockProvider->getId() === $stockId) {
             $select->from(
@@ -95,7 +96,7 @@ class GetStockItemsData implements GetStockItemsDataInterface
                     GetStockItemsDataInterface::IS_SALABLE => IndexStructure::IS_SALABLE,
                 ]
             )->where(
-                IndexStructure::SKU . ' (' . implode(',', $placeholders) . ')'
+                IndexStructure::SKU . ' IN (' . implode(',', $placeholders) . ')'
             );
         }
 
