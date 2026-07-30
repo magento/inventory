@@ -66,10 +66,49 @@ class GetStockItemsData implements GetStockItemsDataInterface
         if (empty($skus)) {
             return [];
         }
+        $results = [];
 
+        try {
+            $stockItemRows = $this->getStockItemRows($skus, $stockId);
+
+            if (!empty($stockItemRows)) {
+                foreach ($stockItemRows as $row) {
+                    $results[$row['sku']] = [
+                        GetStockItemsDataInterface::QUANTITY => $row['quantity'],
+                        GetStockItemsDataInterface::IS_SALABLE => $row['is_salable'],
+                    ];
+                }
+                $results = $this->normalizeResults($skus, $results);
+            } else {
+                /**
+                 * Fallback to the legacy cataloginventory_stock_item table.
+                 * Caused by data absence in legacy cataloginventory_stock_status table
+                 * for disabled products assigned to the default stock.
+                 */
+                foreach ($skus as $sku) {
+                    if (!isset($results[$sku])) {
+                        $fallbackRow = $this->stockItemDataHandler->getStockItemDataFromStockItemTable($sku, $stockId);
+                        $results[$sku] = $fallbackRow ?: null;
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            throw new LocalizedException(__('Could not receive Stock Item data'), $e);
+        }
+
+        return $results;
+    }
+
+    /**
+     * @param array $skus
+     * @param int $stockId
+     * @return array
+     * @throws \Exception
+     */
+    private function getStockItemRows(array $skus, int $stockId): array
+    {
         $connection = $this->resource->getConnection();
         $select = $connection->select();
-        $results = [];
 
         $values = array_values($skus);
         $keys = array_map(static fn (int $i): string => 'sku' . $i, array_keys($values));
@@ -104,35 +143,7 @@ class GetStockItemsData implements GetStockItemsDataInterface
             );
         }
 
-        try {
-            $stockItemRows = $connection->fetchAll($select, $bind) ?: [];
-
-            if (!empty($stockItemRows)) {
-                foreach ($stockItemRows as $row) {
-                    $results[$row['sku']] = [
-                        GetStockItemsDataInterface::QUANTITY => $row['quantity'],
-                        GetStockItemsDataInterface::IS_SALABLE => $row['is_salable'],
-                    ];
-                }
-                $results = $this->normalizeResults($skus, $results);
-            } else {
-                /**
-                 * Fallback to the legacy cataloginventory_stock_item table.
-                 * Caused by data absence in legacy cataloginventory_stock_status table
-                 * for disabled products assigned to the default stock.
-                 */
-                foreach ($skus as $sku) {
-                    if (!isset($results[$sku])) {
-                        $fallbackRow = $this->stockItemDataHandler->getStockItemDataFromStockItemTable($sku, $stockId);
-                        $results[$sku] = $fallbackRow ?: null;
-                    }
-                }
-            }
-        } catch (\Exception $e) {
-            throw new LocalizedException(__('Could not receive Stock Item data'), $e);
-        }
-
-        return $results;
+        return $connection->fetchAll($select, $bind) ?: [];
     }
 
     /**
