@@ -100,6 +100,8 @@ class GetStockItemsData implements GetStockItemsDataInterface
     }
 
     /**
+     * Return stock item information
+     *
      * @param array $skus
      * @param int $stockId
      * @return array
