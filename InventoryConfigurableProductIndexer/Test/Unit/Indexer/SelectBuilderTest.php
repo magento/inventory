@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryConfigurableProductIndexer\Test\Unit\Indexer;
 
+use Magento\Catalog\Model\ResourceModel\Eav\Attribute;
+use Magento\Eav\Model\Config;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\DB\Select;
@@ -21,6 +23,9 @@ use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameResolverInterface
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class SelectBuilderTest extends TestCase
 {
     /**
@@ -58,6 +63,11 @@ class SelectBuilderTest extends TestCase
         $defaultStockProvider = $this->createMock(DefaultStockProviderInterface::class);
         $defaultStockProvider->method('getId')->willReturn(1);
 
+        $statusAttribute = $this->createMock(Attribute::class);
+        $statusAttribute->method('getId')->willReturn(97);
+        $eavConfig = $this->createMock(Config::class);
+        $eavConfig->method('getAttribute')->willReturn($statusAttribute);
+
         $configuration = $this->createMock(InventoryConfigurationInterface::class);
         $configuration->method('getManageStock')->willReturn(1);
 
@@ -67,6 +77,7 @@ class SelectBuilderTest extends TestCase
             $indexNameResolver,
             $metadataPool,
             $defaultStockProvider,
+            $eavConfig,
             $configuration
         );
     }
