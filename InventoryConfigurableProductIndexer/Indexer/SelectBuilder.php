@@ -23,6 +23,7 @@ use Magento\InventoryIndexer\Indexer\SiblingSelectBuilderInterface;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexAlias;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameResolverInterface;
+use Magento\Store\Model\Store;
 
 /**
  * Get configurable product for given stock select builder
@@ -72,6 +73,11 @@ class SelectBuilder implements SiblingSelectBuilderInterface
             $manageStock = "($manageStock)";
         }
 
+        $enabledChildIsSalable = sprintf(
+            'MAX(IF(product_status.value = %d, stock.is_salable, 0))',
+            ProductStatus::STATUS_ENABLED
+        );
+
         $select = $connection->select()
             ->from(
                 ['stock' => $indexTableName],
@@ -79,7 +85,7 @@ class SelectBuilder implements SiblingSelectBuilderInterface
                     IndexStructure::SKU => 'parent_product_entity.sku',
                     IndexStructure::QUANTITY => 'SUM(stock.quantity)',
                     IndexStructure::IS_SALABLE =>
-                        "IF(inventory_stock_item.is_in_stock = 0 AND $manageStock, 0, MAX(stock.is_salable))",
+                        "IF(inventory_stock_item.is_in_stock = 0 AND $manageStock, 0, $enabledChildIsSalable)",
                 ]
             )->joinInner(
                 ['product_entity' => $this->resourceConnection->getTableName('catalog_product_entity')],
@@ -98,11 +104,11 @@ class SelectBuilder implements SiblingSelectBuilderInterface
                 'inventory_stock_item.product_id = parent_product_entity.entity_id'
                 . ' AND inventory_stock_item.stock_id = ' . $this->defaultStockProvider->getId(),
                 []
-            )->joinInner(
+            )->joinLeft(
                 ['product_status' => $this->resourceConnection->getTableName('catalog_product_entity_int')],
                 "product_entity.$linkField = product_status.$linkField"
                 . " AND product_status.attribute_id = $statusAttributeId"
-                . ' AND product_status.value = ' . ProductStatus::STATUS_ENABLED,
+                . ' AND product_status.store_id = ' . Store::DEFAULT_STORE_ID,
                 []
             )
             ->group(['parent_product_entity.sku'])

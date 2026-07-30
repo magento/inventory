@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryConfigurableProductIndexer\Test\Unit\Indexer;
 
+use Magento\Catalog\Model\Product\Attribute\Source\Status as ProductStatus;
 use Magento\Catalog\Model\ResourceModel\Eav\Attribute;
 use Magento\Eav\Model\Config;
 use Magento\Framework\App\ResourceConnection;
@@ -17,9 +18,11 @@ use Magento\Framework\EntityManager\MetadataPool;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryConfigurableProductIndexer\Indexer\SelectBuilder;
 use Magento\InventoryConfigurationApi\Model\InventoryConfigurationInterface;
+use Magento\InventoryIndexer\Indexer\IndexStructure;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexName;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameResolverInterface;
+use Magento\Store\Model\Store;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -96,5 +99,40 @@ class SelectBuilderTest extends TestCase
             ->willReturnSelf();
 
         $this->selectBuilder->getSelect(2, ['configurable_1']);
+    }
+
+    public function testDisabledChildrenAreIgnoredWithoutDroppingTheParentRow(): void
+    {
+        $columns = [];
+        $joinConditions = [];
+
+        $select = $this->createMock(Select::class);
+        foreach (['joinInner', 'where', 'group', 'order'] as $method) {
+            $select->method($method)->willReturnSelf();
+        }
+        $select->method('from')
+            ->willReturnCallback(function ($table, $cols) use ($select, &$columns) {
+                $columns = $cols;
+                return $select;
+            });
+        $select->method('joinLeft')
+            ->willReturnCallback(function ($table, $condition) use ($select, &$joinConditions) {
+                $joinConditions[array_key_first($table)] = $condition;
+                return $select;
+            });
+        $this->connection->method('select')->willReturn($select);
+
+        $this->selectBuilder->getSelect(2);
+
+        self::assertStringContainsString(
+            'MAX(IF(product_status.value = ' . ProductStatus::STATUS_ENABLED . ', stock.is_salable, 0))',
+            $columns[IndexStructure::IS_SALABLE]
+        );
+        self::assertArrayHasKey('product_status', $joinConditions);
+        self::assertStringContainsString(
+            'product_status.store_id = ' . Store::DEFAULT_STORE_ID,
+            $joinConditions['product_status']
+        );
+        self::assertStringNotContainsString('product_status.value =', $joinConditions['product_status']);
     }
 }
