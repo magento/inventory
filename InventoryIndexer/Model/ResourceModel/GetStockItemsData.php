@@ -63,6 +63,10 @@ class GetStockItemsData implements GetStockItemsDataInterface
      */
     public function execute(array $skus, int $stockId): array
     {
+        if (empty($skus)) {
+            return [];
+        }
+
         $connection = $this->resource->getConnection();
         $select = $connection->select();
         $results = [];

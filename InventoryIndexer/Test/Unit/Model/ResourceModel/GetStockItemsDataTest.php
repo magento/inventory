@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryIndexer\Test\Model\ResourceModel;
+namespace Magento\InventoryIndexer\Test\Unit\Model\ResourceModel;
 
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Adapter\AdapterInterface;
@@ -26,7 +26,7 @@ class GetStockItemsDataTest extends TestCase
     private const STOCK_ID = 1;
 
     /**
-     * @var ResourceConnection|Stub
+     * @var ResourceConnection|MockObject
      */
     private ResourceConnection $resourceMock;
 
@@ -66,7 +66,7 @@ class GetStockItemsDataTest extends TestCase
      */
     protected function setUp(): void
     {
-        $this->resourceMock = $this->createStub(ResourceConnection::class);
+        $this->resourceMock = $this->createMock(ResourceConnection::class);
         $this->connectionMock = $this->createMock(AdapterInterface::class);
         $this->selectMock = $this->createStub(Select::class);
         $this->stockIndexTableNameResolverMock = $this->createStub(StockIndexTableNameResolverInterface::class);
@@ -219,5 +219,15 @@ class GetStockItemsDataTest extends TestCase
         $this->expectExceptionMessage('Could not receive Stock Item data');
 
         $this->getStockItemsData->execute($skus, self::STOCK_ID);
+    }
+
+    /**
+     * @return void
+     * @throws LocalizedException
+     */
+    public function testWithEmptySkus(): void
+    {
+        $this->resourceMock->expects($this->never())->method('getConnection');
+        $this->assertEmpty($this->getStockItemsData->execute([], self::STOCK_ID));
     }
 }
