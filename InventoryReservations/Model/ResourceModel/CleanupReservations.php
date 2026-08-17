@@ -29,10 +29,12 @@ class CleanupReservations implements CleanupReservationsInterface
     /**
      * @param ResourceConnection $resource
      * @param int $groupConcatMaxLen
+     * @param int $orphanLifetime
      */
     public function __construct(
         ResourceConnection $resource,
-        int $groupConcatMaxLen
+        int $groupConcatMaxLen,
+        private readonly int $orphanLifetime = 3600,
     ) {
         $this->resource = $resource;
         $this->groupConcatMaxLen = $groupConcatMaxLen;
@@ -46,17 +48,15 @@ class CleanupReservations implements CleanupReservationsInterface
         $connection = $this->resource->getConnection();
         $reservationTable = $this->resource->getTableName('inventory_reservation');
 
-        $groupedReservationIds = implode(
-            ',',
-            array_unique(
-                array_merge(
-                    $this->getReservationIdsByField('object_id'),
-                    $this->getReservationIdsByField('object_increment_id')
-                )
+        $reservationIds = array_unique(
+            array_merge(
+                $this->getReservationIdsByField('object_id'),
+                $this->getReservationIdsByField('object_increment_id'),
+                $this->getOrphanedReservationIds(),
             )
         );
 
-        $condition = [ReservationInterface::RESERVATION_ID . ' IN (?)' => explode(',', $groupedReservationIds)];
+        $condition = [ReservationInterface::RESERVATION_ID . ' IN (?)' => $reservationIds];
         $connection->delete($reservationTable, $condition);
     }
 
@@ -78,6 +78,27 @@ class CleanupReservations implements CleanupReservationsInterface
             ->group("JSON_EXTRACT(metadata, '$.$field')", "JSON_EXTRACT(metadata, '$.object_type')")
             ->having('SUM(' . ReservationInterface::QUANTITY . ') = 0');
         $connection->query('SET group_concat_max_len = ' . $this->groupConcatMaxLen);
+        return $connection->fetchCol($select);
+    }
+
+    /**
+     * Returns reservation ids which are not linked to any order.
+     *
+     * @return array
+     */
+    private function getOrphanedReservationIds(): array
+    {
+        $connection = $this->resource->getConnection();
+        $reservationTable = $this->resource->getTableName('inventory_reservation');
+        $select = $connection->select()
+            ->from(['ir' => $reservationTable], [ReservationInterface::RESERVATION_ID])
+            ->joinLeft(
+                ['so' => $this->resource->getTableName('sales_order')],
+                'JSON_VALUE(ir.metadata, "$.object_increment_id") = so.increment_id',
+                []
+            )
+            ->where('JSON_VALUE(ir.metadata, "$.event_timestamp") < UNIX_TIMESTAMP() - ' . $this->orphanLifetime)
+            ->where('so.entity_id IS NULL');
         return $connection->fetchCol($select);
     }
 }
