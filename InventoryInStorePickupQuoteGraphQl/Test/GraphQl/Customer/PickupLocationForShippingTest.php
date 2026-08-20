@@ -323,11 +323,47 @@ QUERY;
 
         // The `eu-1` source fixture does not set a phone number, but a shipping address built purely from
         // `pickup_location_code` (no other address fields, matching the ticket's exact repro) requires one.
+        $this->setPickupSourcePhone($pickupLocationCode, '3468676');
+
+        $maskedQuoteId = $this->getCustomerCartId($headers);
+        $this->addItemToCart($maskedQuoteId, $headers);
+        $this->setRegularShippingAddress($maskedQuoteId, $headers);
+        $this->assertFlatRateShippingMethodIsSelected($maskedQuoteId, $headers);
+
+        $shippingAddress = $this->switchShippingAddressToPickupLocation($maskedQuoteId, $pickupLocationCode, $headers);
+
+        self::assertEquals($pickupLocationCode, $shippingAddress['pickup_location_code']);
+        self::assertNull(
+            $shippingAddress['selected_shipping_method'],
+            'The previously selected non-pickup shipping method must not be retained on a Pickup Location order.'
+        );
+    }
+
+    /**
+     * Set a phone number on the given Pickup Location source, required to build a pickup-only address.
+     *
+     * @param string $pickupLocationCode
+     * @param string $phone
+     *
+     * @return void
+     */
+    private function setPickupSourcePhone(string $pickupLocationCode, string $phone): void
+    {
         $sourceRepository = Bootstrap::getObjectManager()->get(SourceRepositoryInterface::class);
         $pickupSource = $sourceRepository->get($pickupLocationCode);
-        $pickupSource->setPhone('3468676');
+        $pickupSource->setPhone($phone);
         $sourceRepository->save($pickupSource);
+    }
 
+    /**
+     * Get the masked id of the current customer's cart.
+     *
+     * @param array $headers
+     *
+     * @return string
+     */
+    private function getCustomerCartId(array $headers): string
+    {
         $cartQuery = <<<QUERY
 {
   customerCart {
@@ -336,8 +372,20 @@ QUERY;
 }
 QUERY;
         $cartResponse = $this->graphQlQuery($cartQuery, [], '', $headers);
-        $maskedQuoteId = $cartResponse['customerCart']['id'];
 
+        return $cartResponse['customerCart']['id'];
+    }
+
+    /**
+     * Add a simple product to the cart.
+     *
+     * @param string $maskedQuoteId
+     * @param array $headers
+     *
+     * @return void
+     */
+    private function addItemToCart(string $maskedQuoteId, array $headers): void
+    {
         $addItemQuery = <<<QUERY
 mutation {
   addSimpleProductsToCart(
@@ -353,7 +401,18 @@ mutation {
 }
 QUERY;
         $this->graphQlMutation($addItemQuery, [], '', $headers);
+    }
 
+    /**
+     * Set a regular, non-pickup shipping address on the cart.
+     *
+     * @param string $maskedQuoteId
+     * @param array $headers
+     *
+     * @return void
+     */
+    private function setRegularShippingAddress(string $maskedQuoteId, array $headers): void
+    {
         $setAddressQuery = <<<QUERY
 mutation {
   setShippingAddressesOnCart(
@@ -383,7 +442,18 @@ mutation {
 }
 QUERY;
         $this->graphQlMutation($setAddressQuery, [], '', $headers);
+    }
 
+    /**
+     * Set a non-pickup (flat rate) shipping method on the cart and assert it was applied.
+     *
+     * @param string $maskedQuoteId
+     * @param array $headers
+     *
+     * @return void
+     */
+    private function assertFlatRateShippingMethodIsSelected(string $maskedQuoteId, array $headers): void
+    {
         $setMethodQuery = <<<QUERY
 mutation {
   setShippingMethodsOnCart(
@@ -409,7 +479,22 @@ QUERY;
         )['selected_shipping_method'];
         self::assertEquals('flatrate', $selectedMethod['carrier_code']);
         self::assertEquals('flatrate', $selectedMethod['method_code']);
+    }
 
+    /**
+     * Switch the cart's shipping address to a Pickup Location and return the resulting shipping address.
+     *
+     * @param string $maskedQuoteId
+     * @param string $pickupLocationCode
+     * @param array $headers
+     *
+     * @return array
+     */
+    private function switchShippingAddressToPickupLocation(
+        string $maskedQuoteId,
+        string $pickupLocationCode,
+        array $headers
+    ): array {
         $setPickupAddressQuery = <<<QUERY
 mutation {
   setShippingAddressesOnCart(
@@ -432,12 +517,7 @@ mutation {
 QUERY;
         $response = $this->graphQlMutation($setPickupAddressQuery, [], '', $headers);
 
-        $shippingAddress = current($response['setShippingAddressesOnCart']['cart']['shipping_addresses']);
-        self::assertEquals($pickupLocationCode, $shippingAddress['pickup_location_code']);
-        self::assertNull(
-            $shippingAddress['selected_shipping_method'],
-            'The previously selected non-pickup shipping method must not be retained on a Pickup Location order.'
-        );
+        return current($response['setShippingAddressesOnCart']['cart']['shipping_addresses']);
     }
 
     /**
