@@ -7,39 +7,24 @@ declare(strict_types=1);
 
 namespace Magento\InventoryReservations\Model\ResourceModel;
 
-use Magento\Framework\ObjectManager\ResetAfterRequestInterface;
+use Magento\InventoryReservations\Model\GetReservationsQuantity\CacheStorage;
 use Magento\InventoryReservationsApi\Model\GetReservationsQuantityInterface;
 
 /**
  * @inheritdoc
  */
-class GetReservationsQuantityCache implements GetReservationsQuantityInterface, ResetAfterRequestInterface
+class GetReservationsQuantityCache implements GetReservationsQuantityInterface
 {
     /**
-     * @var GetReservationsQuantity
-     */
-    private $getReservationsQuantity;
-
-    /**
-     * @var array
-     */
-    private $reservationsQuantity = [[]];
-
-    /**
      * @param GetReservationsQuantity $getReservationsQuantity
+     * @param CacheStorage $reservationsQuantityCacheStorage
+     * @param bool $isReadonly
      */
     public function __construct(
-        GetReservationsQuantity $getReservationsQuantity
+        private readonly GetReservationsQuantity $getReservationsQuantity,
+        private readonly CacheStorage $reservationsQuantityCacheStorage,
+        private readonly bool $isReadonly = false
     ) {
-        $this->getReservationsQuantity = $getReservationsQuantity;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function _resetState(): void
-    {
-        $this->reservationsQuantity = [[]];
     }
 
     /**
@@ -47,10 +32,15 @@ class GetReservationsQuantityCache implements GetReservationsQuantityInterface, 
      */
     public function execute(string $sku, int $stockId): float
     {
-        if (!isset($this->reservationsQuantity[$sku][$stockId])) {
-            $this->reservationsQuantity[$sku][$stockId] = $this->getReservationsQuantity->execute($sku, $stockId);
+        if (!$this->reservationsQuantityCacheStorage->has($sku, $stockId)) {
+            $value = $this->getReservationsQuantity->execute($sku, $stockId);
+            if (!$this->isReadonly) {
+                $this->reservationsQuantityCacheStorage->set($sku, $stockId, $value);
+            }
+        } else {
+            $value = $this->reservationsQuantityCacheStorage->get($sku, $stockId);
         }
 
-        return $this->reservationsQuantity[$sku][$stockId];
+        return $value;
     }
 }

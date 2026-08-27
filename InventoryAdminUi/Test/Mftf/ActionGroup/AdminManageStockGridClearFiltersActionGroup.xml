@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright 2026 Adobe
+ * All Rights Reserved.
+ */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AdminManageStockGridClearFiltersActionGroup">
+        <annotations>
+            <description>Opens the Admin Manage Stock grid and clicks Clear Filters when that control is visible.</description>
+        </annotations>
+        <amOnPage url="{{AdminManageStockPage.url}}" stepKey="goToManageStockGridPage"/>
+        <waitForPageLoad stepKey="waitForManageStockGridPageLoad"/>
+        <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}"
+                          dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}"
+                          visible="true"
+                          stepKey="clickClearStockGridFiltersIfPresent"/>
+        <waitForLoadingMaskToDisappear stepKey="waitAfterClearStockGridFilters"/>
+    </actionGroup>
+</actionGroups>

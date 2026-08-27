@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Model;
 
 use Magento\Directory\Model\RegionFactory;
+use Magento\Directory\Model\ResourceModel\Region as RegionResource;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DataObject\Copy;
 use Magento\InventoryApi\Api\Data\SourceInterface;
@@ -29,6 +30,11 @@ class ExtractPickupLocationAddressData
     private $regionFactory;
 
     /**
+     * @var RegionResource
+     */
+    private $regionResource;
+
+    /**
      * @var array
      */
     private $regions = [];
@@ -36,14 +42,18 @@ class ExtractPickupLocationAddressData
     /**
      * @param Copy $copyService
      * @param RegionFactory|null $regionFactory
+     * @param RegionResource|null $regionResource
      */
     public function __construct(
         Copy $copyService,
-        ?RegionFactory $regionFactory = null
+        ?RegionFactory $regionFactory = null,
+        ?RegionResource $regionResource = null
     ) {
         $this->objectCopyService = $copyService;
         $this->regionFactory = $regionFactory ?:
             ObjectManager::getInstance()->get(RegionFactory::class);
+        $this->regionResource = $regionResource ?:
+            ObjectManager::getInstance()->get(RegionResource::class);
     }
 
     /**
@@ -78,7 +88,11 @@ class ExtractPickupLocationAddressData
 
         if (!isset($this->regions[$cacheKey])) {
             $region = $this->regionFactory->create();
-            $region->loadByName($pickupLocation->getRegion(), $pickupLocation->getCountryId());
+            if ($pickupLocation->getRegionId()) {
+                $this->regionResource->load($region, $pickupLocation->getRegionId());
+            } else {
+                $region->loadByName($pickupLocation->getRegion(), $pickupLocation->getCountryId());
+            }
             $this->regions[$cacheKey] = $region->getName() ?: $pickupLocation->getRegion();
         }
 

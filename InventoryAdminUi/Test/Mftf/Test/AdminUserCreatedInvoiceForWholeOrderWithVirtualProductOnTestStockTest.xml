@@ -39,6 +39,9 @@
             <deleteData createDataKey="createCustomer1" stepKey="deleteCustomer"/>
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <magentoCLI command="config:set {{DisableCashOnDeliveryPaymentMethod.path}} {{DisableCashOnDeliveryPaymentMethod.value}}" stepKey="disableCashOnDeliveryPaymentMethod"/>
+            <amOnPage url="{{AdminManageStockPage.url}}" stepKey="goToStockGridBeforeClearFilters"/>
+            <waitForPageLoad stepKey="waitForStockGridLoad"/>
+            <actionGroup ref="ClearFiltersAdminDataGridActionGroup" stepKey="clearInventoryStockListingFiltersAfter"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 

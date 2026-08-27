@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright 2026 Adobe
+ * All Rights Reserved.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magento\InventorySalesApi\Model\GetProductAvailableQtyInterface" type="Magento\InventorySales\Model\GetProductAvailableQtyCache"/>
+    <type name="Magento\InventorySalesApi\Model\CachePool">
+        <arguments>
+            <argument name="pool" xsi:type="array">
+                <item name="stock_item_configuration" xsi:type="object">Magento\InventoryConfigurationApi\Model\GetStockItemConfigurationBySkuListCacheInterface</item>
+                <item name="reservations_quantity" xsi:type="object">Magento\InventoryReservationsApi\Model\GetReservationsQuantityBySkuListCacheInterface</item>
+                <item name="product_available_qty" xsi:type="object">Magento\InventorySales\Model\GetProductAvailableQtyBySkuListCache</item>
+                <item name="product_assigned_to_stock" xsi:type="object">Magento\InventorySales\Model\AreProductsAssignedToStockCacheProxy</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

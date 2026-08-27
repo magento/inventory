@@ -9,6 +9,7 @@ namespace Magento\InventorySalesApi\Test\Api;
 
 use Magento\TestFramework\TestCase\WebapiAbstract;
 use Magento\Framework\Webapi\Rest\Request;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @see https://app.hiptest.com/projects/69435/test-plan/folders/530616/scenarios/1824144
@@ -31,10 +32,10 @@ class GetProductSalableQuantityTest extends WebapiAbstract
      * @magentoApiDataFixture Magento_InventoryApi::Test/_files/source_items.php
      * @magentoApiDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
      * @magentoApiDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
-     * @dataProvider getSalableQuantityDataProvider
      *
      * @magentoDbIsolation disabled
      */
+    #[DataProvider('getSalableQuantityDataProvider')]
     public function testGetSalableQuantity(
         string $sku,
         int $stockId,

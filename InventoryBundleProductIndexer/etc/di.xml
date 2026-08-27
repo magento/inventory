@@ -6,7 +6,6 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="Magento\Bundle\Model\ResourceModel\Indexer\StockStatusQueryProcessorInterface" type="Magento\InventoryBundleProductIndexer\Indexer\InventoryStockStatusQueryProcessor" />
     <type name="Magento\Bundle\Api\ProductLinkManagementInterface">
         <plugin name="reindex_source_items_after_add_bundle_selection" type="Magento\InventoryBundleProductIndexer\Plugin\Bundle\Model\LinkManagement\ReindexSourceItemsAfterAddBundleSelectionPlugin"/>
         <plugin name="reindex_source_items_after_save_bundle_selection" type="Magento\InventoryBundleProductIndexer\Plugin\Bundle\Model\LinkManagement\ReindexSourceItemsAfterSaveBundleSelectionPlugin"/>
@@ -37,5 +36,12 @@
     </type>
     <type name="Magento\Bundle\Model\ResourceModel\Indexer\OptionQtyExpressionProvider">
         <plugin name="join_reservations_table" type="Magento\InventoryBundleProductIndexer\Plugin\Bundle\Model\ResourceModel\Indexer\OptionQtyExpressionProviderPlugin" />
+    </type>
+    <type name="Magento\Bundle\Model\ResourceModel\Indexer\CompositeSelectionPriceModifier">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="inventory" xsi:type="object">Magento\InventoryBundleProductIndexer\Indexer\SelectionPriceModifier</item>
+            </argument>
+        </arguments>
     </type>
 </config>

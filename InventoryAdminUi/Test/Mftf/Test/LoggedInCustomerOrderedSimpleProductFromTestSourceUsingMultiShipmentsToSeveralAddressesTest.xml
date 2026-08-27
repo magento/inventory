@@ -21,9 +21,13 @@
             <group value="multi_mode"/>
             <group value="pr_exclude"/>
         </annotations>
+
         <before>
             <remove keyForRemoval="assignStockToAdditionalWebsite"/>
         </before>
+        <after>
+            <actionGroup ref="AdminOrdersGridClearFiltersActionGroup" stepKey="clearOrdersGridFiltersAfter" before="deleteSimpleProduct"/>
+        </after>
 
         <remove keyForRemoval="assignTestSourceToCreatedProduct"/>
         <remove keyForRemoval="setProductQuantity"/>

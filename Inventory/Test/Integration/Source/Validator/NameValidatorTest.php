@@ -11,6 +11,7 @@ use Magento\Inventory\Model\Source\Validator\NameValidator;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\Data\SourceInterfaceFactory;
 use Magento\TestFramework\Helper\Bootstrap;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class NameValidatorTest extends TestCase
@@ -34,11 +35,11 @@ class NameValidatorTest extends TestCase
     }
 
     /**
-     * @dataProvider dataProvider
      * @param string $value
      * @param int $errorCount
      * @param array $errorStrings
      */
+    #[DataProvider('dataProvider')]
     public function testValidation($value, $errorCount, $errorStrings)
     {
         $source = $this->sourceFactory->create(

@@ -19,6 +19,7 @@ use Magento\InventoryIndexer\Model\ResourceModel\GetStockItemData;
 use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\Helper\Bootstrap;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -88,10 +89,9 @@ class SourceItemIndexerTest extends TestCase
      * @param int $stockId
      * @param array|null $expectedData
      *
-     * @dataProvider reindexRowDataProvider
-     *
      * @magentoDbIsolation disabled
      */
+    #[DataProvider('reindexRowDataProvider')]
     public function testReindexRow(string $sku, int $stockId, $expectedData)
     {
         $this->removeIndexData->execute([10, 20, 30]);
@@ -134,10 +134,9 @@ class SourceItemIndexerTest extends TestCase
      * @param int $stockId
      * @param array|null $expectedData
      *
-     * @dataProvider reindexListDataProvider
-     *
      * @magentoDbIsolation disabled
      */
+    #[DataProvider('reindexListDataProvider')]
     public function testReindexList(string $sku, int $stockId, $expectedData)
     {
         $this->removeIndexData->execute([10, 20, 30]);
@@ -184,10 +183,9 @@ class SourceItemIndexerTest extends TestCase
      * @param int $stockId
      * @param array|null $expectedData
      *
-     * @dataProvider reindexAllDataProvider
-     *
      * @magentoDbIsolation disabled
      */
+    #[DataProvider('reindexAllDataProvider')]
     public function testReindexAll(string $sku, int $stockId, $expectedData)
     {
         $this->removeIndexData->execute([10, 20, 30]);

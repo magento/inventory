@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Model\ResourceModel;
 
-use Magento\Framework\App\ObjectManager;
 use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 use Magento\InventoryIndexer\Model\GetStockItemData\CacheStorage;
 
@@ -17,26 +16,15 @@ use Magento\InventoryIndexer\Model\GetStockItemData\CacheStorage;
 class GetStockItemDataCache implements GetStockItemDataInterface
 {
     /**
-     * @var GetStockItemData
-     */
-    private $getStockItemData;
-
-    /**
-     * @var CacheStorage
-     */
-    private $cacheStorage;
-
-    /**
      * @param GetStockItemData $getStockItemData
-     * @param CacheStorage|null $cacheStorage
+     * @param CacheStorage $cacheStorage
+     * @param bool $isReadonly
      */
     public function __construct(
-        GetStockItemData $getStockItemData,
-        ?CacheStorage $cacheStorage = null
+        private readonly GetStockItemData $getStockItemData,
+        private readonly CacheStorage $cacheStorage,
+        private readonly bool $isReadonly = false
     ) {
-        $this->getStockItemData = $getStockItemData;
-        $this->cacheStorage = $cacheStorage ?: ObjectManager::getInstance()
-            ->get(CacheStorage::class);
     }
 
     /**
@@ -50,7 +38,7 @@ class GetStockItemDataCache implements GetStockItemDataInterface
         /** @var array $stockItemData */
         $stockItemData =  $this->getStockItemData->execute($sku, $stockId);
         /* Add to cache a new item */
-        if (!empty($stockItemData)) {
+        if (!empty($stockItemData) && !$this->isReadonly) {
             $this->cacheStorage->set($stockId, $sku, $stockItemData);
         }
 

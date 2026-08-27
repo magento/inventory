@@ -10,6 +10,7 @@ namespace Magento\InventorySales\Test\Integration\IsProductSalableForRequestedQt
 use Magento\InventorySalesApi\Api\AreProductsSalableForRequestedQtyInterface;
 use Magento\InventorySalesApi\Api\Data\IsProductSalableForRequestedQtyRequestInterfaceFactory;
 use Magento\TestFramework\Helper\Bootstrap;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class ManageStockConditionTest extends TestCase
@@ -53,10 +54,9 @@ class ManageStockConditionTest extends TestCase
      * @param bool $expectedResult
      * @return void
      *
-     * @dataProvider executeWithManageStockFalseDataProvider
-     *
      * @magentoDbIsolation disabled
      */
+    #[DataProvider('executeWithManageStockFalseDataProvider')]
     public function testExecuteWithManageStockFalse(string $sku, int $stockId, float $qty, bool $expectedResult): void
     {
         $request = $this->isProductSalableForRequestedQtyRequestFactory->create(

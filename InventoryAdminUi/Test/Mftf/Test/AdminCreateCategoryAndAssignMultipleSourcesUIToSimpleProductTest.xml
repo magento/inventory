@@ -37,6 +37,9 @@
       <deleteData createDataKey="createProduct" stepKey="deleteProduct"/>
       <!-- Disable all created sources -->
       <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+      <!-- Clear filters on products grid -->
+      <amOnPage url="{{ProductCatalogPage.url}}" stepKey="openProductPage"/>
+      <actionGroup ref="ClearFiltersAdminProductGridActionGroup" stepKey="clearProductGridFilter"/>
       <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdmin"/>
     </after>
     <!-- Step 5: Verify product in grid -->

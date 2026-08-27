@@ -12,6 +12,7 @@ use Magento\CatalogInventory\Model\ResourceModel\Stock\Status as StockStatus;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Test add in in stock filter to collection with different stocks on different websites.
@@ -60,10 +61,9 @@ class AddIsInStockFilterToCollectionTest extends TestCase
      * @param int $expectedSize
      * @return void
      *
-     * @dataProvider addIsInStockFilterToCollectionDataProvider
-     *
      * @magentoDbIsolation disabled
      */
+    #[DataProvider('addIsInStockFilterToCollectionDataProvider')]
     public function testAddIsInStockFilterToCollection(string $store, int $expectedSize)
     {
         $this->storeManager->setCurrentStore($store);

@@ -55,6 +55,7 @@ class GetProductTypesBySkusTest extends TestCase
     {
         $skus = ['not_existed_1', 'not_existed_2', 'simple_sku'];
 
-        self::assertEquals(['simple_sku' => 'simple'], $this->getProductTypesBySkus->execute($skus));
+        $result = array_filter($this->getProductTypesBySkus->execute($skus), static fn ($type) => $type !== null);
+        self::assertEquals(['simple_sku' => 'simple'], $result);
     }
 }

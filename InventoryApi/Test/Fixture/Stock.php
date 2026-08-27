@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryApi\Test\Fixture;
 
+use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DataObject;
 use Magento\InventoryApi\Api\Data\StockInterface;
 use Magento\InventoryApi\Api\StockRepositoryInterface;
@@ -31,15 +32,22 @@ class Stock implements RevertibleDataFixtureInterface
     private ProcessorInterface $dataProcessor;
 
     /**
+     * @var ResourceConnection $resourceConnection
+     */
+    private $resourceConnection;
+
+    /**
      * @param ServiceFactory $serviceFactory
      * @param ProcessorInterface $dataProcessor
      */
     public function __construct(
         ServiceFactory $serviceFactory,
-        ProcessorInterface $dataProcessor
+        ProcessorInterface $dataProcessor,
+        ResourceConnection $resourceConnection
     ) {
         $this->serviceFactory = $serviceFactory;
         $this->dataProcessor = $dataProcessor;
+        $this->resourceConnection = $resourceConnection;
     }
 
     /**
@@ -62,8 +70,14 @@ class Stock implements RevertibleDataFixtureInterface
      */
     public function revert(DataObject $data): void
     {
+        $stockId = $data['stock_id'];
+
         $service = $this->serviceFactory->create(StockRepositoryInterface::class, 'deleteById');
-        $service->execute(['stockId' => $data['stock_id']]);
+        $service->execute(['stockId' => $stockId]);
+
+        $connection = $this->resourceConnection->getConnection();
+        $tableName = 'inventory_stock_' . $stockId;
+        $connection->dropTable($tableName);
     }
 
     /**

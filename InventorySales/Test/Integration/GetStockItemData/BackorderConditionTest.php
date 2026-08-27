@@ -21,6 +21,7 @@ use Magento\InventoryReservationsApi\Model\ReservationBuilderInterface;
 use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -121,12 +122,12 @@ class BackorderConditionTest extends TestCase
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      * @magentoConfigFixture current_store cataloginventory/item_options/backorders 0
-     * @dataProvider backordersDisabledDataProvider
      *
      * @param string $sku
      * @param int $stockId
      * @param array|null $expectedData
      */
+    #[DataProvider('backordersDisabledDataProvider')]
     public function testBackordersDisabled(string $sku, int $stockId, $expectedData): void
     {
         $stockItemData = $this->getStockItemData->execute($sku, $stockId);
@@ -144,12 +145,12 @@ class BackorderConditionTest extends TestCase
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      * @magentoConfigFixture current_store cataloginventory/item_options/backorders 1
-     * @dataProvider backordersGlobalEnabledDataProvider
      *
      * @param string $sku
      * @param int $stockId
      * @param array|null $expectedData
      */
+    #[DataProvider('backordersGlobalEnabledDataProvider')]
     public function testGlobalBackordersEnabled(string $sku, int $stockId, $expectedData): void
     {
         $stockItemData = $this->getStockItemData->execute($sku, $stockId);
@@ -167,12 +168,12 @@ class BackorderConditionTest extends TestCase
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      * @magentoConfigFixture current_store cataloginventory/item_options/backorders 1
-     * @dataProvider backordersDisabledDataProvider
      *
      * @param string $sku
      * @param int $stockId
      * @param array|null $expectedData
      */
+    #[DataProvider('backordersDisabledDataProvider')]
     public function testStockItemBackordersDisabled(string $sku, int $stockId, $expectedData): void
     {
         $this->updateStockItem(
@@ -198,13 +199,13 @@ class BackorderConditionTest extends TestCase
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      * @magentoConfigFixture current_store cataloginventory/item_options/backorders 0
-     * @dataProvider backordersEnabledDataProvider
      *
      * @param string $sku
      * @param int $stockId
      * @param int $itemBackorders
      * @param array|null $expectedData
      */
+    #[DataProvider('backordersEnabledDataProvider')]
     public function testStockItemBackordersEnabled(string $sku, int $stockId, int $itemBackorders, $expectedData): void
     {
         $this->updateStockItem(
@@ -230,12 +231,13 @@ class BackorderConditionTest extends TestCase
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      * @magentoConfigFixture current_store cataloginventory/item_options/backorders 0
-     * @dataProvider backordersWithReservationsDataProvider
+     *
      * @param string $sku
      * @param int $stockId
      * @param array $stockConfig
      * @param array|null $expectedData
      */
+    #[DataProvider('backordersWithReservationsDataProvider')]
     public function testBackordersWithReservations(
         string $sku,
         int $stockId,

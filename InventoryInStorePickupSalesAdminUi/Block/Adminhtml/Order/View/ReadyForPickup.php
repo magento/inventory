@@ -101,7 +101,7 @@ class ReadyForPickup extends Container
                 'class' => 'action-default ready-for-pickup',
                 'onclick' => sprintf(
                     "confirmSetLocation('%s', '%s')",
-                    $message,
+                    $this->_escaper->escapeJs($this->_escaper->escapeHtml($message)),
                     $this->viewBlock->getUrl('sales/*/notifyPickup')
                 ),
             ]

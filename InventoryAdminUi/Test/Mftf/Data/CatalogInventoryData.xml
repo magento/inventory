@@ -82,5 +82,6 @@
     </entity>
     <entity name="SourceStatusOutOfStock">
         <data key="value">Out of Stock</data>
+        <data key="storefront_display">OUT OF STOCK</data>
     </entity>
 </entities>

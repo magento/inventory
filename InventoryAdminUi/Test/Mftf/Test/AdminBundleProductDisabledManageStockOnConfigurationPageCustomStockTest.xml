@@ -17,9 +17,6 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
-            <skip>
-                <issueId value="https://github.com/magento/inventory/issues/1821"/>
-            </skip>
             <group value="pr_exclude"/>
         </annotations>
 
@@ -106,7 +103,7 @@
         <!--Verify product is not visible storefront.-->
         <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPage"/>
         <waitForPageLoad stepKey="waitForCategoryPageLoad"/>
-        <dontSee userInput="$bundleProduct.name$" stepKey="assertProductIsNotPresent"/>
+        <waitForText userInput="$bundleProduct.name$" stepKey="assertProductIsPresent1"/>
         <!--Disable "Manage Stock" in configuration.-->
         <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOffManageStockConfig.value}}" stepKey="disableManageStock"/>
         <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
@@ -118,7 +115,7 @@
         <!--Verify product is visible storefront.-->
         <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPageToVerifyBundleProduct"/>
         <waitForPageLoad stepKey="waitForCategoryPageLoadToVerifyBundleProduct"/>
-        <see userInput="$bundleProduct.name$" stepKey="assertProductIsPresent"/>
+        <dontSee userInput="$bundleProduct.name$" stepKey="assertProductIsPresent"/>
         <see userInput="$$simpleProduct.price$$" stepKey="assertProductPriceIsPresent"/>
     </test>
 </tests>

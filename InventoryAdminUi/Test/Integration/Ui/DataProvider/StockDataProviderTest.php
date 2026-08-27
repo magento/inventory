@@ -11,6 +11,7 @@ use Magento\Framework\ObjectManagerInterface;
 use Magento\InventoryAdminUi\Ui\DataProvider\StockDataProvider;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\InventoryApi\Api\Data\StockInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class StockDataProviderTest extends TestCase
@@ -32,8 +33,8 @@ class StockDataProviderTest extends TestCase
      * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
-     * @dataProvider listingDataStockDataProvider
      */
+    #[DataProvider('listingDataStockDataProvider')]
     public function testGetDataForListingDataStock($stockName, $assignedSources): void
     {
         /** @var StockDataProvider $stockDataProvider */

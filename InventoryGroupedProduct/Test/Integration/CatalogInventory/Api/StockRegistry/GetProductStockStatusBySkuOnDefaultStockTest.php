@@ -10,6 +10,7 @@ namespace Magento\InventoryGroupedProduct\Test\Integration\CatalogInventory\Api\
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\TestFramework\Helper\Bootstrap;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class GetProductStockStatusBySkuOnDefaultStockTest extends TestCase
@@ -36,11 +37,11 @@ class GetProductStockStatusBySkuOnDefaultStockTest extends TestCase
     /**
      * @magentoDataFixture Magento_InventoryGroupedProduct::Test/_files/default_stock_grouped_products.php
      *
-     * @dataProvider getStockDataProvider
      * @param string $sku
      * @param int $status
      * @return void
      */
+    #[DataProvider('getStockDataProvider')]
     public function testGetStatusIfScopeIdParameterIsNotPassed(string $sku, int $status): void
     {
         $productStockStatus = $this->stockRegistry->getProductStockStatusBySku($sku);
@@ -51,11 +52,11 @@ class GetProductStockStatusBySkuOnDefaultStockTest extends TestCase
     /**
      * @magentoDataFixture Magento_InventoryGroupedProduct::Test/_files/default_stock_grouped_products.php
      *
-     * @dataProvider getStockDataProvider
      * @param string $sku
      * @param int $status
      * @return void
      */
+    #[DataProvider('getStockDataProvider')]
     public function testGetStatusIfScopeIdParameterIsPassed(string $sku, int $status): void
     {
         $productStockStatus = $this->stockRegistry->getProductStockStatusBySku(

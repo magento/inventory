@@ -12,4 +12,12 @@
     <type name="Magento\CatalogInventory\Model\Stock\StockItemRepository">
         <plugin name="reindex_after_save_product_stock_item" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Model\Stock\StockItemRepository\StockItemRepositoryPlugin"/>
     </type>
+    <type name="Magento\InventorySalesApi\Model\CachePool">
+        <arguments>
+            <argument name="pool" xsi:type="array">
+                <item name="stock_registry_stock_item" xsi:type="object">Magento\InventoryCatalog\Model\StockRegistryStockItemCache</item>
+                <item name="stock_registry_stock_status" xsi:type="object">Magento\InventoryCatalog\Model\StockRegistryStockStatusCache</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

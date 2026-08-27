@@ -2,6 +2,8 @@
 /**
  * Copyright 2018 Adobe
  * All Rights Reserved.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 declare(strict_types=1);
 
@@ -23,8 +25,12 @@ use Magento\TestFramework\Fixture\DataFixture;
 use Magento\TestFramework\Fixture\DataFixtureStorageManager;
 use Magento\TestFramework\Fixture\DbIsolation;
 use Magento\TestFramework\Helper\Bootstrap;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class AssignStatusToProductTest extends TestCase
 {
     /**
@@ -69,12 +75,12 @@ class AssignStatusToProductTest extends TestCase
      * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
      * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
-     * @dataProvider assignStatusToProductDataProvider
      * @param string $storeCode
      * @param array $productsData
      *
      * @magentoDbIsolation disabled
      */
+    #[DataProvider('assignStatusToProductDataProvider')]
     public function testAssignStatusToProductIfStatusParameterIsNotPassed(string $storeCode, array $productsData)
     {
         $storeId = $this->storeManager->getStore($storeCode)->getId();
@@ -97,12 +103,12 @@ class AssignStatusToProductTest extends TestCase
      * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
      * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
-     * @dataProvider assignStatusToProductDataProvider
      * @param string $storeCode
      * @param array $productsData
      *
      * @magentoDbIsolation disabled
      */
+    #[DataProvider('assignStatusToProductDataProvider')]
     public function testAssignStatusToProductIfStatusParameterIsPassed(string $storeCode, array $productsData)
     {
         $expectedStatus = 1;

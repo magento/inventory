@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright 2026 Adobe
+ * All Rights Reserved.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magento\InventorySalesApi\Model\GetStockItemDataInterface" type="Magento\InventoryIndexer\Model\ResourceModel\GetStockItemDataCache"/>
+    <preference for="Magento\InventorySalesApi\Model\GetStockItemsDataInterface" type="Magento\InventoryIndexer\Model\ResourceModel\GetStockItemsDataCache"/>
+    <type name="Magento\InventorySalesApi\Model\CachePool">
+        <arguments>
+            <argument name="pool" xsi:type="array">
+                <item name="stock_item_data" xsi:type="object">Magento\InventoryIndexer\Model\ResourceModel\GetStockItemsDataCache</item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- Retrieve data from cache without persisting on cache misses. This allows using cache in REST area for preloaded data without affecting Admin REST where caching should be avoided. -->
+    <type name="Magento\InventoryIndexer\Model\ResourceModel\GetStockItemDataCache">
+        <arguments>
+            <argument name="isReadonly" xsi:type="boolean">true</argument>
+        </arguments>
+    </type>
+    <type name="Magento\InventoryIndexer\Model\ResourceModel\GetStockItemsDataCache">
+        <arguments>
+            <argument name="isReadonly" xsi:type="boolean">true</argument>
+        </arguments>
+    </type>
+</config>

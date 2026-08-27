@@ -2,6 +2,8 @@
 /**
  * Copyright 2022 Adobe
  * All Rights Reserved.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 declare(strict_types=1);
 
@@ -20,7 +22,11 @@ use Magento\TestFramework\Fixture\DataFixtureStorage;
 use Magento\TestFramework\Fixture\DataFixtureStorageManager;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class UpdateInventoryTest extends TestCase
 {
     /**
@@ -73,11 +79,9 @@ class UpdateInventoryTest extends TestCase
             ConfigurableProductFixture::class,
             ['_options' => ['$attr$'], '_links' => ['$sp3$', '$sp4$']],
             'cp2'
-        )
+        ),
+        DataProvider('massUpdateConfigurableProductsStockStatusDataProvider')
     ]
-    /**
-     * @dataProvider massUpdateConfigurableProductsStockStatusDataProvider
-     */
     public function testMassUpdateConfigurableProductsStockStatus(array $products): void
     {
         $skus = array_map(

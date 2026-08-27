@@ -33,6 +33,10 @@ use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
 /**
+ * Integration tests for salable quantity inconsistencies CLI logic (many fixtures only for #[DataFixture] wiring).
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  * @see https://app.hiptest.com/projects/69435/test-plan/folders/909285/scenarios/3026032
  * @see https://app.hiptest.com/projects/69435/test-plan/folders/888618/scenarios/3027875
  * @see https://app.hiptest.com/projects/69435/test-plan/folders/888618/scenarios/3027429
@@ -175,6 +179,10 @@ class GetSalableQuantityInconsistenciesTest extends TestCase
      * Test inventory:reservations:list-inconsistencies will return correct result use pagination
      */
     #[
+        DbIsolation(false),
+        DataFixture(
+            'Magento_InventoryReservationCli::Test/Integration/_files/delete_reservations.php'
+        ),
         DataFixture(ProductFixture::class, ['sku' => 'simple']),
         DataFixture(
             'Magento_InventoryReservationCli::Test/Integration/_files/create_incomplete_orders_with_reservations.php'

@@ -11,6 +11,7 @@ use Magento\Catalog\Model\ResourceModel\Product\Link\Product\Collection;
 use Magento\CatalogInventory\Helper\Stock;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\Helper\Bootstrap;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class AddInStockFilterToCollectionTest extends TestCase
@@ -57,10 +58,10 @@ class AddInStockFilterToCollectionTest extends TestCase
      * @param int $expectedSize
      * @return void
      *
-     * @dataProvider addInStockFilterToCollectionDataProvider
      *
      * @magentoDbIsolation disabled
      */
+    #[DataProvider('addInStockFilterToCollectionDataProvider')]
     public function testAddInStockFilterToCollection(string $store, int $expectedSize)
     {
         $this->storeManager->setCurrentStore($store);

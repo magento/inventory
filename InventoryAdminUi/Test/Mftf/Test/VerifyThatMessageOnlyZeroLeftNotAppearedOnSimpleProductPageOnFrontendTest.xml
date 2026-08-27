@@ -64,6 +64,9 @@
             <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
                 <argument name="tags" value="full_page"/>
             </actionGroup>
+            <amOnPage url="{{AdminManageStockPage.url}}" stepKey="goToStockGridBeforeClearFilters"/>
+            <waitForPageLoad stepKey="waitForStockGridLoad"/>
+            <actionGroup ref="ClearFiltersAdminDataGridActionGroup" stepKey="clearInventoryStockListingFiltersAfter"/>
         </after>
 
         <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="goToProduct1">

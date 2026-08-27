@@ -40,6 +40,8 @@
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableSource"/>
             <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openProductsGrid"/>
             <actionGroup ref="ResetProductGridToDefaultViewActionGroup" stepKey="resetGrid"/>
+            <!--Clear filters on orders grid-->
+            <actionGroup ref="AdminOrdersGridClearFiltersActionGroup" stepKey="clearOrdersFilters"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutCustomer" />
             <comment userInput="BIC workaround" stepKey="deleteCustomer"/>

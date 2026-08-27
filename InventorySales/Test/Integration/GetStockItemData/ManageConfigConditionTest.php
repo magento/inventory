@@ -9,6 +9,7 @@ namespace Magento\InventorySales\Test\Integration\GetStockItemData;
 
 use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 use Magento\TestFramework\Helper\Bootstrap;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class ManageConfigConditionTest extends TestCase
@@ -42,10 +43,9 @@ class ManageConfigConditionTest extends TestCase
      * @param $expectedData
      * @return void
      *
-     * @dataProvider executeWithManageStockFalseDataProvider
-     *
      * @magentoDbIsolation disabled
      */
+    #[DataProvider('executeWithManageStockFalseDataProvider')]
     public function testExecuteWithManageStockFalse(string $sku, int $stockId, $expectedData)
     {
         $stockItemData = $this->getStockItemData->execute($sku, $stockId);

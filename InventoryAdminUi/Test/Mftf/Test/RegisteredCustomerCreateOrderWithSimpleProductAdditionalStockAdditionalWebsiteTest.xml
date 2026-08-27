@@ -19,14 +19,6 @@
             <group value="multi_mode"/>
             <group value="pr_exclude"/>
         </annotations>
-        <after>
-            <!--Delete customer created during test execution, login to admin are again-->
-            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminAreaAgain"/>
-            <actionGroup ref="AdminDeleteCustomerActionGroup" stepKey="deleteCustomerFromGrid">
-                <argument name="customerEmail" value="Simple_US_Customer.email"/>
-            </actionGroup>
-            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdminAgain"/>
-        </after>
         <!--Register customer.-->
         <actionGroup ref="RegisterCustomOnStorefrontActionGroup" stepKey="registerCustomer">
             <argument name="Customer" value="Simple_US_Customer"/>

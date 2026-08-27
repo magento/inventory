@@ -9,6 +9,7 @@ namespace Magento\Inventory\Model\SourceItem\Command;
 
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\InputException;
+use Magento\Inventory\Model\IsProductAssignedToStock\CacheStorage;
 use Magento\Inventory\Model\ResourceModel\SourceItem\DeleteMultiple;
 use Magento\InventoryApi\Api\SourceItemsDeleteInterface;
 use Psr\Log\LoggerInterface;
@@ -19,23 +20,15 @@ use Psr\Log\LoggerInterface;
 class SourceItemsDelete implements SourceItemsDeleteInterface
 {
     /**
-     * @var DeleteMultiple
-     */
-    private $deleteMultiple;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
      * @param DeleteMultiple $deleteMultiple
      * @param LoggerInterface $logger
+     * @param CacheStorage $isProductAssignedToStockCacheStorage
      */
-    public function __construct(DeleteMultiple $deleteMultiple, LoggerInterface $logger)
-    {
-        $this->deleteMultiple = $deleteMultiple;
-        $this->logger = $logger;
+    public function __construct(
+        private readonly DeleteMultiple $deleteMultiple,
+        private readonly LoggerInterface $logger,
+        private readonly CacheStorage $isProductAssignedToStockCacheStorage
+    ) {
     }
 
     /**
@@ -48,6 +41,9 @@ class SourceItemsDelete implements SourceItemsDeleteInterface
         }
         try {
             $this->deleteMultiple->execute($sourceItems);
+            foreach ($sourceItems as $sourceItem) {
+                $this->isProductAssignedToStockCacheStorage->delete((string) $sourceItem->getSku());
+            }
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
             throw new CouldNotDeleteException(__('Could not delete Source Items'), $e);

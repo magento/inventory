@@ -20,6 +20,7 @@
             <group value="multi_mode"/>
             <group value="pr_exclude"/>
         </annotations>
+
         <before>
             <remove keyForRemoval="navigateToStockListPage"/>
             <remove keyForRemoval="waitForStockListPageLoad"/>
@@ -29,6 +30,9 @@
             <remove keyForRemoval="selectDefaultWebsiteAsSalesChannelForDefaultStock"/>
             <remove keyForRemoval="saveDefaultStock"/>
         </before>
+        <after>
+            <actionGroup ref="AdminOrdersGridClearFiltersActionGroup" stepKey="clearOrdersGridFiltersAfter" before="logoutFromAdminArea"/>
+        </after>
         <remove keyForRemoval="createNewOrderForCustomer"/>
         <remove keyForRemoval="clickOnDefaultStoreViewIfPresent1"/>
         <remove keyForRemoval="waitForPageLoad3"/>

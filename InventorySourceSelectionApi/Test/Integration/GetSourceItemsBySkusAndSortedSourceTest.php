@@ -11,6 +11,7 @@ use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventorySourceSelectionApi\Model\GetInStockSourceItemsBySkusAndSortedSource;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class GetSourceItemsBySkusAndSortedSourceTest extends TestCase
 {
@@ -65,11 +66,11 @@ class GetSourceItemsBySkusAndSortedSourceTest extends TestCase
      * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
-     * @dataProvider shouldReturnSortedSourceItemsDataProvider
      * @param array $skus
      * @param array $sortedSourceCodes
      * @param array $expected
      */
+    #[DataProvider('shouldReturnSortedSourceItemsDataProvider')]
     public function testShouldReturnSortedSourceItems(array $skus, array $sortedSourceCodes, array $expected): void
     {
         $sourceItems = $this->subject->execute($skus, $sortedSourceCodes);
@@ -117,11 +118,11 @@ class GetSourceItemsBySkusAndSortedSourceTest extends TestCase
      * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items_numeric_skus.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
-     * @dataProvider numericOnlySkusDataProvider
      * @param array $skus
      * @param array $sortedSourceCodes
      * @param array $expected
      */
+    #[DataProvider('numericOnlySkusDataProvider')]
     public function testNumericOnlySkus(array $skus, array $sortedSourceCodes, array $expected): void
     {
         $sourceItems = $this->subject->execute($skus, $sortedSourceCodes);

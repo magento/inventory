@@ -55,6 +55,11 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource1">
                 <argument name="sourceCode" value="$$additionalSource1.source[source_code]$$"/>
             </actionGroup>
+            <!--Clear Filters-->
+            <actionGroup ref="AdminOrdersPageOpenActionGroup" stepKey="navigateToSalesOrderPage"/>
+            <actionGroup ref="ClearFiltersAdminDataGridActionGroup" stepKey="clickOnButtonToRemoveFiltersIfPresent"/>
+            <amOnPage url="{{ProductCatalogPage.url}}" stepKey="openProductPage"/>
+            <actionGroup ref="ClearFiltersAdminProductGridActionGroup" stepKey="clearProductGridFilter"/>
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource2">
                 <argument name="sourceCode" value="$$additionalSource2.source[source_code]$$"/>
             </actionGroup>

@@ -16,4 +16,28 @@
         <var key="stock_id" entityKey="return" entityType="stock"/>
         <var key="source_code" entityKey="source[source_code]" entityType="source"/>
     </entity>
+    <entity name="SourceStockLinked2" type="source-stock-links">
+        <requiredEntity type="source-stock-link">Link2</requiredEntity>
+    </entity>
+    <entity name="Link2" type="source-stock-link">
+        <data key="priority">2</data>
+        <var key="stock_id" entityKey="return" entityType="stock"/>
+        <var key="source_code" entityKey="source[source_code]" entityType="source"/>
+    </entity>
+    <entity name="SourceStockLinked3" type="source-stock-links">
+        <requiredEntity type="source-stock-link">Link3</requiredEntity>
+    </entity>
+    <entity name="Link3" type="source-stock-link">
+        <data key="priority">3</data>
+        <var key="stock_id" entityKey="return" entityType="stock"/>
+        <var key="source_code" entityKey="source[source_code]" entityType="source"/>
+    </entity>
+    <entity name="SourceStockLinked4" type="source-stock-links">
+        <requiredEntity type="source-stock-link">Link4</requiredEntity>
+    </entity>
+    <entity name="Link4" type="source-stock-link">
+        <data key="priority">4</data>
+        <var key="stock_id" entityKey="return" entityType="stock"/>
+        <var key="source_code" entityKey="source[source_code]" entityType="source"/>
+    </entity>
 </entities>

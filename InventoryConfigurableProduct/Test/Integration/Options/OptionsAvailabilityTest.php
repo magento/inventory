@@ -13,6 +13,7 @@ use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @magentoAppArea frontend
@@ -64,13 +65,13 @@ class OptionsAvailabilityTest extends TestCase
      * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      * @codingStandardsIgnoreEnd
-     * @dataProvider getSalableOptionsDataProvider
      * @param string $storeCode
      * @param int $expected
      * @return void
      *
      * @magentoDbIsolation disabled
      */
+    #[DataProvider('getSalableOptionsDataProvider')]
     public function testGetSalableOptions(string $storeCode, int $expected)
     {
         $this->storeManager->setCurrentStore($storeCode);

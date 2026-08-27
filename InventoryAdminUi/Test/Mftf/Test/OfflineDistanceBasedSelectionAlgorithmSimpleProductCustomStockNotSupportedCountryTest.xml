@@ -101,6 +101,7 @@
             <comment userInput="BIC workaround" stepKey="selectDefaultWebsiteAsSalesChannelForDefaultStock"/>
             <comment userInput="BIC workaround" stepKey="saveDefaultStock"/>
 
+            <actionGroup ref="AdminOrdersGridClearFiltersActionGroup" stepKey="clearOrdersGridFiltersAfter"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <!--Remove category, product, customer and additional stock.-->
             <deleteData createDataKey="category" stepKey="deleteCategory"/>

@@ -69,6 +69,7 @@
             </actionGroup>
             <deleteData createDataKey="simpleVirtualMsiProduct1" stepKey="deleteVirtualProduct"/>
             <deleteData createDataKey="simpleCategory1" stepKey="deletesimpleCategory1"/>
+            <actionGroup ref="AdminResetFilterInManageSourcesGridActionGroup" stepKey="resetManageSourcesGridFilters"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
         </after>
 

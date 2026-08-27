@@ -46,6 +46,7 @@
             </actionGroup>
             <deleteData createDataKey="simpleProduct1" stepKey="deleteProduct"/>
             <deleteData createDataKey="simpleCategory1" stepKey="deletesimpleCategory1"/>
+            <actionGroup ref="AdminResetFilterInManageSourcesGridActionGroup" stepKey="resetManageSourcesGridFilters"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
         </after>
 

@@ -26,6 +26,7 @@ contains entity references that violate dependency constraints:
 	 CliIndexerReindexActionGroup from module(s): magento/module-indexer
 	 AdminLoginActionGroup from module(s): magento/module-admin-analytics, magento/module-backend, magento/module-two-factor-auth
 	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 AdminResetFilterInManageSourcesGridActionGroup from module(s): magento/module-inventory-admin-ui
 	 AdminLogoutActionGroup from module(s): magento/module-backend
 	 AssertProductInStorefrontCategoryPage from module(s): magento/module-catalog
 	 AssertProductNameAndSkuInStorefrontProductPageActionGroup from module(s): magento/module-catalog
@@ -44,6 +45,7 @@ contains entity references that violate dependency constraints:
 	 AdminOrderDetailsPage from module(s): magento/module-gift-wrapping, magento/module-reward, magento/module-rma, magento/module-sales
 	 AdminLoginActionGroup from module(s): magento/module-admin-analytics, magento/module-backend, magento/module-two-factor-auth
 	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 AdminResetFilterInManageSourcesGridActionGroup from module(s): magento/module-inventory-admin-ui
 	 AdminLogoutActionGroup from module(s): magento/module-backend
 	 AdminGoToProductGridFilterResultsByInputEditProduct from module(s): magento/module-inventory-admin-ui
 	 AdminOnProductEditPageAssignSourceToProduct from module(s): magento/module-inventory-admin-ui
@@ -128,6 +130,7 @@ contains entity references that violate dependency constraints:
 	 AdminGoToProductGridFilterResultsByInputEditProduct from module(s): magento/module-inventory-admin-ui
 	 AdminOnProductEditPageAssignSourceToProduct from module(s): magento/module-inventory-admin-ui
 	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 AdminResetFilterInManageSourcesGridActionGroup from module(s): magento/module-inventory-admin-ui
 	 AdminLogoutActionGroup from module(s): magento/module-backend
 	 AssertProductInStorefrontCategoryPage from module(s): magento/module-catalog
 	 AssertProductInStorefrontProductPageActionGroup from module(s): magento/module-catalog
@@ -172,6 +175,7 @@ contains entity references that violate dependency constraints:
 	 CheckoutSuccessMainSection from module(s): magento/module-b2b, magento/module-checkout
 	 AdminLoginActionGroup from module(s): magento/module-admin-analytics, magento/module-backend, magento/module-two-factor-auth
 	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 AdminResetFilterInManageSourcesGridActionGroup from module(s): magento/module-inventory-admin-ui
 	 AdminLogoutActionGroup from module(s): magento/module-backend
 	 AdminGoToProductGridFilterResultsByInputEditProduct from module(s): magento/module-inventory-admin-ui
 	 AdminOnProductEditPageAssignSourceToProduct from module(s): magento/module-inventory-admin-ui
@@ -199,6 +203,7 @@ contains entity references that violate dependency constraints:
 	 CheckoutSuccessMainSection from module(s): magento/module-b2b, magento/module-checkout
 	 AdminLoginActionGroup from module(s): magento/module-admin-analytics, magento/module-backend, magento/module-two-factor-auth
 	 AssignWebsiteToStockActionGroup from module(s): magento/module-inventory-admin-ui
+	 AdminResetFilterInManageSourcesGridActionGroup from module(s): magento/module-inventory-admin-ui
 	 AdminLogoutActionGroup from module(s): magento/module-backend
 	 AdminGoToProductGridFilterResultsByInputEditProduct from module(s): magento/module-inventory-admin-ui
 	 AdminOnProductEditPageAssignSourceToProduct from module(s): magento/module-inventory-admin-ui

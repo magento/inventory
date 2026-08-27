@@ -11,6 +11,7 @@ use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\CatalogInventory\Model\ResourceModel\Stock\Status as StockStatus;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class AddStockDataToCollectionOnDefaultStockTest extends TestCase
 {
@@ -36,9 +37,8 @@ class AddStockDataToCollectionOnDefaultStockTest extends TestCase
      * @param int $expectedSize
      * @param bool $isFilterInStock
      * @return void
-     *
-     * @dataProvider addStockDataToCollectionDataProvider
      */
+    #[DataProvider('addStockDataToCollectionDataProvider')]
     public function testAddStockDataToCollection(int $expectedSize, bool $isFilterInStock)
     {
         $collection = Bootstrap::getObjectManager()->create(Collection::class);

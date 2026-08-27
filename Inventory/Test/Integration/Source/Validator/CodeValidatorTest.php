@@ -11,6 +11,7 @@ use Magento\Inventory\Model\Source\Validator\CodeValidator;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\Data\SourceInterfaceFactory;
 use Magento\TestFramework\Helper\Bootstrap;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class CodeValidatorTest extends TestCase
@@ -34,11 +35,11 @@ class CodeValidatorTest extends TestCase
     }
 
     /**
-     * @dataProvider dataProvider
      * @param string $sourceCode
      * @param int $errorCount
      * @param array $errorStrings
      */
+    #[DataProvider('dataProvider')]
     public function testValidation($sourceCode, $errorCount, $errorStrings)
     {
         $source = $this->sourceFactory->create(

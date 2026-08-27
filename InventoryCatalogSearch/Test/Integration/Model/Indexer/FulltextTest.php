@@ -45,6 +45,7 @@ use PHPUnit\Framework\TestCase;
 use Magento\Framework\Exception\FileSystemException;
 use Magento\InventoryApi\Api\Data\SourceItemInterfaceFactory;
 use Magento\InventoryApi\Test\Fixture\SourceItems as SourceItemsFixture;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @magentoDbIsolation disabled
@@ -212,9 +213,9 @@ class FulltextTest extends TestCase
      * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items.php
      * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
-     * @dataProvider searchPerStockDataProvider
      * @throws LocalizedException
      */
+    #[DataProvider('searchPerStockDataProvider')]
     public function testSearchPerStock(string $queryText, string $store, int $expectedSize)
     {
         $this->storeManager->setCurrentStore($store);

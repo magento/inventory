@@ -12,6 +12,7 @@ use Magento\CatalogInventory\Model\ResourceModel\Stock\Status as StockStatus;
 use Magento\Store\Model\Website;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Test add stock status to select
@@ -53,10 +54,9 @@ class AddStockStatusToSelectTest extends TestCase
      * @param int $expectedIsSalableCount
      * @param int $expectedNotSalableCount
      *
-     * @dataProvider addStockStatusToSelectDataProvider
-     *
      * @magentoDbIsolation disabled
      */
+    #[DataProvider('addStockStatusToSelectDataProvider')]
     public function testAddStockStatusToSelect(
         string $websiteCode,
         int $expectedIsSalableCount,

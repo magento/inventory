@@ -25,6 +25,10 @@
         <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="{{websiteName}}" stepKey="selectWebsiteAsSalesChannel"/>
         <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveStock"/>
         <waitForPageLoad stepKey="waitForSave"/>
+        <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockIndexPageAfterWebsiteAssign"/>
+        <waitForPageLoad stepKey="waitForStockGridPageLoadAfterWebsiteAssign"/>
+        <click selector="{{AdminDataGridHeaderSection.clearFilters}}" stepKey="clearFiltersAfterSave"/>
+        <waitForPageLoad stepKey="waitForStockGridPageLoadAfterFiltersClearing"/>
     </actionGroup>
 </actionGroups>
 

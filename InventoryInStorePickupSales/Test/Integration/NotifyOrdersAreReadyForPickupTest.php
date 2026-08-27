@@ -21,6 +21,7 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Api\ShipmentRepositoryInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\Mail\Template\TransportBuilderMock;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @inheritdoc
@@ -89,12 +90,12 @@ class NotifyOrdersAreReadyForPickupTest extends \PHPUnit\Framework\TestCase
      *
      * @magentoDbIsolation disabled
      * @magentoAppIsolation enabled
-     * @dataProvider dataProvider
      *
      * @param string $sourceId
      * @param string|null $errorMessage
      * @throws
      */
+    #[DataProvider('dataProvider')]
     public function testExecuteForNotReadyForPickupOrders(string $sourceId, ?string $errorMessage)
     {
         $createdOrder = $this->getCreatedOrder();
@@ -134,12 +135,12 @@ class NotifyOrdersAreReadyForPickupTest extends \PHPUnit\Framework\TestCase
      *
      * @magentoDbIsolation disabled
      * @magentoAppIsolation enabled
-     * @dataProvider dataProvider
      *
      * @param string $sourceId
      * @param string|null $errorMessage
      * @throws
      */
+    #[DataProvider('dataProvider')]
     public function testExecuteForNotReadyForPickupAsyncSending(string $sourceId, ?string $errorMessage)
     {
         // Set up configuration values

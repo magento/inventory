@@ -11,6 +11,7 @@ use Magento\InventoryLowQuantityNotificationAdminUi\Block\Adminhtml\Rss\NotifySt
 use Magento\InventoryLowQuantityNotificationApi\Api\GetSourceItemConfigurationInterface;
 use Magento\InventoryLowQuantityNotificationApi\Api\SourceItemConfigurationsSaveInterface;
 use Magento\TestFramework\Helper\Bootstrap;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -65,8 +66,8 @@ class RssFeedTest extends TestCase
      * @param int $expectedCount
      * @return void
      *
-     * @dataProvider getRssDataDataProvider
      */
+    #[DataProvider('getRssDataDataProvider')]
     // @codingStandardsIgnoreEnd
     public function testGetRssData(
         string $sku,
@@ -102,8 +103,9 @@ class RssFeedTest extends TestCase
      * @param int $expectedCount
      * @return void
      *
-     * @dataProvider getRssDataDataProvider
      */
+    #[DataProvider('getRssDataDataProvider')]
+
     // @codingStandardsIgnoreEnd
     public function testGetRssDataDisabledManageStock(
         string $sku,

@@ -90,10 +90,8 @@
                       xsi:type="object">Magento\InventoryApi\Model\StockSourceLinkValidatorChain</argument>
         </arguments>
     </type>
-    <preference for="Magento\InventoryApi\Model\IsProductAssignedToStockInterface" type="Magento\Inventory\Model\ResourceModel\IsProductAssignedToStock"/>
-    <type name="Magento\Inventory\Model\ResourceModel\IsProductAssignedToStock">
-        <plugin name="cache_product_stock_assignment_check" type="Magento\Inventory\Plugin\Inventory\Model\ResourceModel\IsProductAssignedToStockCache"/>
-    </type>
+    <preference for="Magento\InventoryApi\Model\IsProductAssignedToStockInterface" type="Magento\Inventory\Model\IsProductAssignedToStockCache"/>
+    <preference for="Magento\InventoryApi\Model\AreProductsAssignedToStockInterface" type="Magento\Inventory\Model\ResourceModel\AreProductsAssignedToStock"/>
     <type name="Magento\Setup\Fixtures\FixtureRegistry">
         <arguments>
             <argument name="fixtures" xsi:type="array">

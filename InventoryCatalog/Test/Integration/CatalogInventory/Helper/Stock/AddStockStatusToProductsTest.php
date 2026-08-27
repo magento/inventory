@@ -12,6 +12,7 @@ use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\CatalogInventory\Helper\Stock;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\Helper\Bootstrap;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class AddStockStatusToProductsTest extends TestCase
@@ -52,12 +53,12 @@ class AddStockStatusToProductsTest extends TestCase
      * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
      * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
-     * @dataProvider addStockStatusToProductsDataProvider
      * @param string $storeCode
      * @param array $productsData
      *
      * @magentoDbIsolation disabled
      */
+    #[DataProvider('addStockStatusToProductsDataProvider')]
     public function testAddStockStatusToProducts(string $storeCode, array $productsData)
     {
         $this->storeManager->setCurrentStore($storeCode);
