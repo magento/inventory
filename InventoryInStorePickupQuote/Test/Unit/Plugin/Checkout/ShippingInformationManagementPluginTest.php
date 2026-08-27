@@ -145,6 +145,8 @@ class ShippingInformationManagementPluginTest extends TestCase
         $this->extensionAttributes->expects($this->once())
             ->method('getPickupLocationCode')
             ->willReturn(null);
+        $this->shippingAddress->expects($this->once())->method('getStreet')->willReturn(['123 Main St']);
+        $this->shippingAddress->expects($this->once())->method('getCity')->willReturn('Austin');
         $this->addressInformation->expects($this->once())
             ->method('getShippingAddress')
             ->willReturn($this->shippingAddress);
@@ -154,6 +156,37 @@ class ShippingInformationManagementPluginTest extends TestCase
         $this->addressInformation->expects($this->once())
             ->method('setBillingAddress')
             ->with($this->shippingAddress);
+        $result = $this->plugin->beforeSaveAddressInformation(
+            $this->subject,
+            $cartId,
+            $this->addressInformation
+        );
+        $this->assertEquals([$cartId, $this->addressInformation], $result);
+    }
+
+    /**
+     * Test billing is not copied when shipping address was cleared after pickup reset
+     *
+     * @return void
+     */
+    public function testBeforeSaveAddressInformationDoesNotCopyIncompleteShippingAddressToBilling(): void
+    {
+        $cartId = 123;
+        $this->shippingAddress->expects($this->once())
+            ->method('getExtensionAttributes')
+            ->willReturn($this->extensionAttributes);
+        $this->extensionAttributes->expects($this->once())
+            ->method('getPickupLocationCode')
+            ->willReturn(null);
+        $this->shippingAddress->expects($this->once())->method('getStreet')->willReturn([]);
+        $this->shippingAddress->expects($this->never())->method('getCity');
+        $this->addressInformation->expects($this->once())
+            ->method('getShippingAddress')
+            ->willReturn($this->shippingAddress);
+        $this->addressInformation->expects($this->once())
+            ->method('getBillingAddress')
+            ->willReturn(null);
+        $this->addressInformation->expects($this->never())->method('setBillingAddress');
         $result = $this->plugin->beforeSaveAddressInformation(
             $this->subject,
             $cartId,
