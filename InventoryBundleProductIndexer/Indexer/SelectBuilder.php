@@ -99,7 +99,8 @@ class SelectBuilder implements SiblingSelectBuilderInterface
                     '0',
                     'MAX(' . $isRequiredOptionUnavailable . ') = 0 AND MAX(options.stock_status) = 1'
                 ),
-            ]);
+            ])
+            ->order('product_entity.sku ASC');
 
         if (!empty($skuList)) {
             $select->where('product_entity.sku IN (?)', $skuList);
