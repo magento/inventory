@@ -126,6 +126,7 @@ define([
          * @returns void
          */
         openPopup: function () {
+            const self = this;
             var shippingAddress = quote.shippingAddress(),
                 country = shippingAddress.countryId ? shippingAddress.countryId :
                     this.defaultCountryId,
@@ -137,7 +138,12 @@ define([
                 searchTerm = this.getSearchTerm(shippingAddress.postcode, country);
             }
 
-            this.updateNearbyLocations(searchTerm);
+            this.updateNearbyLocations(searchTerm).done(function () {
+                if (searchTerm && !self.searchQuery() && !self.nearbyLocations().length) {
+                    // If no results found for the shipping address, clear the search query to show all nearby locations
+                    self.updateNearbyLocations('');
+                }
+            });
         },
 
         /**
