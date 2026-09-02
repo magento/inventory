@@ -126,8 +126,8 @@ define([
          * @returns void
          */
         openPopup: function () {
-            const self = this;
-            var shippingAddress = quote.shippingAddress(),
+            var self = this,
+                shippingAddress = quote.shippingAddress(),
                 country = shippingAddress.countryId ? shippingAddress.countryId :
                     this.defaultCountryId,
                 searchTerm = '';
@@ -140,7 +140,6 @@ define([
 
             this.updateNearbyLocations(searchTerm).done(function () {
                 if (searchTerm && !self.searchQuery() && !self.nearbyLocations().length) {
-                    // If no results found for the shipping address, clear the search query to show all nearby locations
                     self.updateNearbyLocations('');
                 }
             });
@@ -168,37 +167,16 @@ define([
          * @returns {*}
          */
         updateNearbyLocations: function (searchQuery) {
-            var self = this,
-                productsInfo = [],
-                items = quote.getItems(),
-                searchCriteria;
-
-            _.each(items, function (item) {
-                if (item['qty_options'] === undefined || item['qty_options'].length === 0) {
-                    productsInfo.push(
-                        {
-                            sku: item.sku
-                        }
-                    );
-                }
-            });
-
-            searchCriteria = {
-                extensionAttributes: {
-                    productsInfo: productsInfo
-                },
-                pageSize: this.nearbySearchLimit
-            };
-
-            if (searchQuery) {
-                searchCriteria.area = {
-                    radius: this.nearbySearchRadius,
-                    searchTerm: searchQuery
-                };
-            }
+            const self = this;
 
             return pickupLocationsService
-                .getNearbyLocations(searchCriteria)
+                .getNearbyLocations(
+                    pickupLocationsService.getNearbyLocationsCriteria(
+                        searchQuery,
+                        this.nearbySearchRadius,
+                        this.nearbySearchLimit
+                    )
+                )
                 .then(function (locations) {
                     self.nearbyLocations(locations);
                 })
