@@ -19,7 +19,6 @@ use Magento\Quote\Model\Quote\ShippingAssignment\ShippingProcessor;
  * quote is first loaded in the request, before any address change. If the address is switched to a Pickup Location
  * later in the same request, this stale snapshot still carries the earlier, now inconsistent, delivery method and
  * would otherwise be silently re-applied when the quote is saved.
- *
  */
 class PreventNonPickupShippingMethodReapplication
 {
@@ -38,8 +37,7 @@ class PreventNonPickupShippingMethodReapplication
         /** @var \Magento\Quote\Model\Quote $quote */
         $quoteShippingAddress = $quote->getShippingAddress();
         $quoteIsInStorePickup = $quoteShippingAddress
-            && ($quoteShippingAddress->getExtensionAttributes()?->getPickupLocationCode()
-                || $quoteShippingAddress->getShippingMethod() === InStorePickup::DELIVERY_METHOD);
+            && $quoteShippingAddress->getExtensionAttributes()?->getPickupLocationCode();
 
         $method = $shipping->getMethod();
 
