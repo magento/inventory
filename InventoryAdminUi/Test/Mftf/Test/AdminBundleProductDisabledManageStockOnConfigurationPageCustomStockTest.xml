@@ -103,7 +103,7 @@
         <!--Verify product is not visible storefront.-->
         <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPage"/>
         <waitForPageLoad stepKey="waitForCategoryPageLoad"/>
-        <waitForText userInput="$bundleProduct.name$" stepKey="assertProductIsPresent1"/>
+        <dontSee userInput="$bundleProduct.name$" stepKey="assertProductIsAbsent1"/>
         <!--Disable "Manage Stock" in configuration.-->
         <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOffManageStockConfig.value}}" stepKey="disableManageStock"/>
         <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
@@ -115,7 +115,7 @@
         <!--Verify product is visible storefront.-->
         <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPageToVerifyBundleProduct"/>
         <waitForPageLoad stepKey="waitForCategoryPageLoadToVerifyBundleProduct"/>
-        <dontSee userInput="$bundleProduct.name$" stepKey="assertProductIsPresent"/>
+        <waitForText userInput="$bundleProduct.name$" stepKey="assertProductIsPresent"/>
         <see userInput="$$simpleProduct.price$$" stepKey="assertProductPriceIsPresent"/>
     </test>
 </tests>
