@@ -234,6 +234,7 @@
         <actionGroup ref="StorefrontGoToCategoryPageActionGroup" stepKey="selectCategory">
             <argument name="categoryName" value="$$createCategory.name$$"/>
         </actionGroup>
+        <waitForPageLoad stepKey="waitForCategoryPageLoad"/>
         <actionGroup ref="StorefrontAssertProductNameOnProductMainPageActionGroup" stepKey="seeProduct1Name">
             <argument name="productName" value="$$product1.name$$"/>
         </actionGroup>
@@ -247,6 +248,7 @@
         <actionGroup ref="StorefrontGoToCategoryPageActionGroup" stepKey="openCategoryPage">
             <argument name="categoryName" value="$$createCategory.name$$"/>
         </actionGroup>
+        <waitForPageLoad stepKey="waitForCategoryPageLoadAgain"/>
         <actionGroup ref="StorefrontAssertProductNameOnProductMainPageActionGroup" stepKey="assertBundleProduct1Present">
             <argument name="productName" value="$$bundleProduct1.name$$"/>
         </actionGroup>
@@ -271,6 +273,7 @@
         <actionGroup ref="StorefrontGoToCategoryPageActionGroup" stepKey="openCategoryPageAgain">
             <argument name="categoryName" value="$$createCategory.name$$"/>
         </actionGroup>
+        <waitForPageLoad stepKey="waitForCategoryPageLoadThirdTime"/>
         <actionGroup ref="StorefrontAssertProductNameOnProductMainPageActionGroup" stepKey="assertBundleProduct2Present">
             <argument name="productName" value="$$bundleProduct2.name$$"/>
         </actionGroup>
