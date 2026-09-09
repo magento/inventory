@@ -28,7 +28,7 @@
 
         <after>
             <actionGroup ref="AdminDeleteStockActionGroup" stepKey="deleteCreatedStock">
-              <argument name="stockName" value="Test Stock 1"/>
+              <argument name="stockName" value="Test Stock 1 Bundle"/>
             </actionGroup>
             <actionGroup ref="AdminGoToConfigurationPageEnableDisableManageStock" stepKey="enableManageStockBackToYes">
               <argument name="manageStockValue" value="Yes"/>
@@ -52,7 +52,7 @@
         <!-- Step3 Create the stock from UI and then assign the sources -->
         <actionGroup ref="AdminCreateNewStockActionGroup" stepKey="createNewStock">
             <argument name="assignSource" value="$$createTestSource1.source[name]$$"/>
-            <argument name="stockName" value="Test Stock 1"/>
+            <argument name="stockName" value="Test Stock 1 Bundle"/>
         </actionGroup>
         <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
             <argument name="indices" value=""/>
