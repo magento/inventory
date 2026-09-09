@@ -152,6 +152,43 @@ class IsSalableOptionPluginTest extends TestCase
         $this->assertEmpty($result);
     }
 
+    public function testSalabilityIsCheckedPerInvocation(): void
+    {
+        $firstProducts = $this->createProducts(['sku1' => true]);
+        $secondProducts = $this->createProducts(['sku2' => true]);
+
+        $this->storeManagerMock->expects($this->exactly(2))
+            ->method('getWebsite')
+            ->willReturn($this->websiteMock);
+        $this->websiteMock->expects($this->exactly(2))
+            ->method('getCode')
+            ->willReturn('website_code');
+        $this->stockResolverMock->expects($this->exactly(2))
+            ->method('execute')
+            ->with(SalesChannelInterface::TYPE_WEBSITE, 'website_code')
+            ->willReturn($this->stockMock);
+        $this->stockMock->expects($this->exactly(2))
+            ->method('getStockId')
+            ->willReturn(1);
+
+        $this->areProductsSalableMock->expects($this->exactly(2))
+            ->method('execute')
+            ->willReturnCallback(function (array $skus) {
+                $salableResults = [];
+                foreach ($skus as $sku) {
+                    $salableResultMock = $this->createMock(IsProductSalableResultInterface::class);
+                    $salableResultMock->method('getSku')->willReturn($sku);
+                    $salableResultMock->method('isSalable')->willReturn(true);
+                    $salableResults[] = $salableResultMock;
+                }
+
+                return $salableResults;
+            });
+
+        $this->plugin->afterGetUsedProducts($this->configurableMock, $firstProducts);
+        $this->plugin->afterGetUsedProducts($this->configurableMock, $secondProducts);
+    }
+
     private function createProducts(array $productData): array
     {
         return array_map(function ($sku, $isSalable) {
