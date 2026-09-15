@@ -40,4 +40,7 @@
     <type name="Magento\Checkout\Model\ShippingInformationManagement">
         <plugin name="inventory_in_store_pickup_quote_shipping_information_management" sortOrder="20" type="Magento\InventoryInStorePickupQuote\Plugin\Checkout\ShippingInformationManagementPlugin" />
     </type>
+    <type name="Magento\Quote\Model\Quote\ShippingAssignment\ShippingProcessor">
+        <plugin name="prevent_non_pickup_shipping_method_reapplication" type="Magento\InventoryInStorePickupQuote\Plugin\Quote\ShippingAssignment\PreventNonPickupShippingMethodReapplication" sortOrder="10" />
+    </type>
 </config>
