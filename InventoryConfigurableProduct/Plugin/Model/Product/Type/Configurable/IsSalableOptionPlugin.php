@@ -12,7 +12,6 @@ use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
-use Magento\InventorySalesApi\Api\Data\IsProductSalableResultInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
@@ -41,11 +40,6 @@ class IsSalableOptionPlugin
      * @var StockConfigurationInterface
      */
     private $stockConfiguration;
-
-    /**
-     * @var IsProductSalableResultInterface[]
-     */
-    private $productsSalableStatuses = [];
 
     /**
      * @param AreProductsSalableInterface $areProductsSalable
@@ -77,35 +71,19 @@ class IsSalableOptionPlugin
      */
     public function afterGetUsedProducts(Configurable $subject, array $products): array
     {
-        // Use associative array for fast SKU lookup
-        $salableSkus = array_flip(array_map(function ($status) {
-            return $status->getSku();
-        }, $this->productsSalableStatuses));
-
-        // Collect SKUs not already in $this->productsSalableStatuses
-        $skus = array_filter(array_map(function ($product) use ($salableSkus) {
-            $sku = $product->getSku();
-            return isset($salableSkus[$sku]) ? null : $sku; // Return null if SKU exists, SKU otherwise
-        }, $products));
-
-        // If there are no new SKUs to process, filter products and return
-        if (empty($skus)) {
-            $this->filterProducts($products, $this->productsSalableStatuses);
+        if ($products === []) {
             return $products;
         }
 
-        // Only now do we need the website and stock information
+        $skusToCheck = array_unique(array_map(static function ($product) {
+            return $product->getSku();
+        }, $products));
+
         $website = $this->storeManager->getWebsite();
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $website->getCode());
 
-        // Update products salable statuses with new salable information
-        $this->productsSalableStatuses = array_merge(
-            $this->productsSalableStatuses,
-            $this->areProductsSalable->execute($skus, $stock->getStockId())
-        );
-
-        // Filter products once all updates are made
-        $this->filterProducts($products, $this->productsSalableStatuses);
+        $salableResults = $this->areProductsSalable->execute($skusToCheck, $stock->getStockId());
+        $this->filterProducts($products, $salableResults);
 
         return $products;
     }

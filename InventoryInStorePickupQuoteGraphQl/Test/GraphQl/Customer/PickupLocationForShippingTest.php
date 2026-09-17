@@ -12,6 +12,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\GraphQl\Quote\GetMaskedQuoteIdByReservedOrderId;
 use Magento\Integration\Api\CustomerTokenServiceInterface;
+use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\InventoryInStorePickupApi\Model\GetPickupLocationInterface;
 use Magento\InventorySales\Model\SalesChannel;
 use Magento\Store\Model\StoreManagerInterface;
@@ -285,6 +286,238 @@ QUERY;
         ];
 
         $this->assertResponseFields($shippingAddressResponse, $assertionMap);
+    }
+
+    /**
+     * A shipping method selected before switching the address to a Pickup Location must not be
+     * silently retained on the resulting Pickup Location order.
+     *
+     * Reproduces the reported scenario: set a regular shipping address and a non-pickup shipping method
+     * (flat rate), then change the shipping address to a Pickup Location using `pickup_location_code`. The
+     * previously selected flat rate method must be cleared instead of staying attached to the pickup order.
+     *
+     * @magentoApiDataFixture Magento/Customer/_files/customer.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_addresses.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_pickup_location_attributes.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_items_eu_stock_only.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/assign_products_to_websites.php
+     *
+     * @magentoConfigFixture store_for_eu_website_store customer/account_share/scope 0
+     *
+     * @throws AuthenticationException
+     * @throws NoSuchEntityException
+     * @throws LocalizedException
+     * @throws \Exception
+     */
+    public function testNonPickupShippingMethodIsClearedWhenAddressSwitchedToPickupLocation(): void
+    {
+        $pickupLocationCode = 'eu-1';
+        $headers = array_merge($this->getAuthHeader(), $this->getStoreHeader());
+
+        // The `eu-1` source fixture does not set a phone number, but a shipping address built purely from
+        // `pickup_location_code` (no other address fields, matching the ticket's exact repro) requires one.
+        $this->setPickupSourcePhone($pickupLocationCode, '3468676');
+
+        $maskedQuoteId = $this->getCustomerCartId($headers);
+        $this->addItemToCart($maskedQuoteId, $headers);
+        $this->setRegularShippingAddress($maskedQuoteId, $headers);
+        $this->assertFlatRateShippingMethodIsSelected($maskedQuoteId, $headers);
+
+        $shippingAddress = $this->switchShippingAddressToPickupLocation($maskedQuoteId, $pickupLocationCode, $headers);
+
+        self::assertEquals($pickupLocationCode, $shippingAddress['pickup_location_code']);
+        self::assertNull(
+            $shippingAddress['selected_shipping_method'],
+            'The previously selected non-pickup shipping method must not be retained on a Pickup Location order.'
+        );
+    }
+
+    /**
+     * Set a phone number on the given Pickup Location source, required to build a pickup-only address.
+     *
+     * @param string $pickupLocationCode
+     * @param string $phone
+     *
+     * @return void
+     */
+    private function setPickupSourcePhone(string $pickupLocationCode, string $phone): void
+    {
+        $sourceRepository = Bootstrap::getObjectManager()->get(SourceRepositoryInterface::class);
+        $pickupSource = $sourceRepository->get($pickupLocationCode);
+        $pickupSource->setPhone($phone);
+        $sourceRepository->save($pickupSource);
+    }
+
+    /**
+     * Get the masked id of the current customer's cart.
+     *
+     * @param array $headers
+     *
+     * @return string
+     */
+    private function getCustomerCartId(array $headers): string
+    {
+        $cartQuery = <<<QUERY
+{
+  customerCart {
+    id
+  }
+}
+QUERY;
+        $cartResponse = $this->graphQlQuery($cartQuery, [], '', $headers);
+
+        return $cartResponse['customerCart']['id'];
+    }
+
+    /**
+     * Add a simple product to the cart.
+     *
+     * @param string $maskedQuoteId
+     * @param array $headers
+     *
+     * @return void
+     */
+    private function addItemToCart(string $maskedQuoteId, array $headers): void
+    {
+        $addItemQuery = <<<QUERY
+mutation {
+  addSimpleProductsToCart(
+    input: {
+      cart_id: "$maskedQuoteId"
+      cart_items: [{ data: { quantity: 1, sku: "SKU-1" } }]
+    }
+  ) {
+    cart {
+      id
+    }
+  }
+}
+QUERY;
+        $this->graphQlMutation($addItemQuery, [], '', $headers);
+    }
+
+    /**
+     * Set a regular, non-pickup shipping address on the cart.
+     *
+     * @param string $maskedQuoteId
+     * @param array $headers
+     *
+     * @return void
+     */
+    private function setRegularShippingAddress(string $maskedQuoteId, array $headers): void
+    {
+        $setAddressQuery = <<<QUERY
+mutation {
+  setShippingAddressesOnCart(
+    input: {
+      cart_id: "$maskedQuoteId"
+      shipping_addresses: [
+        {
+          address: {
+            firstname: "Bob"
+            lastname: "Roll"
+            street: ["Magento Pkwy"]
+            city: "Culver City"
+            region_id: 12
+            postcode: "90230"
+            country_code: "US"
+            telephone: "8675309"
+            save_in_address_book: false
+          }
+        }
+      ]
+    }
+  ) {
+    cart {
+      id
+    }
+  }
+}
+QUERY;
+        $this->graphQlMutation($setAddressQuery, [], '', $headers);
+    }
+
+    /**
+     * Set a non-pickup (flat rate) shipping method on the cart and assert it was applied.
+     *
+     * @param string $maskedQuoteId
+     * @param array $headers
+     *
+     * @return void
+     */
+    private function assertFlatRateShippingMethodIsSelected(string $maskedQuoteId, array $headers): void
+    {
+        $setMethodQuery = <<<QUERY
+mutation {
+  setShippingMethodsOnCart(
+    input: {
+      cart_id: "$maskedQuoteId"
+      shipping_methods: [{ carrier_code: "flatrate", method_code: "flatrate" }]
+    }
+  ) {
+    cart {
+      shipping_addresses {
+        selected_shipping_method {
+          carrier_code
+          method_code
+        }
+      }
+    }
+  }
+}
+QUERY;
+        $methodResponse = $this->graphQlMutation($setMethodQuery, [], '', $headers);
+        $selectedMethod = current(
+            $methodResponse['setShippingMethodsOnCart']['cart']['shipping_addresses']
+        )['selected_shipping_method'];
+        self::assertEquals('flatrate', $selectedMethod['carrier_code']);
+        self::assertEquals('flatrate', $selectedMethod['method_code']);
+    }
+
+    /**
+     * Switch the cart's shipping address to a Pickup Location and return the resulting shipping address.
+     *
+     * @param string $maskedQuoteId
+     * @param string $pickupLocationCode
+     * @param array $headers
+     *
+     * @return array
+     */
+    private function switchShippingAddressToPickupLocation(
+        string $maskedQuoteId,
+        string $pickupLocationCode,
+        array $headers
+    ): array {
+        $setPickupAddressQuery = <<<QUERY
+mutation {
+  setShippingAddressesOnCart(
+    input: {
+      cart_id: "$maskedQuoteId"
+      shipping_addresses: [{ pickup_location_code: "$pickupLocationCode" }]
+    }
+  ) {
+    cart {
+      shipping_addresses {
+        pickup_location_code
+        selected_shipping_method {
+          carrier_code
+          method_code
+        }
+      }
+    }
+  }
+}
+QUERY;
+        $response = $this->graphQlMutation($setPickupAddressQuery, [], '', $headers);
+
+        return current($response['setShippingAddressesOnCart']['cart']['shipping_addresses']);
     }
 
     /**
