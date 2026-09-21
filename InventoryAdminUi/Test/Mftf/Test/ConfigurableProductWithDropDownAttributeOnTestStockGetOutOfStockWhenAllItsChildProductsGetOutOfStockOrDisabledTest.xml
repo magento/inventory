@@ -48,9 +48,6 @@
                 <argument name="Color" value="{{colorProductAttribute1.name}}"/>
             </actionGroup>
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
-            <!--Clear filter product listing grid-->
-            <actionGroup ref="AdminOpenCatalogProductPageActionGroup" stepKey="goToProductCatalogPageBeforeClearFilters"/>
-            <actionGroup ref="ClearFiltersAdminProductGridActionGroup" stepKey="clearProductGridFilters"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
@@ -99,6 +96,8 @@
 
         <!-- Step5.3 Verify the Created Configurable Product on Storefront -->
         <amOnPage url="$$createConfigurableProduct.sku$$.html" stepKey="navigateToProductPageOnStoreFront"/>
+        <waitForPageLoad stepKey="waitForStoreFrontPageToLoad"/>
+        <waitForElementVisible selector="{{StorefrontProductInfoMainSection.productAttributeDropDown}}" stepKey="waitForDropdownElementVisible"/>
         <see userInput="$$createConfigurableProduct.name$$" selector="{{StorefrontProductInfoMainSection.productName}}" stepKey="assertProductName"/>
         <see userInput="$$createConfigurableProduct.price$$" selector="{{StorefrontProductInfoMainSection.productPrice}}" stepKey="assertProductPrice"/>
         <see userInput="$$createConfigurableProduct.sku$$" selector="{{StorefrontProductInfoMainSection.productSku}}" stepKey="assertProductSku"/>
@@ -115,11 +114,14 @@
 
         <!-- Step6.1 Verify the Blue Configurable Product is not displayed on Storefront -->
         <amOnPage url="$$createConfigurableProduct.sku$$.html" stepKey="navigateToProductPageOnStoreFront1"/>
+        <waitForPageLoad stepKey="waitForStoreFrontPageToLoad1"/>
+        <waitForElementVisible selector="{{StorefrontProductInfoMainSection.productAttributeDropDown}}" stepKey="waitForDropdownElementVisible1"/>
         <see userInput="$$createConfigurableProduct.name$$" selector="{{StorefrontProductInfoMainSection.productName}}" stepKey="assertProductName1"/>
         <see userInput="$$createConfigurableProduct.price$$" selector="{{StorefrontProductInfoMainSection.productPrice}}" stepKey="assertProductPrice1"/>
         <see userInput="$$createConfigurableProduct.sku$$" selector="{{StorefrontProductInfoMainSection.productSku}}" stepKey="assertProductSku1"/>
         <selectOption selector="{{StorefrontProductInfoMainSection.productAttributeDropDown}}" userInput="{{colorProductAttribute1.name}}" stepKey="selectWhiteVariation1"/>
         <seeOptionIsSelected selector="{{StorefrontProductInfoMainSection.productAttributeDropDown}}" userInput="{{colorProductAttribute1.name}}" stepKey="checkWhiteVariationIsSelected1"/>
+        <waitForElementVisible selector="{{StorefrontProductInfoMainSection.storefrontColorProductDropdown}}" stepKey="waitForAttributeDropdownVisible"/>
         <click selector="{{StorefrontProductInfoMainSection.storefrontColorProductDropdown}}" stepKey="clickOnAttributeDropdown"/>
         <seeElement selector="{{StorefrontProductInfoMainSection.storefrontColorProductDropdownValues(colorProductAttribute1.name)}}" stepKey="checkWhiteVariationIsDisplayed"/>
         <dontSeeElement selector="{{StorefrontProductInfoMainSection.storefrontColorProductDropdownValues(colorProductAttribute3.name)}}" stepKey="checkBlueVariationIsNotDisplayed"/>
