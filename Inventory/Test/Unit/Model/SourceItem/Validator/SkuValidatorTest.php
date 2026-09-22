@@ -7,6 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\Inventory\Test\Unit\Model\SourceItem\Validator;
 
+use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Phrase;
 use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
@@ -36,6 +39,11 @@ class SkuValidatorTest extends TestCase
     private $noSpaceBeforeAndAfterString;
 
     /**
+     * @var ProductRepositoryInterface|MockObject
+     */
+    private $productRepository;
+
+    /**
      * @var SourceItem|MockObject
      */
     private $sourceItemMock;
@@ -50,12 +58,14 @@ class SkuValidatorTest extends TestCase
         $this->validationResultFactory = $this->createMock(ValidationResultFactory::class);
         $this->notAnEmptyString = $this->createMock(NotAnEmptyString::class);
         $this->noSpaceBeforeAndAfterString = $this->createMock(NoSpaceBeforeAndAfterString::class);
+        $this->productRepository = $this->createMock(ProductRepositoryInterface::class);
         $this->sourceItemMock = $this->getMockBuilder(SourceItem::class)->disableOriginalConstructor()
             ->onlyMethods(['getSku', 'getSourceCode', 'getQuantity', 'getStatus', 'getData', 'setData'])->getMock();
         $this->skuValidator = new SkuValidator(
             $this->validationResultFactory,
             $this->notAnEmptyString,
-            $this->noSpaceBeforeAndAfterString
+            $this->noSpaceBeforeAndAfterString,
+            $this->productRepository
         );
     }
 
@@ -98,9 +108,14 @@ class SkuValidatorTest extends TestCase
         $errors = [$source['execute']];
         $errors = array_merge(...$errors);
         $this->noSpaceBeforeAndAfterString->method('execute')->willReturn($source['execute']);
-            $this->validationResultFactory->method('create')->with(
-                ['errors' => $errors]
-            )->willReturn(new ValidationResult($errors));
+
+        // Mock product repository to return existing product
+        $product = $this->createMock(ProductInterface::class);
+        $this->productRepository->method('get')->willReturn($product);
+
+        $this->validationResultFactory->method('create')->with(
+            ['errors' => $errors]
+        )->willReturn(new ValidationResult($errors));
         $result = $this->skuValidator->validate($this->sourceItemMock);
         if ($source['is_string_whitespace']) {
             foreach ($result->getErrors() as $error) {
@@ -109,5 +124,41 @@ class SkuValidatorTest extends TestCase
         } else {
             $this->assertEmpty($result->getErrors());
         }
+    }
+
+    /**
+     * Test validation when SKU does not exist
+     *
+     * @return void
+     */
+    public function testValidateNonExistentSku(): void
+    {
+        $sku = 'non_existent_sku';
+        $this->sourceItemMock->expects($this->atLeastOnce())->method('getSku')
+            ->willReturn($sku);
+
+        $this->notAnEmptyString->method('execute')->willReturn([]);
+        $this->noSpaceBeforeAndAfterString->method('execute')->willReturn([]);
+
+        // Mock product repository to throw NoSuchEntityException
+        $this->productRepository->expects($this->once())
+            ->method('get')
+            ->with($sku)
+            ->willThrowException(new NoSuchEntityException(__('Product not found')));
+
+        $expectedError = __('Product with SKU "%1" does not exist.', $sku);
+        $errors = [$expectedError];
+
+        $this->validationResultFactory->method('create')->with(
+            ['errors' => $errors]
+        )->willReturn(new ValidationResult($errors));
+
+        $result = $this->skuValidator->validate($this->sourceItemMock);
+
+        $this->assertCount(1, $result->getErrors());
+        $errorMessage = $result->getErrors()[0];
+        $this->assertInstanceOf(Phrase::class, $errorMessage);
+        $this->assertEquals('Product with SKU "%1" does not exist.', $errorMessage->getText());
+        $this->assertEquals(['non_existent_sku'], $errorMessage->getArguments());
     }
 }
