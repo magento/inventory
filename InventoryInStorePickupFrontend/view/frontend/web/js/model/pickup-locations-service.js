@@ -75,6 +75,46 @@ define([
         },
 
         /**
+         * Sole owner of the nearby search criteria shape. Requests issued from different components
+         * must be structurally identical, otherwise they miss each other in locationsCache.
+         *
+         * @param {String} searchTerm
+         * @param {Number} radius
+         * @param {Number} pageSize
+         * @returns {Object}
+         */
+        getNearbyLocationsCriteria: function (searchTerm, radius, pageSize) {
+            var criteria,
+                // Composite items are skipped - their children carry the salable skus.
+                productsInfo = _.chain(quote.getItems())
+                    .filter(function (item) {
+                        return item['qty_options'] === undefined || item['qty_options'].length === 0;
+                    })
+                    .map(function (item) {
+                        return {
+                            sku: item.sku
+                        };
+                    })
+                    .value();
+
+            criteria = {
+                extensionAttributes: {
+                    productsInfo: productsInfo
+                },
+                pageSize: pageSize
+            };
+
+            if (searchTerm) {
+                criteria.area = {
+                    radius: radius,
+                    searchTerm: searchTerm
+                };
+            }
+
+            return criteria;
+        },
+
+        /**
          * Get nearby pickup locations based on given search criteria.
          *
          * @param {Object} searchCriteria - Search criteria object.
