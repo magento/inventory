@@ -139,7 +139,10 @@ class QuantityPerSource extends AbstractModifier
 
         $itemData = [];
         foreach ($sourceItems as $sourceItem) {
-            $source = $sourcesBySourceCode[$sourceItem->getSourceCode()];
+            $source = $this->findSourceBySourceCode($sourcesBySourceCode, $sourceItem->getSourceCode());
+            if ($source === null) {
+                continue;
+            }
             $itemData[] = [
                 'source_name' => $source->getName(),
                 'source_code' => $sourceItem->getSourceCode(),
@@ -148,6 +151,28 @@ class QuantityPerSource extends AbstractModifier
         }
 
         return $itemData;
+    }
+
+    /**
+     * Find a source by exact source code, falling back to a case-insensitive match.
+     *
+     * @param SourceInterface[] $sourcesBySourceCode
+     * @param string $sourceCode
+     * @return SourceInterface|null
+     */
+    private function findSourceBySourceCode(array $sourcesBySourceCode, string $sourceCode): ?SourceInterface
+    {
+        if (isset($sourcesBySourceCode[$sourceCode])) {
+            return $sourcesBySourceCode[$sourceCode];
+        }
+
+        foreach ($sourcesBySourceCode as $storedSourceCode => $source) {
+            if (mb_strtolower($storedSourceCode) === mb_strtolower($sourceCode)) {
+                return $source;
+            }
+        }
+
+        return null;
     }
 
     /**
