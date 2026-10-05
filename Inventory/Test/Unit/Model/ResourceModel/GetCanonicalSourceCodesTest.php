@@ -60,6 +60,62 @@ class GetCanonicalSourceCodesTest extends TestCase
         self::assertSame(['warehouse_bravo' => 'warehouse_bravo'], $result);
     }
 
+    public function testExecuteQueriesOnlyUnresolvedCodes(): void
+    {
+        $connection = $this->createMock(AdapterInterface::class);
+        $select = $this->createMock(Select::class);
+
+        $this->resourceConnection->expects(self::exactly(2))->method('getConnection')->willReturn($connection);
+        $this->resourceConnection->method('getTableName')->willReturn('inventory_source');
+
+        $expectedSourceCodes = [['Warehouse_Bravo'], ['eu-1']];
+        $select->method('from')->willReturnSelf();
+        $select->expects(self::exactly(2))
+            ->method('where')
+            ->willReturnCallback(
+                function (string $condition, array $sourceCodes) use ($select, &$expectedSourceCodes): Select {
+                    self::assertSame('source_code IN (?)', $condition);
+                    self::assertSame(array_shift($expectedSourceCodes), $sourceCodes);
+                    return $select;
+                }
+            );
+
+        $connection->method('select')->willReturn($select);
+        $connection->expects(self::exactly(2))
+            ->method('fetchCol')
+            ->willReturnOnConsecutiveCalls(['warehouse_bravo'], ['EU-1']);
+
+        self::assertSame(
+            ['warehouse_bravo' => 'warehouse_bravo'],
+            $this->getCanonicalSourceCodes->execute(['Warehouse_Bravo'])
+        );
+        self::assertSame(
+            ['warehouse_bravo' => 'warehouse_bravo', 'eu-1' => 'EU-1'],
+            $this->getCanonicalSourceCodes->execute(['WAREHOUSE_BRAVO', 'eu-1'])
+        );
+    }
+
+    public function testResetStateDropsResolvedCodes(): void
+    {
+        $connection = $this->createMock(AdapterInterface::class);
+        $select = $this->createStub(Select::class);
+
+        $this->resourceConnection->expects(self::exactly(2))->method('getConnection')->willReturn($connection);
+        $this->resourceConnection->method('getTableName')->willReturn('inventory_source');
+
+        $select->method('from')->willReturnSelf();
+        $select->method('where')->willReturnSelf();
+
+        $connection->method('select')->willReturn($select);
+        $connection->expects(self::exactly(2))
+            ->method('fetchCol')
+            ->willReturn(['warehouse_bravo']);
+
+        $this->getCanonicalSourceCodes->execute(['Warehouse_Bravo']);
+        $this->getCanonicalSourceCodes->_resetState();
+        $this->getCanonicalSourceCodes->execute(['Warehouse_Bravo']);
+    }
+
     public function testExecuteReturnsEmptyArrayForEmptyInput(): void
     {
         $this->resourceConnection->expects(self::never())->method('getConnection');

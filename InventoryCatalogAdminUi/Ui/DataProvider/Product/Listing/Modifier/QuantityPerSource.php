@@ -139,7 +139,7 @@ class QuantityPerSource extends AbstractModifier
 
         $itemData = [];
         foreach ($sourceItems as $sourceItem) {
-            $source = $this->findSourceBySourceCode($sourcesBySourceCode, $sourceItem->getSourceCode());
+            $source = $sourcesBySourceCode[mb_strtolower($sourceItem->getSourceCode())] ?? null;
             if ($source === null) {
                 continue;
             }
@@ -151,28 +151,6 @@ class QuantityPerSource extends AbstractModifier
         }
 
         return $itemData;
-    }
-
-    /**
-     * Find a source by exact source code, falling back to a case-insensitive match.
-     *
-     * @param SourceInterface[] $sourcesBySourceCode
-     * @param string $sourceCode
-     * @return SourceInterface|null
-     */
-    private function findSourceBySourceCode(array $sourcesBySourceCode, string $sourceCode): ?SourceInterface
-    {
-        if (isset($sourcesBySourceCode[$sourceCode])) {
-            return $sourcesBySourceCode[$sourceCode];
-        }
-
-        foreach ($sourcesBySourceCode as $storedSourceCode => $source) {
-            if (mb_strtolower($storedSourceCode) === mb_strtolower($sourceCode)) {
-                return $source;
-            }
-        }
-
-        return null;
     }
 
     /**
@@ -229,7 +207,10 @@ class QuantityPerSource extends AbstractModifier
     }
 
     /**
-     * Get all sources by source items codes.
+     * Get all sources by source items codes, keyed by lowercased source code.
+     *
+     * Source codes are compared case-insensitively by the database, so a source item may reference
+     * a source with a code that differs from the stored one only by case.
      *
      * @param SourceItemInterface[] $sourceItems
      * @return array
@@ -240,8 +221,9 @@ class QuantityPerSource extends AbstractModifier
 
         foreach ($sourceItems as $sourceItem) {
             $sourceCode = $sourceItem->getSourceCode();
-            if (isset($this->sourcesBySourceCodes[$sourceCode])) {
-                $sourcesBySourceCodes[$sourceCode] = $this->sourcesBySourceCodes[$sourceCode];
+            $sourceCodeKey = mb_strtolower($sourceCode);
+            if (isset($this->sourcesBySourceCodes[$sourceCodeKey])) {
+                $sourcesBySourceCodes[$sourceCodeKey] = $this->sourcesBySourceCodes[$sourceCodeKey];
             } else {
                 $newSourceCodes[] = $sourceCode;
             }
@@ -254,8 +236,9 @@ class QuantityPerSource extends AbstractModifier
             $newSources = $this->sourceRepository->getList($searchCriteria)->getItems();
 
             foreach ($newSources as $source) {
-                $this->sourcesBySourceCodes[$source->getSourceCode()] = $source;
-                $sourcesBySourceCodes[$source->getSourceCode()] = $source;
+                $sourceCodeKey = mb_strtolower($source->getSourceCode());
+                $this->sourcesBySourceCodes[$sourceCodeKey] = $source;
+                $sourcesBySourceCodes[$sourceCodeKey] = $source;
             }
         }
 

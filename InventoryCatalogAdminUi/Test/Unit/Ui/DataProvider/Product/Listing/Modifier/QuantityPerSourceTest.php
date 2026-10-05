@@ -110,6 +110,29 @@ class QuantityPerSourceTest extends TestCase
         );
     }
 
+    public function testModifyDataLoadsMisCasedSourceOncePerGridPage(): void
+    {
+        $sourceItem = $this->createStub(SourceItemInterface::class);
+        $sourceItem->method('getSourceCode')->willReturn('Warehouse_Bravo');
+        $sourceItem->method('getQuantity')->willReturn(5.0);
+
+        $source = $this->createStub(SourceInterface::class);
+        $source->method('getSourceCode')->willReturn('warehouse_bravo');
+        $source->method('getName')->willReturn('Warehouse Bravo');
+
+        $this->getSourceItemsBySku->expects(self::exactly(2))
+            ->method('execute')
+            ->willReturn([$sourceItem]);
+        $this->stubSourceRepositoryList([$source]);
+
+        $gridData = $this->buildGridData();
+        $gridData['items'][] = ['sku' => 'sku-2', 'type_id' => 'simple'];
+        $data = $this->modifier->modifyData($gridData);
+
+        self::assertSame('Warehouse Bravo', $data['items'][0]['quantity_per_source'][0]['source_name']);
+        self::assertSame('Warehouse Bravo', $data['items'][1]['quantity_per_source'][0]['source_name']);
+    }
+
     public function testModifyDataSkipsSourceItemWithNoMatchingSource(): void
     {
         $sourceItem = $this->createStub(SourceItemInterface::class);
