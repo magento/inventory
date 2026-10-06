@@ -1,26 +1,27 @@
 {
     "name": "magento/module-inventory-import-export",
     "description": "N/A",
-    "require": {
-        "php": "~8.3.0||~8.4.0||~8.5.0",
-        "magento/framework": "*",
-        "magento/module-eav": "*",
-        "magento/module-import-export": "*",
-        "magento/module-inventory-api": "*",
-        "magento/module-inventory": "*",
-        "magento/module-inventory-catalog-api": "*",
-        "magento/module-store": "*",
-        "magento/module-inventory-configuration": "*",
-        "magento/module-inventory-indexer": "*"
-    },
-    "suggest": {
-        "magento/module-catalog-import-export": "*"
-    },
     "type": "magento2-module",
     "license": [
         "OSL-3.0",
         "AFL-3.0"
     ],
+    "version": "1.2.7",
+    "require": {
+        "php": "~8.3.0||~8.4.0||~8.5.0",
+        "magento/framework": "103.0.*",
+        "magento/module-eav": "102.1.*",
+        "magento/module-import-export": "101.0.*",
+        "magento/module-inventory-api": "1.2.*",
+        "magento/module-inventory": "1.2.*",
+        "magento/module-inventory-catalog-api": "1.3.*",
+        "magento/module-store": "101.1.*",
+        "magento/module-inventory-configuration": "1.2.*",
+        "magento/module-inventory-indexer": "2.2.*"
+    },
+    "suggest": {
+        "magento/module-catalog-import-export": "101.1.*"
+    },
     "autoload": {
         "files": [
             "registration.php"
@@ -30,3 +31,4 @@
         }
     }
 }
+

@@ -1,20 +1,21 @@
 {
     "name": "magento/module-inventory-catalog-search-bundle-product",
     "description": "N/A",
-    "require": {
-        "php": "~8.3.0||~8.4.0||~8.5.0",
-        "magento/framework": "*",
-        "magento/module-bundle": "*",
-        "magento/module-catalog": "*",
-        "magento/module-inventory-catalog-search": "*",
-        "magento/module-store": "*",
-        "magento/module-catalog-inventory": "*"
-    },
     "type": "magento2-module",
     "license": [
         "OSL-3.0",
         "AFL-3.0"
     ],
+    "version": "1.0.5",
+    "require": {
+        "php": "~8.3.0||~8.4.0||~8.5.0",
+        "magento/framework": "103.0.*",
+        "magento/module-bundle": "101.0.*",
+        "magento/module-catalog": "104.0.*",
+        "magento/module-inventory-catalog-search": "1.2.*",
+        "magento/module-store": "101.1.*",
+        "magento/module-catalog-inventory": "100.4.*"
+    },
     "autoload": {
         "files": [
             "registration.php"
@@ -24,3 +25,4 @@
         }
     }
 }
+
