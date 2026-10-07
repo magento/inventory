@@ -9,6 +9,7 @@
         "magento/module-inventory-api": "*",
         "magento/module-inventory": "*",
         "magento/module-inventory-catalog-api": "*",
+        "magento/module-inventory-configuration-api": "*",
         "magento/module-store": "*",
         "magento/module-inventory-configuration": "*",
         "magento/module-inventory-indexer": "*"
