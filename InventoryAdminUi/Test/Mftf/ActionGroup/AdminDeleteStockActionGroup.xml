@@ -15,7 +15,7 @@
             <argument name="stockName" defaultValue="Test Stock 1" type="string"/>
             <argument name="websiteName" defaultValue="Main Website" type="string"/>
         </arguments>
-        <amOnPage url="{{AdminStockPage.url}}" stepKey="navigateToManageStockPage"/>
+        <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToManageStockPage"/>
         <waitForPageLoad stepKey="waitForManageStockPageLoad"/>
         <conditionalClick selector="{{AdminProductGridFilterSection.clearFilters}}" dependentSelector="{{AdminProductGridFilterSection.clearFilters}}" visible="true" stepKey="clickClearFilters"/>
         <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clickClearKeywordFilters"/>

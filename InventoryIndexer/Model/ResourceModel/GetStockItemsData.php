@@ -63,42 +63,13 @@ class GetStockItemsData implements GetStockItemsDataInterface
      */
     public function execute(array $skus, int $stockId): array
     {
-        $connection = $this->resource->getConnection();
-        $select = $connection->select();
+        if (empty($skus)) {
+            return [];
+        }
         $results = [];
 
-        if ($this->defaultStockProvider->getId() === $stockId) {
-            $select->from(
-                ['stock_status' => $this->resource->getTableName('cataloginventory_stock_status')],
-                [
-                    GetStockItemDataInterface::SKU => 'product_entity.sku',
-                    GetStockItemDataInterface::QUANTITY => 'stock_status.qty',
-                    GetStockItemDataInterface::IS_SALABLE => 'stock_status.stock_status',
-                ]
-            )->join(
-                ['product_entity' => $this->resource->getTableName('catalog_product_entity')],
-                'stock_status.product_id = product_entity.entity_id',
-                []
-            )->where(
-                'product_entity.sku IN (?)',
-                $skus
-            );
-        } else {
-            $select->from(
-                $this->stockIndexTableNameResolver->execute($stockId),
-                [
-                    GetStockItemsDataInterface::SKU => IndexStructure::SKU,
-                    GetStockItemsDataInterface::QUANTITY => IndexStructure::QUANTITY,
-                    GetStockItemsDataInterface::IS_SALABLE => IndexStructure::IS_SALABLE,
-                ]
-            )->where(
-                IndexStructure::SKU . ' IN (?)',
-                $skus
-            );
-        }
-
         try {
-            $stockItemRows = $connection->fetchAll($select) ?: [];
+            $stockItemRows = $this->getStockItemRows($skus, $stockId);
 
             if (!empty($stockItemRows)) {
                 foreach ($stockItemRows as $row) {
@@ -129,6 +100,55 @@ class GetStockItemsData implements GetStockItemsDataInterface
     }
 
     /**
+     * Return stock item information
+     *
+     * @param array $skus
+     * @param int $stockId
+     * @return array
+     * @throws \Exception
+     */
+    private function getStockItemRows(array $skus, int $stockId): array
+    {
+        $connection = $this->resource->getConnection();
+        $select = $connection->select();
+
+        $values = array_values($skus);
+        $keys = array_map(static fn (int $i): string => 'sku' . $i, array_keys($values));
+        $placeholders = array_map(static fn (string $key): string => ':' . $key, $keys);
+        $bind = array_combine($keys, $values);
+
+        if ($this->defaultStockProvider->getId() === $stockId) {
+            $select->from(
+                ['stock_status' => $this->resource->getTableName('cataloginventory_stock_status')],
+                [
+                    GetStockItemDataInterface::SKU => 'product_entity.sku',
+                    GetStockItemDataInterface::QUANTITY => 'stock_status.qty',
+                    GetStockItemDataInterface::IS_SALABLE => 'stock_status.stock_status',
+                ]
+            )->join(
+                ['product_entity' => $this->resource->getTableName('catalog_product_entity')],
+                'stock_status.product_id = product_entity.entity_id',
+                []
+            )->where(
+                'product_entity.sku IN (' . implode(',', $placeholders) . ')'
+            );
+        } else {
+            $select->from(
+                $this->stockIndexTableNameResolver->execute($stockId),
+                [
+                    GetStockItemsDataInterface::SKU => IndexStructure::SKU,
+                    GetStockItemsDataInterface::QUANTITY => IndexStructure::QUANTITY,
+                    GetStockItemsDataInterface::IS_SALABLE => IndexStructure::IS_SALABLE,
+                ]
+            )->where(
+                IndexStructure::SKU . ' IN (' . implode(',', $placeholders) . ')'
+            );
+        }
+
+        return $connection->fetchAll($select, $bind) ?: [];
+    }
+
+    /**
      * Return results with original SKUs as keys.
      *
      * @param array $originalSkus
@@ -141,7 +161,7 @@ class GetStockItemsData implements GetStockItemsDataInterface
         foreach ($results as $sku => $result) {
             $normalizedResults[$this->normalizeSku((string) $sku)] = $result;
         }
-        
+
         $finalResults = [];
         foreach (array_unique($originalSkus) as $sku) {
             $normalizedSku = $this->normalizeSku((string) $sku);
