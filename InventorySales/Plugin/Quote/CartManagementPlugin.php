@@ -10,6 +10,7 @@ namespace Magento\InventorySales\Plugin\Quote;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
+use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 use Magento\InventorySales\Model\ReservationExecutionInterface;
 use Magento\InventorySales\Model\ResourceModel\AcquireInventoryLock;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
@@ -54,12 +55,18 @@ class CartManagementPlugin
     private $reservationExecution;
 
     /**
+     * @var GetStockItemConfigurationInterface
+     */
+    private $getStockItemConfiguration;
+
+    /**
      * @param CartRepositoryInterface $cartRepository
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param AcquireInventoryLock $acquireInventoryLock
      * @param StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
      * @param StoreManagerInterface $storeManager
      * @param ReservationExecutionInterface $reservationExecution
+     * @param GetStockItemConfigurationInterface $getStockItemConfiguration
      */
     public function __construct(
         CartRepositoryInterface $cartRepository,
@@ -67,7 +74,8 @@ class CartManagementPlugin
         AcquireInventoryLock $acquireInventoryLock,
         StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver,
         StoreManagerInterface $storeManager,
-        ReservationExecutionInterface $reservationExecution
+        ReservationExecutionInterface $reservationExecution,
+        GetStockItemConfigurationInterface $getStockItemConfiguration
     ) {
         $this->cartRepository = $cartRepository;
         $this->getSkusByProductIds = $getSkusByProductIds;
@@ -75,6 +83,7 @@ class CartManagementPlugin
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
         $this->storeManager = $storeManager;
         $this->reservationExecution = $reservationExecution;
+        $this->getStockItemConfiguration = $getStockItemConfiguration;
     }
 
     /**
@@ -122,6 +131,11 @@ class CartManagementPlugin
 
         try {
             foreach ($skus as $sku) {
+                $stockItemConfiguration = $this->getStockItemConfiguration->execute((string) $sku, $stockId);
+                if (!$stockItemConfiguration->isManageStock()) {
+                    continue;
+                }
+
                 if (!$this->acquireInventoryLock->execute((string) $sku, $stockId)) {
                     throw new LocalizedException(
                         __('Could not acquire inventory lock for SKU: %1. Please try again.', $sku)
