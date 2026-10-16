@@ -9,7 +9,13 @@
         "magento/module-inventory-catalog": "*",
         "magento/module-inventory-configuration-api": "*",
         "magento/module-inventory-sales-api": "*",
-        "magento/module-bundle": "*"
+        "magento/module-bundle": "*",
+        "magento/module-configurable-product": "*",
+        "magento/module-inventory-configurable-product": "*",
+        "magento/module-inventory-indexer": "*",
+        "magento/module-inventory-reservations": "*",
+        "magento/module-inventory-reservations-api": "*",
+        "magento/module-inventory-sales": "*"
     },
     "license": [
         "OSL-3.0",
