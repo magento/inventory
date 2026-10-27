@@ -10,6 +10,7 @@ namespace Magento\InventorySalesFrontendUi\Plugin\Block\Stockqty;
 use Magento\CatalogInventory\Block\Stockqty\AbstractStockqty;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
+use Magento\InventoryConfigurationApi\Exception\SkuIsNotAssignedToStockException;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
 use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
@@ -81,7 +82,11 @@ class AbstractStockqtyPlugin
         $sku = $subject->getProduct()->getSku();
         $websiteId = (int)$subject->getProduct()->getStore()->getWebsiteId();
         $stockId = (int)$this->stockByWebsiteId->execute($websiteId)->getStockId();
-        $stockItemConfig = $this->getStockItemConfiguration->execute($sku, $stockId);
+        try {
+            $stockItemConfig = $this->getStockItemConfiguration->execute($sku, $stockId);
+        } catch (SkuIsNotAssignedToStockException $exception) {
+            return false;
+        }
         if (!$this->isSourceItemManagementAllowedForProductType->execute($productType)
             || !$stockItemConfig->isManageStock()
         ) {
