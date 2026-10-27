@@ -6,7 +6,7 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
-    <group id="default">
+    <group id="inventory">
         <job name="inventory_cleanup_reservations" instance="Magento\InventoryReservations\Cron\CleanupReservations" method="execute">
             <schedule>0 0 * * *</schedule>
         </job>
