@@ -11,6 +11,8 @@ use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 
 /**
  * Check if it is necessary to show qty left.
+ *
+ * @deprecated
  */
 class IsSalableQtyAvailableForDisplaying
 {
@@ -37,9 +39,9 @@ class IsSalableQtyAvailableForDisplaying
     public function execute(float $productSalableQty): bool
     {
         return ($this->stockItemConfig->getBackorders() === StockItemConfigurationInterface::BACKORDERS_NO
-                || $this->stockItemConfig->getBackorders() !== StockItemConfigurationInterface::BACKORDERS_NO
-                && $this->stockItemConfig->getMinQty() < 0)
-            && $productSalableQty <= (float) $this->stockItemConfig->getStockThresholdQty()
+                || ($this->stockItemConfig->getBackorders() !== StockItemConfigurationInterface::BACKORDERS_NO
+                && $this->stockItemConfig->getMinQty() < 0))
+            && $productSalableQty <= $this->stockItemConfig->getStockThresholdQty()
             && $productSalableQty > 0;
     }
 }
