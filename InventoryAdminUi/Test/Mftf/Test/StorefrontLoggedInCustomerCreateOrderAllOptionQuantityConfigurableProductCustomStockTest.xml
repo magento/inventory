@@ -128,6 +128,9 @@
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
         <magentoCLI command="queue:consumers:start inventory.reservations.updateSalabilityStatus" stepKey="updateSalability"/>
         <comment userInput="To not do BIC 'flushCache' step remained to be in the test but the cache:flush command was replaced with comment action" stepKey="flushCache"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCacheAfterSalabilityUpdate">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <!-- Assert out of stock option is absent on product page -->
         <amOnPage url="{{StorefrontProductPage.url($$configurableProduct.custom_attributes[url_key]$$)}}" stepKey="navigateToConfigurablePDP"/>
         <waitForPageLoad stepKey="waitForConfigurablePDP"/>
