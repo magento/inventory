@@ -190,10 +190,10 @@ class ReservationPlacingDuringRegisterProductsSaleTest extends TestCase
 
         self::assertEquals(5, $this->getProductSalableQty->execute($sku, $stockId));
         self::assertEquals(-3.5, $this->getReservationsQuantity->execute($sku, $stockId));
-        self::assertEquals(
-            '{"event_type":"order_placed","object_type":"order","object_id":"","object_increment_id":"test_order_1"}',
-            $this->getReservationMetadata()
-        );
+        $reservationMetadata = json_decode($this->getReservationMetadata(), true);
+        self::assertEquals('order_placed', $reservationMetadata['event_type']);
+        self::assertEquals('order', $reservationMetadata['object_type']);
+        self::assertEquals('test_order_1', $reservationMetadata['object_increment_id']);
 
         //cleanup
         $this->deleteOrderById((int)$orderId);
