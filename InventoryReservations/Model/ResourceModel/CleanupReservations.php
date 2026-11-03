@@ -53,7 +53,8 @@ class CleanupReservations implements CleanupReservationsInterface
             array_unique(
                 array_merge(
                     $this->getReservationIdsByField('object_id'),
-                    $this->getReservationIdsByField('object_increment_id')
+                    $this->getReservationIdsByField('object_increment_id'),
+                    $this->getOrphanedReservationIds(),
                 )
             )
         );
