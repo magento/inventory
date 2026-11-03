@@ -48,14 +48,17 @@ class CleanupReservations implements CleanupReservationsInterface
         $connection = $this->resource->getConnection();
         $reservationTable = $this->resource->getTableName('inventory_reservation');
 
-        $reservationIds = array_unique(
-            array_merge(
-                $this->getReservationIdsByField('object_id'),
-                $this->getReservationIdsByField('object_increment_id'),
+        $groupedReservationIds = implode(
+            ',',
+            array_unique(
+                array_merge(
+                    $this->getReservationIdsByField('object_id'),
+                    $this->getReservationIdsByField('object_increment_id')
+                )
             )
         );
 
-        $condition = [ReservationInterface::RESERVATION_ID . ' IN (?)' => $reservationIds];
+        $condition = [ReservationInterface::RESERVATION_ID . ' IN (?)' => explode(',', $groupedReservationIds)];
         $connection->delete($reservationTable, $condition);
     }
 
