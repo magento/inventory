@@ -34,7 +34,7 @@ class CleanupReservations implements CleanupReservationsInterface
     public function __construct(
         ResourceConnection $resource,
         int $groupConcatMaxLen,
-        private readonly int $orphanLifetime = 3600,
+        private readonly int $orphanLifetime = 86400,
     ) {
         $this->resource = $resource;
         $this->groupConcatMaxLen = $groupConcatMaxLen;
