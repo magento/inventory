@@ -53,8 +53,8 @@ class CleanupReservationsTest extends TestCase
     {
         return [
             [80, ['object_increment_id' => 666666]],
-            [80, ['object_increment_id' => 666666, 'event_timestamp' => time() + 3600]],
-            [90, ['object_increment_id' => 666666, 'event_timestamp' => time() - 3601]],
+            [80, ['object_increment_id' => 666666, 'event_timestamp' => time() + 86400]],
+            [90, ['object_increment_id' => 666666, 'event_timestamp' => time() - 86401]],
         ];
     }
 }
