@@ -12,6 +12,11 @@
     <preference for="Magento\InventoryExportStockApi\Api\ExportStockIndexDataInterface" type="Magento\InventoryExportStock\Model\ExportStockIndexData"/>
     <preference for="Magento\InventoryExportStockApi\Api\ExportStockIndexDataBySalesChannelInterface" type="Magento\InventoryExportStock\Model\ExportStockIndexDataBySalesChannel"/>
     <preference for="Magento\InventoryExportStockApi\Api\Data\ProductStockIndexDataInterface" type="Magento\InventoryExportStock\Model\ProductStockIndexData"/>
+    <type name="Magento\InventoryExportStock\Model\PreciseExportStockProcessor">
+        <arguments>
+            <argument name="cache" xsi:type="object">Magento\InventorySalesApi\Model\CachePool</argument>
+        </arguments>
+    </type>
     <type name="Magento\InventoryExportStock\Model\GetQtyForNotManageStock">
         <arguments>
             <argument name="qtyForNotManageStock" xsi:type="null"/>

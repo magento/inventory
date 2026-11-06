@@ -8,8 +8,11 @@ declare(strict_types=1);
 namespace Magento\InventoryExportStock\Model;
 
 use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\InventoryApi\Model\CacheInterface;
 use Magento\InventoryApi\Model\IsProductAssignedToStockInterface;
+use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
 use Magento\InventoryConfigurationApi\Exception\SkuIsNotAssignedToStockException;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForSkuInterface;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
@@ -17,6 +20,8 @@ use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
 
 /**
  * Class Provides stock data with reservation taken into in account
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class PreciseExportStockProcessor
 {
@@ -51,12 +56,24 @@ class PreciseExportStockProcessor
     private $areProductsSalable;
 
     /**
+     * @var CacheInterface
+     */
+    private $cache;
+
+    /**
+     * @var GetProductTypesBySkusInterface
+     */
+    private $getProductTypesBySkus;
+
+    /**
      * @param IsSourceItemManagementAllowedForSkuInterface $isSourceItemManagementAllowedForSku
      * @param GetProductSalableQtyInterface $getProductSalableQty
      * @param GetQtyForNotManageStock $getQtyForNotManageStock
      * @param GetStockItemConfiguration $getStockItemConfiguration
      * @param IsProductAssignedToStockInterface $isProductAssignedToStock
      * @param AreProductsSalableInterface $areProductsSalable
+     * @param CacheInterface|null $cache
+     * @param GetProductTypesBySkusInterface|null $getProductTypesBySkus
      */
     public function __construct(
         IsSourceItemManagementAllowedForSkuInterface $isSourceItemManagementAllowedForSku,
@@ -64,7 +81,9 @@ class PreciseExportStockProcessor
         GetQtyForNotManageStock $getQtyForNotManageStock,
         GetStockItemConfiguration $getStockItemConfiguration,
         IsProductAssignedToStockInterface $isProductAssignedToStock,
-        AreProductsSalableInterface $areProductsSalable
+        AreProductsSalableInterface $areProductsSalable,
+        ?CacheInterface $cache = null,
+        ?GetProductTypesBySkusInterface $getProductTypesBySkus = null
     ) {
         $this->isSourceItemManagementAllowedForSku = $isSourceItemManagementAllowedForSku;
         $this->getProductSalableQty = $getProductSalableQty;
@@ -72,6 +91,9 @@ class PreciseExportStockProcessor
         $this->getQtyForNotManageStock = $getQtyForNotManageStock;
         $this->isProductAssignedToStock = $isProductAssignedToStock;
         $this->areProductsSalable = $areProductsSalable;
+        $this->cache = $cache ?? ObjectManager::getInstance()->get(CacheInterface::class);
+        $this->getProductTypesBySkus = $getProductTypesBySkus
+            ?? ObjectManager::getInstance()->get(GetProductTypesBySkusInterface::class);
     }
 
     /**
@@ -85,6 +107,12 @@ class PreciseExportStockProcessor
     public function execute(array $products, int $stockId): array
     {
         $skus = $this->getProductSkus($products);
+        if (!$skus) {
+            return [];
+        }
+        $this->cache->warmup($skus, $stockId);
+        // Loads the product types of the whole page into the per-SKU cache used by the source item checks below.
+        $this->getProductTypesBySkus->execute($skus);
         $items = [];
         foreach ($skus as $sku) {
             try {

@@ -5,6 +5,7 @@
         "php": "~8.3.0||~8.4.0||~8.5.0",
         "magento/framework": "*",
         "magento/module-inventory-api": "*",
+        "magento/module-inventory-catalog-api": "*",
         "magento/module-inventory-export-stock-api": "*",
         "magento/module-inventory-sales-api": "*",
         "magento/module-inventory-sales": "*",
