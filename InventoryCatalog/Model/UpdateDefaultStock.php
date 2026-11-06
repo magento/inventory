@@ -11,6 +11,7 @@ use Magento\CatalogInventory\Model\Indexer\Stock\Processor as StockIndexProcesso
 use Magento\CatalogInventory\Model\Stock;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\InventoryApi\Model\CacheInterface;
 use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockStatus;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\InventoryConfiguration\Model\GetLegacyStockItemsInterface;
@@ -28,6 +29,7 @@ class UpdateDefaultStock
      * @param SetDataToLegacyStockStatus $setDataToLegacyStockStatus
      * @param GetLegacyStockItemsInterface $getLegacyStockItems
      * @param IsSourceItemManagementAllowedForSkuInterface $isSourceItemManagementAllowed
+     * @param CacheInterface $cache
      */
     public function __construct(
         private readonly AreProductsSalableInterface $areProductsSalable,
@@ -36,7 +38,8 @@ class UpdateDefaultStock
         private readonly StockIndexProcessor $stockIndexProcessor,
         private readonly SetDataToLegacyStockStatus $setDataToLegacyStockStatus,
         private readonly GetLegacyStockItemsInterface $getLegacyStockItems,
-        private readonly IsSourceItemManagementAllowedForSkuInterface $isSourceItemManagementAllowed
+        private readonly IsSourceItemManagementAllowedForSkuInterface $isSourceItemManagementAllowed,
+        private readonly CacheInterface $cache
     ) {
     }
 
@@ -53,6 +56,9 @@ class UpdateDefaultStock
         if (empty($skus)) {
             return [];
         }
+        // Drop any per-request salability cache entries warmed before this save, so the reads
+        // below reflect the data just persisted rather than a snapshot from earlier in the request.
+        $this->cache->clean($skus, Stock::DEFAULT_STOCK_ID);
         $idsBySku = $this->getProductIdsBySkus->execute($skus);
         $skusById = array_flip($idsBySku);
         $affectedSkus = [];
@@ -79,6 +85,9 @@ class UpdateDefaultStock
         if (!empty($idsBySku)) {
             $this->stockIndexProcessor->reindexList(array_values($idsBySku));
         }
+        // Drop the entries this call itself may have warmed with the pre-write status, so any
+        // salability read later in the same request sees the status just persisted above.
+        $this->cache->clean($skus, Stock::DEFAULT_STOCK_ID);
         return $affectedSkus;
     }
 }
