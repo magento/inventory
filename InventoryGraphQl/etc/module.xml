@@ -9,8 +9,14 @@
     <module name="Magento_InventoryGraphQl">
         <sequence>
             <module name="Magento_Catalog"/>
+            <module name="Magento_ConfigurableProduct"/>
             <module name="Magento_InventoryCatalog"/>
             <module name="Magento_InventoryConfigurationApi"/>
+            <module name="Magento_InventoryConfigurableProduct"/>
+            <module name="Magento_InventoryIndexer"/>
+            <module name="Magento_InventoryReservations"/>
+            <module name="Magento_InventoryReservationsApi"/>
+            <module name="Magento_InventorySales"/>
             <module name="Magento_InventorySalesApi"/>
             <module name="Magento_CatalogInventoryGraphQl"/>
         </sequence>
