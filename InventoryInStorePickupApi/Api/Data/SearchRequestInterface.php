@@ -72,6 +72,15 @@ interface SearchRequestInterface extends \Magento\Framework\Api\ExtensibleDataIn
     public function getSort(): ?array;
 
     /**
+     * Set Sort Order.
+     *
+     * @param \Magento\Framework\Api\SortOrder[]|null $sort
+     *
+     * @return void
+     */
+    public function setSort(?array $sort): void;
+
+    /**
      * Set Extension Attributes for Search Request.
      *
      * @param \Magento\InventoryInStorePickupApi\Api\Data\SearchRequestExtensionInterface|null $extensionAttributes
