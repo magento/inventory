@@ -232,9 +232,7 @@ define([
                 selectedSource,
                 selectedSourceCode,
                 nearestLocation,
-                self = this,
-                productsInfo = [],
-                items = quote.getItems();
+                self = this;
 
             if (!this.isStorePickupSelected()) {
                 return;
@@ -279,27 +277,15 @@ define([
                         pickupLocationsService.selectForShipping(location);
                     });
             } else if (shippingAddress.city && shippingAddress.postcode) {
-                _.each(items, function (item) {
-                    if (item['qty_options'] === undefined || item['qty_options'].length === 0) {
-                        productsInfo.push(
-                            {
-                                sku: item.sku
-                            }
-                        );
-                    }
-                });
                 pickupLocationsService
-                    .getNearbyLocations({
-                        area: {
-                            radius: this.nearbySearchRadius,
-                            searchTerm: shippingAddress.postcode + this.delimiter +
-                                        shippingAddress.countryId || this.defaultCountry
-                        },
-                        extensionAttributes: {
-                            productsInfo: productsInfo
-                        },
-                        pageSize: this.nearbySearchLimit
-                    })
+                    .getNearbyLocations(
+                        pickupLocationsService.getNearbyLocationsCriteria(
+                            shippingAddress.postcode + this.delimiter +
+                                (shippingAddress.countryId || this.defaultCountry),
+                            this.nearbySearchRadius,
+                            this.nearbySearchLimit
+                        )
+                    )
                     .then(function (locations) {
                         nearestLocation = locations[0];
 
