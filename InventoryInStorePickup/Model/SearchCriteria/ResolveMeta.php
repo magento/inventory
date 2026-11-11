@@ -63,6 +63,11 @@ class ResolveMeta implements ResolverInterface
     ): void {
         $sorts = [];
         foreach ($searchRequest->getSort() as $sortOrder) {
+            // Skip a sort order without a field; the framework sorting processor skips a null field too.
+            if ((string)$sortOrder->getField() === '') {
+                continue;
+            }
+
             if ($sortOrder->getField() === AreaInterface::DISTANCE_FIELD) {
                 // If sort order need to be done by distance, not other sort orders are allowed.
                 if ($searchRequest->getArea()) {
