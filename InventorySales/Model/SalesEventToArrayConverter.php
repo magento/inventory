@@ -23,8 +23,10 @@ class SalesEventToArrayConverter
     public function execute(SalesEventInterface $salesEvent): array
     {
         $extensionData = $salesEvent->getExtensionAttributes()->__toArray();
+        $timestamp = new \DateTimeImmutable(timezone: new \DateTimeZone('UTC'));
         return [
             'event_type' => $salesEvent->getType(),
+            'event_timestamp' => $timestamp->getTimestamp(),
             'object_type' => $salesEvent->getObjectType(),
             'object_id' => $salesEvent->getObjectId(),
             'object_increment_id' => $extensionData['objectIncrementId'] ?? ''
