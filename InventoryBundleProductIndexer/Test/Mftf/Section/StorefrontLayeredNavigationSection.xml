@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright 2026 Adobe
+ * All Rights Reserved.
+ */
+-->
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+    <!-- Click a price facet bucket link by its URL range value (e.g. "10-20") -->
+    <section name="StorefrontLayeredNavigationSection">
+        <element name="priceFilterLinkByRange" type="text" selector="#narrow-by-list a[href*='price={{range}}']" parameterized="true"/>
+    </section>
+</sections>

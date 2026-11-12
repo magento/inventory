@@ -22,4 +22,8 @@
         <requiredEntity type="custom_attribute">CustomAttributePriceView</requiredEntity>
         <requiredEntity type="custom_attribute">CustomAttributeShipmentTypeShipSeparately</requiredEntity>
     </entity>
+    <!-- Price-view-range bundle, ship type Separately, own source per child -->
+    <entity name="ApiBundleProductPriceViewRangeShipSeparately" type="product2" extends="ApiBundleProductPriceViewRange">
+        <requiredEntity type="custom_attribute">CustomAttributeShipmentTypeShipSeparately</requiredEntity>
+    </entity>
 </entities>

@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright 2026 Adobe
+ * All Rights Reserved.
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontBundlePriceSortAndFacetWithNonDefaultSourceWebsiteTest">
+        <annotations>
+            <features value="Bundle"/>
+            <stories value="Bundle product price index with multi-source inventory"/>
+            <title value="Bundle price index with non-default source and website children"/>
+            <description value="Bundle price shows children prices, not zero, across source and website."/>
+            <severity value="MAJOR"/>
+            <testCaseId value="ACP2E-4380"/>
+            <group value="bundle"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+        <before>
+            <!-- Step 1: Create category shared under the default root category tree -->
+            <createData entity="SimpleSubCategory" stepKey="createCategory"/>
+            <!-- Step 2: Create additional source and stock, link them together -->
+            <createData entity="FullSource1" stepKey="createCustomSource"/>
+            <createData entity="BasicMsiStock1" stepKey="createCustomStock"/>
+            <createData entity="SourceStockLinked1" stepKey="linkCustomSourceToCustomStock">
+                <requiredEntity createDataKey="createCustomStock"/>
+                <requiredEntity createDataKey="createCustomSource"/>
+            </createData>
+            <!-- Step 3: Reference product with lowest price to detect wrong sort order -->
+            <createData entity="SimpleProduct3" stepKey="createReferenceLowCostProduct">
+                <field key="price">5.00</field>
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <!-- Step 4: Create bundle child products, also assigned to the category -->
+            <createData entity="SimpleProduct3" stepKey="createCheapBundleChild">
+                <field key="price">12.00</field>
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <createData entity="SimpleProduct3" stepKey="createExpensiveBundleChild">
+                <field key="price">48.00</field>
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <!-- Step 5: Bundle with both children in one option, ship type Separately -->
+            <createData entity="ApiBundleProductPriceViewRangeShipSeparately" stepKey="createBundleProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <createData entity="DropDownBundleOption" stepKey="createBundleOption">
+                <requiredEntity createDataKey="createBundleProduct"/>
+            </createData>
+            <createData entity="ApiBundleLink" stepKey="linkCheapChildToOption">
+                <requiredEntity createDataKey="createBundleProduct"/>
+                <requiredEntity createDataKey="createBundleOption"/>
+                <requiredEntity createDataKey="createCheapBundleChild"/>
+            </createData>
+            <createData entity="ApiBundleLink" stepKey="linkExpensiveChildToOption">
+                <requiredEntity createDataKey="createBundleProduct"/>
+                <requiredEntity createDataKey="createBundleOption"/>
+                <requiredEntity createDataKey="createExpensiveBundleChild"/>
+            </createData>
+            <!-- Step 5b: Second bundle: two options means summed price, not a range -->
+            <createData entity="ApiBundleProductPriceViewRangeShipSeparately" stepKey="createMultiOptionBundleProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <createData entity="DropDownBundleOption" stepKey="createMultiOptionBundleOptionOne">
+                <requiredEntity createDataKey="createMultiOptionBundleProduct"/>
+            </createData>
+            <createData entity="RadioButtonsOption" stepKey="createMultiOptionBundleOptionTwo">
+                <requiredEntity createDataKey="createMultiOptionBundleProduct"/>
+            </createData>
+            <createData entity="ApiBundleLink" stepKey="linkCheapChildToMultiOptionOne">
+                <requiredEntity createDataKey="createMultiOptionBundleProduct"/>
+                <requiredEntity createDataKey="createMultiOptionBundleOptionOne"/>
+                <requiredEntity createDataKey="createCheapBundleChild"/>
+            </createData>
+            <createData entity="ApiBundleLink" stepKey="linkExpensiveChildToMultiOptionTwo">
+                <requiredEntity createDataKey="createMultiOptionBundleProduct"/>
+                <requiredEntity createDataKey="createMultiOptionBundleOptionTwo"/>
+                <requiredEntity createDataKey="createExpensiveBundleChild"/>
+            </createData>
+            <!-- Step 6: Create an additional website, store group and store view -->
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminCreateWebsiteActionGroup" stepKey="createSecondWebsite">
+                <argument name="newWebsiteName" value="{{customWebsite.name}}"/>
+                <argument name="websiteCode" value="{{customWebsite.code}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateNewStoreGroupActionGroup" stepKey="createSecondStoreGroup">
+                <argument name="website" value="{{customWebsite.name}}"/>
+                <argument name="storeGroupName" value="{{customStoreGroup.name}}"/>
+                <argument name="storeGroupCode" value="{{customStoreGroup.code}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateStoreViewActionGroup" stepKey="createSecondStoreView">
+                <argument name="StoreGroup" value="customStoreGroup"/>
+                <argument name="customStore" value="customStore"/>
+            </actionGroup>
+            <!-- Step 7: Assign stock to website as its only sales channel -->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignSecondWebsiteToCustomStock">
+                <argument name="stockName" value="$$createCustomStock.stock[name]$$"/>
+                <argument name="websiteName" value="{{customWebsite.name}}"/>
+            </actionGroup>
+            <!-- Step 8: Assign cheap bundle child only to the second website and source -->
+            <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openCheapChildEditPage">
+                <argument name="productId" value="$$createCheapBundleChild.id$$"/>
+            </actionGroup>
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromCheapChild">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
+            <waitForElementNotVisible selector="{{AdminProductSourcesGrid.rowDeleteByCode(_defaultSource.name)}}" stepKey="waitForDefaultSourceRowRemovedFromCheapChild"/>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignCustomSourceToCheapChild">
+                <argument name="sourceCode" value="$$createCustomSource.source[source_code]$$"/>
+                <argument name="sourceQty" value="100"/>
+            </actionGroup>
+            <actionGroup ref="AdminChangeWebSiteAssignedToProductActionGroup" stepKey="assignCheapChildOnlyToSecondWebsite">
+                <argument name="website" value="{{customWebsite.name}}"/>
+                <argument name="websiteToDeselect" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <!-- Step 9: Assign expensive bundle child only to the second website and source -->
+            <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openExpensiveChildEditPage">
+                <argument name="productId" value="$$createExpensiveBundleChild.id$$"/>
+            </actionGroup>
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromExpensiveChild">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
+            <waitForElementNotVisible selector="{{AdminProductSourcesGrid.rowDeleteByCode(_defaultSource.name)}}" stepKey="waitForDefaultSourceRowRemovedFromExpensiveChild"/>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignCustomSourceToExpensiveChild">
+                <argument name="sourceCode" value="$$createCustomSource.source[source_code]$$"/>
+                <argument name="sourceQty" value="100"/>
+            </actionGroup>
+            <actionGroup ref="AdminChangeWebSiteAssignedToProductActionGroup" stepKey="assignExpensiveChildOnlyToSecondWebsite">
+                <argument name="website" value="{{customWebsite.name}}"/>
+                <argument name="websiteToDeselect" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <!-- Step 10: Assign reference product only to second website and source -->
+            <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openReferenceProductEditPage">
+                <argument name="productId" value="$$createReferenceLowCostProduct.id$$"/>
+            </actionGroup>
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromReferenceProduct">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
+            <waitForElementNotVisible selector="{{AdminProductSourcesGrid.rowDeleteByCode(_defaultSource.name)}}" stepKey="waitForDefaultSourceRowRemovedFromReferenceProduct"/>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignCustomSourceToReferenceProduct">
+                <argument name="sourceCode" value="$$createCustomSource.source[source_code]$$"/>
+                <argument name="sourceQty" value="100"/>
+            </actionGroup>
+            <actionGroup ref="AdminChangeWebSiteAssignedToProductActionGroup" stepKey="assignReferenceProductOnlyToSecondWebsite">
+                <argument name="website" value="{{customWebsite.name}}"/>
+                <argument name="websiteToDeselect" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <!-- Step 11: Assign the bundle product only to the second website -->
+            <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openBundleProductEditPage">
+                <argument name="productId" value="$$createBundleProduct.id$$"/>
+            </actionGroup>
+            <actionGroup ref="AdminChangeWebSiteAssignedToProductActionGroup" stepKey="assignBundleOnlyToSecondWebsite">
+                <argument name="website" value="{{customWebsite.name}}"/>
+                <argument name="websiteToDeselect" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <!-- Step 11b: Assign the multi-option bundle only to the second website -->
+            <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openMultiOptionBundleProductEditPage">
+                <argument name="productId" value="$$createMultiOptionBundleProduct.id$$"/>
+            </actionGroup>
+            <actionGroup ref="AdminChangeWebSiteAssignedToProductActionGroup" stepKey="assignMultiOptionBundleOnlyToSecondWebsite">
+                <argument name="website" value="{{customWebsite.name}}"/>
+                <argument name="websiteToDeselect" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <!-- Step 12: Make the second website default so storefront resolves to it -->
+            <actionGroup ref="AdminGoCreatedWebsitePageActionGroup" stepKey="openSecondWebsiteToSetDefault">
+                <argument name="websiteName" value="{{customWebsite.name}}"/>
+            </actionGroup>
+            <waitForElementClickable selector="{{AdminNewWebsiteActionsSection.setAsDefault}}" stepKey="waitForSetSecondWebsiteAsDefaultClickable"/>
+            <click selector="{{AdminNewWebsiteActionsSection.setAsDefault}}" stepKey="setSecondWebsiteAsDefault"/>
+            <waitForElementClickable selector="{{AdminNewWebsiteActionsSection.saveWebsite}}" stepKey="waitForSaveSecondWebsiteAsDefaultClickable"/>
+            <click selector="{{AdminNewWebsiteActionsSection.saveWebsite}}" stepKey="saveSecondWebsiteAsDefault"/>
+            <waitForPageLoad stepKey="waitForWebsiteSaved"/>
+            <!-- Step 13: Reindex and flush cache so price index updates -->
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexAfterSetup">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCacheAfterSetup">
+                <argument name="tags" value=""/>
+            </actionGroup>
+        </before>
+        <after>
+            <!-- Restore default website before deleting custom website -->
+            <actionGroup ref="AdminGoCreatedWebsitePageActionGroup" stepKey="openDefaultWebsiteToRestoreDefault">
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <waitForElementClickable selector="{{AdminNewWebsiteActionsSection.setAsDefault}}" stepKey="waitForSetDefaultWebsiteAsDefaultAgainClickable"/>
+            <click selector="{{AdminNewWebsiteActionsSection.setAsDefault}}" stepKey="setDefaultWebsiteAsDefaultAgain"/>
+            <waitForElementClickable selector="{{AdminNewWebsiteActionsSection.saveWebsite}}" stepKey="waitForSaveDefaultWebsiteAsDefaultAgainClickable"/>
+            <click selector="{{AdminNewWebsiteActionsSection.saveWebsite}}" stepKey="saveDefaultWebsiteAsDefaultAgain"/>
+            <waitForPageLoad stepKey="waitForDefaultWebsiteSaved"/>
+            <!-- Delete created products, bundle and category -->
+            <deleteData createDataKey="createBundleProduct" stepKey="deleteBundleProduct"/>
+            <deleteData createDataKey="createMultiOptionBundleProduct" stepKey="deleteMultiOptionBundleProduct"/>
+            <deleteData createDataKey="createCheapBundleChild" stepKey="deleteCheapBundleChild"/>
+            <deleteData createDataKey="createExpensiveBundleChild" stepKey="deleteExpensiveBundleChild"/>
+            <deleteData createDataKey="createReferenceLowCostProduct" stepKey="deleteReferenceLowCostProduct"/>
+            <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
+            <!-- Delete the created website -->
+            <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteSecondWebsite">
+                <argument name="websiteName" value="{{customWebsite.name}}"/>
+            </actionGroup>
+            <!-- Reassign default stock to default website, delete custom stock -->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignDefaultWebsiteBackToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <deleteData createDataKey="createCustomStock" stepKey="deleteCustomStock"/>
+            <!-- Disable the custom source -->
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableCustomSource">
+                <argument name="sourceCode" value="$$createCustomSource.source[source_code]$$"/>
+            </actionGroup>
+            <!-- Reindex and clean cache after teardown -->
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexAfterTeardown">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCacheAfterTeardown">
+                <argument name="tags" value=""/>
+            </actionGroup>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+        </after>
+        <!-- Step 14: Open the category on storefront -->
+        <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="goToStorefrontHomePage"/>
+        <actionGroup ref="StorefrontGoToCategoryPageActionGroup" stepKey="openCategoryPage">
+            <argument name="categoryName" value="$$createCategory.name$$"/>
+        </actionGroup>
+        <!-- Step 15: Bundle price range reflects children prices, not zero -->
+        <actionGroup ref="AssertStorefrontElementVisibleActionGroup" stepKey="seeBundlePriceRangeFrom">
+            <argument name="selector" value="{{StorefrontCategoryProductSection.priceFromByProductId($$createBundleProduct.id$$)}}"/>
+            <argument name="userInput" value="From $12.00"/>
+        </actionGroup>
+        <actionGroup ref="AssertStorefrontElementVisibleActionGroup" stepKey="seeBundlePriceRangeTo">
+            <argument name="selector" value="{{StorefrontCategoryProductSection.priceToByProductId($$createBundleProduct.id$$)}}"/>
+            <argument name="userInput" value="To $48.00"/>
+        </actionGroup>
+        <!-- Step 15b: Multi-option bundle price is summed children price -->
+        <actionGroup ref="AssertStorefrontElementVisibleActionGroup" stepKey="seeMultiOptionBundleSummedPrice">
+            <argument name="selector" value="{{StorefrontCategoryMainSection.productPriceByName($$createMultiOptionBundleProduct.name$$)}}"/>
+            <argument name="userInput" value="$60.00"/>
+        </actionGroup>
+        <!-- Step 16: Sort by price ascending; reference product should be first -->
+        <actionGroup ref="StorefrontSwitchCategoryViewToListModeActionGroup" stepKey="switchToListMode"/>
+        <actionGroup ref="StorefrontCategoryPageSortProductActionGroup" stepKey="sortProductsByPrice"/>
+        <actionGroup ref="AssertStorefrontElementVisibleActionGroup" stepKey="seeReferenceProductFirstWhenSortedAscending">
+            <argument name="selector" value="{{StorefrontCategoryMainSection.lineProductName('1')}}"/>
+            <argument name="userInput" value="$$createReferenceLowCostProduct.name$$"/>
+        </actionGroup>
+        <!-- Step 17: Bundle appears in $10-$20 facet, not reference product -->
+        <waitForElementClickable selector="{{StorefrontLayeredNavigationSection.shoppingOptionsByName('Price')}}" stepKey="waitForPriceFilterTitleVisible"/>
+        <click selector="{{StorefrontLayeredNavigationSection.shoppingOptionsByName('Price')}}" stepKey="openPriceFilter"/>
+        <waitForElementVisible selector="{{StorefrontCategoryMainSection.productOptionList}}" stepKey="waitForPriceFilterVisible"/>
+        <!-- Confirm the displayed range/count ($10.00-$19.99, 2 items: bundle + cheap child) before clicking by URL to avoid label/count coupling -->
+        <seeElement selector="{{StorefrontCategorySidebarSection.seeLayeredNavigationFirstPriceRange('10.00', '19.99', '2')}}" stepKey="seeTenToTwentyPriceFacetRangeAndCount"/>
+        <click selector="{{StorefrontLayeredNavigationSection.priceFilterLinkByRange('10-20')}}" stepKey="clickTenToTwentyPriceFacetBucket"/>
+        <waitForPageLoad stepKey="waitForFacetFilteredPageLoad"/>
+        <waitForElementVisible selector="{{StorefrontCategoryMainSection.specifiedProductItemInfo($$createBundleProduct.name$$)}}" stepKey="seeBundleInTenToTwentyFacetBucket"/>
+        <waitForElementNotVisible selector="{{StorefrontCategoryMainSection.specifiedProductItemInfo($$createReferenceLowCostProduct.name$$)}}" stepKey="dontSeeReferenceProductInTenToTwentyFacetBucket"/>
+        <waitForElementNotVisible selector="{{StorefrontCategoryMainSection.specifiedProductItemInfo($$createExpensiveBundleChild.name$$)}}" stepKey="dontSeeExpensiveChildInTenToTwentyFacetBucket"/>
+    </test>
+</tests>
