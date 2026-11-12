@@ -148,6 +148,14 @@ class SearchRequest implements SearchRequestInterface
     /**
      * @inheritdoc
      */
+    public function setSort(?array $sort): void
+    {
+        $this->sort = $sort;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function setExtensionAttributes(?SearchRequestExtensionInterface $extensionAttributes): void
     {
         $this->searchRequestExtension = $extensionAttributes;
