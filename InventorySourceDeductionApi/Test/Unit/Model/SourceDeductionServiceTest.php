@@ -164,6 +164,23 @@ class SourceDeductionServiceTest extends TestCase
         );
 
         $this->inventoryConfigurationMock->method('isCanBackInStock')->willReturn($isCanBackInStock);
+        $this->decrementSourceItemMock->expects($this->once())
+            ->method('execute')
+            ->willReturnCallback(
+                function (array $sourceItemDecrementData) use ($testcase, $itemsData) {
+                    foreach ($sourceItemDecrementData as $index => $decrementData) {
+                        $configurationData = $itemsData[$index]['stockItemConfigurationData'];
+                        if ($configurationData['getBackorders']) {
+                            $testcase->assertArrayNotHasKey('out_of_stock_threshold', $decrementData);
+                        } else {
+                            $testcase->assertSame(
+                                $configurationData['getMinQty'],
+                                $decrementData['out_of_stock_threshold']
+                            );
+                        }
+                    }
+                }
+            );
         $this->model->execute($sourceDeductionRequest);
     }
 
