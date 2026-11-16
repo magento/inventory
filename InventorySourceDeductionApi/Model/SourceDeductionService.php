@@ -101,10 +101,14 @@ class SourceDeductionService implements SourceDeductionServiceInterface
                     $sourceItem
                 );
                 $sourceItem->setStatus($stockStatus);
-                $sourceItemDecrementData[] = [
+                $decrementData = [
                     'source_item' => $sourceItem,
                     'qty_to_decrement' => $qty
                 ];
+                if (!$stockItemConfiguration->getBackorders()) {
+                    $decrementData['out_of_stock_threshold'] = $stockItemConfiguration->getMinQty();
+                }
+                $sourceItemDecrementData[] = $decrementData;
             } else {
                 throw new LocalizedException(
                     __('Not all of your products are available in the requested quantity.')
