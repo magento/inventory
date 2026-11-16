@@ -12,7 +12,7 @@
                 <enabled>1</enabled>
                 <template>sales_email_order_ready_for_pickup_template</template>
                 <guest_template>sales_email_order_ready_for_pickup_guest_template</guest_template>
-                <identity>storepickup</identity>
+                <identity>sales</identity>
                 <copy_method>bcc</copy_method>
             </order_ready_for_pickup>
         </sales_email>
