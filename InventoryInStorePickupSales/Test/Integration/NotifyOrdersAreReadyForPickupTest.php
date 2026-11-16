@@ -180,6 +180,7 @@ class NotifyOrdersAreReadyForPickupTest extends \PHPUnit\Framework\TestCase
      * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/place_order.php
      *
      * @magentoConfigFixture store_for_eu_website_store carriers/instore/active 1
+     * @magentoConfigFixture store_for_eu_website_store trans_email/ident_sales/email pickup.sales@example.com
      *
      * @magentoDbIsolation disabled
      */
@@ -207,6 +208,8 @@ class NotifyOrdersAreReadyForPickupTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($sourceId, $createdShipment->getExtensionAttributes()->getSourceCode());
         $message = $this->transportBuilder->getSentMessage();
         $this->assertEquals("Your store_view_eu_website order is ready for pickup", $message->getSubject());
+        // the default sender must be a store email address the admin can see and configure
+        $this->assertEquals('pickup.sales@example.com', $message->getFrom()[0]->getEmail());
     }
 
     /**
