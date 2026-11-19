@@ -21,4 +21,13 @@
                 type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Model\System\Config\Backend\Minqty\AllowNegativeMinQtyInConfigPlugin"/>
     </type>
     <preference for="Magento\InventoryConfigurationApi\Model\GetStockItemConfigurationBySkuListCacheInterface" type="Magento\InventoryConfiguration\Model\GetStockItemConfigurationBySkuListCache"/>
+    <type name="Magento\InventoryApi\Model\SourceItemValidatorChain">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="productTypeManagementAllowed" xsi:type="object">
+                    Magento\InventoryConfiguration\Model\SourceItem\Validator\ProductTypeManagementAllowedValidator
+                </item>
+            </argument>
+        </arguments>
+    </type>
 </config>

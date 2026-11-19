@@ -17,7 +17,9 @@ use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\Data\SourceItemInterfaceFactory;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
+use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
 use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
+use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
 use Magento\InventoryIndexer\Indexer\CompositeProductsIndexer;
 use Magento\InventoryIndexer\Indexer\SourceItem\SourceItemIndexer;
 
@@ -53,6 +55,9 @@ class SourceItemImporter
      * @param SourceItemResourceModel $sourceItemResourceModel
      * @param SourceItemIndexer $sourceItemIndexer
      * @param CompositeProductsIndexer $compositeProductsIndexer
+     * @param GetProductTypesBySkusInterface $getProductTypesBySkus
+     * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         private readonly SourceItemsSaveInterface $sourceItemsSave,
@@ -63,6 +68,9 @@ class SourceItemImporter
         private readonly SourceItemResourceModel $sourceItemResourceModel,
         private readonly SourceItemIndexer $sourceItemIndexer,
         private readonly CompositeProductsIndexer $compositeProductsIndexer,
+        private readonly GetProductTypesBySkusInterface $getProductTypesBySkus,
+        private readonly IsSourceItemManagementAllowedForProductTypeInterface
+        $isSourceItemManagementAllowedForProductType,
     ) {
     }
 
@@ -94,9 +102,18 @@ class SourceItemImporter
         $existingSourceItemsBySKU = $isSingleSourceMode ? [] : $this->getSourceItems(array_keys($stockData));
         $defaultSourceCode = $this->defaultSourceProvider->getCode();
         $sourceItemIds = [];
+        $productTypesBySku = $this->getProductTypesBySkus->execute(
+            array_map('strval', array_keys($stockData))
+        );
         foreach ($stockData as $sku => $stockDatum) {
             $sku = (string)$sku;
             $skus[] = $sku;
+            // Composite product types (configurable, bundle, grouped) don't have their own source
+            // items; skip them here so the import doesn't create orphan inventory_source_item rows.
+            // They stay in $skus for the composite products reindex below.
+            if (!$this->isSourceItemManagementAllowed($productTypesBySku[$sku] ?? null)) {
+                continue;
+            }
             $sources = $existingSourceItemsBySKU[$sku] ?? [];
             $isQtyExplicitlySet = (bool) ($importedData[$sku]['qty'] ?? false);
             $hasDefaultSource = isset($sources[$defaultSourceCode]);
@@ -133,6 +150,21 @@ class SourceItemImporter
         // Reindex composite products present in data.
         // As they don't have their own source items, no reindex will be triggered automatically.
         $this->compositeProductsIndexer->reindexList($skus);
+    }
+
+    /**
+     * Return whether source items may be written for the given product type
+     *
+     * An unresolved type (SKU not queryable yet) is not rejected; the source item validator chain
+     * owns that case.
+     *
+     * @param string|null $productType
+     * @return bool
+     */
+    private function isSourceItemManagementAllowed(?string $productType): bool
+    {
+        return $productType === null
+            || $this->isSourceItemManagementAllowedForProductType->execute($productType);
     }
 
     /**

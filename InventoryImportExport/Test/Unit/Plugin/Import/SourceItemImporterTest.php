@@ -18,7 +18,9 @@ use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\Data\SourceItemInterfaceFactory;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
+use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
 use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
+use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
 use Magento\InventoryImportExport\Plugin\Import\SourceItemImporter;
 use Magento\InventoryIndexer\Indexer\CompositeProductsIndexer;
 use Magento\InventoryIndexer\Indexer\SourceItem\SourceItemIndexer;
@@ -84,6 +86,16 @@ class SourceItemImporterTest extends TestCase
     private SkuStorage $skuStorageMock;
 
     /**
+     * @var GetProductTypesBySkusInterface|MockObject
+     */
+    private $getProductTypesBySkusMock;
+
+    /**
+     * @var IsSourceItemManagementAllowedForProductTypeInterface|MockObject
+     */
+    private $isSourceItemManagementAllowedForProductTypeMock;
+
+    /**
      * @inheritdoc
      */
     protected function setUp(): void
@@ -99,6 +111,15 @@ class SourceItemImporterTest extends TestCase
 
         $this->skuStorageMock = $this->createMock(SkuStorage::class);
 
+        $this->getProductTypesBySkusMock = $this->createMock(GetProductTypesBySkusInterface::class);
+        $this->getProductTypesBySkusMock->method('execute')
+            ->willReturnCallback(fn (array $skus) => array_fill_keys($skus, 'simple'));
+        $this->isSourceItemManagementAllowedForProductTypeMock = $this->createMock(
+            IsSourceItemManagementAllowedForProductTypeInterface::class
+        );
+        $this->isSourceItemManagementAllowedForProductTypeMock->method('execute')
+            ->willReturnCallback(fn (string $type) => $type === 'simple');
+
         $this->plugin = new SourceItemImporter(
             $this->sourceItemsSaveMock,
             $this->sourceItemFactoryMock,
@@ -108,6 +129,8 @@ class SourceItemImporterTest extends TestCase
             $this->sourceItemResourceModelMock,
             $this->createMock(SourceItemIndexer::class),
             $this->compositeProductsIndexerMock,
+            $this->getProductTypesBySkusMock,
+            $this->isSourceItemManagementAllowedForProductTypeMock,
         );
     }
 
@@ -178,6 +201,57 @@ class SourceItemImporterTest extends TestCase
                 ->willReturnSelf();
         }
         $this->compositeProductsIndexerMock->expects($this->once())->method('reindexList')->with([$sku]);
+
+        $this->plugin->afterProcess($this->stockItemProcessorMock, '', $stockData, []);
+    }
+
+    /**
+     * Composite product types (configurable, bundle, grouped) don't support source items: the
+     * import must not create inventory_source_item rows for them, but they must still take part
+     * in the composite products reindex.
+     *
+     * @return void
+     */
+    public function testAfterImportSkipsSourceItemsForCompositeProductTypes(): void
+    {
+        $stockData = [
+            'configurable-sku' => ['qty' => 0, 'is_in_stock' => 1, 'product_id' => 1],
+            'simple-sku' => ['qty' => 10, 'is_in_stock' => 1, 'product_id' => 2],
+        ];
+
+        $this->getProductTypesBySkusMock = $this->createMock(GetProductTypesBySkusInterface::class);
+        $this->getProductTypesBySkusMock->method('execute')
+            ->willReturn(['configurable-sku' => 'configurable', 'simple-sku' => 'simple']);
+        $this->plugin = new SourceItemImporter(
+            $this->sourceItemsSaveMock,
+            $this->sourceItemFactoryMock,
+            $this->defaultSourceMock,
+            $this->isSingleSourceModeMock,
+            $this->skuStorageMock,
+            $this->sourceItemResourceModelMock,
+            $this->createMock(SourceItemIndexer::class),
+            $this->compositeProductsIndexerMock,
+            $this->getProductTypesBySkusMock,
+            $this->isSourceItemManagementAllowedForProductTypeMock,
+        );
+
+        $this->isSingleSourceModeMock->method('execute')->willReturn(true);
+        $this->skuStorageMock->method('has')->willReturn(false);
+        $this->defaultSourceMock->method('getCode')->willReturn('default');
+        $this->sourceItemMock->method('setSku')->willReturnSelf();
+        $this->sourceItemMock->method('setSourceCode')->willReturnSelf();
+        $this->sourceItemMock->method('setQuantity')->willReturnSelf();
+        $this->sourceItemMock->method('setStatus')->willReturnSelf();
+
+        // Only the simple product produces a source item.
+        $this->sourceItemFactoryMock->expects($this->once())->method('create')
+            ->willReturn($this->sourceItemMock);
+        $this->sourceItemMock->expects($this->once())->method('setSku')->with('simple-sku');
+        $this->sourceItemsSaveMock->expects($this->once())->method('execute')
+            ->with([$this->sourceItemMock]);
+        // Both SKUs still take part in the composite reindex.
+        $this->compositeProductsIndexerMock->expects($this->once())->method('reindexList')
+            ->with(['configurable-sku', 'simple-sku']);
 
         $this->plugin->afterProcess($this->stockItemProcessorMock, '', $stockData, []);
     }

@@ -18,6 +18,8 @@ $sourceItemFactory = Bootstrap::getObjectManager()->get(SourceItemInterfaceFacto
 /** @var  SourceItemsSaveInterface $sourceItemsSave */
 $sourceItemsSave = Bootstrap::getObjectManager()->get(SourceItemsSaveInterface::class);
 
+// 'bundle' is a composite product type: it does not hold its own source item, only its selection
+// (child) products do. It was never valid to create one for it here.
 $sourcesItemsData = [
     [
         SourceItemInterface::SOURCE_CODE => 'us-1',
@@ -25,13 +27,6 @@ $sourcesItemsData = [
         SourceItemInterface::QUANTITY => 100,
         SourceItemInterface::STATUS => SourceItemInterface::STATUS_IN_STOCK,
     ],
-    [
-        SourceItemInterface::SOURCE_CODE => 'us-1',
-        SourceItemInterface::SKU => 'bundle',
-        SourceItemInterface::QUANTITY => 100,
-        SourceItemInterface::STATUS => SourceItemInterface::STATUS_IN_STOCK,
-    ],
-
 ];
 
 $sourceItems = [];
