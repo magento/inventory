@@ -63,13 +63,16 @@ class GetReservationFromCompensationArgument
     /**
      * Parse CLI argument into order and order item information.
      *
+     * The SKU may itself contain colons, so the increment id is read up to the first colon
+     * and the quantity and stock id are read as numbers from the end.
+     *
      * @param string $argument
      * @return array
      * @throws InvalidArgumentException
      */
     private function parseArgument(string $argument): array
     {
-        $pattern = '/(?P<increment_id>.*):(?P<sku>.*):(?P<quantity>.*):(?P<stock_id>.*)/';
+        $pattern = '/^(?P<increment_id>[^:]+):(?P<sku>.+):(?P<quantity>[+-]?\d*\.?\d+):(?P<stock_id>\d+)$/';
         if (preg_match($pattern, $argument, $match)) {
             return $match;
         }
