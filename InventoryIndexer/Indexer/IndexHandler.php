@@ -99,6 +99,8 @@ class IndexHandler implements IndexHandlerInterface
     {
         $connection = $this->resourceConnection->getConnection($connectionName);
         $tableName = $this->indexNameResolver->resolveName($indexName);
-        $connection->delete($tableName, ['sku IN (?)' => iterator_to_array($documents)]);
+        // numeric SKUs often arrive as integers (from array keys); unquoted, "sku IN (123)" also matches "123-A"
+        $skus = array_map('strval', iterator_to_array($documents, false));
+        $connection->delete($tableName, ['sku IN (?)' => $skus]);
     }
 }
