@@ -62,14 +62,15 @@ class Validate extends Action implements HttpPostActionInterface
                 }
                 foreach ($item['sources'] as $source) {
                     if ($source['sourceCode'] == $sourceCode) {
-                        if ($item['isManageStock']) {
+                        // the form posts booleans as the strings "true" and "false"
+                        if (filter_var($item['isManageStock'], FILTER_VALIDATE_BOOLEAN)) {
                             $qtyToCompare = (float)$source['qtyAvailable'];
                         } else {
                             $qtyToCompare = (float)$item['qtyToShip'];
                         }
                         if ((float)$source['qtyToDeduct'] > $qtyToCompare) {
                             throw new LocalizedException(
-                                __('Qty of %1 should be less or equal to %2', $item['sku'], $source['qtyAvailable'])
+                                __('Qty of %1 should be less or equal to %2', $item['sku'], $qtyToCompare)
                             );
                         }
                         $itemsToShip[$item['sku']] = ($itemsToShip[$item['sku']] ?? 0) + $source['qtyToDeduct'];
