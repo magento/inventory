@@ -147,6 +147,7 @@ class GetBackorder
         $productsSalableResult = $this->areProductsSalableForRequestedQty->execute([$request], (int)$stockId);
         $productsSalableResult = current($productsSalableResult);
 
+        $notifyCustomer = false;
         if ($productsSalableResult->isSalable() === false) {
             /** @var ProductSalabilityError $error */
             foreach ($productsSalableResult->getErrors() as $error) {
@@ -155,12 +156,7 @@ class GetBackorder
             }
         } else {
             $productSalableResult = $this->backOrderNotifyCustomerCondition->execute($productSku, (int)$stockId, $qty);
-            if ($productSalableResult->getErrors()) {
-                /** @var ProductSalabilityError $error */
-                foreach ($productSalableResult->getErrors() as $error) {
-                    $result->setMessage($error->getMessage());
-                }
-            }
+            $notifyCustomer = !empty($productSalableResult->getErrors());
         }
 
         $backorderQty = 0;
@@ -168,6 +164,16 @@ class GetBackorder
             $backorderQty = $this->getBackorderQty->execute($productSku, (int)$stockId, $qty);
             // phpcs:ignore Magento2.CodeAnalysis.EmptyBlock.DetectedCatch
         } catch (SkuIsNotAssignedToStockException $exception) {
+        }
+        // $qty includes the same product in the other quote items, but an item cannot backorder more than its own qty
+        $backorderQty = min($backorderQty, $this->getNumber($itemQty));
+        if ($notifyCustomer && $backorderQty > 0) {
+            $result->setMessage(
+                __(
+                    'We don\'t have as many quantity as you requested, but we\'ll back order the remaining %1.',
+                    $backorderQty * 1
+                )
+            );
         }
         if ($backorderQty > 0) {
             $result->setItemBackorders($backorderQty);
