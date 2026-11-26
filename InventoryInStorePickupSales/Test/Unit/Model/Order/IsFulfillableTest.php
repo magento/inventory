@@ -291,6 +291,36 @@ class IsFulfillableTest extends TestCase
     }
 
     /**
+     * Order items of products that were deleted from the catalog must not break the check.
+     *
+     * @return void
+     */
+    public function testExecuteWithDeletedProduct(): void
+    {
+        $this->getPickupLocationCode->expects($this->once())
+            ->method('execute')
+            ->with($this->orderMock)
+            ->willReturn('default');
+
+        $this->orderMock->expects($this->once())
+            ->method('getItems')
+            ->willReturn([$this->itemMock]);
+
+        $this->itemMock->expects($this->any())
+            ->method('getHasChildren')
+            ->willReturn(false);
+
+        $this->itemMock->expects($this->atLeastOnce())
+            ->method('getProduct')
+            ->willReturn(null);
+
+        $this->sourceItemRepository->expects($this->never())
+            ->method('getList');
+
+        $this->assertTrue($this->model->execute($this->orderMock));
+    }
+
+    /**
      * @return array
      */
     public static function dataProvider(): array
