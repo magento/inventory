@@ -7,10 +7,12 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupSales\Test\Integration;
 
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\ObjectManagerInterface;
+use Magento\Framework\Registry;
 use Magento\InventoryInStorePickupSalesApi\Api\NotifyOrdersAreReadyForPickupInterface;
 use Magento\Sales\Api\Data\OrderExtensionFactory;
 use Magento\Sales\Api\Data\OrderExtensionInterface;
@@ -182,6 +184,7 @@ class NotifyOrdersAreReadyForPickupTest extends \PHPUnit\Framework\TestCase
      * @magentoConfigFixture store_for_eu_website_store carriers/instore/active 1
      *
      * @magentoDbIsolation disabled
+     * @magentoAppIsolation enabled
      */
     public function testExecuteReadyForPickUpOrders()
     {
@@ -207,6 +210,69 @@ class NotifyOrdersAreReadyForPickupTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($sourceId, $createdShipment->getExtensionAttributes()->getSourceCode());
         $message = $this->transportBuilder->getSentMessage();
         $this->assertEquals("Your store_view_eu_website order is ready for pickup", $message->getSubject());
+    }
+
+    /**
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_items.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_addresses.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_pickup_location_attributes.php
+     * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/create_in_store_pickup_quote_on_eu_website_guest.php
+     * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/place_order.php
+     *
+     * @magentoConfigFixture store_for_eu_website_store carriers/instore/active 1
+     *
+     * @magentoDbIsolation disabled
+     * @magentoAppIsolation enabled
+     */
+    public function testExecuteForOrderWithDeletedProduct()
+    {
+        $sourceId = 'eu-2';
+        $createdOrder = $this->getCreatedOrder();
+        $this->setPickupLocation($createdOrder, $sourceId);
+        $this->deleteProduct('SKU-2');
+
+        // @see \Magento\InventoryShipping\Plugin\Sales\Shipment\AssignSourceCodeToShipmentPlugin::afterCreate
+        $this->request->setParams(['sourceCode' => $sourceId]);
+
+        $orderId = (int)$createdOrder->getEntityId();
+        $result = $this->notifyOrderIsReadyForPickup->execute([$orderId]);
+
+        $this->assertTrue($result->isSuccessful(), json_encode($result->getErrors()));
+        /** @var ShipmentInterface $createdShipment */
+        $createdShipment = $this->getCreatedShipment($orderId);
+        $shippedSkus = array_map(
+            function (ShipmentItemInterface $shipmentItem): string {
+                return $shipmentItem->getSku();
+            },
+            array_values($createdShipment->getItems())
+        );
+        $this->assertEquals(['SKU-1', 'SKU-2'], $shippedSkus);
+        $message = $this->transportBuilder->getSentMessage();
+        $this->assertEquals("Your store_view_eu_website order is ready for pickup", $message->getSubject());
+    }
+
+    /**
+     * Delete product from the catalog
+     *
+     * @param string $sku
+     * @return void
+     */
+    private function deleteProduct(string $sku): void
+    {
+        $registry = $this->objectManager->get(Registry::class);
+        $isSecureArea = $registry->registry('isSecureArea');
+        $registry->unregister('isSecureArea');
+        $registry->register('isSecureArea', true);
+        $this->objectManager->get(ProductRepositoryInterface::class)->deleteById($sku);
+        $registry->unregister('isSecureArea');
+        $registry->register('isSecureArea', $isSecureArea);
     }
 
     /**

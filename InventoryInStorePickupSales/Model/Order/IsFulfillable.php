@@ -75,7 +75,13 @@ class IsFulfillable
                     continue;
                 }
 
-                $stockItem =  $item->getProduct()->getExtensionAttributes()->getStockItem();
+                $product = $item->getProduct();
+                if ($product === null) {
+                    // The product was deleted from the catalog after the order was placed.
+                    continue;
+                }
+
+                $stockItem = $product->getExtensionAttributes()->getStockItem();
                 if (!$stockItem->getManageStock()) {
                     return $stockItem->getIsInStock() === (bool)SourceItemInterface::STATUS_IN_STOCK &&
                         $this->sourceRepository->get($sourceCode)->isEnabled();
