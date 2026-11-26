@@ -115,7 +115,8 @@ class SelectBuilder implements SelectBuilderInterface
             ]
         )
             ->where('source_item.' . SourceItemInterface::SOURCE_CODE . ' IN (?)', $sourceCodes)
-            ->group(['source_item.' .SourceItemInterface::SKU]);
+            ->group(['source_item.' .SourceItemInterface::SKU])
+            ->order('source_item.' . SourceItemInterface::SKU . ' ASC');
 
         if ($skuList) {
             $select->where('source_item.' . SourceItemInterface::SKU . ' IN (?)', $skuList);
