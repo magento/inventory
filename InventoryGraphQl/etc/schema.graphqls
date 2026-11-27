@@ -3,7 +3,7 @@
 
 interface ProductInterface {
     only_x_left_in_stock: Float @doc(description: "Product stock only x left count") @resolver(class: "Magento\\InventoryGraphQl\\Model\\Resolver\\OnlyXLeftInStockResolver")
-    stock_status: ProductStockStatus @doc(description: "Stock status of the product") @resolver(class: "Magento\\InventoryGraphQl\\Model\\Resolver\\StockStatusProvider")
+    stock_status: ProductStockStatus @doc(description: "Stock status of the product") @resolver(class: "Magento\\InventoryGraphQl\\Model\\Resolver\\StockStatus")
 }
 
 enum ProductStockStatus @doc(description: "This enumeration states whether a product stock status is in stock or out of stock") {
