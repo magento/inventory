@@ -18,6 +18,7 @@ use Magento\InventoryInStorePickupApi\Model\GetPickupLocationInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\TestFramework\Assert\AssertArrayContains;
 use Magento\TestFramework\TestCase\WebapiAbstract;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Api functional tests coverage
@@ -52,7 +53,6 @@ class GetPickupLocationsTest extends WebapiAbstract
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
      *
-     * @dataProvider executeIntersectionSearchDataProvider
      * @magentoAppArea frontend
      *
      * @magentoDbIsolation disabled
@@ -63,6 +63,7 @@ class GetPickupLocationsTest extends WebapiAbstract
      *
      * @throws NoSuchEntityException
      */
+    #[DataProvider('executeIntersectionSearchDataProvider')]
     public function testExecuteIntersectionSearch(
         array $searchRequestData,
         array $sortedPickupLocationCodes,
@@ -108,7 +109,7 @@ class GetPickupLocationsTest extends WebapiAbstract
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function executeIntersectionSearchDataProvider(): array
+    public static function executeIntersectionSearchDataProvider(): array
     {
         return [
             [
@@ -269,13 +270,13 @@ class GetPickupLocationsTest extends WebapiAbstract
      * @param string[] $sortedPickupLocationCodes
      * @param int $expectedTotalCount
      *
-     * @dataProvider executeCombinedDataProvider
      * @magentoAppArea frontend
      *
      * @magentoDbIsolation disabled
      *
      * @throws NoSuchEntityException
      */
+    #[DataProvider('executeCombinedDataProvider')]
     public function testExecuteCombined(
         array $searchRequestData,
         array $sortedPickupLocationCodes,
@@ -323,7 +324,7 @@ class GetPickupLocationsTest extends WebapiAbstract
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function executeCombinedDataProvider(): array
+    public static function executeCombinedDataProvider(): array
     {
         return [
             [ /* Data set #0 */
@@ -376,7 +377,7 @@ class GetPickupLocationsTest extends WebapiAbstract
                     'scopeCode' => 'global_website',
                     'scopeType' => 'website',
                     'pageSize' => 2,
-                    'currentPage' => 2,
+                    'currentPage' => 1,
                     'sort' => [
                         [
                             SortOrder::DIRECTION => SortOrder::SORT_DESC,
@@ -421,13 +422,13 @@ class GetPickupLocationsTest extends WebapiAbstract
      * @param array $searchRequestData
      * @param string[] $sortedPickupLocationCodes
      *
-     * @dataProvider executeAreaOfflineDataProvider
      * @magentoAppArea frontend
      *
      * @magentoDbIsolation disabled
      *
      * @throws NoSuchEntityException
      */
+    #[DataProvider('executeAreaOfflineDataProvider')]
     public function testExecuteareaOffline(
         array $searchRequestData,
         array $sortedPickupLocationCodes
@@ -473,7 +474,7 @@ class GetPickupLocationsTest extends WebapiAbstract
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function executeAreaOfflineDataProvider(): array
+    public static function executeAreaOfflineDataProvider(): array
     {
         return [
             [ /* Data set #0 */
@@ -630,13 +631,13 @@ class GetPickupLocationsTest extends WebapiAbstract
      * @param string $salesChannelCode
      * @param string[] $sortedPickupLocationCodes
      *
-     * @dataProvider executeFiltersDataProvider
      * @magentoAppArea frontend
      *
      * @magentoDbIsolation disabled
      *
      * @throws NoSuchEntityException
      */
+    #[DataProvider('executefiltersDataProvider')]
     public function testExecuteFilters(
         array $searchRequestData,
         string $salesChannelCode,
@@ -686,7 +687,7 @@ class GetPickupLocationsTest extends WebapiAbstract
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function executefiltersDataProvider(): array
+    public static function executefiltersDataProvider(): array
     {
         return [
             [ /* Data set #0 */
@@ -958,13 +959,13 @@ class GetPickupLocationsTest extends WebapiAbstract
      * @param array $sortOrder
      * @param string[] $sortedPickupLocationCodes
      *
-     * @dataProvider executeGeneralDataProvider
      * @magentoAppArea frontend
      *
      * @magentoDbIsolation disabled
      *
      * @throws NoSuchEntityException
      */
+    #[DataProvider('executeGeneralDataProvider')]
     public function testExecuteGeneral(
         string $salesChannelCode,
         array $paging,
@@ -1016,7 +1017,7 @@ class GetPickupLocationsTest extends WebapiAbstract
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function executeGeneralDataProvider(): array
+    public static function executeGeneralDataProvider(): array
     {
         return [
             [ /* Data set #0 */

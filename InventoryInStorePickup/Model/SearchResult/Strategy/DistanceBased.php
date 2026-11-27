@@ -65,14 +65,14 @@ class DistanceBased implements StrategyInterface
      *
      * @param array $sources
      * @param array $distanceToSources
-     * @param string $sortDirection
+     * @param string|null $sortDirection Any value other than ASC sorts descending, as for other sort fields.
      *
      * @return array
      */
     private function sortSourcesByDistance(
         array $sources,
         array $distanceToSources,
-        string $sortDirection = SortOrder::SORT_ASC
+        ?string $sortDirection = SortOrder::SORT_ASC
     ): array {
         $ascSort = function (SourceInterface $left, SourceInterface $right) use ($distanceToSources) {
             return $distanceToSources[$left->getSourceCode()] <=> $distanceToSources[$right->getSourceCode()];
