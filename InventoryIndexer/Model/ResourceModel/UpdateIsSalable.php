@@ -51,7 +51,7 @@ class UpdateIsSalable
         $connection = $this->resourceConnection->getConnection($connectionName);
         $tableName = $this->indexNameResolver->resolveName($indexName);
         foreach ($dataForUpdate as $sku => $isSalable) {
-            $connection->update($tableName, [IndexStructure::IS_SALABLE => $isSalable], ['sku = ?' => $sku]);
+            $connection->update($tableName, [IndexStructure::IS_SALABLE => $isSalable], ['sku = ?' => (string)$sku]);
         }
     }
 }
