@@ -130,9 +130,11 @@ class SaveMultiple
 
         $skus = [];
         $stock = [];
+        $indexedSourceItems = [];
         foreach ($sourceItems as $sourceItem) {
             $skus[] = $sourceItem->getSku();
             $stock[] = $sourceItem->getSourceCode();
+            $indexedSourceItems[$sourceItem->getSourceCode()][$sourceItem->getSku()] = $sourceItem;
         }
 
         $storedSourceItems = $connection->fetchAll(
@@ -142,16 +144,20 @@ class SaveMultiple
         );
 
         $exisingSourceItems = [];
-        foreach ($sourceItems as $key => $sourceItem) {
-            foreach ($storedSourceItems as $storedSourceItem) {
-                if ($sourceItem->getSku() === $storedSourceItem['sku'] &&
-                    $sourceItem->getSourceCode() === $storedSourceItem['source_code']) {
-                    unset($sourceItems[$key]);
-                    $exisingSourceItems[$storedSourceItem['source_item_id']] = $sourceItem;
-                }
+        foreach ($storedSourceItems as $storedSourceItem) {
+            $sku = $storedSourceItem['sku'];
+            $sourceCode = $storedSourceItem['source_code'];
+
+            if (isset($indexedSourceItems[$sourceCode][$sku])) {
+                $sourceItemId = $storedSourceItem['source_item_id'];
+                $exisingSourceItems[$sourceItemId] = $indexedSourceItems[$sourceCode][$sku];
+                unset($indexedSourceItems[$sourceCode][$sku]);
             }
         }
-        return [$sourceItems, $exisingSourceItems];
+
+        $newSourceItems = array_merge(...array_values($indexedSourceItems));
+
+        return [$newSourceItems, $exisingSourceItems];
     }
 
     /**
